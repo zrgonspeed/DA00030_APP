@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">bike FTMS app</string>
+    <string name="home_strokes">STROKES</string>
+    <string name="home_drag">DRAG</string>
+    <string name="home_interval">INTERVAL</string>
+    <string name="home_ave_500">AVE/500</string>
+    <string name="home_sm">S/M</string>
+    <string name="home_watts">WATTS</string>
+    <string name="home_ave_watts">AVE WATTS</string>
+    <string name="home_calories">CALORIES</string>
+    <string name="home_calories_hr">CALORIES/hr</string>
+    <string name="setting_back">BACK</string>
+    <string name="setting_settings">SETTINGS</string>
+    <string name="bluetooth_switch">Bluetooth Enable</string>
+    <string name="bluetooth_scanning">Scanning for Devices</string>
+</resources>
