@@ -1,19 +1,25 @@
 package com.bike.ftms.app.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.os.PowerManager;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.adapter.InformationPagerAdapter;
+import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
+import com.bike.ftms.app.fragment.OnePageHomeFragment;
+import com.bike.ftms.app.fragment.ThreePageHomeFragment;
+import com.bike.ftms.app.fragment.TwoPageHomeFragment;
+import com.bike.ftms.app.widget.VerticalViewPager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,44 +28,42 @@ import butterknife.OnClick;
 public class MainActivity extends BaseActivity {
 
     @BindView(R.id.vp)
-    ViewPager vp;
+    VerticalViewPager vp;
     @BindView(R.id.btn_bluetooth)
     ImageView btnBluetooth;
     @BindView(R.id.btn_setting)
     ImageView btnSetting;
+    @BindView(R.id.iv_page)
+    ImageView ivPage;
     private View page1, page2, page3;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private PowerManager.WakeLock m_wklk;//屏幕锁屏
+    private List<Fragment> fragmentList;
+    private TabFragmentPagerAdapter adapter;
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
-    protected void init() {
-
+    protected void initData() {
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+        m_wklk = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "cn");
+        m_wklk.acquire(); //设置保持唤醒
     }
 
     @Override
     protected void initView() {
-        LayoutInflater mLayoutInflater = getLayoutInflater();
-        page1 = mLayoutInflater.inflate(R.layout.view_pager_home1, null);
-        page2 = mLayoutInflater.inflate(R.layout.view_pager_home2, null);
-        page3 = mLayoutInflater.inflate(R.layout.view_pager_home3, null);
-        ArrayList<View> mViews = new ArrayList<>();
-        mViews.add(page1);
-        mViews.add(page2);
-        mViews.add(page3);
-        vp.addView(page1);
-        vp.addView(page2);
-        vp.addView(page3);
-        vp.setAdapter(new InformationPagerAdapter(mViews));
+        //把Fragment添加到List集合里面
+        fragmentList = new ArrayList<>();
+        fragmentList.add(new OnePageHomeFragment(vp));
+        fragmentList.add(new TwoPageHomeFragment(vp));
+        fragmentList.add(new ThreePageHomeFragment(vp));
         vp.setOffscreenPageLimit(3);
-       /* vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        adapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
+        vp.setAdapter(adapter);
+        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -67,20 +71,18 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    iv_page.setImageResource(R.mipmap.page1);
+                    ivPage.setImageResource(R.mipmap.page1);
                 } else if (position == 1) {
-                    iv_page.setImageResource(R.mipmap.page2);
+                    ivPage.setImageResource(R.mipmap.page2);
                 } else if (position == 2) {
-                    iv_page.setImageResource(R.mipmap.page3);
-                } else {
-                    iv_page.setImageResource(R.mipmap.page4);
+                    ivPage.setImageResource(R.mipmap.page3);
                 }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
             }
-        });*/
+        });
     }
 
 
@@ -94,5 +96,31 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        m_wklk.release(); //解除保持唤醒
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        m_wklk.release();//解除保持唤醒
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        m_wklk.acquire(); //设置保持唤醒
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

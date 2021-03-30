@@ -21,7 +21,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     @Override
-    protected void init() {
+    protected void initData() {
 
     }
 

@@ -13,4 +13,10 @@
     <string name="setting_settings">SETTINGS</string>
     <string name="bluetooth_switch">Bluetooth Enable</string>
     <string name="bluetooth_scanning">Scanning for Devices</string>
+    <string name="workouts">WORKOUTS</string>
+    <string name="workouts_upload">UPLOAD</string>
+    <string name="workouts_edit">EDIT</string>
+    <string name="workouts_date">DATE</string>
+    <string name="workouts_type">TYPE</string>
+    <string name="workouts_result">RESULT</string>
 </resources>

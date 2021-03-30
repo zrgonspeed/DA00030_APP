@@ -22,7 +22,7 @@ public class BluetoothActivity extends BaseActivity {
     }
 
     @Override
-    protected void init() {
+    protected void initData() {
         cbSwitch.setChecked(false);
     }
 

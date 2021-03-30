@@ -6,33 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-    <androidx.viewpager.widget.ViewPager
+    <com.bike.ftms.app.widget.VerticalViewPager
         android:id="@+id/vp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/ll_bottom"/>
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_bottom" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@color/color_387E2F"
-        android:gravity="right"
-        android:layout_alignParentBottom="true">
-
-        <ImageView
-            android:id="@+id/btn_bluetooth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_bluetooth" />
+        >
 
         <ImageView
             android:id="@+id/btn_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
             android:src="@drawable/btn_setting" />
-
-
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/btn_bluetooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_bluetooth"
+            android:layout_toLeftOf="@id/btn_setting"/>
+        <ImageView
+            android:id="@+id/iv_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/page1"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
 </RelativeLayout>
