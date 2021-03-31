@@ -1,4 +1,4 @@
-package com.bike.ftms.app.fragment;
+package com.bike.ftms.app.fragment.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,18 +29,17 @@ import butterknife.Unbinder;
  * @Date 2021/3/30
  */
 public abstract class BaseHomeFragment extends BaseFragment {
-    @BindView(R.id.vp_home_fragment)
-    protected ViewPager vpHomeFragment;
+ /*   @BindView(R.id.vp_home_fragment)
+    protected ViewPager vpHomeFragment;*/
     Unbinder unbinder;
     protected View page1, page2;
-    protected VerticalViewPager verticalViewPager;
     private TextView tvUpload, tvEdit;
     private RecyclerView rvWorkouts;
 
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
         unbinder = ButterKnife.bind(this, view);
-        page1 = LayoutInflater.from(mActivity).inflate(getPageOneId(), container, false);
+       /* page1 = LayoutInflater.from(mActivity).inflate(getPageOneId(), container, false);
         page2 = LayoutInflater.from(mActivity).inflate(getPageTwoId(), container, false);
         ArrayList<View> mViews = new ArrayList<>();
         mViews.add(page1);
@@ -70,7 +69,7 @@ public abstract class BaseHomeFragment extends BaseFragment {
 
         tvUpload = page1.findViewById(R.id.tv_upload);
         tvEdit = page1.findViewById(R.id.tv_edit);
-        rvWorkouts = page1.findViewById(R.id.rv_workouts);
+        rvWorkouts = page1.findViewById(R.id.rv_workouts);*/
     }
 
     @Override
@@ -80,16 +79,7 @@ public abstract class BaseHomeFragment extends BaseFragment {
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_base_home_page;
-    }
-
-    @Override
     protected void initData() {
 
     }
-
-    protected abstract int getPageOneId();
-
-    protected abstract int getPageTwoId();
 }

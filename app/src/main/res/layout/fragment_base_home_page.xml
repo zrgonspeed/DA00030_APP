@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.viewpager.widget.ViewPager
+    <com.bike.ftms.app.widget.VerticalViewPager
         android:id="@+id/vp_home_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

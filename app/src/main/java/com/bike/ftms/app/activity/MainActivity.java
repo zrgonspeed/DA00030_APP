@@ -6,29 +6,27 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
-import com.bike.ftms.app.fragment.OnePageHomeFragment;
-import com.bike.ftms.app.fragment.ThreePageHomeFragment;
-import com.bike.ftms.app.fragment.TwoPageHomeFragment;
-import com.bike.ftms.app.widget.VerticalViewPager;
+import com.bike.ftms.app.fragment.HomeFragment;
+import com.bike.ftms.app.fragment.WorkoutsFragment;
+import com.bike.ftms.app.widget.HorizontalViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
     @BindView(R.id.vp)
-    VerticalViewPager vp;
+    HorizontalViewPager vp;
     @BindView(R.id.btn_bluetooth)
     ImageView btnBluetooth;
     @BindView(R.id.btn_setting)
@@ -37,8 +35,12 @@ public class MainActivity extends BaseActivity {
     ImageView ivPage;
     private View page1, page2, page3;
     private PowerManager.WakeLock m_wklk;//屏幕锁屏
-    private List<Fragment> fragmentList;
-    private TabFragmentPagerAdapter adapter;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -55,34 +57,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        //把Fragment添加到List集合里面
-        fragmentList = new ArrayList<>();
-        fragmentList.add(new OnePageHomeFragment(vp));
-        fragmentList.add(new TwoPageHomeFragment(vp));
-        fragmentList.add(new ThreePageHomeFragment(vp));
-        vp.setOffscreenPageLimit(3);
-        adapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
-        vp.setAdapter(adapter);
-        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+        List<Fragment> homeFragments = new ArrayList<>();
+        homeFragments.add(new HomeFragment(ivPage));
+        homeFragments.add(new WorkoutsFragment());
+        vp.setOffscreenPageLimit(2);
+        TabFragmentPagerAdapter adapter1 = new TabFragmentPagerAdapter(getSupportFragmentManager(), homeFragments);
+        vp.setAdapter(adapter1);
+        vp.setOffscreenPageLimit(2);
 
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    ivPage.setImageResource(R.mipmap.page1);
-                } else if (position == 1) {
-                    ivPage.setImageResource(R.mipmap.page2);
-                } else if (position == 2) {
-                    ivPage.setImageResource(R.mipmap.page3);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
     }
 
 
@@ -117,10 +99,5 @@ public class MainActivity extends BaseActivity {
         m_wklk.acquire(); //设置保持唤醒
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
+
 }

@@ -1,4 +1,4 @@
-package com.bike.ftms.app.fragment;
+package com.bike.ftms.app.fragment.home;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,13 +14,12 @@ import com.bike.ftms.app.widget.VerticalViewPager;
  */
 public class ThreePageHomeFragment extends BaseHomeFragment {
 
-    public ThreePageHomeFragment(VerticalViewPager verticalViewPager) {
-        this.verticalViewPager = verticalViewPager;
+    public ThreePageHomeFragment() {
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_base_home_page;
+        return R.layout.view_pager_home3;
     }
 
     @Override
@@ -31,15 +30,5 @@ public class ThreePageHomeFragment extends BaseHomeFragment {
     @Override
     protected void initData() {
 
-    }
-
-    @Override
-    protected int getPageOneId() {
-        return R.layout.view_pager_home3;
-    }
-
-    @Override
-    protected int getPageTwoId() {
-        return R.layout.fragment_workouts;
     }
 }

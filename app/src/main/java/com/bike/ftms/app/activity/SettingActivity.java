@@ -5,10 +5,13 @@ import android.view.View;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseActivity;
+import com.bike.ftms.app.manager.ble.BleManager;
 
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SettingActivity extends BaseActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,4 +49,6 @@ public class SettingActivity extends BaseActivity {
                 break;
         }
     }
+
+
 }

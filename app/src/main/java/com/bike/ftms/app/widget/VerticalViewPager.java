@@ -94,12 +94,14 @@ public class VerticalViewPager extends ViewPager {
 
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                lastX = x;
+                lastY = y;
                 break;
             case MotionEvent.ACTION_MOVE:
                 dealtX += Math.abs(x - lastX);
                 dealtY += Math.abs(y - lastY);
-                Logger.d(TAG, "dealtX:=" + dealtX);
-                Logger.d(TAG, "dealtY:=" + dealtY);
+               /* Logger.d(TAG, "dealtX:=" + dealtX);
+                Logger.d(TAG, "dealtY:=" + dealtY);*/
                 lastX = x;
                 lastY = y;
                 // 拦截的判断
@@ -119,7 +121,7 @@ public class VerticalViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        Logger.d(TAG, "onTouchEvent " + ev.getAction() + "，X=" + ev.getX() + ",Y=" + ev.getY());
+        //Logger.d(TAG, "onTouchEvent " + ev.getAction() + "，X=" + ev.getX() + ",Y=" + ev.getY());
         return super.onTouchEvent(swapXY(ev));
     }
 
