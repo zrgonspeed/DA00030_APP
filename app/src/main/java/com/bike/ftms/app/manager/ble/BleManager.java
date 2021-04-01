@@ -19,6 +19,7 @@ import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.bean.FormatBean;
 import com.bike.ftms.app.util.Logger;
 import com.bike.ftms.app.utils.ByteArrTransUtil;
+import com.bike.ftms.app.utils.ConvertData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +30,24 @@ import java.util.UUID;
 public class BleManager {
     private String TAG = "BleManager";
     private static BleManager instance;
+    /**
+     * 00002acc-0000-1000-8000-00805f9b34fb
+     * 00002acd-0000-1000-8000-00805f9b34fb
+     * 00002ace-0000-1000-8000-00805f9b34fb
+     * 00002acf-0000-1000-8000-00805f9b34fb
+     * 00002ad0-0000-1000-8000-00805f9b34fb
+     * 00002ad1-0000-1000-8000-00805f9b34fb
+     * 00002ad2-0000-1000-8000-00805f9b34fb
+     * 00002ad3-0000-1000-8000-00805f9b34fb
+     * 00002ad4-0000-1000-8000-00805f9b34fb
+     * 00002ad5-0000-1000-8000-00805f9b34fb
+     * 00002ad6-0000-1000-8000-00805f9b34fb
+     * 00002ad8-0000-1000-8000-00805f9b34fb
+     * 00002ad7-0000-1000-8000-00805f9b34fb
+     * 00002ad9-0000-1000-8000-00805f9b34fb
+     * 00002ada-0000-1000-8000-00805f9b34fb
+     * d18d2c10-c44c-11e8-a355-529269fb1459
+     */
     public final String[] UUID_LIST = {
             "6e400001-b5a3-f393-e0a9-e50e24dcca9e;6e400003-b5a3-f393-e0a9-e50e24dcca9e;6e400002-b5a3-f393-e0a9-e50e24dcca9e",
             "0000ffe5-0000-1000-8000-00805f9b34fb;0000ffe0-0000-1000-8000-00805f9b34fb;0000ffe9-0000-1000-8000-00805f9b34fb"
@@ -173,10 +192,10 @@ public class BleManager {
             ScanSettings scanSettings = builder.build();
             List<ScanFilter> scanFilters = new ArrayList<>();
             ScanFilter scanFilter = new ScanFilter.Builder().setServiceUuid(
-                    new ParcelUuid(UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e"))).build();
+                    new ParcelUuid(UUID.fromString("00001826-0000-1000-8000-00805f9b34fb"))).build();
             scanFilters.add(scanFilter);
-            //mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
-            mBluetoothAdapter.getBluetoothLeScanner().startScan(mScanCallback);
+            mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
+            //mBluetoothAdapter.getBluetoothLeScanner().startScan(mScanCallback);
             Logger.i(TAG, "开始扫描设备");
         }
     }
@@ -203,7 +222,7 @@ public class BleManager {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
-           // Logger.i(TAG, "onScanResult:" + result.getDevice().getName());
+            //Logger.i(TAG, "onScanResult:" + result.getDevice().getName());
            /* Logger.i(TAG, "onScanResult" + result.getDevice().toString());          //D5:EA:80:77:23:39
             Logger.i(TAG, "onScanResult" + result.getDevice().getUuids());            //null
             Logger.i(TAG, "onScanResult" + result.getDevice().getType());             //2
@@ -262,6 +281,9 @@ public class BleManager {
                 //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
                 mBluetoothGatt = getScanResults().get(position).getDevice()
                         .connectGatt(MyApplication.getContext(), false, mGattCallback);
+              /*  BluetoothGattService bluetoothGattService=  mBluetoothGatt.getService(UUID.fromString("00001826-0000-1000-8000-00805f9b34fb"));
+                Logger.i(TAG, "onScanResult:" + getScanResults().get(position).getDevice().getName()+", getUuids=" + getScanResults().get(position).getScanRecord().getServiceUuids()+
+                        ",mBluetoothGatt"+bluetoothGattService.getCharacteristics().toString());*/
                 Logger.i(TAG, "connectDevice" + position);
             }
         }
@@ -324,6 +346,18 @@ public class BleManager {
                 //mBluetoothGatt.getServices().size()==gatt.getServices().size()
                 Logger.i(TAG, "mBluetoothGatt.getServices()::" + mBluetoothGatt.getServices().size());
                 mBluetoothGattServices = mBluetoothGatt.getServices();
+                BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString("00001826-0000-1000-8000-00805f9b34fb"));
+                List<BluetoothGattCharacteristic> list = localGattService.getCharacteristics();
+                for (int i = 0; i < list.size(); i++) {
+                    Logger.d(TAG, "getCharacteristics=" + list.get(i).getUuid());
+                    List<BluetoothGattDescriptor> bluetoothGattDescriptors = list.get(i).getDescriptors();
+                    for (BluetoothGattDescriptor bluetoothGattDescriptor:bluetoothGattDescriptors) {
+                       /* bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                        mBluetoothGatt.writeDescriptor(bluetoothGattDescriptor);*/
+                        Logger.d(TAG, "getDescriptors=" + bluetoothGattDescriptor.getUuid());
+                    }
+
+                }
                 registrationGattCharacteristic();//注册通知
             } else {
                 Logger.d(TAG, "onServicesDiscovered received: " + status);
@@ -344,7 +378,7 @@ public class BleManager {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicRead(gatt, characteristic, status);
-            Logger.i(TAG, "onCharacteristicRead::" + ByteArrTransUtil.toHexValue(characteristic.getValue()));
+            Logger.i(TAG, "onCharacteristicRead::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
 
         }
 
@@ -396,25 +430,54 @@ public class BleManager {
      */
     private void registrationGattCharacteristic() {
         if (mBluetoothGattServices != null) {
-            for (BluetoothGattService gattService : mBluetoothGattServices) {
-                for (BluetoothGattCharacteristic gattCharacteristic : gattService.getCharacteristics()) {
-                    //除了通过 BluetoothGatt#setCharacteristicNotification 开启 Android 端接收通知的开关，
-                    // 还需要往 Characteristic 的 Descriptor 属性写入开启通知的数据开关使得当硬件的数据改变时，主动往手机发送数据。
+            BluetoothGattService gattService = mBluetoothGatt.getService(UUID.fromString("00001826-0000-1000-8000-00805f9b34fb"));
+            //for (BluetoothGattService gattService : mBluetoothGattServices) {
+            for (BluetoothGattCharacteristic gattCharacteristic : gattService.getCharacteristics()) {
+                //除了通过 BluetoothGatt#setCharacteristicNotification 开启 Android 端接收通知的开关，
+                // 还需要往 Characteristic 的 Descriptor 属性写入开启通知的数据开关使得当硬件的数据改变时，主动往手机发送数据。
+               /* if (gattCharacteristic.getUuid().toString().contains("ab01")) {//发送通道
+                    mBluetoothGattCharacteristic = gattCharacteristic;
+                    Logger.i(TAG, "发送通道::ab01");
+                }*/
+                if (gattCharacteristic.getUuid().toString().contains("2acd")) {//接收通道
+                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                    Logger.i(TAG, "注册通知::" + enabled);
+                }
+                if (gattCharacteristic.getUuid().toString().contains("2ace")) {//接收通道
+                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                    Logger.i(TAG, "注册通知::" + enabled);
+                }
+                if (gattCharacteristic.getUuid().toString().contains("2ad1")) {//接收通道
+                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                    Logger.i(TAG, "注册通知::" + enabled);
+                }
+                if (gattCharacteristic.getUuid().toString().contains("2ad2")) {//接收通道
+                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                    Logger.i(TAG, "注册通知::" + enabled);
+                }
+                if (gattCharacteristic.getUuid().toString().contains("2ad3")) {//接收通道
+                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                    Logger.i(TAG, "注册通知::" + enabled);
+                }
+                if (gattCharacteristic.getUuid().toString().contains("2ada")) {//接收通道
+                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                    Logger.i(TAG, "注册通知::" + enabled);
+                }
 
-                    if (gattCharacteristic.getUuid().toString().contains("ab01")) {//发送通道
-                        mBluetoothGattCharacteristic = gattCharacteristic;
-                        Logger.i(TAG, "发送通道::ab01");
-                    }
-                    if (gattCharacteristic.getUuid().toString().contains("ab02")) {//接收通道
-                        boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-                        Logger.i(TAG, "注册通知::" + enabled);
-                    }
-                    Logger.i(TAG, "GattCharacteristic" + gattCharacteristic.getUuid().toString());
+                if (gattCharacteristic.getUuid().toString().contains("2ad6")) {
+                    boolean enabled = mBluetoothGatt.readCharacteristic(gattCharacteristic);
+                    Logger.i(TAG, "读::" + enabled);
+                }
+               /* if (gattCharacteristic.getUuid().toString().contains("2ad3")) {//接收通道
+                    boolean enabled = mBluetoothGatt.readCharacteristic(gattCharacteristic);
+                    Logger.i(TAG, "读::" + enabled);
+                }*/
+                Logger.i(TAG, "GattCharacteristic" + gattCharacteristic.getUuid().toString());
                     /*00002a00-0000-1000-8000-00805f9b34fb
                     0000ab01-0000-1000-8000-00805f9b34fb
                     0000ab02-0000-1000-8000-00805f9b34fb
                     0000ab03-0000-1000-8000-00805f9b34fb*/
-                }
+                //  }
             }
 
         }
