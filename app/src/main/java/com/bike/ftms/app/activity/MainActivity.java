@@ -13,8 +13,11 @@ import androidx.fragment.app.Fragment;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
+import com.bike.ftms.app.bean.RowerDataBean;
 import com.bike.ftms.app.fragment.HomeFragment;
 import com.bike.ftms.app.fragment.WorkoutsFragment;
+import com.bike.ftms.app.manager.ble.BleManager;
+import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.widget.HorizontalViewPager;
 
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @BindView(R.id.vp)
     HorizontalViewPager vp;
@@ -90,14 +93,25 @@ public class MainActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         m_wklk.release();//解除保持唤醒
-
+        BleManager.getInstance().setonRunDataListener(null);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         m_wklk.acquire(); //设置保持唤醒
+        BleManager.getInstance().setonRunDataListener(this);
+
     }
 
 
+    @Override
+    public void onRunData(RowerDataBean rowerDataBean) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+    }
 }

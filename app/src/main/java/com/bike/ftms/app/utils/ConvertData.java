@@ -100,4 +100,13 @@ public class ConvertData {
     public static float getKmToMile1Float(float value){
         return (float) (Math.round((value / 1.6093f) * 10) / 10.0);
     }
+    /**
+     * byte数组转换为二进制字符串,每个字节以","隔开
+     **/
+    public static String byteToBinStr(byte b) {
+        StringBuffer result = new StringBuffer();
+            result.append(Integer.toString(b & 0xff, 2));
+        return result.toString();
+    }
+
 }
