@@ -291,6 +291,18 @@ public class DataTypeConversion {
     }
 
     /**
+     * byte数组转int类型的对象
+     *
+     * @param bytes
+     * @return
+     */
+    public static int Byte2Int(byte[] bytes, int offset) {
+        return (bytes[offset] & 0xff)
+                | (bytes[offset + 1] & 0xff) << 8
+                | (bytes[offset + 2] & 0xff) << 16;
+    }
+
+    /**
      * byte数组中取int数值，本方法适用于(低位在前，高位在后)的顺序。
      * 小端
      *
@@ -352,6 +364,7 @@ public class DataTypeConversion {
 
     /**
      * 当长度为2时,这个方法会自动高低位互换
+     *
      * @param b
      * @param offset
      * @param length

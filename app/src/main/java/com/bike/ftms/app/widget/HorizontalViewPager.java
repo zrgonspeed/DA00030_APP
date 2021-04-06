@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bike.ftms.app.util.Logger;
-
 /**
  * @Description
  * @Author YYH

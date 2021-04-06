@@ -1,4 +1,4 @@
-package com.bike.ftms.app.util;
+package com.bike.ftms.app.utils;
 
 import android.util.Log;
 

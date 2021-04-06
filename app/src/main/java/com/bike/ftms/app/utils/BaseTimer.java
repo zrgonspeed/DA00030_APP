@@ -1,4 +1,4 @@
-package com.bike.ftms.app.util;
+package com.bike.ftms.app.utils;
 
 import java.util.Timer;
 import java.util.TimerTask;

@@ -15,6 +15,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.InformationPagerAdapter;
 import com.bike.ftms.app.base.BaseFragment;
+import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.utils.TimeStringUtil;
 import com.bike.ftms.app.widget.VerticalViewPager;
 
 import java.util.ArrayList;
@@ -30,9 +32,20 @@ import butterknife.Unbinder;
  */
 public abstract class BaseHomeFragment extends BaseFragment {
     Unbinder unbinder;
-    protected View page1, page2;
-    private TextView tvUpload, tvEdit;
-    private RecyclerView rvWorkouts;
+    @BindView(R.id.tv_strokes)
+    TextView tvStrokes;
+    @BindView(R.id.tv_drag)
+    TextView tvDrag;
+    @BindView(R.id.tv_interval)
+    TextView tvInterval;
+    @BindView(R.id.tv_distance)
+    TextView tvDistance;
+    @BindView(R.id.tv_sm)
+    TextView tvSm;
+    @BindView(R.id.tv_heart_rate)
+    TextView tvHeartRate;
+    @BindView(R.id.tv_time)
+    TextView tvTime;
 
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
@@ -48,5 +61,15 @@ public abstract class BaseHomeFragment extends BaseFragment {
     @Override
     protected void initData() {
 
+    }
+
+    public void onRunData(RowerDataBean rowerDataBean) {
+        tvStrokes.setText(String.valueOf(rowerDataBean.getStrokes()));
+        tvInterval.setText(String.valueOf(rowerDataBean.getInterval()));
+        tvDistance.setText(String.valueOf(rowerDataBean.getDistance()));
+        tvDrag.setText(String.valueOf(rowerDataBean.getDrag()));
+        tvSm.setText(String.valueOf(rowerDataBean.getSm()));
+        tvHeartRate.setText(String.valueOf(rowerDataBean.getHeart_rate()));
+        tvTime.setText(String.valueOf(rowerDataBean.getTime()));
     }
 }

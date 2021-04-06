@@ -31,7 +31,7 @@
             android:id="@+id/tv_strokes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="76"
+            android:text="0"
             android:textColor="@color/color_white"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -63,7 +63,7 @@
             android:id="@+id/tv_drag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="90"
+            android:text="0"
             android:textColor="@color/color_white"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -94,7 +94,7 @@
             android:id="@+id/tv_interval"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="84"
+            android:text="0"
             android:textColor="@color/color_white"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -119,7 +119,7 @@
             android:id="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="200"
+            android:text="0"
             android:textColor="@color/color_0B4531"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -154,7 +154,7 @@
             android:id="@+id/tv_sm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="32"
+            android:text="0"
             android:textColor="@color/color_0B4531"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -190,7 +190,7 @@
             android:id="@+id/tv_watts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="111"
+            android:text="0"
             android:textColor="@color/color_0B4531"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -227,7 +227,7 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=":37"
+            android:text=":00"
             android:textColor="@color/color_0B4531"
             android:textSize="42sp"
             android:textStyle="bold" />
@@ -281,7 +281,7 @@
             android:id="@+id/tv_ave_watts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1:00.5"
+            android:text="0"
             android:textColor="@color/color_0B4531"
             android:textSize="42sp"
             android:textStyle="bold" />

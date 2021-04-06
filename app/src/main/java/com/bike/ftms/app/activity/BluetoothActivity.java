@@ -19,10 +19,9 @@ import com.bike.ftms.app.adapter.BleAdapter;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnScanConnectListener;
-import com.bike.ftms.app.util.Logger;
+import com.bike.ftms.app.utils.Logger;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BluetoothActivity extends BaseActivity implements OnScanConnectListener, BleAdapter.OnItemClickListener {
@@ -58,7 +57,9 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    scanDevice();
+                    if (!BleManager.isConnect) {
+                        scanDevice();
+                    }
                 } else {
                     BleManager.getInstance().closeBLE();
                     BleManager.getInstance().getScanResults().clear();
@@ -166,8 +167,10 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     }
 
     @Override
-    public void onConnectEvent(boolean isconnect, String tag) {
-
+    public void onConnectEvent(boolean isconnect, String name) {
+        if (isconnect) {
+            finish();
+        }
     }
 
     @Override

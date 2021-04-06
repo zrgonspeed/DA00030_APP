@@ -13,8 +13,6 @@ import android.view.View;
 
 import androidx.viewpager.widget.ViewPager;
 
-import com.bike.ftms.app.util.Logger;
-
 public class VerticalViewPager extends ViewPager {
     private final String TAG = "VerticalViewPager";
     int lastX = -1;

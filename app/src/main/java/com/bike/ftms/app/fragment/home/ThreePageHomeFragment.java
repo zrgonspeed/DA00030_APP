@@ -3,9 +3,12 @@ package com.bike.ftms.app.fragment.home;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.widget.VerticalViewPager;
+import com.bike.ftms.app.bean.RowerDataBean;
+
+import butterknife.BindView;
 
 /**
  * @Description
@@ -13,6 +16,11 @@ import com.bike.ftms.app.widget.VerticalViewPager;
  * @Date 2021/3/30
  */
 public class ThreePageHomeFragment extends BaseHomeFragment {
+
+    @BindView(R.id.tv_calories)
+    TextView tvCalories;
+    @BindView(R.id.tv_calories_hr)
+    TextView tvCaloriesHr;
 
     public ThreePageHomeFragment() {
     }
@@ -30,5 +38,11 @@ public class ThreePageHomeFragment extends BaseHomeFragment {
     @Override
     protected void initData() {
 
+    }
+
+    public void onRunData(RowerDataBean rowerDataBean) {
+        super.onRunData(rowerDataBean);
+        tvCalories.setText(String.valueOf(rowerDataBean.getCalorie()));
+        tvCaloriesHr.setText(String.valueOf(rowerDataBean.getCalories_hr()));
     }
 }

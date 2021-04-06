@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseFragment;
+import com.bike.ftms.app.bean.RowerDataBean;
 import com.bike.ftms.app.fragment.home.OnePageHomeFragment;
 import com.bike.ftms.app.fragment.home.ThreePageHomeFragment;
 import com.bike.ftms.app.fragment.home.TwoPageHomeFragment;
@@ -31,6 +32,9 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.vp_home_fragment)
     VerticalViewPager vpHomeFragment;
     private ImageView ivPage;
+    private OnePageHomeFragment onePageHomeFragment;
+    private TwoPageHomeFragment twoPageHomeFragment;
+    private ThreePageHomeFragment threePageHomeFragment;
 
     public HomeFragment() {
     }
@@ -47,11 +51,13 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-
+        onePageHomeFragment = new OnePageHomeFragment();
+        twoPageHomeFragment = new TwoPageHomeFragment();
+        threePageHomeFragment = new ThreePageHomeFragment();
         List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new OnePageHomeFragment());
-        fragmentList.add(new TwoPageHomeFragment());
-        fragmentList.add(new ThreePageHomeFragment());
+        fragmentList.add(onePageHomeFragment);
+        fragmentList.add(twoPageHomeFragment);
+        fragmentList.add(threePageHomeFragment);
         vpHomeFragment.setOffscreenPageLimit(3);
         TabFragmentPagerAdapter adapter = new TabFragmentPagerAdapter(getChildFragmentManager(), fragmentList);
         vpHomeFragment.setAdapter(adapter);
@@ -80,5 +86,11 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initData() {
 
+    }
+
+    public void onRunData(RowerDataBean rowerDataBean) {
+        onePageHomeFragment.onRunData(rowerDataBean);
+        twoPageHomeFragment.onRunData(rowerDataBean);
+        threePageHomeFragment.onRunData(rowerDataBean);
     }
 }

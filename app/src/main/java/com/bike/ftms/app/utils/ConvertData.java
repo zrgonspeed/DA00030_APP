@@ -35,7 +35,7 @@ public class ConvertData {
 
 
     public static String byteArrayToHexString(byte[] b, int length) {
-        if(buffer.length() > 0){
+        if (buffer.length() > 0) {
             buffer.setLength(0);
         }
         for (int i = 0; i < length; ++i) {
@@ -55,6 +55,7 @@ public class ConvertData {
 
     /**
      * byte数组中取int数值，本方法适用于(高位在前，低位在后)的顺序。2个字节
+     *
      * @param ary
      * @param offset
      * @return
@@ -68,11 +69,12 @@ public class ConvertData {
 
     /**
      * 倡佑 2个字节 数据转整数，自己缩小或者放大（高位在前，低位在后）
+     *
      * @param ary
      * @param offset
      * @return
      */
-    public static int cyByteToInt(byte[] ary,int offset){
+    public static int cyByteToInt(byte[] ary, int offset) {
         //low
         int low = ary[offset + 1] & 0xff;
         //hi
@@ -82,10 +84,11 @@ public class ConvertData {
 
     /**
      * 倡佑 整数转byte 数组 (2位)（高位在前，低位在后）
+     *
      * @param value 不超过4位数
      * @return
      */
-    public static byte[] cyIntToByte(int value){
+    public static byte[] cyIntToByte(int value) {
         byte[] data = new byte[2];
         data[1] = (byte) ((value % 100) & 0xFF);
         data[0] = (byte) ((value / 100) & 0xFF);
@@ -94,19 +97,32 @@ public class ConvertData {
 
     /**
      * 公制转英制
+     *
      * @param value
      * @return
      */
-    public static float getKmToMile1Float(float value){
+    public static float getKmToMile1Float(float value) {
         return (float) (Math.round((value / 1.6093f) * 10) / 10.0);
     }
+
+    /**
+     * byte转换为二进制字符串
+     **/
     /**
      * byte数组转换为二进制字符串,每个字节以","隔开
      **/
-    public static String byteToBinStr(byte b) {
+    public static String byteArrToBinStr(byte[] b) {
         StringBuffer result = new StringBuffer();
-            result.append(Integer.toString(b & 0xff, 2));
-        return result.toString();
+        for (int i = 0; i < b.length; i++) {
+            StringBuffer sbTwo = new StringBuffer();
+            String two = Long.toString(b[i] & 0xff, 2);
+            for (int j = two.length(); j< 8; j++) {
+                sbTwo.append("0");
+            }
+            sbTwo.append(two);
+            result.append(sbTwo.toString() + ",");
+        }
+        return result.toString().substring(0, result.length() - 1);
     }
 
 }

@@ -3,9 +3,13 @@ package com.bike.ftms.app.fragment.home;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.widget.VerticalViewPager;
+import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.utils.TimeStringUtil;
+
+import butterknife.BindView;
 
 /**
  * @Description
@@ -14,6 +18,11 @@ import com.bike.ftms.app.widget.VerticalViewPager;
  */
 public class OnePageHomeFragment extends BaseHomeFragment {
 
+
+    @BindView(R.id.tv_five_hundred)
+    TextView tvFiveHundred;
+    @BindView(R.id.tv_ave_five_hundred)
+    TextView tvAveFiveHundred;
 
     public OnePageHomeFragment() {
     }
@@ -34,4 +43,10 @@ public class OnePageHomeFragment extends BaseHomeFragment {
 
     }
 
+    @Override
+    public void onRunData(RowerDataBean rowerDataBean) {
+        super.onRunData(rowerDataBean);
+        tvFiveHundred.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean.getFive_hundred()));
+        tvAveFiveHundred.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean.getAve_five_hundred()));
+    }
 }

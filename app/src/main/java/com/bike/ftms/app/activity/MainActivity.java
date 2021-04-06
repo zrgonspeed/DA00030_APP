@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
 
@@ -38,7 +37,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     ImageView ivPage;
     private View page1, page2, page3;
     private PowerManager.WakeLock m_wklk;//屏幕锁屏
-
+    private HomeFragment homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +53,15 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected void initData() {
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-        m_wklk = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "cn");
+        m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "cn");
         m_wklk.acquire(); //设置保持唤醒
     }
 
     @Override
     protected void initView() {
         List<Fragment> homeFragments = new ArrayList<>();
-        homeFragments.add(new HomeFragment(ivPage));
+        homeFragment = new HomeFragment(ivPage);
+        homeFragments.add(homeFragment);
         homeFragments.add(new WorkoutsFragment());
         vp.setOffscreenPageLimit(2);
         TabFragmentPagerAdapter adapter1 = new TabFragmentPagerAdapter(getSupportFragmentManager(), homeFragments);
@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
+                homeFragment.onRunData(rowerDataBean);
             }
         });
     }

@@ -1,7 +1,7 @@
 package com.bike.ftms.app.bean;
 
 
-import com.bike.ftms.app.util.Logger;
+import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.ByteArrTransUtil;
 
 /**
