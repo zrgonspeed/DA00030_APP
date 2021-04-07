@@ -129,7 +129,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         switch (requestCode) {
             // requestCode即所声明的权限获取码，在checkSelfPermission时传入
             case BAIDU_READ_PHONE_STATE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // 获取到权限，作相应处理（调用定位SDK应当确保相关权限均被授权，否则可能引起定位失败）
                     llLoading.setVisibility(View.VISIBLE);
                     BleManager.getInstance().scanDevice();

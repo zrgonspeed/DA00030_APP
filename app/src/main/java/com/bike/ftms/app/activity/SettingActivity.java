@@ -1,5 +1,6 @@
 package com.bike.ftms.app.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -40,12 +41,16 @@ public class SettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.iv_setting_login:
+                startActivity(new Intent(this, LoginActivity.class));
                 break;
             case R.id.iv_setting_bluetooth:
+                startActivity(new Intent(this, BluetoothActivity.class));
                 break;
             case R.id.iv_setting_hr:
+                startActivity(new Intent(this, HeartRateMonitorActivity.class));
                 break;
             case R.id.iv_setting_version:
+                startActivity(new Intent(this, VersionActivity.class));
                 break;
         }
     }

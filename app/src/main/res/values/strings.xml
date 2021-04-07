@@ -10,14 +10,31 @@
     <string name="home_ave_watts">AVE WATTS</string>
     <string name="home_calories">CALORIES</string>
     <string name="home_calories_hr">CALORIES/hr</string>
+
     <string name="setting_back">BACK</string>
     <string name="setting_settings">SETTINGS</string>
+
     <string name="bluetooth_switch">Bluetooth Enable</string>
     <string name="bluetooth_scanning">Scanning for Devices</string>
+
+    <string name="heart_rate_switch">HRM Bluetooth Smart Wireless</string>
+    <string name="heart_rate_scanning">Heart Rate Monitors - Tap to select / disconnect</string>
+
     <string name="workouts">WORKOUTS</string>
     <string name="workouts_upload">UPLOAD</string>
     <string name="workouts_edit">EDIT</string>
     <string name="workouts_date">DATE</string>
     <string name="workouts_type">TYPE</string>
     <string name="workouts_result">RESULT</string>
+
+    <string name="version_title">APP VERSION</string>
+    <string name="version_new_version">App has a new version</string>
+
+    <string name="login_title">EXISTING ACCOUNT</string>
+    <string name="login_user_name">Username:</string>
+    <string name="login_password">Password:</string>
+    <string name="login_btn">LOGIN</string>
+    <string name="login_forget">Forget Username / Password</string>
+    <string name="login_create">Create New Account</string>
+    <string name="login_hint">Delete workouts in Online Logbook when deleting form APP</string>
 </resources>

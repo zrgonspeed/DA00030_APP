@@ -1,5 +1,7 @@
 package com.bike.ftms.app.utils;
 
+import java.text.SimpleDateFormat;
+
 /**
  * 时间转换为字符串
  */
@@ -222,4 +224,7 @@ public class TimeStringUtil {
         }
         return timeValue;
     }
+
+
+
 }
