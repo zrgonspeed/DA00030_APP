@@ -33,9 +33,6 @@ public class RowerDataParam {
     public static int RESISTANCE_LEVEL_INX;
     public static int RESISTANCE_LEVEL_LEN = 2;
 
-    public static int EXPENDED_ENERGY_INX;
-    public static int EXPENDED_ENERGY_LEN = 1;
-
     public static int HEART_RATE_INX;
     public static int HEART_RATE_LEN = 1;
 

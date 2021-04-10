@@ -8,11 +8,20 @@
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
         android:text="NAME"
         android:textColor="@color/color_387E2F"
         android:textSize="16sp" />
+    <TextView
+        android:id="@+id/tv_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:layout_below="@id/tv_name"
+        android:textColor="@color/color_387E2F"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tv_state"

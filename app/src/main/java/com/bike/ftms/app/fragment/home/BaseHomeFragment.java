@@ -70,6 +70,6 @@ public abstract class BaseHomeFragment extends BaseFragment {
         tvDrag.setText(String.valueOf(rowerDataBean.getDrag()));
         tvSm.setText(String.valueOf(rowerDataBean.getSm()));
         tvHeartRate.setText(String.valueOf(rowerDataBean.getHeart_rate()));
-        tvTime.setText(String.valueOf(rowerDataBean.getTime()));
+        tvTime.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean.getTime()));
     }
 }

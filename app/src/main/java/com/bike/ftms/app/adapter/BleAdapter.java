@@ -46,7 +46,7 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
             }
         });
         holder.tvName.setText(list.get(position).getDevice().getName());
-
+        holder.tvAddress.setText(list.get(position).getDevice().getAddress());
         switch (list.get(position).getDevice().getBondState()) {
             case BluetoothDevice.BOND_BONDING:
                 holder.tvState.setText("Connecting");
@@ -78,11 +78,13 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
     public class BleViewHolder extends RecyclerView.ViewHolder {
         TextView tvName;
         TextView tvState;
+        TextView tvAddress;
 
         public BleViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_name);
             tvState = itemView.findViewById(R.id.tv_state);
+            tvAddress = itemView.findViewById(R.id.tv_address);
         }
     }
 }

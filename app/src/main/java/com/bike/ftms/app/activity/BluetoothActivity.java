@@ -67,7 +67,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 }
             }
         });
-
+        rvBle.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -135,7 +135,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                     BleManager.getInstance().scanDevice();
                 } else {
                     // 没有获取到权限，做特殊处理
-                    Toast.makeText(getApplicationContext(), "Failed to get permission. Please open it manually!", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
