@@ -47,7 +47,9 @@ public class SettingActivity extends BaseActivity {
                 startActivity(new Intent(this, BluetoothActivity.class));
                 break;
             case R.id.iv_setting_hr:
-                startActivity(new Intent(this, HeartRateMonitorActivity.class));
+                Intent intent=new Intent(this,HeartRateMonitorActivity.class);
+                intent.putExtra("isScanHrDevice",true);
+                startActivity(intent);
                 break;
             case R.id.iv_setting_version:
                 startActivity(new Intent(this, VersionActivity.class));

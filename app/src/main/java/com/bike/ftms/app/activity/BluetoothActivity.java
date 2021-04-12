@@ -73,6 +73,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Override
     protected void onResume() {
         super.onResume();
+        BleManager.getInstance().setIsScanHrDevice(getIntent().getBooleanExtra("isScanHrDevice", false));
         cbSwitch.setChecked(BleManager.getInstance().getBluetoothAdapter().isEnabled());
         if (BleManager.getInstance().getBluetoothAdapter().isEnabled() && !BleManager.isCanning) {
             scanDevice();

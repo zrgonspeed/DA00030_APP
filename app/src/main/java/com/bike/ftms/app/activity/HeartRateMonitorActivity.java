@@ -24,11 +24,12 @@ public class HeartRateMonitorActivity extends BluetoothActivity {
 
     @Override
     protected void initData() {
+        super.initData();
 
     }
 
     @Override
     protected void initView() {
-
+        super.initView();
     }
 }
