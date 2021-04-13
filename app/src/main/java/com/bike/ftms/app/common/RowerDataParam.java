@@ -52,5 +52,5 @@ public class RowerDataParam {
     public static int TOTAL_ENERGY_LEN = 2;
 
     public static int ENERGY_PER_MINUTE_INX;
-    public static int ENERGY_PER_MINUTE_LEN = 2;
+    public static int ENERGY_PER_MINUTE_LEN = 1;
 }

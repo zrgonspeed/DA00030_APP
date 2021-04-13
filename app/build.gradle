@@ -23,6 +23,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    signingConfigs {
+        debug {
+            keyAlias 'com.bike.ftms.app'
+            keyPassword 'android'
+            storeFile file('./BikeFtms.jks')
+            storePassword 'android'
+        }
+        relase {
+            keyAlias 'com.bike.ftms.app'
+            keyPassword 'android'
+            storeFile file('./BikeFtms.jks')
+            storePassword 'android'
+        }
+    }
 }
 
 dependencies {

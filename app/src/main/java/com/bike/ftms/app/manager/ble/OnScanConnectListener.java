@@ -7,6 +7,10 @@ package com.bike.ftms.app.manager.ble;
  */
 public interface OnScanConnectListener {
     void onScanSuccess();
+
     void onStopScan();
-    void onConnectEvent(boolean isconnect,String tag);
+
+    void onConnectEvent(boolean isconnect, String tag);
+
+    void onNotifyData();
 }

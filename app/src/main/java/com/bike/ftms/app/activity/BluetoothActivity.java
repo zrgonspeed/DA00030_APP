@@ -73,12 +73,12 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Override
     protected void onResume() {
         super.onResume();
+        BleManager.getInstance().setOnScanConnectListener(this);
         BleManager.getInstance().setIsScanHrDevice(getIntent().getBooleanExtra("isScanHrDevice", false));
         cbSwitch.setChecked(BleManager.getInstance().getBluetoothAdapter().isEnabled());
         if (BleManager.getInstance().getBluetoothAdapter().isEnabled() && !BleManager.isCanning) {
             scanDevice();
         }
-        BleManager.getInstance().setOnScanConnectListener(this);
 
     }
 
@@ -168,9 +168,22 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     @Override
     public void onConnectEvent(boolean isconnect, String name) {
-        if (isconnect) {
+        /*if (isconnect) {
             finish();
-        }
+        }*/
+    }
+
+    @Override
+    public void onNotifyData() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (bleAdapter != null) {
+                    bleAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -184,4 +197,5 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     public void onItemClickListener(int position) {
         BleManager.getInstance().connectDevice(position);
     }
+
 }

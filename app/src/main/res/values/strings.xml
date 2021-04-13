@@ -10,6 +10,7 @@
     <string name="home_ave_watts">AVE WATTS</string>
     <string name="home_calories">CALORIES</string>
     <string name="home_calories_hr">CALORIES/hr</string>
+    <string name="home_exit">Are you sure to exit ?</string>
 
     <string name="setting_back">BACK</string>
     <string name="setting_settings">SETTINGS</string>

@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.BleAdapter.BleViewHolder;
+import com.bike.ftms.app.bean.MyScanResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,10 +25,10 @@ import java.util.List;
  */
 public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
 
-    private List<ScanResult> list;
+    private List<MyScanResult> list;
     private OnItemClickListener onItemClickListener;
 
-    public BleAdapter(List<ScanResult> list) {
+    public BleAdapter(List<MyScanResult> list) {
         this.list = list;
     }
 
@@ -42,23 +44,20 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                    if (list.get(position).getConnectState()==1) {
+                        return;
+                }
                 onItemClickListener.onItemClickListener(position);
             }
         });
-        holder.tvName.setText(list.get(position).getDevice().getName());
-        holder.tvAddress.setText(list.get(position).getDevice().getAddress());
-        switch (list.get(position).getDevice().getBondState()) {
-            case BluetoothDevice.BOND_BONDING:
-                holder.tvState.setText("Connecting");
-                break;
-            case BluetoothDevice.BOND_BONDED:
-                holder.tvState.setText("Connected");
-                break;
-            case BluetoothDevice.BOND_NONE:
-                holder.tvState.setText("Disconnected");
-                break;
-            default:
-                break;
+        holder.tvName.setText(list.get(position).getScanResult().getDevice().getName());
+        holder.tvAddress.setText(list.get(position).getScanResult().getDevice().getAddress());
+        if (list.get(position).getConnectState()==1) {
+            holder.tvState.setText("Connected");
+        } else if (list.get(position).getConnectState()==2) {
+            holder.tvState.setText("Connecting");
+        }else {
+            holder.tvState.setText("Disconnected");
         }
     }
 

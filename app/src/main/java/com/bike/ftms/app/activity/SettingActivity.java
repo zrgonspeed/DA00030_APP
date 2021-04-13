@@ -4,15 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseActivity;
+import com.bike.ftms.app.common.ParamData;
 import com.bike.ftms.app.manager.ble.BleManager;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SettingActivity extends BaseActivity {
-
+    private final int HR_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +50,9 @@ public class SettingActivity extends BaseActivity {
                 startActivity(new Intent(this, BluetoothActivity.class));
                 break;
             case R.id.iv_setting_hr:
-                Intent intent=new Intent(this,HeartRateMonitorActivity.class);
-                intent.putExtra("isScanHrDevice",true);
-                startActivity(intent);
+                Intent intent = new Intent(this, HeartRateMonitorActivity.class);
+                intent.putExtra("isScanHrDevice", true);
+                startActivityForResult(intent, HR_REQUEST_CODE);
                 break;
             case R.id.iv_setting_version:
                 startActivity(new Intent(this, VersionActivity.class));
@@ -57,5 +60,11 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == ParamData.REQUEST_IS_FINISH_CODE && HR_REQUEST_CODE == requestCode) {
+            finish();
+        }
+    }
 }
