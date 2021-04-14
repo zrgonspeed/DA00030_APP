@@ -119,7 +119,6 @@ public class VerticalViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        //Logger.d(TAG, "onTouchEvent " + ev.getAction() + "，X=" + ev.getX() + ",Y=" + ev.getY());
         return super.onTouchEvent(swapXY(ev));
     }
 

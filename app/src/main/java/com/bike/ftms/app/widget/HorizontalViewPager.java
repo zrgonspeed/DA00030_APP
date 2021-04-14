@@ -17,6 +17,7 @@ public class HorizontalViewPager extends ViewPager {
     private final String TAG = "HorizontalViewPager";
     int lastX = -1;
     int lastY = -1;
+    private boolean isSetIntercept = true;//是否设置拦截
 
     public HorizontalViewPager(@NonNull Context context) {
         super(context);
@@ -28,6 +29,9 @@ public class HorizontalViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (!isSetIntercept){
+            return super.onInterceptTouchEvent(ev);
+        }
         int x = (int) ev.getRawX();
         int y = (int) ev.getRawY();
         int dealtX = 0;
@@ -58,5 +62,9 @@ public class HorizontalViewPager extends ViewPager {
 
         }
         return super.onInterceptTouchEvent(ev);
+    }
+
+    public void setSetIntercept(boolean setIntercept) {
+        isSetIntercept = setIntercept;
     }
 }

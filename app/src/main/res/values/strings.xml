@@ -27,6 +27,18 @@
     <string name="workouts_date">DATE</string>
     <string name="workouts_type">TYPE</string>
     <string name="workouts_result">RESULT</string>
+    <string name="workouts_done">DONE</string>
+    <string name="workouts_time">TIME</string>
+    <string name="workouts_meters">METERS</string>
+    <string name="workouts_500">/500</string>
+    <string name="workouts_clas">CALS</string>
+    <string name="workouts_watts">WATTS</string>
+    <string name="workouts_cal_hr">CAL/HR</string>
+    <string name="workouts_sm">S/M</string>
+    <string name="workouts_info_delete">Delete</string>
+    <string name="workouts_cancel">Cancel</string>
+    <string name="workouts_ok">OK</string>
+    <string name="workouts_info_delete_txt">Are you sure to delete this workout?</string>
 
     <string name="version_title">APP VERSION</string>
     <string name="version_new_version">App has a new version</string>

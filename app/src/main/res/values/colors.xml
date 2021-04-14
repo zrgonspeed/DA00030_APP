@@ -9,7 +9,9 @@
     <color name="color_white">#FFFFFF</color>
     <color name="color_F5F5F5">#F5F5F5</color>
     <color name="color_black">#000000</color>
+    <color name="color_txt_black">#010101</color>
     <color name="color_707070">#707070</color>
     <color name="color_B5B3B3">#B5B3B3</color>
     <color name="color_1A91F9">#1A91F9</color>
+    <color name="color_black_40">#66000000</color>
 </resources>
