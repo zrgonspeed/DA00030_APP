@@ -39,6 +39,8 @@
     <string name="workouts_cancel">Cancel</string>
     <string name="workouts_ok">OK</string>
     <string name="workouts_info_delete_txt">Are you sure to delete this workout?</string>
+    <string name="workouts_info_online_txt">You must first login from the \nlogbook settings page</string>
+    <string name="workouts_info_online">Online LogBook Status</string>
 
     <string name="version_title">APP VERSION</string>
     <string name="version_new_version">App has a new version</string>
@@ -50,4 +52,16 @@
     <string name="login_forget">Forget Username / Password</string>
     <string name="login_create">Create New Account</string>
     <string name="login_hint">Delete workouts in Online Logbook when deleting form APP</string>
+
+    <string name="create_title">CREATE NEW ACCOUNT</string>
+    <string name="create_first_name">First Name：</string>
+    <string name="create_last_name">Last Name：</string>
+    <string name="create_gender">Gender：</string>
+    <string name="create_birth">Male Date of birth：</string>
+    <string name="create_country">Country：</string>
+    <string name="create_email_address">Email Address：</string>
+    <string name="create_username">Username：</string>
+    <string name="create_password">Password：</string>
+    <string name="create_confirm_password">Confirm Password：</string>
+    <string name="create_create_account">CREATE ACCOUNT</string>
 </resources>

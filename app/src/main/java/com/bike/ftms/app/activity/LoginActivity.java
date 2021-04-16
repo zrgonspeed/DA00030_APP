@@ -1,5 +1,6 @@
 package com.bike.ftms.app.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -48,6 +49,7 @@ public class LoginActivity extends BaseActivity {
             case R.id.tv_forget:
                 break;
             case R.id.tv_create:
+                startActivity(new Intent(this, CreateNewAccountActivity.class));
                 break;
         }
     }

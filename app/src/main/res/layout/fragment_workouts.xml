@@ -175,6 +175,60 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_online"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_black_40"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/info_delete_dialog_bg"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/workouts_info_online"
+                    android:textColor="@color/color_txt_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/workouts_info_online_txt"
+                    android:textColor="@color/color_txt_black"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/color_F5F5F5" />
+
+
+                <TextView
+                    android:id="@+id/tv_online_ok"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/workouts_ok"
+                    android:textColor="@color/color_387E2F"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout

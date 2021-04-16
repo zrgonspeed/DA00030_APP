@@ -47,6 +47,8 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     ImageView ivInfoBack;
     @BindView(R.id.rl_delete)
     RelativeLayout rlDelete;
+    @BindView(R.id.rl_online)
+    RelativeLayout rlOnline;
     private WorkoutsAdapter workoutsAdapter;
     private boolean isEdit = false;
 
@@ -67,6 +69,12 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
         workoutsAdapter.addItemClickListener(this);
         workoutsAdapter.addItemDeleteClickListener(this);
         rlDelete.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        rlOnline.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return true;
