@@ -146,10 +146,10 @@ public class BleManager {
             }, SCAN_PERIOD);
             isCanning = true;
             mScanResults.clear();
-            if (connectScanResult != null && !isScanHrDevice&&connectScanResult.getConnectState()==1) {
+            if (connectScanResult != null && !isScanHrDevice && connectScanResult.getConnectState() == 1) {
                 mScanResults.add(connectScanResult);
             }
-            if (connectHrScanResult != null && isScanHrDevice&&connectHrScanResult.getConnectState()==1) {
+            if (connectHrScanResult != null && isScanHrDevice && connectHrScanResult.getConnectState() == 1) {
                 mScanResults.add(connectHrScanResult);
             }
             if (onScanConnectListener != null) {
@@ -186,8 +186,8 @@ public class BleManager {
 
             scanFilters.add(scanFilter);
 
-            mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
-            //mBluetoothAdapter.getBluetoothLeScanner().startScan(mScanCallback);
+            //mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
+            mBluetoothAdapter.getBluetoothLeScanner().startScan(mScanCallback);
             Logger.i(TAG, "开始扫描设备");
         }
     }
@@ -228,7 +228,7 @@ public class BleManager {
             //result.getScanRecord().getServiceUuids()   mServiceUuids=[0000ab00-0000-1000-8000-00805f9b34fb]*/
             String deviceAddress = result.getDevice().getAddress();
             String deviceName = result.getDevice().getName();
-            if (deviceName != null&&!deviceName.equals("") && deviceAddress != null) {
+            if (deviceName != null && !deviceName.equals("") && deviceAddress != null) {
                 boolean isAdd = true;//第一次无需查重
                 for (int i = 0; i < getScanResults().size(); i++) {//查重
                     if (getScanResults().get(i).getScanResult().getDevice().getAddress().equals(deviceAddress)) {
@@ -646,7 +646,8 @@ public class BleManager {
             } else {
                 gattService = mBluetoothHrGatt.getService(UUID.fromString(uuidHeartbeat));
             }
-          /* for (BluetoothGattService gattService1:mBluetoothGatt.getServices()){
+           for (BluetoothGattService gattService1:mBluetoothGatt.getServices()){
+               Logger.d(TAG,"=========================================");
                Logger.d(TAG, "getServices=" + gattService1.getUuid().toString());
                for (BluetoothGattCharacteristic gattCharacteristic : gattService1.getCharacteristics()) {
                    Logger.d(TAG, "gattCharacteristic=" + gattCharacteristic.getUuid().toString());
@@ -654,7 +655,7 @@ public class BleManager {
                        Logger.d(TAG, "getDescriptors=" + bluetoothGattDescriptor.getUuid().toString());
                    }
                }
-           }*/
+           }
             for (BluetoothGattCharacteristic gattCharacteristic : gattService.getCharacteristics()) {
                 //除了通过 BluetoothGatt#setCharacteristicNotification 开启 Android 端接收通知的开关，
                 // 还需要往 Characteristic 的 Descriptor 属性写入开启通知的数据开关使得当硬件的数据改变时，主动往手机发送数据。
@@ -898,25 +899,25 @@ public class BleManager {
         if (onRunDataListener == null) {
             return;
         }
-        rowerDataBean.setStrokes(resolveDate(data, RowerDataParam.STROKE_COUNT_INX, RowerDataParam.STROKE_COUNT_LEN));
-        rowerDataBean.setDistance(resolveDate(data, RowerDataParam.TOTAL_DISTANCE_INX, RowerDataParam.TOTAL_DISTANCE_LEN));
-        rowerDataBean.setSm(resolveDate(data, RowerDataParam.STROKE_RATE_INX, RowerDataParam.STROKE_RATE_LEN));
-        rowerDataBean.setFive_hundred(resolveDate(data, RowerDataParam.INSTANTANEOUS_PACE_INX, RowerDataParam.INSTANTANEOUS_PACE_LEN));
-        rowerDataBean.setCalorie(resolveDate(data, RowerDataParam.ENERGY_PER_HOUR_INX, RowerDataParam.ENERGY_PER_HOUR_LEN));
-        rowerDataBean.setCalories_hr(resolveDate(data, RowerDataParam.ENERGY_PER_HOUR_INX, RowerDataParam.ENERGY_PER_HOUR_LEN));
-        rowerDataBean.setDrag(resolveDate(data, RowerDataParam.ENERGY_PER_MINUTE_INX, RowerDataParam.ENERGY_PER_MINUTE_LEN));
+        rowerDataBean.setStrokes(RowerDataParam.STROKE_COUNT_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_COUNT_INX, RowerDataParam.STROKE_COUNT_LEN));
+        rowerDataBean.setDistance(RowerDataParam.TOTAL_DISTANCE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.TOTAL_DISTANCE_INX, RowerDataParam.TOTAL_DISTANCE_LEN));
+        rowerDataBean.setSm(RowerDataParam.STROKE_RATE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_RATE_INX, RowerDataParam.STROKE_RATE_LEN));
+        rowerDataBean.setFive_hundred(RowerDataParam.INSTANTANEOUS_PACE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.INSTANTANEOUS_PACE_INX, RowerDataParam.INSTANTANEOUS_PACE_LEN));
+        rowerDataBean.setCalorie(RowerDataParam.TOTAL_ENERGY_INX == -1 ? 0 : resolveDate(data, RowerDataParam.TOTAL_ENERGY_INX, RowerDataParam.TOTAL_ENERGY_LEN));
+        rowerDataBean.setCalories_hr(RowerDataParam.ENERGY_PER_HOUR_INX == -1 ? 0 : resolveDate(data, RowerDataParam.ENERGY_PER_HOUR_INX, RowerDataParam.ENERGY_PER_HOUR_LEN));
+        rowerDataBean.setDrag(RowerDataParam.ENERGY_PER_MINUTE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.ENERGY_PER_MINUTE_INX, RowerDataParam.ENERGY_PER_MINUTE_LEN));
         if (!isHeartbeatConnect) {
-            rowerDataBean.setHeart_rate(resolveDate(data, RowerDataParam.HEART_RATE_INX, RowerDataParam.HEART_RATE_LEN));
+            rowerDataBean.setHeart_rate(RowerDataParam.HEART_RATE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.HEART_RATE_INX, RowerDataParam.HEART_RATE_LEN));
         }
-        rowerDataBean.setWatts(resolveDate(data, RowerDataParam.INSTANTANEOUS_POWER_INX, RowerDataParam.INSTANTANEOUS_POWER_LEN));
-        rowerDataBean.setAve_watts(resolveDate(data, RowerDataParam.AVERAGE_POWER_INX, RowerDataParam.AVERAGE_POWER_LEN));
-        rowerDataBean.setAve_five_hundred(resolveDate(data, RowerDataParam.AVERAGE_PACE_INX, RowerDataParam.AVERAGE_PACE_LEN));
-        if (resolveDate(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN) != 0) {
-            rowerDataBean.setTime( resolveDate(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
+        rowerDataBean.setWatts(RowerDataParam.INSTANTANEOUS_POWER_INX == -1 ? 0 : resolveDate(data, RowerDataParam.INSTANTANEOUS_POWER_INX, RowerDataParam.INSTANTANEOUS_POWER_LEN));
+        rowerDataBean.setAve_watts(RowerDataParam.AVERAGE_POWER_INX == -1 ? 0 : resolveDate(data, RowerDataParam.AVERAGE_POWER_INX, RowerDataParam.AVERAGE_POWER_LEN));
+        rowerDataBean.setAve_five_hundred(RowerDataParam.AVERAGE_PACE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.AVERAGE_PACE_INX, RowerDataParam.AVERAGE_PACE_LEN));
+        if (RowerDataParam.ELAPSED_TIME_INX != -1 && resolveDate(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN) != 0) {
+            rowerDataBean.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveDate(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
         } else {
-            rowerDataBean.setTime( resolveDate(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
+            rowerDataBean.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveDate(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
         }
-        rowerDataBean.setInterval( resolveDate(data, RowerDataParam.RESISTANCE_LEVEL_INX, RowerDataParam.RESISTANCE_LEVEL_LEN));
+        rowerDataBean.setInterval(RowerDataParam.RESISTANCE_LEVEL_INX == -1 ? 0 : resolveDate(data, RowerDataParam.RESISTANCE_LEVEL_INX, RowerDataParam.RESISTANCE_LEVEL_LEN));
         onRunDataListener.onRunData(rowerDataBean);
     }
 
