@@ -140,13 +140,12 @@
                     android:textColor="@color/color_707070"
                     android:textSize="16sp" />
 
-                <EditText
+                <TextView
                     android:id="@+id/edt_gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_gender"
-                    android:background="@null"
                     android:imeOptions="actionDone"
                     android:singleLine="true"
                     android:textColor="@color/color_707070"
@@ -212,7 +211,7 @@
                     android:textColor="@color/color_707070"
                     android:textSize="16sp" />
 
-                <EditText
+                <TextView
                     android:id="@+id/edt_country"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

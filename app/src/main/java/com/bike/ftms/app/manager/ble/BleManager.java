@@ -277,6 +277,7 @@ public class BleManager {
                 if (!isScanHrDevice) {
                     connectScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
                     setBleDataInx = false;
+                    cleanBleDataInx();
                     //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
                     mBluetoothGatt = getScanResults().get(position).getScanResult().getDevice()
                             .connectGatt(MyApplication.getContext(), true, mGattCallback);
@@ -646,16 +647,16 @@ public class BleManager {
             } else {
                 gattService = mBluetoothHrGatt.getService(UUID.fromString(uuidHeartbeat));
             }
-           for (BluetoothGattService gattService1:mBluetoothGatt.getServices()){
-               Logger.d(TAG,"=========================================");
-               Logger.d(TAG, "getServices=" + gattService1.getUuid().toString());
-               for (BluetoothGattCharacteristic gattCharacteristic : gattService1.getCharacteristics()) {
-                   Logger.d(TAG, "gattCharacteristic=" + gattCharacteristic.getUuid().toString());
-                   for (BluetoothGattDescriptor bluetoothGattDescriptor:gattCharacteristic.getDescriptors()){
-                       Logger.d(TAG, "getDescriptors=" + bluetoothGattDescriptor.getUuid().toString());
-                   }
-               }
-           }
+            for (BluetoothGattService gattService1 : mBluetoothGatt.getServices()) {
+                Logger.d(TAG, "=========================================");
+                Logger.d(TAG, "getServices=" + gattService1.getUuid().toString());
+                for (BluetoothGattCharacteristic gattCharacteristic : gattService1.getCharacteristics()) {
+                    Logger.d(TAG, "gattCharacteristic=" + gattCharacteristic.getUuid().toString());
+                    for (BluetoothGattDescriptor bluetoothGattDescriptor : gattCharacteristic.getDescriptors()) {
+                        Logger.d(TAG, "getDescriptors=" + bluetoothGattDescriptor.getUuid().toString());
+                    }
+                }
+            }
             for (BluetoothGattCharacteristic gattCharacteristic : gattService.getCharacteristics()) {
                 //除了通过 BluetoothGatt#setCharacteristicNotification 开启 Android 端接收通知的开关，
                 // 还需要往 Characteristic 的 Descriptor 属性写入开启通知的数据开关使得当硬件的数据改变时，主动往手机发送数据。
@@ -891,6 +892,25 @@ public class BleManager {
             }
 
         }
+    }
+
+    private void cleanBleDataInx() {
+        RowerDataParam.STROKE_RATE_INX = -1;
+        RowerDataParam.STROKE_COUNT_INX = -1;
+        RowerDataParam.AVERAGE_STROKE_RATE_INX = -1;
+        RowerDataParam.TOTAL_DISTANCE_INX = -1;
+        RowerDataParam.INSTANTANEOUS_PACE_INX = -1;
+        RowerDataParam.AVERAGE_PACE_INX = -1;
+        RowerDataParam.INSTANTANEOUS_POWER_INX = -1;
+        RowerDataParam.AVERAGE_POWER_INX = -1;
+        RowerDataParam.RESISTANCE_LEVEL_INX = -1;
+        RowerDataParam.HEART_RATE_INX = -1;
+        RowerDataParam.METABOLIC_EQUIVALENT_INX = -1;
+        RowerDataParam.ELAPSED_TIME_INX = -1;
+        RowerDataParam.REMAINING_TIME_INX = -1;
+        RowerDataParam.ENERGY_PER_HOUR_INX = -1;
+        RowerDataParam.TOTAL_ENERGY_INX = -1;
+        RowerDataParam.ENERGY_PER_MINUTE_INX = -1;
     }
 
     RowerDataBean rowerDataBean = new RowerDataBean();

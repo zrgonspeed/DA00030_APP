@@ -64,4 +64,9 @@
     <string name="create_password">Password：</string>
     <string name="create_confirm_password">Confirm Password：</string>
     <string name="create_create_account">CREATE ACCOUNT</string>
+    <string name="create_male">Male</string>
+    <string name="create_female">Female</string>
+    <string name="create_gender_title">Please select gender: </string>
+    <string name="create_confirm">Confirm</string>
+    <string name="create_country_title">Please select country</string>
 </resources>

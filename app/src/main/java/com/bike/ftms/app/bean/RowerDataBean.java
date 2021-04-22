@@ -1,11 +1,13 @@
 package com.bike.ftms.app.bean;
 
+import org.litepal.crud.LitePalSupport;
+
 /**
  * @Description
  * @Author YYH
  * @Date 2021/4/2
  */
-public class RowerDataBean {
+public class RowerDataBean extends LitePalSupport {
     private int strokes;
     private int drag;
     private int interval;
