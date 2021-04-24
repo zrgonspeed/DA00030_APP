@@ -13,14 +13,15 @@ public class RowerDataBean extends LitePalSupport {
     private int interval;
     private long distance;
     private int sm;
-    private int five_hundred;
-    private int time;
+    private long five_hundred;
+    private long time;
     private int heart_rate;
-    private int ave_five_hundred;
+    private long ave_five_hundred;
     private int watts;
     private int ave_watts;
     private int calorie;
     private int calories_hr;
+    private String note;
 
     public RowerDataBean() {
     }
@@ -65,19 +66,19 @@ public class RowerDataBean extends LitePalSupport {
         this.sm = sm;
     }
 
-    public int getFive_hundred() {
+    public long getFive_hundred() {
         return five_hundred;
     }
 
-    public void setFive_hundred(int five_hundred) {
+    public void setFive_hundred(long five_hundred) {
         this.five_hundred = five_hundred;
     }
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -89,11 +90,11 @@ public class RowerDataBean extends LitePalSupport {
         this.heart_rate = heart_rate;
     }
 
-    public int getAve_five_hundred() {
+    public long getAve_five_hundred() {
         return ave_five_hundred;
     }
 
-    public void setAve_five_hundred(int ave_five_hundred) {
+    public void setAve_five_hundred(long ave_five_hundred) {
         this.ave_five_hundred = ave_five_hundred;
     }
 
@@ -127,5 +128,13 @@ public class RowerDataBean extends LitePalSupport {
 
     public void setCalories_hr(int calories_hr) {
         this.calories_hr = calories_hr;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

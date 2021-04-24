@@ -63,7 +63,10 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 } else {
                     BleManager.getInstance().closeBLE();
                     BleManager.getInstance().getScanResults().clear();
+                    BleManager.getInstance().stopScan();
+                    bleAdapter.notifyDataSetChanged();
                     llLoading.setVisibility(View.GONE);
+                    rvBle.setVisibility(View.GONE);
                 }
             }
         });
@@ -88,6 +91,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             showContacts();
         } else {
             llLoading.setVisibility(View.VISIBLE);
+            rvBle.setVisibility(View.VISIBLE);
             BleManager.getInstance().scanDevice();
         }
     }
@@ -119,6 +123,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         } else {
             llLoading.setVisibility(View.VISIBLE);
             BleManager.getInstance().openBLE();
+            rvBle.setVisibility(View.VISIBLE);
             BleManager.getInstance().scanDevice();
         }
     }
@@ -133,6 +138,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // 获取到权限，作相应处理（调用定位SDK应当确保相关权限均被授权，否则可能引起定位失败）
                     llLoading.setVisibility(View.VISIBLE);
+                    rvBle.setVisibility(View.VISIBLE);
                     BleManager.getInstance().scanDevice();
                 } else {
                     // 没有获取到权限，做特殊处理

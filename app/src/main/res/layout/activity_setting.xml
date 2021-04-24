@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:src="@drawable/btn_back" />
 
         <TextView
@@ -26,60 +26,63 @@
             android:layout_toRightOf="@+id/iv_back"
             android:text="@string/setting_back"
             android:textColor="@color/color_black"
-            android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/setting_settings"
-            android:textStyle="bold"
             android:textColor="@color/color_black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/iv_setting_login"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/btn_setting_login"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rl"
-        app:layout_constraintEnd_toStartOf="@id/iv_setting_bluetooth"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.15">
 
-    <ImageView
-        android:id="@+id/iv_setting_bluetooth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/btn_setting_bluetooth"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_setting_hr"
-        app:layout_constraintStart_toEndOf="@id/iv_setting_login"
-        app:layout_constraintTop_toBottomOf="@id/rl"
-        app:layout_constraintVertical_bias="0.2" />
+        <ImageView
+            android:id="@+id/iv_setting_login"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:src="@drawable/btn_setting_login" />
 
-    <ImageView
-        android:id="@+id/iv_setting_hr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/btn_setting_hr"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_setting_version"
-        app:layout_constraintStart_toEndOf="@+id/iv_setting_bluetooth"
-        app:layout_constraintTop_toBottomOf="@id/rl"
-        app:layout_constraintVertical_bias="0.2" />
+        <ImageView
+            android:id="@+id/iv_setting_bluetooth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:src="@drawable/btn_setting_bluetooth" />
 
-    <ImageView
-        android:id="@+id/iv_setting_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/btn_setting_version"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/iv_setting_hr"
-        app:layout_constraintTop_toBottomOf="@id/rl"
-        app:layout_constraintVertical_bias="0.2" />
+        <ImageView
+            android:id="@+id/iv_setting_hr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:src="@drawable/btn_setting_hr" />
+
+        <ImageView
+            android:id="@+id/iv_setting_version"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/btn_setting_version" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
