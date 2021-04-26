@@ -1,11 +1,15 @@
 package com.bike.ftms.app.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,6 +25,7 @@ import com.bike.ftms.app.fragment.WorkoutsFragment;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.widget.HorizontalViewPager;
+import com.bike.ftms.app.widget.YesOrNoDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +48,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     private HomeFragment homeFragment;
     private WorkoutsFragment workoutsFragment;
     private long exitTime = 0;
+    private YesOrNoDialog yesOrNoDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +89,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             public void onPageSelected(int position) {
                 if (position == 0) {
                     vp.setSetIntercept(true);
+                    m_wklk.acquire(); //设置保持唤醒
                 } else {
                     vp.setSetIntercept(false);
+                    m_wklk.release();//解除保持唤醒
                 }
             }
 
@@ -127,6 +135,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         super.onResume();
         m_wklk.acquire(); //设置保持唤醒
         BleManager.getInstance().setonRunDataListener(this);
+        if (!BleManager.isConnect) {
+            showConnectHintDialog();
+        }
 
     }
 
@@ -139,6 +150,29 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
                 homeFragment.onRunData(rowerDataBean);
             }
         });
+    }
+
+    private void showConnectHintDialog() {
+        if (yesOrNoDialog==null){
+            yesOrNoDialog = new YesOrNoDialog(MainActivity.this);
+            yesOrNoDialog.setTitle("Warm Tip");
+            yesOrNoDialog.setMessage("Connect the device or not?");
+            yesOrNoDialog.setYesOnclickListener("Yes", new YesOrNoDialog.onYesOnclickListener() {
+                @Override
+                public void onYesClick() {
+                    startActivity(new Intent(MainActivity.this, BluetoothActivity.class));
+                    yesOrNoDialog.dismiss();
+                }
+            });
+            yesOrNoDialog.setNoOnclickListener("NO", new YesOrNoDialog.onNoOnclickListener() {
+                @Override
+                public void onNoClick() {
+                    yesOrNoDialog.dismiss();
+                }
+            });
+        }
+
+        yesOrNoDialog.show();
     }
 
     @Override

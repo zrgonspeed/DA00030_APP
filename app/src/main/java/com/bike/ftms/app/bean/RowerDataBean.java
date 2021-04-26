@@ -22,6 +22,7 @@ public class RowerDataBean extends LitePalSupport {
     private int calorie;
     private int calories_hr;
     private String note;
+    private long date;
 
     public RowerDataBean() {
     }
@@ -136,5 +137,13 @@ public class RowerDataBean extends LitePalSupport {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
     }
 }

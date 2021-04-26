@@ -10,6 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.utils.Logger;
+import com.bike.ftms.app.utils.TimeStringUtil;
+
+import java.util.List;
 
 /**
  * @Description
@@ -20,10 +25,14 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     private OnItemClickListener onItemClickListener;
     private OnItemDeleteListener onItemDeleteListener;
     private boolean isShowDelete = false;
+    private List<RowerDataBean> rowerDataBeanList;
+
+    public WorkoutsAdapter(List<RowerDataBean> rowerDataBeanList) {
+        this.rowerDataBeanList = rowerDataBeanList;
+    }
 
     @NonNull
     @Override
-
     public WorkoutsAdapter.WorkoutsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workouts, parent, false);
         return new WorkoutsViewHolder(view);
@@ -31,6 +40,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     @Override
     public void onBindViewHolder(@NonNull WorkoutsAdapter.WorkoutsViewHolder holder, int position) {
+        RowerDataBean bean = rowerDataBeanList.get(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,11 +58,19 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         } else {
             holder.ivDelete.setVisibility(View.GONE);
         }
+        if (bean.getNote() != null) {
+            holder.ivNote.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivNote.setVisibility(View.GONE);
+        }
+        holder.tvDate.setText(TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd HH:mm:ss"));
+        holder.tvDistance.setText(bean.getDistance()+"M");
+        holder.tvTime.setText(TimeStringUtil.getSToMinSecValue(bean.getTime()));
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return rowerDataBeanList.size();
     }
 
     public interface OnItemClickListener {

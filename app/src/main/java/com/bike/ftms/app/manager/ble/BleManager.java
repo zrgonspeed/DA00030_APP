@@ -24,6 +24,7 @@ import com.bike.ftms.app.bean.FormatBean;
 import com.bike.ftms.app.bean.MyScanResult;
 import com.bike.ftms.app.bean.RowerDataBean;
 import com.bike.ftms.app.common.RowerDataParam;
+import com.bike.ftms.app.serial.SerialCommand;
 import com.bike.ftms.app.serial.SerialData;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.ByteArrTransUtil;
@@ -45,6 +46,7 @@ public class BleManager {
     public final String uuid = "00001826-0000-1000-8000-00805f9b34fb";
     public final String uuidHeartbeat = "0000180d-0000-1000-8000-00805f9b34fb";
     public final String uuidSendData = "0000ffe5-0000-1000-8000-00805f9b34fb";
+    RowerDataBean rowerDataBean;
 
     private BleManager() {
     }
@@ -77,8 +79,8 @@ public class BleManager {
     private final long SCAN_MAX_COUNT = 20;     //扫描的设备个数限制（停止扫描）
     private final long SCAN_PERIOD = 60000;     //扫描设备时间限制
     private boolean setBleDataInx = false;
-    private boolean isToExamine = true;
-    private boolean isSendVerifyData = true;
+    private boolean isToExamine = false;
+    private boolean isSendVerifyData = false;
     private boolean isScanHrDevice = false;//是否扫描腰带设备
     private MyScanResult connectScanResult;
     private MyScanResult connectHrScanResult;
@@ -279,8 +281,8 @@ public class BleManager {
             if (position >= 0 && position < getScanResults().size()) {
                 getScanResults().get(position).setConnectState(2);
                 if (!isScanHrDevice) {
+                    rowerDataBean = new RowerDataBean();
                     connectScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
-
                     cleanBleDataInx();
                     //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
                     mBluetoothGatt = getScanResults().get(position).getScanResult().getDevice()
@@ -458,14 +460,11 @@ public class BleManager {
                 if (characteristic.getValue()[2] == 0x40 && characteristic.getValue()[3] == 0x01) {
                     isToExamine = true;
                 }
-                if (characteristic.getValue()[1] == 0x21 && (characteristic.getValue()[2] == 0x01 || characteristic.getValue()[2] == 0x00 && isToExamine)) {
-                    sendRespondData(characteristic.getValue());
-                    if (characteristic.getValue()[2] == 0x00) {
-                        rowerDataBean.setDrag(resolveDate(characteristic.getValue(), 4, 2));
-                    }
-                    if (characteristic.getValue()[2] == 0x01) {
-                        rowerDataBean.setInterval(resolveDate(characteristic.getValue(), 4, 2));
-                    }
+                byte[] ResultBuf = new byte[SerialCommand.RECEIVE_PACK_LEN_MAX];
+                if (characteristic.getValue()[1] == 0x41 && (characteristic.getValue()[2] == 0x02)) {
+                    //sendRespondData(characteristic.getValue());
+                    rowerDataBean.setDrag(resolveDate(characteristic.getValue(), 3, 2));
+                    rowerDataBean.setInterval(resolveDate(characteristic.getValue(), 5, 2));
                 }
             }
 
@@ -748,12 +747,10 @@ public class BleManager {
      * @param bytes 指令
      */
     private void sendDescriptorByte(byte[] bytes) {
-        //Logger.d(TAG, ",Send:" + ConvertData.byteArrayToHexString(bytes, bytes.length));
         if (mBluetoothGattCharacteristic != null) {
             mBluetoothGattCharacteristic.setValue(bytes);
             boolean r = mBluetoothGatt.writeCharacteristic(mBluetoothGattCharacteristic);
             Logger.d(TAG, mBluetoothGattCharacteristic.getUuid() + ",Send:" + ConvertData.byteArrayToHexString(bytes, bytes.length) + r);
-
         }
     }
 
@@ -960,9 +957,10 @@ public class BleManager {
         isToExamine = false;
     }
 
-    RowerDataBean rowerDataBean = new RowerDataBean();
+    int i = 0;
 
     private void setRunData(byte[] data) {
+        i++;
         if (onRunDataListener == null) {
             return;
         }
@@ -972,7 +970,7 @@ public class BleManager {
         rowerDataBean.setFive_hundred(RowerDataParam.INSTANTANEOUS_PACE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.INSTANTANEOUS_PACE_INX, RowerDataParam.INSTANTANEOUS_PACE_LEN));
         rowerDataBean.setCalorie(RowerDataParam.TOTAL_ENERGY_INX == -1 ? 0 : resolveDate(data, RowerDataParam.TOTAL_ENERGY_INX, RowerDataParam.TOTAL_ENERGY_LEN));
         rowerDataBean.setCalories_hr(RowerDataParam.ENERGY_PER_HOUR_INX == -1 ? 0 : resolveDate(data, RowerDataParam.ENERGY_PER_HOUR_INX, RowerDataParam.ENERGY_PER_HOUR_LEN));
-        rowerDataBean.setDrag(RowerDataParam.ENERGY_PER_MINUTE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.ENERGY_PER_MINUTE_INX, RowerDataParam.ENERGY_PER_MINUTE_LEN));
+        //rowerDataBean.setDrag(RowerDataParam.ENERGY_PER_MINUTE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.ENERGY_PER_MINUTE_INX, RowerDataParam.ENERGY_PER_MINUTE_LEN));
         if (!isHeartbeatConnect) {
             rowerDataBean.setHeart_rate(RowerDataParam.HEART_RATE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.HEART_RATE_INX, RowerDataParam.HEART_RATE_LEN));
         }
@@ -985,7 +983,11 @@ public class BleManager {
             rowerDataBean.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveDate(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
         }
         rowerDataBean.setInterval(RowerDataParam.RESISTANCE_LEVEL_INX == -1 ? 0 : resolveDate(data, RowerDataParam.RESISTANCE_LEVEL_INX, RowerDataParam.RESISTANCE_LEVEL_LEN));
+        rowerDataBean.setDate(System.currentTimeMillis());
         onRunDataListener.onRunData(rowerDataBean);
+        /*if (i % 10 == 0) {
+           Logger.d(TAG,"保存："+rowerDataBean.save());
+        }*/
     }
 
     private void setHrData(byte[] data) {

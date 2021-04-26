@@ -97,6 +97,7 @@
                 android:text="@string/workouts_result"
                 android:textColor="@color/color_white"
                 android:textSize="16sp"
+                android:layout_marginRight="10dp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -277,7 +278,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
                 android:layout_marginRight="60dp"
-                android:layout_toLeftOf="@id/tv_time"
+                android:layout_toLeftOf="@id/tv_title_time"
                 android:drawableRight="@mipmap/boat2"
                 android:gravity="center"
                 android:text="TYPE："
@@ -286,7 +287,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tv_time"
+                android:id="@+id/tv_title_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -391,6 +392,7 @@
             android:padding="10dp">
 
             <TextView
+                android:id="@+id/tv_info_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -401,6 +403,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_info_meters"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -412,6 +415,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_info_five_hundred"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -423,6 +427,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_info_cals"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -434,6 +439,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_info_watts"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -445,6 +451,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_info_cal_hr"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -456,6 +463,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_info_sm"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -483,6 +491,7 @@
             android:padding="5dp">
 
             <EditText
+                android:id="@+id/edt_info_note"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"

@@ -1,6 +1,8 @@
 package com.bike.ftms.app.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * 时间转换为字符串
@@ -225,6 +227,16 @@ public class TimeStringUtil {
         return timeValue;
     }
 
-
+    /**
+     *
+     * @param time  1541569323155
+     * @param pattern yyyy-MM-dd HH:mm:ss
+     * @return 2018-11-07 13:42:03
+     */
+    public static String getDate2String(long time, String pattern) {
+        Date date = new Date(time);
+        SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.getDefault());
+        return format.format(date);
+    }
 
 }

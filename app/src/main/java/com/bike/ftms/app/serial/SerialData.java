@@ -44,7 +44,7 @@ public class SerialData {
      输出：解包结果，为TRUE表示得到一个正确的数据包，为FALSE表示得到一个校验错误的数据包
      功能：将接收到的未经处理的数据包进行解包，解包后计算CRC校验和。
      **********************************************************************************/
-    protected static synchronized int comUnPackage(byte[] pSrcBuf, byte[] pResultBuf, int rawPackageLen) {
+    public static synchronized int comUnPackage(byte[] pSrcBuf, byte[] pResultBuf, int rawPackageLen) {
         int unPackageBufLen;
         short receivedCRC;
         int CRCByCal;
