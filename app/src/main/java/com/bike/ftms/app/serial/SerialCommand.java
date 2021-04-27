@@ -13,11 +13,11 @@ public class SerialCommand {
     /**
      * 数据包的包头
      */
-    public final static int PACK_FRAME_HEADER = 0xFF;
+    public final static int PACK_FRAME_HEADER = 0xFE;
     /**
      * 数据包的包尾
      */
-    public final static int PACK_FRAME_END = 0xFE;
+    public final static int PACK_FRAME_END = 0xFF;
 
     /**
      * 数据包内最大值(不包括包头与包尾)

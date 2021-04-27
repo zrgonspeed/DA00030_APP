@@ -82,6 +82,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     private boolean isEdit = false;
     private List<RowerDataBean> rowerDataBeanList = new ArrayList<>();
     private int clickPosition;
+    private int deletePosition;
 
     public WorkoutsFragment() {
     }
@@ -121,7 +122,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser&&llWorkouts.getVisibility()==View.VISIBLE) {
+        if (isVisibleToUser && llWorkouts.getVisibility() == View.VISIBLE) {
             rowerDataBeanList.clear();
             rowerDataBeanList.addAll(LitePal.findAll(RowerDataBean.class));
             workoutsAdapter.notifyDataSetChanged();
@@ -150,6 +151,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
                 int i = LitePal.updateAll(RowerDataBean.class, contentValues, "date=?", String.valueOf(rowerDataBeanList.get(clickPosition).getDate()));
                 if (i == 1) {
                     rowerDataBeanList.get(clickPosition).setNote(edtInfoNote.getText().toString());
+                    workoutsAdapter.notifyItemChanged(clickPosition);
                     Toast.makeText(getContext(), "Save successfully", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getContext(), "Save fail", Toast.LENGTH_LONG).show();
@@ -164,6 +166,16 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
                 rlDelete.setVisibility(View.GONE);
                 break;
             case R.id.tv_ok:
+                tvEdit.performClick();
+                int j = LitePal.deleteAll(RowerDataBean.class, "date=?", String.valueOf(rowerDataBeanList.get(deletePosition).getDate()));
+                if (j == 1) {
+                    rowerDataBeanList.remove(deletePosition);
+                    workoutsAdapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(), "Delete successfully", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), "Delete fail", Toast.LENGTH_LONG).show();
+                }
+
                 rlDelete.setVisibility(View.GONE);
                 break;
         }
@@ -211,7 +223,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
 
     @Override
     public void onItemDeleteListener(int position) {
-        LitePal.deleteAll(RowerDataBean.class, "date=?", String.valueOf(rowerDataBeanList.get(clickPosition).getDate()));
+        deletePosition = position;
         rlDelete.setVisibility(View.VISIBLE);
     }
 

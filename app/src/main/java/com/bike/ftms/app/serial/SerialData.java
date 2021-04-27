@@ -107,7 +107,7 @@ public class SerialData {
      功能：将待发送的数据打包成最终要发送的数据。先求包头和校验码之间(不包含包头和校验码)
      的校验码，追加到包尾，接着将FD到FF之间的数据进行拆分，最后求出数据包的长度。
      **********************************************************************************/
-    protected static synchronized byte comPackage(byte[] pSrcBuf, byte[] pResultBuf, int len) {
+    public static synchronized byte comPackage(byte[] pSrcBuf, byte[] pResultBuf, int len) {
         short crc;
         byte resultLen;
         crc = calCRCByTable(ConvertData.subBytes(pSrcBuf, 1, pSrcBuf.length - 1), len - 1); // 校验码

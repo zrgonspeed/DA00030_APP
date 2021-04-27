@@ -24,6 +24,7 @@ import com.bike.ftms.app.fragment.HomeFragment;
 import com.bike.ftms.app.fragment.WorkoutsFragment;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
+import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.HorizontalViewPager;
 import com.bike.ftms.app.widget.YesOrNoDialog;
 
@@ -49,6 +50,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     private WorkoutsFragment workoutsFragment;
     private long exitTime = 0;
     private YesOrNoDialog yesOrNoDialog;
+    private boolean isOnPause = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,17 +128,23 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected void onPause() {
         super.onPause();
+        isOnPause = true;
         m_wklk.release();//解除保持唤醒
-        BleManager.getInstance().setonRunDataListener(null);
+        //BleManager.getInstance().setonRunDataListener(null);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        isOnPause = false;
         m_wklk.acquire(); //设置保持唤醒
         BleManager.getInstance().setonRunDataListener(this);
         if (!BleManager.isConnect) {
             showConnectHintDialog();
+        } else {
+            if (yesOrNoDialog != null && yesOrNoDialog.isShowing()) {
+                yesOrNoDialog.dismiss();
+            }
         }
 
     }
@@ -144,6 +152,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public void onRunData(RowerDataBean rowerDataBean) {
+        if (isOnPause){
+            return;
+        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -152,8 +163,27 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         });
     }
 
+    @Override
+    public void disConnect() {
+        if (isOnPause){
+            return;
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showConnectHintDialog();
+            }
+        });
+    }
+
+    @Override
+    public void onExit() {
+        finish();
+        System.exit(0);
+    }
+
     private void showConnectHintDialog() {
-        if (yesOrNoDialog==null){
+        if (yesOrNoDialog == null) {
             yesOrNoDialog = new YesOrNoDialog(MainActivity.this);
             yesOrNoDialog.setTitle("Warm Tip");
             yesOrNoDialog.setMessage("Connect the device or not?");
@@ -177,14 +207,17 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Logger.d("onKeyDown");
         if (workoutsFragment.onKeyDown(keyCode, event)) {
             exitTime = 0;
             return false;
         }
+        Logger.d("onKeyDown1");
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             exit();
             return false;
         }
+        Logger.d("onKeyDown2");
         return super.onKeyDown(keyCode, event);
     }
 

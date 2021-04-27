@@ -9,4 +9,8 @@ import com.bike.ftms.app.bean.RowerDataBean;
  */
 public interface OnRunDataListener {
     void onRunData(RowerDataBean rowerDataBean);
+
+    void disConnect();
+
+    void onExit();
 }

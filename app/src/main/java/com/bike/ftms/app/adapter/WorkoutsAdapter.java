@@ -58,7 +58,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         } else {
             holder.ivDelete.setVisibility(View.GONE);
         }
-        if (bean.getNote() != null) {
+        if (bean.getNote() != null&&!"".equals(bean.getNote())) {
             holder.ivNote.setVisibility(View.VISIBLE);
         } else {
             holder.ivNote.setVisibility(View.GONE);
