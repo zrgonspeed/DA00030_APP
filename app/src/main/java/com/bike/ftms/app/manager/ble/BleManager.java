@@ -47,6 +47,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
     public final String uuid = "00001826-0000-1000-8000-00805f9b34fb";
     public final String uuidHeartbeat = "0000180d-0000-1000-8000-00805f9b34fb";
     public final String uuidSendData = "0000ffe5-0000-1000-8000-00805f9b34fb";
+    private final byte RUN_STATUS_RUNNING = 0x0D;
+    private final byte RUN_STATUS_STOP = 0x0F;
     RowerDataBean rowerDataBean;
 
     public static boolean isConnect;  //是否连接
@@ -80,6 +82,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private final String isHrConnectTag = "isHrConnect";
     private CustomTimer isVerifyConnectTimer;
     private final String isVerifyConnectTag = "isVerifyConnect";
+    private byte runStatus = RUN_STATUS_STOP;
     private Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper()));
 
     private BleManager() {
@@ -193,15 +196,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
             if (isScanHrDevice) {
                 scanFilter = new ScanFilter.Builder().setServiceUuid(
                         new ParcelUuid(UUID.fromString(uuidHeartbeat))).build();
+                scanFilters.add(scanFilter);
+                mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
             } else {
-                scanFilter = new ScanFilter.Builder().setServiceUuid(
-                        new ParcelUuid(UUID.fromString(uuid))).build();
+               /* scanFilter = new ScanFilter.Builder().setServiceUuid(
+                        new ParcelUuid(UUID.fromString(uuid))).build();*/
+                mBluetoothAdapter.getBluetoothLeScanner().startScan(mScanCallback);
             }
-
-            scanFilters.add(scanFilter);
-
-            mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
-            //mBluetoothAdapter.getBluetoothLeScanner().startScan(mScanCallback);
             Logger.i(TAG, "开始扫描设备");
         }
     }
@@ -365,6 +366,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 }
                 // mBluetoothGatt.discoverServices();//
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                rowerDataBean = new RowerDataBean();
+                onRunDataListener.onRunData(rowerDataBean);
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
                         myScanResult.setConnectState(0);
@@ -474,9 +477,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 setBleDataInx(new byte[]{characteristic.getValue()[0], characteristic.getValue()[1]});
                 setRunData(characteristic.getValue());
             }
-            if (characteristic.getUuid().toString().contains("2ad3") && characteristic.getValue()[1] == 0x0F && isToExamine) {//停止运动
-                rowerDataBean.save();
-                rowerDataBean = new RowerDataBean();
+            if (characteristic.getUuid().toString().contains("2ad3") && isToExamine) {
+                if (characteristic.getValue()[1] == RUN_STATUS_STOP && runStatus != RUN_STATUS_STOP) {//停止运动
+                    rowerDataBean.save();
+                    rowerDataBean = new RowerDataBean();
+                }
+                runStatus = characteristic.getValue()[1];
+
+
             }
             if (characteristic.getUuid().toString().contains("ffe0")) {//校对CRC码
                 if (characteristic.getValue()[1] == 0x40 && characteristic.getValue()[2] == 0x01) {
@@ -492,11 +500,17 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     }
 
                 }
-                if (characteristic.getValue()[1] == 0x41 && characteristic.getValue()[2] == 0x02&& isToExamine) {
+                if (characteristic.getValue()[1] == 0x41 && characteristic.getValue()[2] == 0x02 && isToExamine) {
                     sendRespondData(characteristic.getValue());
-                    rowerDataBean.setDrag(resolveDate(characteristic.getValue(), 3, 2));
-                    rowerDataBean.setInterval(resolveDate(characteristic.getValue(), 5, 2));
-                    if (onRunDataListener!=null){
+                    if (runStatus == RUN_STATUS_RUNNING) {
+                        rowerDataBean.setDrag(resolveDate(characteristic.getValue(), 3, 2));
+                        rowerDataBean.setInterval(resolveDate(characteristic.getValue(), 5, 2));
+                    } else {
+                        rowerDataBean.setDrag(0);
+                        rowerDataBean.setInterval(0);
+                    }
+
+                    if (onRunDataListener != null) {
                         onRunDataListener.onRunData(rowerDataBean);
                     }
                 }
@@ -707,10 +721,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
             BluetoothGattService gattService;
             if (!isScanHrDevice) {
                 gattService = mBluetoothGatt.getService(UUID.fromString(uuid));
-                if (gattService==null){
+                if (gattService == null) {
                     onRunDataListener.onExit();
                 }
-                for (BluetoothGattCharacteristic gattCharacteristic :  mBluetoothGatt.getService(UUID.fromString(uuidSendData)).getCharacteristics()) {
+                for (BluetoothGattCharacteristic gattCharacteristic : mBluetoothGatt.getService(UUID.fromString(uuidSendData)).getCharacteristics()) {
                     if (gattCharacteristic.getUuid().toString().contains("ffe9")) {
                         mBluetoothGattCharacteristic = gattCharacteristic;
                         Logger.d(TAG, "mBluetoothGattCharacteristic=" + mBluetoothGattCharacteristic);
@@ -793,10 +807,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * @param bytes 指令
      */
     private boolean sendDescriptorByte(byte[] bytes) {
-        boolean r=false;
+        boolean r = false;
         if (mBluetoothGattCharacteristic != null) {
             mBluetoothGattCharacteristic.setValue(bytes);
-             r = mBluetoothGatt.writeCharacteristic(mBluetoothGattCharacteristic);
+            r = mBluetoothGatt.writeCharacteristic(mBluetoothGattCharacteristic);
         }
         Logger.d(TAG, mBluetoothGattCharacteristic.getUuid() + ",Send:" + ConvertData.byteArrayToHexString(bytes, bytes.length) + r);
         return false;
@@ -995,7 +1009,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * @param data
      */
     private void setRunData(byte[] data) {
-        if (onRunDataListener == null) {
+        if (onRunDataListener == null || runStatus == RUN_STATUS_STOP) {
             return;
         }
         rowerDataBean.setStrokes(RowerDataParam.STROKE_COUNT_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_COUNT_INX, RowerDataParam.STROKE_COUNT_LEN));
@@ -1016,7 +1030,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         } else {
             rowerDataBean.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveDate(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
         }
-        rowerDataBean.setInterval(RowerDataParam.RESISTANCE_LEVEL_INX == -1 ? 0 : resolveDate(data, RowerDataParam.RESISTANCE_LEVEL_INX, RowerDataParam.RESISTANCE_LEVEL_LEN));
+        //rowerDataBean.setInterval(RowerDataParam.RESISTANCE_LEVEL_INX == -1 ? 0 : resolveDate(data, RowerDataParam.RESISTANCE_LEVEL_INX, RowerDataParam.RESISTANCE_LEVEL_LEN));
         rowerDataBean.setDate(System.currentTimeMillis());
         onRunDataListener.onRunData(rowerDataBean);
     }
@@ -1058,7 +1072,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     }
 
     private void sendRespondData(byte[] data) {
-        byte[] bytes = new byte[data.length+1];
+        byte[] bytes = new byte[data.length + 1];
         bytes[0] = (byte) SerialCommand.PACK_FRAME_HEADER;
         bytes[1] = (byte) 0x00;
         System.arraycopy(data, 1, bytes, 2, data.length - 4);
