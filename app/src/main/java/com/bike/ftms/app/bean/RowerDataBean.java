@@ -23,6 +23,9 @@ public class RowerDataBean extends LitePalSupport {
     private int calories_hr;
     private String note;
     private long date;
+    private long setTime = 0;//间歇模式设定时间
+    private long setDistance = 0;//间歇模式设定距离
+    private long setCalorie = 0;//间歇模式设定卡路里
 
     public RowerDataBean() {
     }
@@ -145,5 +148,29 @@ public class RowerDataBean extends LitePalSupport {
 
     public void setDate(long date) {
         this.date = date;
+    }
+
+    public long getSetTime() {
+        return setTime;
+    }
+
+    public void setSetTime(long setTime) {
+        this.setTime = setTime;
+    }
+
+    public long getSetDistance() {
+        return setDistance;
+    }
+
+    public void setSetDistance(long setDistance) {
+        this.setDistance = setDistance;
+    }
+
+    public long getSetCalorie() {
+        return setCalorie;
+    }
+
+    public void setSetCalorie(long setCalorie) {
+        this.setCalorie = setCalorie;
     }
 }

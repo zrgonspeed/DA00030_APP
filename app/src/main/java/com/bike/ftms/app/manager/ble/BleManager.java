@@ -83,6 +83,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private CustomTimer isVerifyConnectTimer;
     private final String isVerifyConnectTag = "isVerifyConnect";
     private byte runStatus = RUN_STATUS_STOP;
+    private long setTime = 0;//间歇模式设定时间
+    private long setDistance = 0;//间歇模式设定距离
+    private long setCalorie = 0;//间歇模式设定卡路里
     private Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper()));
 
     private BleManager() {
@@ -292,7 +295,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 if (!isScanHrDevice) {
                     rowerDataBean = new RowerDataBean();
                     connectScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
-                    cleanBleDataInx();
+                    reset();
                     //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
                     mBluetoothGatt = getScanResults().get(position).getScanResult().getDevice()
                             .connectGatt(MyApplication.getContext(), true, mGattCallback);
@@ -503,8 +506,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 if (characteristic.getValue()[1] == 0x41 && characteristic.getValue()[2] == 0x02 && isToExamine) {
                     sendRespondData(characteristic.getValue());
                     if (runStatus == RUN_STATUS_RUNNING) {
-                        rowerDataBean.setDrag(resolveDate(characteristic.getValue(), 3, 2));
-                        rowerDataBean.setInterval(resolveDate(characteristic.getValue(), 5, 2));
+                        rowerDataBean.setDrag(resolveDate(characteristic.getValue(), RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
+                        rowerDataBean.setInterval(resolveDate(characteristic.getValue(), RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
+                        setTime = resolveDate(characteristic.getValue(), RowerDataParam.SET_TIME_INX, RowerDataParam.SET_TIME_LEN);
+                        setDistance = resolveDate(characteristic.getValue(), RowerDataParam.SET_DISTANCE_INX, RowerDataParam.SET_DISTANCE_LEN);
+                        setCalorie = resolveDate(characteristic.getValue(), RowerDataParam.SET_CALORIE_INX, RowerDataParam.SET_CALORIE_LEN);
+                        rowerDataBean.setSetTime(setTime);
+                        rowerDataBean.setSetDistance(setDistance);
+                        rowerDataBean.setSetCalorie(setCalorie);
+                        Logger.d("setDistance=" + setDistance + ",setTime=" + setTime + ",setCalorie=" + setCalorie);
                     } else {
                         rowerDataBean.setDrag(0);
                         rowerDataBean.setInterval(0);
@@ -981,7 +991,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     /**
      * 恢复默认值
      */
-    private void cleanBleDataInx() {
+    private void reset() {
         RowerDataParam.STROKE_RATE_INX = -1;
         RowerDataParam.STROKE_COUNT_INX = -1;
         RowerDataParam.AVERAGE_STROKE_RATE_INX = -1;
@@ -1001,6 +1011,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
         setBleDataInx = false;
         isSendVerifyData = false;
         isToExamine = false;
+        setCalorie = 0;
+        setDistance = 0;
+        setTime = 0;
     }
 
     /**
@@ -1012,6 +1025,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (onRunDataListener == null || runStatus == RUN_STATUS_STOP) {
             return;
         }
+        Logger.d("Calorie=" + resolveDate(data, RowerDataParam.TOTAL_ENERGY_INX, RowerDataParam.TOTAL_ENERGY_LEN)
+                + ",Time=" + resolveDate(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN)
+                + ",Distance=" + resolveDate(data, RowerDataParam.TOTAL_DISTANCE_INX, RowerDataParam.TOTAL_DISTANCE_LEN));
         rowerDataBean.setStrokes(RowerDataParam.STROKE_COUNT_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_COUNT_INX, RowerDataParam.STROKE_COUNT_LEN));
         rowerDataBean.setDistance(RowerDataParam.TOTAL_DISTANCE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.TOTAL_DISTANCE_INX, RowerDataParam.TOTAL_DISTANCE_LEN));
         rowerDataBean.setSm(RowerDataParam.STROKE_RATE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_RATE_INX, RowerDataParam.STROKE_RATE_LEN));
@@ -1025,7 +1041,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         rowerDataBean.setWatts(RowerDataParam.INSTANTANEOUS_POWER_INX == -1 ? 0 : resolveDate(data, RowerDataParam.INSTANTANEOUS_POWER_INX, RowerDataParam.INSTANTANEOUS_POWER_LEN));
         rowerDataBean.setAve_watts(RowerDataParam.AVERAGE_POWER_INX == -1 ? 0 : resolveDate(data, RowerDataParam.AVERAGE_POWER_INX, RowerDataParam.AVERAGE_POWER_LEN));
         rowerDataBean.setAve_five_hundred(RowerDataParam.AVERAGE_PACE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.AVERAGE_PACE_INX, RowerDataParam.AVERAGE_PACE_LEN));
-        if (RowerDataParam.ELAPSED_TIME_INX != -1 && resolveDate(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN) != 0) {
+        if (RowerDataParam.REMAINING_TIME_INX == -1 || resolveDate(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN) == 0) {
             rowerDataBean.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveDate(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
         } else {
             rowerDataBean.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveDate(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));

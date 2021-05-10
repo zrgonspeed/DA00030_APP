@@ -46,6 +46,21 @@ public class TimeStringUtil {
         return String.format("%02d:%02d", minute, second);
     }
     /**
+     * 将秒转换为00:00(分钟:秒);
+     * 分钟数会突破99
+     *
+     * @param value 毫秒
+     * @return
+     */
+    public static String getSToHourMinSecValue(float value) {
+        long time = (long) value;
+        long minute = time / 60;
+        long hour = minute / 60;
+        long second = time % 60;
+        minute %= 60;
+        return String.format("%02d:%02d:%02d",hour, minute, second);
+    }
+    /**
      * 将毫秒转换为00:00(分钟:秒);
      * 分钟数会突破99
      *

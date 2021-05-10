@@ -210,15 +210,30 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     private void notifyInfoData() {
         RowerDataBean bean = rowerDataBeanList.get(clickPosition);
         tvInfoTitle.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
-        tvInfoTime.setText(TimeStringUtil.getSToMinSecValue(bean.getTime()));
-        tvTitleTime.setText(TimeStringUtil.getSToMinSecValue(bean.getTime()));
-        tvInfoMeters.setText(bean.getDistance() + "M");
+        if (bean.getSetTime()==0){
+            tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
+            tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
+        }else {
+            tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime()-bean.getTime()));
+            tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime()-bean.getTime()));
+        }
+
+        if (bean.getSetDistance()==0){
+            tvInfoMeters.setText(bean.getDistance() + "M");
+        }else {
+            tvInfoMeters.setText((bean.getSetDistance()-bean.getDistance()) + "M");
+        }
         tvInfoFiveHundred.setText(TimeStringUtil.getSToMinSecValue(bean.getFive_hundred()));
-        tvInfoCals.setText(String.valueOf(bean.getCalorie()));
+        if (bean.getSetCalorie()==0){
+            tvInfoCals.setText(String.valueOf(bean.getCalorie()));
+        }else {
+            tvInfoCals.setText(String.valueOf(bean.getSetCalorie()-bean.getCalorie()));
+        }
         tvInfoWatts.setText(String.valueOf(bean.getWatts()));
         tvInfoCalHr.setText(String.valueOf(bean.getCalories_hr()));
         tvInfoSm.setText(String.valueOf(bean.getSm()));
         edtInfoNote.setText(bean.getNote() == null ? "" : bean.getNote());
+
     }
 
     @Override
