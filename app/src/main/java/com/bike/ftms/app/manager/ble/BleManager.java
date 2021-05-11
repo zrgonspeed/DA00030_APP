@@ -1025,9 +1025,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (onRunDataListener == null || runStatus == RUN_STATUS_STOP) {
             return;
         }
-        Logger.d("Calorie=" + resolveDate(data, RowerDataParam.TOTAL_ENERGY_INX, RowerDataParam.TOTAL_ENERGY_LEN)
-                + ",Time=" + resolveDate(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN)
-                + ",Distance=" + resolveDate(data, RowerDataParam.TOTAL_DISTANCE_INX, RowerDataParam.TOTAL_DISTANCE_LEN));
         rowerDataBean.setStrokes(RowerDataParam.STROKE_COUNT_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_COUNT_INX, RowerDataParam.STROKE_COUNT_LEN));
         rowerDataBean.setDistance(RowerDataParam.TOTAL_DISTANCE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.TOTAL_DISTANCE_INX, RowerDataParam.TOTAL_DISTANCE_LEN));
         rowerDataBean.setSm(RowerDataParam.STROKE_RATE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_RATE_INX, RowerDataParam.STROKE_RATE_LEN));

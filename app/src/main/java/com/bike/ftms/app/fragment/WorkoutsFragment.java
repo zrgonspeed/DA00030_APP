@@ -124,7 +124,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && llWorkouts.getVisibility() == View.VISIBLE) {
             rowerDataBeanList.clear();
-            rowerDataBeanList.addAll(LitePal.findAll(RowerDataBean.class));
+            rowerDataBeanList.addAll(LitePal.order("date desc").find(RowerDataBean.class));
             workoutsAdapter.notifyDataSetChanged();
         }
     }
@@ -210,24 +210,24 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     private void notifyInfoData() {
         RowerDataBean bean = rowerDataBeanList.get(clickPosition);
         tvInfoTitle.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
-        if (bean.getSetTime()==0){
+        if (bean.getSetTime() == 0) {
             tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
             tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-        }else {
-            tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime()-bean.getTime()));
-            tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime()-bean.getTime()));
+        } else {
+            tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime() - bean.getTime()));
+            tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime() - bean.getTime()));
         }
 
-        if (bean.getSetDistance()==0){
+        if (bean.getSetDistance() == 0) {
             tvInfoMeters.setText(bean.getDistance() + "M");
-        }else {
-            tvInfoMeters.setText((bean.getSetDistance()-bean.getDistance()) + "M");
+        } else {
+            tvInfoMeters.setText((bean.getSetDistance() - bean.getDistance()) + "M");
         }
         tvInfoFiveHundred.setText(TimeStringUtil.getSToMinSecValue(bean.getFive_hundred()));
-        if (bean.getSetCalorie()==0){
+        if (bean.getSetCalorie() == 0) {
             tvInfoCals.setText(String.valueOf(bean.getCalorie()));
-        }else {
-            tvInfoCals.setText(String.valueOf(bean.getSetCalorie()-bean.getCalorie()));
+        } else {
+            tvInfoCals.setText(String.valueOf(bean.getSetCalorie() - bean.getCalorie()));
         }
         tvInfoWatts.setText(String.valueOf(bean.getWatts()));
         tvInfoCalHr.setText(String.valueOf(bean.getCalories_hr()));
