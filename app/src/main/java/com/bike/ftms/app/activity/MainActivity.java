@@ -1,15 +1,11 @@
 package com.bike.ftms.app.activity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -73,7 +69,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected void initView() {
         List<Fragment> homeFragments = new ArrayList<>();
-        homeFragment = new HomeFragment(ivPage);
+        homeFragment = new HomeFragment();
         workoutsFragment = new WorkoutsFragment();
         homeFragments.add(homeFragment);
         homeFragments.add(workoutsFragment);
@@ -91,9 +87,11 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             public void onPageSelected(int position) {
                 if (position == 0) {
                     vp.setSetIntercept(true);
+                    ivPage.setImageResource(R.mipmap.page1);
                     m_wklk.acquire(); //设置保持唤醒
                 } else {
                     vp.setSetIntercept(false);
+                    ivPage.setImageResource(R.mipmap.page2);
                     m_wklk.release();//解除保持唤醒
                 }
             }
@@ -152,7 +150,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public void onRunData(RowerDataBean rowerDataBean) {
-        if (isOnPause){
+        if (isOnPause) {
             return;
         }
         runOnUiThread(new Runnable() {
@@ -165,7 +163,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public void disConnect() {
-        if (isOnPause){
+        if (isOnPause) {
             return;
         }
         runOnUiThread(new Runnable() {

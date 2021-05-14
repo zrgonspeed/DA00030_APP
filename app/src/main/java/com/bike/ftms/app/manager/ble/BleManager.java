@@ -43,6 +43,14 @@ import java.util.UUID;
 
 public class BleManager implements CustomTimer.TimerCallBack {
     private String TAG = "BleManager";
+    private final byte IDLE_BEGIN = 0;
+    private final byte HEADER_DATA = 1;
+    private byte c_state = IDLE_BEGIN;
+    private short offset;
+    private byte[] readDataBuffer = new byte[SerialCommand.RECEIVE_PACK_LEN_MAX];
+    private int rawPackageLen;
+    private byte[] ResultBuf = new byte[SerialCommand.RECEIVE_PACK_LEN_MAX];
+
     private static BleManager instance;
     public final String uuid = "00001826-0000-1000-8000-00805f9b34fb";
     public final String uuidHeartbeat = "0000180d-0000-1000-8000-00805f9b34fb";
@@ -472,59 +480,41 @@ public class BleManager implements CustomTimer.TimerCallBack {
             super.onCharacteristicChanged(gatt, characteristic);
             isConnectTimer.setmAllTime(0L);
             Logger.i(TAG, characteristic.getUuid() + ",onCharacteristicChanged::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
-            if (!isSendVerifyData) {
-                isSendVerifyData = true;
-                sendVerifyData();
-            }
-            if (characteristic.getUuid().toString().contains("2ad1") && isToExamine) {
-                setBleDataInx(new byte[]{characteristic.getValue()[0], characteristic.getValue()[1]});
-                setRunData(characteristic.getValue());
-            }
-            if (characteristic.getUuid().toString().contains("2ad3") && isToExamine) {
-                if (characteristic.getValue()[1] == RUN_STATUS_STOP && runStatus != RUN_STATUS_STOP) {//停止运动
-                    rowerDataBean.save();
-                    rowerDataBean = new RowerDataBean();
-                }
-                runStatus = characteristic.getValue()[1];
-
-
-            }
-            if (characteristic.getUuid().toString().contains("ffe0")) {//校对CRC码
-                if (characteristic.getValue()[1] == 0x40 && characteristic.getValue()[2] == 0x01) {
-                    String[] dates = getCurDate().split("-");
-                    byte[] date = new byte[3];
-                    date[0] = (byte) Integer.parseInt(dates[0], 16);
-                    date[1] = (byte) Integer.parseInt(dates[1], 16);
-                    date[2] = (byte) Integer.parseInt(dates[2], 16);
-                    byte[] calCRCBytes = ConvertData.shortToBytes(SerialData.calCRCByTable(ConvertData.subBytes(date, 0, date.length), date.length));
-                    if (calCRCBytes[0] == characteristic.getValue()[3] && calCRCBytes[1] == characteristic.getValue()[4]) {
-                        isToExamine = true;
-                        isVerifyConnectTimer.closeTimer();
-                    }
-
-                }
-                if (characteristic.getValue()[1] == 0x41 && characteristic.getValue()[2] == 0x02 && isToExamine) {
-                    sendRespondData(characteristic.getValue());
-                    if (runStatus == RUN_STATUS_RUNNING) {
-                        rowerDataBean.setDrag(resolveDate(characteristic.getValue(), RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
-                        rowerDataBean.setInterval(resolveDate(characteristic.getValue(), RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
-                        setTime = resolveDate(characteristic.getValue(), RowerDataParam.SET_TIME_INX, RowerDataParam.SET_TIME_LEN);
-                        setDistance = resolveDate(characteristic.getValue(), RowerDataParam.SET_DISTANCE_INX, RowerDataParam.SET_DISTANCE_LEN);
-                        setCalorie = resolveDate(characteristic.getValue(), RowerDataParam.SET_CALORIE_INX, RowerDataParam.SET_CALORIE_LEN);
-                        rowerDataBean.setSetTime(setTime);
-                        rowerDataBean.setSetDistance(setDistance);
-                        rowerDataBean.setSetCalorie(setCalorie);
-                        Logger.d("setDistance=" + setDistance + ",setTime=" + setTime + ",setCalorie=" + setCalorie);
-                    } else {
-                        rowerDataBean.setDrag(0);
-                        rowerDataBean.setInterval(0);
-                    }
-
-                    if (onRunDataListener != null) {
-                        onRunDataListener.onRunData(rowerDataBean);
-                    }
+            byte[] data = characteristic.getValue();
+            for (int i = 0; i < data.length; i++) {
+                switch (c_state) {
+                    case IDLE_BEGIN:
+                        if ((data[i] & 0xFF) == SerialCommand.PACK_FRAME_HEADER) {
+                            readDataBuffer[offset] = data[i];
+                            offset++;
+                            c_state = HEADER_DATA;
+                        }
+                        break;
+                    case HEADER_DATA:
+                        if (offset > SerialCommand.RECEIVE_PACK_LEN_MAX) {
+                            reSet();
+                            break;
+                        }
+                        readDataBuffer[offset] = data[i];
+                        offset++;
+                        if ((data[i] & 0xFF) > SerialCommand.PACK_FRAME_MAX_DATA
+                                && (data[i] & 0xFF) != SerialCommand.PACK_FRAME_END) {
+                            reSet();
+                            break;
+                        }
+                        if ((data[i] & 0xFF) == SerialCommand.PACK_FRAME_END) {
+                            rawPackageLen = SerialData.comUnPackage(readDataBuffer, ResultBuf, offset);
+                            reSet();
+                            if (rawPackageLen > 0) {
+                                byte[] bytes = new byte[rawPackageLen];
+                                System.arraycopy(ResultBuf, 0, bytes, 0, rawPackageLen);
+                                rxDataPackage(bytes,characteristic.getUuid().toString());
+                            }
+                        }
+                        break;
                 }
             }
+
 
         }
 
@@ -816,15 +806,20 @@ public class BleManager implements CustomTimer.TimerCallBack {
      *
      * @param bytes 指令
      */
-    private boolean sendDescriptorByte(byte[] bytes) {
+    private boolean sendDescriptorByte(byte[] bytes, int len) {
         boolean r = false;
-        if (mBluetoothGattCharacteristic != null) {
-            mBluetoothGattCharacteristic.setValue(bytes);
+        byte[] sendBytes = new byte[len];
+        System.arraycopy(bytes, 0, sendBytes, 0, len);
+        if (mBluetoothGattCharacteristic != null && mBluetoothGatt != null) {
+            mBluetoothGattCharacteristic.setValue(sendBytes);
             r = mBluetoothGatt.writeCharacteristic(mBluetoothGattCharacteristic);
+            Logger.d(TAG, mBluetoothGattCharacteristic.getUuid() + ",Send:" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length) + r);
+        } else {
+            Logger.d(TAG, "Send:" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length) + r);
         }
-        Logger.d(TAG, mBluetoothGattCharacteristic.getUuid() + ",Send:" + ConvertData.byteArrayToHexString(bytes, bytes.length) + r);
-        return false;
+        return r;
     }
+
 
     /**
      * 释放资源
@@ -1079,8 +1074,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
         date[4] = (byte) Integer.parseInt(dates[1], 16);
         date[5] = (byte) Integer.parseInt(dates[2], 16);
         byte[] bytes = new byte[date.length];
-        SerialData.comPackage(date, bytes, date.length - 3);
-        sendDescriptorByte(bytes);
+        int len = SerialData.comPackage(date, bytes, date.length - 3);
+        sendDescriptorByte(bytes, len);
         startTimerOfIsVerifyConnect();
     }
 
@@ -1090,8 +1085,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
         bytes[1] = (byte) 0x00;
         System.arraycopy(data, 1, bytes, 2, data.length - 4);
         byte[] respondByte = new byte[bytes.length];
-        SerialData.comPackage(bytes, respondByte, bytes.length - 3);
-        sendDescriptorByte(respondByte);
+        int len = SerialData.comPackage(bytes, respondByte, bytes.length - 3);
+        sendDescriptorByte(respondByte, len);
     }
 
     public String getCurDate() {
@@ -1154,5 +1149,64 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 isVerifyConnectTimer.closeTimer();
             }
         }
+    }
+    private void rxDataPackage(byte[] data,String uuid){
+        if (!isSendVerifyData) {
+            isSendVerifyData = true;
+            sendVerifyData();
+        }
+        if (uuid.contains("2ad1") && isToExamine) {
+            setBleDataInx(new byte[]{data[0], data[1]});
+            setRunData(data);
+        }
+        if (uuid.contains("2ad3") && isToExamine) {
+            if (data[1] == RUN_STATUS_STOP && runStatus != RUN_STATUS_STOP) {//停止运动
+                rowerDataBean.save();
+                rowerDataBean = new RowerDataBean();
+            }
+            runStatus = data[1];
+
+
+        }
+        if (uuid.contains("ffe0")) {//校对CRC码
+            if (data[1] == 0x40 && data[2] == 0x01) {
+                String[] dates = getCurDate().split("-");
+                byte[] date = new byte[3];
+                date[0] = (byte) Integer.parseInt(dates[0], 16);
+                date[1] = (byte) Integer.parseInt(dates[1], 16);
+                date[2] = (byte) Integer.parseInt(dates[2], 16);
+                byte[] calCRCBytes = ConvertData.shortToBytes(SerialData.calCRCByTable(ConvertData.subBytes(date, 0, date.length), date.length));
+                if (calCRCBytes[0] == data[3] && calCRCBytes[1] == data[4]) {
+                    isToExamine = true;
+                    isVerifyConnectTimer.closeTimer();
+                }
+
+            }
+            if (data[1] == 0x41 && data[2] == 0x02 && isToExamine) {
+                sendRespondData(data);
+                if (runStatus == RUN_STATUS_RUNNING) {
+                    rowerDataBean.setDrag(resolveDate(data, RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
+                    rowerDataBean.setInterval(resolveDate(data, RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
+                    setTime = resolveDate(data, RowerDataParam.SET_TIME_INX, RowerDataParam.SET_TIME_LEN);
+                    setDistance = resolveDate(data, RowerDataParam.SET_DISTANCE_INX, RowerDataParam.SET_DISTANCE_LEN);
+                    setCalorie = resolveDate(data, RowerDataParam.SET_CALORIE_INX, RowerDataParam.SET_CALORIE_LEN);
+                    rowerDataBean.setSetTime(setTime);
+                    rowerDataBean.setSetDistance(setDistance);
+                    rowerDataBean.setSetCalorie(setCalorie);
+                    Logger.d("setDistance=" + setDistance + ",setTime=" + setTime + ",setCalorie=" + setCalorie);
+                } else {
+                    rowerDataBean.setDrag(0);
+                    rowerDataBean.setInterval(0);
+                }
+
+                if (onRunDataListener != null) {
+                    onRunDataListener.onRunData(rowerDataBean);
+                }
+            }
+        }
+    }
+    private synchronized void reSet() {
+        c_state = IDLE_BEGIN;
+        offset = 0;
     }
 }

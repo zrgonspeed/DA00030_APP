@@ -40,4 +40,5 @@
             android:src="@mipmap/page1"
             android:layout_centerInParent="true"/>
     </RelativeLayout>
+
 </RelativeLayout>

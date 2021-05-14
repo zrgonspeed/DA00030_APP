@@ -31,16 +31,13 @@ import butterknife.ButterKnife;
 public class HomeFragment extends BaseFragment {
     @BindView(R.id.vp_home_fragment)
     VerticalViewPager vpHomeFragment;
-    private ImageView ivPage;
+    @BindView(R.id.iv_bar)
+    ImageView ivBar;
     private OnePageHomeFragment onePageHomeFragment;
     private TwoPageHomeFragment twoPageHomeFragment;
     private ThreePageHomeFragment threePageHomeFragment;
 
     public HomeFragment() {
-    }
-
-    public HomeFragment(ImageView ivPage) {
-        this.ivPage = ivPage;
     }
 
     @Override
@@ -69,11 +66,11 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    ivPage.setImageResource(R.mipmap.page1);
+                    ivBar.setImageResource(R.mipmap.bar1);
                 } else if (position == 1) {
-                    ivPage.setImageResource(R.mipmap.page2);
+                    ivBar.setImageResource(R.mipmap.bar2);
                 } else if (position == 2) {
-                    ivPage.setImageResource(R.mipmap.page3);
+                    ivBar.setImageResource(R.mipmap.bar3);
                 }
             }
 
