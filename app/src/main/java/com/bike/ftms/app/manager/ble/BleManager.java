@@ -254,7 +254,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             //result.getScanRecord().getServiceUuids()   mServiceUuids=[0000ab00-0000-1000-8000-00805f9b34fb]*/
             String deviceAddress = result.getDevice().getAddress();
             String deviceName = result.getDevice().getName();
-            if (deviceName != null && !deviceName.equals("") && deviceAddress != null) {
+            if (deviceName != null && !deviceName.trim().equals("") && deviceAddress != null) {
                 boolean isAdd = true;//第一次无需查重
                 for (int i = 0; i < getScanResults().size(); i++) {//查重
                     if (getScanResults().get(i).getScanResult().getDevice().getAddress().equals(deviceAddress)) {
@@ -295,8 +295,11 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * @param position
      */
     public void connectDevice(int position) {
+        if (getScanResults().get(position).getConnectState() == 1) {
+            disConnectDevice();
+            return;
+        }
         disConnectDevice();
-
         if (getScanResults() != null && getScanResults().size() != 0) {
             if (position >= 0 && position < getScanResults().size()) {
                 getScanResults().get(position).setConnectState(2);
@@ -306,7 +309,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     reset();
                     //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
                     mBluetoothGatt = getScanResults().get(position).getScanResult().getDevice()
-                            .connectGatt(MyApplication.getContext(), true, mGattCallback);
+                            .connectGatt(MyApplication.getContext(), false, mGattCallback);
                 } else {
                     connectHrScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
                     mBluetoothHrGatt = getScanResults().get(position).getScanResult().getDevice()
@@ -333,6 +336,22 @@ public class BleManager implements CustomTimer.TimerCallBack {
             mBluetoothHrGatt.disconnect();
             mBluetoothHrGatt = null;
         }
+    }
+
+    /**
+     * 断开蓝牙设备
+     */
+    public void disConnectAllDevice() {
+
+        if (mBluetoothGatt != null) {
+            mBluetoothGatt.disconnect();
+            mBluetoothGatt = null;
+        }
+        if (mBluetoothHrGatt != null) {
+            mBluetoothHrGatt.disconnect();
+            mBluetoothHrGatt = null;
+        }
+
     }
 
     private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
@@ -481,7 +500,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             isConnectTimer.setmAllTime(0L);
             Logger.i(TAG, characteristic.getUuid() + ",onCharacteristicChanged::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
             byte[] data = characteristic.getValue();
-            for (int i = 0; i < data.length; i++) {
+/*            for (int i = 0; i < data.length; i++) {
                 switch (c_state) {
                     case IDLE_BEGIN:
                         if ((data[i] & 0xFF) == SerialCommand.PACK_FRAME_HEADER) {
@@ -513,9 +532,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         }
                         break;
                 }
-            }
+            }*/
 
-
+            rxDataPackage(data, characteristic.getUuid().toString());
         }
 
         @Override
@@ -722,7 +741,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
             if (!isScanHrDevice) {
                 gattService = mBluetoothGatt.getService(UUID.fromString(uuid));
                 if (gattService == null) {
-                    onRunDataListener.onExit();
+                    // onRunDataListener.onExit();
+                    mBluetoothGatt.disconnect();
+                    mBluetoothGatt = null;
                 }
                 for (BluetoothGattCharacteristic gattCharacteristic : mBluetoothGatt.getService(UUID.fromString(uuidSendData)).getCharacteristics()) {
                     if (gattCharacteristic.getUuid().toString().contains("ffe9")) {
@@ -832,6 +853,12 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (mBluetoothHrGatt != null) {
             mBluetoothHrGatt.close();
             mBluetoothHrGatt = null;
+        }
+        if (connectHrScanResult != null) {
+            connectHrScanResult = null;
+        }
+        if (connectScanResult != null) {
+            connectScanResult = null;
         }
 
     }
@@ -1020,6 +1047,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (onRunDataListener == null || runStatus == RUN_STATUS_STOP) {
             return;
         }
+
         rowerDataBean.setStrokes(RowerDataParam.STROKE_COUNT_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_COUNT_INX, RowerDataParam.STROKE_COUNT_LEN));
         rowerDataBean.setDistance(RowerDataParam.TOTAL_DISTANCE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.TOTAL_DISTANCE_INX, RowerDataParam.TOTAL_DISTANCE_LEN));
         rowerDataBean.setSm(RowerDataParam.STROKE_RATE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_RATE_INX, RowerDataParam.STROKE_RATE_LEN));
@@ -1129,28 +1157,40 @@ public class BleManager implements CustomTimer.TimerCallBack {
     @Override
     public void timerComply(long lastTime, String tag) {
         if (lastTime == 10 && isConnectTag.equals(tag)) {
-            mBluetoothGatt.disconnect();
-            mBluetoothGatt = null;
+            if (mBluetoothGatt != null) {
+                mBluetoothGatt.disconnect();
+                mBluetoothGatt = null;
+            }
             isConnectTimer.closeTimer();
-            onRunDataListener.disConnect();
+            if (onRunDataListener != null) {
+                onRunDataListener.disConnect();
+            }
             Logger.d("断开连接");
             return;
         }
         if (lastTime == 10 && isHrConnectTag.equals(tag)) {
-            mBluetoothHrGatt.disconnect();
-            mBluetoothHrGatt = null;
+            if (mBluetoothHrGatt != null) {
+                mBluetoothHrGatt.disconnect();
+                mBluetoothHrGatt = null;
+            }
+
             isHrConnectTimer.closeTimer();
             Logger.d("断开连接Hr");
             return;
         }
         if (lastTime == 3 && isVerifyConnectTag.equals(tag)) {
             if (onRunDataListener != null) {
-                onRunDataListener.onExit();
+                //onRunDataListener.onExit();
+                if (mBluetoothGatt != null) {
+                    mBluetoothGatt.disconnect();
+                    mBluetoothGatt = null;
+                }
                 isVerifyConnectTimer.closeTimer();
             }
         }
     }
-    private void rxDataPackage(byte[] data,String uuid){
+
+    private void rxDataPackage(byte[] data, String uuid) {
         if (!isSendVerifyData) {
             isSendVerifyData = true;
             sendVerifyData();
@@ -1205,6 +1245,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             }
         }
     }
+
     private synchronized void reSet() {
         c_state = IDLE_BEGIN;
         offset = 0;

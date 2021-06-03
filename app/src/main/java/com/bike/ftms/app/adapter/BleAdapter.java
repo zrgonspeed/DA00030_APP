@@ -41,10 +41,10 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BleViewHolder holder, int position) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.tvState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    if (list.get(position).getConnectState()==1) {
+                    if (list.get(position).getConnectState()==2) {
                         return;
                 }
                 onItemClickListener.onItemClickListener(position);
@@ -52,12 +52,12 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
         });
         holder.tvName.setText(list.get(position).getScanResult().getDevice().getName());
         holder.tvAddress.setText(list.get(position).getScanResult().getDevice().getAddress());
-        if (list.get(position).getConnectState()==1) {
-            holder.tvState.setText("Connected");
-        } else if (list.get(position).getConnectState()==2) {
+        if (list.get(position).getConnectState() == 1) {
+            holder.tvState.setText("Disconnect");
+        } else if (list.get(position).getConnectState() == 2) {
             holder.tvState.setText("Connecting");
-        }else {
-            holder.tvState.setText("Disconnected");
+        } else {
+            holder.tvState.setText("Connect");
         }
     }
 

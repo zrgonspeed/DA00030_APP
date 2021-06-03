@@ -23,6 +23,7 @@ import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.HorizontalViewPager;
 import com.bike.ftms.app.widget.YesOrNoDialog;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +140,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         BleManager.getInstance().setonRunDataListener(this);
         if (!BleManager.isConnect) {
             showConnectHintDialog();
+            homeFragment.onRunData(new RowerDataBean());
         } else {
             if (yesOrNoDialog != null && yesOrNoDialog.isShowing()) {
                 yesOrNoDialog.dismiss();

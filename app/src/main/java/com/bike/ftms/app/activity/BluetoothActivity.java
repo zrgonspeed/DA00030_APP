@@ -64,6 +64,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                     BleManager.getInstance().closeBLE();
                     BleManager.getInstance().getScanResults().clear();
                     BleManager.getInstance().stopScan();
+                    BleManager.getInstance().disConnectAllDevice();
+                    BleManager.getInstance().close();
                     bleAdapter.notifyDataSetChanged();
                     llLoading.setVisibility(View.GONE);
                     rvBle.setVisibility(View.GONE);
