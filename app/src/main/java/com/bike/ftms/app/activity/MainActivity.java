@@ -74,7 +74,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         workoutsFragment = new WorkoutsFragment();
         homeFragments.add(homeFragment);
         homeFragments.add(workoutsFragment);
-        vp.setOffscreenPageLimit(2);
         TabFragmentPagerAdapter adapter1 = new TabFragmentPagerAdapter(getSupportFragmentManager(), homeFragments);
         vp.setAdapter(adapter1);
         vp.setOffscreenPageLimit(2);

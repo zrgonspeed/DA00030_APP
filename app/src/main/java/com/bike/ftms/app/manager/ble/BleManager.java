@@ -152,6 +152,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 扫描蓝牙设备
      */
     public void scanDevice() {
+       /* if(isCanning){
+            isCanning = false;
+            mBluetoothAdapter.getBluetoothLeScanner().stopScan(mScanCallback);
+        }*/
         if (mBluetoothAdapter != null && !isCanning) {
             if (!mBluetoothAdapter.isEnabled()) {
                 mBluetoothAdapter.enable();
@@ -299,7 +303,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             disConnectDevice();
             return;
         }
-        disConnectDevice();
+        //disConnectDevice();
         if (getScanResults() != null && getScanResults().size() != 0) {
             if (position >= 0 && position < getScanResults().size()) {
                 getScanResults().get(position).setConnectState(2);
@@ -328,6 +332,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 断开蓝牙设备
      */
     public void disConnectDevice() {
+        Logger.i("disConnectDevice");
         if (mBluetoothGatt != null && !isScanHrDevice) {
             mBluetoothGatt.disconnect();
             mBluetoothGatt = null;
@@ -1050,7 +1055,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
         rowerDataBean.setStrokes(RowerDataParam.STROKE_COUNT_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_COUNT_INX, RowerDataParam.STROKE_COUNT_LEN));
         rowerDataBean.setDistance(RowerDataParam.TOTAL_DISTANCE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.TOTAL_DISTANCE_INX, RowerDataParam.TOTAL_DISTANCE_LEN));
-        rowerDataBean.setSm(RowerDataParam.STROKE_RATE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_RATE_INX, RowerDataParam.STROKE_RATE_LEN));
+        rowerDataBean.setSm(RowerDataParam.STROKE_RATE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.STROKE_RATE_INX, RowerDataParam.STROKE_RATE_LEN)/2);
         rowerDataBean.setFive_hundred(RowerDataParam.INSTANTANEOUS_PACE_INX == -1 ? 0 : resolveDate(data, RowerDataParam.INSTANTANEOUS_PACE_INX, RowerDataParam.INSTANTANEOUS_PACE_LEN));
         rowerDataBean.setCalorie(RowerDataParam.TOTAL_ENERGY_INX == -1 ? 0 : resolveDate(data, RowerDataParam.TOTAL_ENERGY_INX, RowerDataParam.TOTAL_ENERGY_LEN));
         rowerDataBean.setCalories_hr(RowerDataParam.ENERGY_PER_HOUR_INX == -1 ? 0 : resolveDate(data, RowerDataParam.ENERGY_PER_HOUR_INX, RowerDataParam.ENERGY_PER_HOUR_LEN));

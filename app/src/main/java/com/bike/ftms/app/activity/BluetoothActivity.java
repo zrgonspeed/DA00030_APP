@@ -158,7 +158,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     @Override
     public void onScanSuccess() {
-        Logger.d("onScanSuccess");
+        Logger.i("onScanSuccess");
         if (bleAdapter != null) {
             bleAdapter.notifyDataSetChanged();
         } else {
