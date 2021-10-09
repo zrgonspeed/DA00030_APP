@@ -23,6 +23,7 @@ import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.bean.FormatBean;
 import com.bike.ftms.app.bean.MyScanResult;
 import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.common.RowerDataParam;
 import com.bike.ftms.app.serial.SerialCommand;
 import com.bike.ftms.app.serial.SerialData;
@@ -1238,7 +1239,17 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     rowerDataBean.setSetTime(setTime);
                     rowerDataBean.setSetDistance(setDistance);
                     rowerDataBean.setSetCalorie(setCalorie);
-                    Logger.d("setDistance=" + setDistance + ",setTime=" + setTime + ",setCalorie=" + setCalorie);
+
+                    rowerDataBean.setSetTargetCalorie(setCalorie);
+                    rowerDataBean.setSetTargetTime(setTime);
+                    rowerDataBean.setSetTargetDistance(setDistance);
+
+//                    rowerDataBean.setMode(resolveDate(data, RowerDataParam.RUN_MODE_INX, RowerDataParam.RUN_MODE_LEN));
+                    rowerDataBean.setReset_time(resolveDate(data, RowerDataParam.REST_TIME_INX, RowerDataParam.REST_TIME_LEN));
+
+                    rowerDataBean.setMode(MyConstant.GOAL_DISTANCE);
+//                    rowerDataBean.setReset_time(5);
+                    Logger.d("mode= " + rowerDataBean.getMode() + ",interval= " + rowerDataBean.getInterval() + ",rest time= " + rowerDataBean.getReset_time() + ",setDistance=" + setDistance + ",setTime=" + setTime + ",setCalorie=" + setCalorie);
                 } else {
                     rowerDataBean.setDrag(0);
                     rowerDataBean.setInterval(0);

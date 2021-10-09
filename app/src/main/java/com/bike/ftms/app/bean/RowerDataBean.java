@@ -1,5 +1,7 @@
 package com.bike.ftms.app.bean;
 
+import com.bike.ftms.app.common.MyConstant;
+
 import org.litepal.crud.LitePalSupport;
 
 /**
@@ -26,6 +28,13 @@ public class RowerDataBean extends LitePalSupport {
     private long setTime = 0;//间歇模式设定时间
     private long setDistance = 0;//间歇模式设定距离
     private long setCalorie = 0;//间歇模式设定卡路里
+
+    private long setTargetTime = 0;//目标模式设定时间
+    private long setTargetDistance = 0;//目标模式设定距离
+    private long setTargetCalorie = 0;//目标模式设定卡路里
+
+    private int mode = MyConstant.NORMAL;
+    private int reset_time;
 
     public RowerDataBean() {
     }
@@ -174,6 +183,46 @@ public class RowerDataBean extends LitePalSupport {
         this.setCalorie = setCalorie;
     }
 
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(@MyConstant.RunMode int mode) {
+        this.mode = mode;
+    }
+
+    public int getReset_time() {
+        return reset_time;
+    }
+
+    public void setReset_time(int reset_time) {
+        this.reset_time = reset_time;
+    }
+
+    public long getSetTargetTime() {
+        return setTargetTime;
+    }
+
+    public void setSetTargetTime(long setTargetTime) {
+        this.setTargetTime = setTargetTime;
+    }
+
+    public long getSetTargetDistance() {
+        return setTargetDistance;
+    }
+
+    public void setSetTargetDistance(long setTargetDistance) {
+        this.setTargetDistance = setTargetDistance;
+    }
+
+    public long getSetTargetCalorie() {
+        return setTargetCalorie;
+    }
+
+    public void setSetTargetCalorie(long setTargetCalorie) {
+        this.setTargetCalorie = setTargetCalorie;
+    }
+
     @Override
     public String toString() {
         return "RowerDataBean{" +
@@ -195,6 +244,11 @@ public class RowerDataBean extends LitePalSupport {
                 ", setTime=" + setTime +
                 ", setDistance=" + setDistance +
                 ", setCalorie=" + setCalorie +
+                ", setTargetTime=" + setTargetTime +
+                ", setTargetDistance=" + setTargetDistance +
+                ", setTargetCalorie=" + setTargetCalorie +
+                ", mode=" + mode +
+                ", reset_time=" + reset_time +
                 '}';
     }
 }

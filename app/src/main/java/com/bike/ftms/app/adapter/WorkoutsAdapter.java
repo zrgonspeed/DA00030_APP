@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
@@ -64,16 +65,52 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
             holder.ivNote.setVisibility(View.GONE);
         }
         holder.tvDate.setText(TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd HH:mm:ss"));
-        if (bean.getSetDistance() == 0) {
+
+        switch (bean.getMode()) {
+            case MyConstant.NORMAL:
+                holder.tvDistance.setText(bean.getDistance() + "M");
+                holder.tvTime.setText(bean.getDistance() + "M");
+                break;
+            case MyConstant.GOAL_TIME:
+                holder.tvDistance.setText(TimeStringUtil.getSToMinSecValue(bean.getSetTargetTime()));
+                holder.tvTime.setText(bean.getDistance() + "M");
+                break;
+            case MyConstant.GOAL_DISTANCE:
+                holder.tvDistance.setText(bean.getSetTargetDistance() + "M");
+                holder.tvTime.setText(TimeStringUtil.getSToMinSecValue(bean.getTime()));
+                break;
+            case MyConstant.GOAL_CALORIES:
+                holder.tvDistance.setText(bean.getSetTargetCalorie() + "C");
+                holder.tvTime.setText(bean.getDistance() + "M");
+                break;
+            case MyConstant.INTERVAL_TIME:
+                holder.tvDistance.setText((bean.getInterval() + "x:" + bean.getSetTime() + "/:" + bean.getReset_time() + "R"));
+                holder.tvTime.setText(bean.getDistance() + "M");
+                break;
+            case MyConstant.INTERVAL_DISTANCE:
+                holder.tvDistance.setText((bean.getInterval() + "x" + bean.getSetDistance() + "M" + "/:" + bean.getReset_time() + "R"));
+                holder.tvTime.setText(TimeStringUtil.getSToMinSecValue(bean.getTime()));
+                break;
+            case MyConstant.INTERVAL_CALORIES:
+                holder.tvDistance.setText((bean.getInterval() + "x" + bean.getSetCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
+                holder.tvTime.setText(bean.getDistance() + "M");
+                break;
+            default:
+                break;
+        }
+
+/*        if (bean.getSetDistance() == 0) {
+            // 表示不是间歇运动
             holder.tvDistance.setText(bean.getDistance() + "M");
         } else {
-            holder.tvDistance.setText((bean.getSetDistance() - bean.getDistance()) + "M");
-        }
-        if (bean.getSetTime() == 0) {
+//            holder.tvDistance.setText((bean.getSetDistance() - bean.getDistance()) + "M");
+            holder.tvDistance.setText((bean.getInterval() + "x" + bean.getSetCalorie() + "c" + "/:" + bean.getReset_time()));
+        }*/
+/*        if (bean.getSetTime() == 0) {
             holder.tvTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
         } else {
             holder.tvTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime() - bean.getTime()));
-        }
+        }*/
     }
 
     @Override

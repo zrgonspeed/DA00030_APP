@@ -151,6 +151,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public void onRunData(RowerDataBean rowerDataBean) {
+        Logger.d("MainActivity", rowerDataBean.toString());
+
         if (isOnPause) {
             return;
         }

@@ -74,4 +74,10 @@ public class RowerDataParam {
 
     public static int SET_CALORIE_INX = 13;
     public static int SET_CALORIE_LEN = 2;
+
+    public static int RUN_MODE_INX = 17;
+    public static int RUN_MODE_LEN = 2;
+
+    public static int REST_TIME_INX = 15;
+    public static int REST_TIME_LEN = 2;
 }

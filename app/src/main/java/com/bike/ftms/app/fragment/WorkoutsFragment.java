@@ -21,6 +21,7 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.WorkoutsAdapter;
 import com.bike.ftms.app.base.BaseFragment;
 import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import org.litepal.LitePal;
@@ -210,12 +211,39 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     private void notifyInfoData() {
         RowerDataBean bean = rowerDataBeanList.get(clickPosition);
         tvInfoTitle.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
+
+        switch (bean.getMode()) {
+            case MyConstant.NORMAL:
+                tvTitleTime.setText(bean.getDistance() + "M");
+                break;
+            case MyConstant.GOAL_TIME:
+                tvTitleTime.setText(TimeStringUtil.getSToMinSecValue(bean.getSetTargetTime()));
+                break;
+            case MyConstant.GOAL_DISTANCE:
+                tvTitleTime.setText(bean.getSetTargetDistance() + "M");
+                break;
+            case MyConstant.GOAL_CALORIES:
+                tvTitleTime.setText(bean.getSetTargetCalorie() + "C");
+                break;
+            case MyConstant.INTERVAL_TIME:
+                tvTitleTime.setText((bean.getInterval() + "x:" + bean.getSetTime() + "/:" + bean.getReset_time() + "R"));
+                break;
+            case MyConstant.INTERVAL_DISTANCE:
+                tvTitleTime.setText((bean.getInterval() + "x" + bean.getSetDistance() + "M" + "/:" + bean.getReset_time() + "R"));
+                break;
+            case MyConstant.INTERVAL_CALORIES:
+                tvTitleTime.setText((bean.getInterval() + "x" + bean.getSetCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
+                break;
+            default:
+                break;
+        }
+
         if (bean.getSetTime() == 0) {
             tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-            tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
+//            tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
         } else {
             tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime() - bean.getTime()));
-            tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime() - bean.getTime()));
+//            tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime() - bean.getTime()));
         }
 
         if (bean.getSetDistance() == 0) {
