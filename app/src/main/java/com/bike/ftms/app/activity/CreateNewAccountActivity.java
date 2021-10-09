@@ -40,7 +40,7 @@ public class CreateNewAccountActivity extends BaseActivity {
     @Override
     protected void initData() {
         sexItems = new String[]{getString(R.string.create_male), getString(R.string.create_female)};
-        countryItems =getResources().getStringArray(R.array.country_code_list_en);
+        countryItems = getResources().getStringArray(R.array.country_code_list_en);
         edtBirth.setText(BasisTimesUtils.getDeviceTimeOfYMD());
         edtGender.setText(sexItems[choiceSexInx]);
         edtCountry.setText(countryItems[choiceCountryInx]);
@@ -110,7 +110,7 @@ public class CreateNewAccountActivity extends BaseActivity {
         choiceCountry.setItems(countryItems, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                choiceCountryInx=which;
+                choiceCountryInx = which;
                 edtCountry.setText(countryItems[choiceCountryInx]);
             }
         });

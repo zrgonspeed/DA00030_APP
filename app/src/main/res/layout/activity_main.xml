@@ -17,8 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/color_387E2F"
-        >
+        android:background="@color/color_387E2F">
 
         <ImageView
             android:id="@+id/btn_setting"
@@ -27,18 +26,20 @@
             android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/btn_setting" />
+
         <ImageView
             android:id="@+id/btn_bluetooth"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:src="@drawable/btn_bluetooth"
-            android:layout_toLeftOf="@id/btn_setting"/>
+            android:layout_toLeftOf="@id/btn_setting" />
+
         <ImageView
             android:id="@+id/iv_page"
             android:layout_width="wrap_content"
             android:layout_height="10dp"
             android:src="@mipmap/page1"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true" />
     </RelativeLayout>
 
 </RelativeLayout>

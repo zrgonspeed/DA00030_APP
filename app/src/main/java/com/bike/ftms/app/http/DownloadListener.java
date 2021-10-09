@@ -11,18 +11,21 @@ public interface DownloadListener {
 
     /**
      * 下载成功
+     *
      * @param file
      */
     void onDownloadSuccess(File file);
 
     /**
      * 下载进度
+     *
      * @param progress
      */
     void onDownLoading(int progress);
 
     /**
      * 下载异常
+     *
      * @param e
      */
     void onDownloadFailed(Exception e);

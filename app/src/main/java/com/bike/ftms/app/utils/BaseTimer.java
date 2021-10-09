@@ -18,6 +18,7 @@ public class BaseTimer {
     public interface TimerCallBack {
         public void callBack();
     }
+
     /**
      * 回调接口定义
      */

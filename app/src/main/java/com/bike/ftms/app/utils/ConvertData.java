@@ -116,7 +116,7 @@ public class ConvertData {
         for (int i = 0; i < b.length; i++) {
             StringBuffer sbTwo = new StringBuffer();
             String two = Long.toString(b[i] & 0xff, 2);
-            for (int j = two.length(); j< 8; j++) {
+            for (int j = two.length(); j < 8; j++) {
                 sbTwo.append("0");
             }
             sbTwo.append(two);

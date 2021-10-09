@@ -86,7 +86,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void onRunData(RowerDataBean rowerDataBean) {
-        if (onePageHomeFragment==null||twoPageHomeFragment==null||threePageHomeFragment==null){
+        if (onePageHomeFragment == null || twoPageHomeFragment == null || threePageHomeFragment == null) {
             return;
         }
         onePageHomeFragment.onRunData(rowerDataBean);

@@ -39,7 +39,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/iv_boat"
-        android:text="100M"
+        android:text="2x5c/:05r"
         android:textColor="@color/color_0B4531"
         android:textSize="16sp"
         android:textStyle="bold" />

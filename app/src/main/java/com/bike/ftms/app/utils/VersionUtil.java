@@ -152,10 +152,11 @@ public class VersionUtil {
             value = (String) getMethod.invoke(classType, new Object[]{"ro.anplus.version"});
             Log.i("===", "---" + value);
         } catch (Exception e) {
-            Log.e("===", "---" + e.getMessage(),e);
+            Log.e("===", "---" + e.getMessage(), e);
         }
         return value;
     }
+
     /**
      * @return 获取当前系统的版本号
      */

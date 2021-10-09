@@ -13,6 +13,7 @@ public class VersionManager {
 
     /**
      * 获取App版本号
+     *
      * @param context
      * @return
      */

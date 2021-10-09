@@ -58,21 +58,21 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         } else {
             holder.ivDelete.setVisibility(View.GONE);
         }
-        if (bean.getNote() != null&&!"".equals(bean.getNote())) {
+        if (bean.getNote() != null && !"".equals(bean.getNote())) {
             holder.ivNote.setVisibility(View.VISIBLE);
         } else {
             holder.ivNote.setVisibility(View.GONE);
         }
         holder.tvDate.setText(TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd HH:mm:ss"));
-        if (bean.getSetDistance()==0){
-            holder.tvDistance.setText(bean.getDistance()+"M");
-        }else {
-            holder.tvDistance.setText((bean.getSetDistance()-bean.getDistance())+"M");
+        if (bean.getSetDistance() == 0) {
+            holder.tvDistance.setText(bean.getDistance() + "M");
+        } else {
+            holder.tvDistance.setText((bean.getSetDistance() - bean.getDistance()) + "M");
         }
-        if (bean.getSetTime()==0){
+        if (bean.getSetTime() == 0) {
             holder.tvTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-        }else {
-            holder.tvTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime()-bean.getTime()));
+        } else {
+            holder.tvTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime() - bean.getTime()));
         }
     }
 

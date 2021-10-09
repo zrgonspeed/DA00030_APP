@@ -29,7 +29,7 @@ public class HorizontalViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (!isSetIntercept){
+        if (!isSetIntercept) {
             return super.onInterceptTouchEvent(ev);
         }
         int x = (int) ev.getRawX();

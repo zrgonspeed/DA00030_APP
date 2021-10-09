@@ -80,7 +80,7 @@ public class VerticalViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (!isVertical){
+        if (!isVertical) {
             return false;
         }
         boolean intercepted = super.onInterceptTouchEvent(swapXY(ev));

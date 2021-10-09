@@ -28,10 +28,10 @@ public class OkHttpHelper {
     private static OkHttpClient okHttpClient;
     private static Handler mHandler;
 
-    private static OkHttpClient getInstance(){
-        if(okHttpClient == null){
-            synchronized (OkHttpHelper.class){
-                if(okHttpClient == null){
+    private static OkHttpClient getInstance() {
+        if (okHttpClient == null) {
+            synchronized (OkHttpHelper.class) {
+                if (okHttpClient == null) {
                     okHttpClient = new OkHttpClient.Builder()
                             .connectTimeout(10, TimeUnit.SECONDS)
                             .writeTimeout(10, TimeUnit.SECONDS)
@@ -46,44 +46,48 @@ public class OkHttpHelper {
 
     /**
      * get 请求
+     *
      * @param url
      * @param tag
      * @param callBack
      */
-    public static void get(String url, Object tag, OkHttpCallBack callBack){
-        commonGet(getRequestForGet(url,tag),callBack);
+    public static void get(String url, Object tag, OkHttpCallBack callBack) {
+        commonGet(getRequestForGet(url, tag), callBack);
     }
 
     /**
      * 下载文件
+     *
      * @param url
      * @param destFileDir
      * @param tag
      * @param listener
      */
-    public static void download(String url, String destFileDir, String fileName, Object tag, DownloadListener listener){
-        commonDownload(url,destFileDir,fileName,tag,listener);
+    public static void download(String url, String destFileDir, String fileName, Object tag, DownloadListener listener) {
+        commonDownload(url, destFileDir, fileName, tag, listener);
     }
 
     /**
      * 取消某个tag的网络请求
+     *
      * @param tag
      */
-    public static void cacel(Object tag){
-        if(tag == null){
+    public static void cacel(Object tag) {
+        if (tag == null) {
             return;
         }
-        for(Call call:getInstance().dispatcher().runningCalls()){
-            if(tag.equals(call.request().tag())){
+        for (Call call : getInstance().dispatcher().runningCalls()) {
+            if (tag.equals(call.request().tag())) {
                 call.cancel();
             }
         }
-        for(Call call:getInstance().dispatcher().queuedCalls()){
-            if(tag.equals(call.request().tag())){
+        for (Call call : getInstance().dispatcher().queuedCalls()) {
+            if (tag.equals(call.request().tag())) {
                 call.cancel();
             }
         }
     }
+
     /**
      * 判断tag是否存在
      *
@@ -105,8 +109,9 @@ public class OkHttpHelper {
         }
         return false;
     }
-    private static void commonGet(Request request,OkHttpCallBack callBack){
-        if(request == null){
+
+    private static void commonGet(Request request, OkHttpCallBack callBack) {
+        if (request == null) {
             return;
         }
         getInstance()
@@ -114,23 +119,23 @@ public class OkHttpHelper {
                 .enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        if(call.isCanceled()){
+                        if (call.isCanceled()) {
                             return;
                         }
                         mHandler.post(() -> {
                             Logger.i("====onFailure======= " + request.url().toString() + "" + e);
-                            if(callBack != null){
-                                callBack.onFailure(call,e);
+                            if (callBack != null) {
+                                callBack.onFailure(call, e);
                             }
                         });
                     }
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) {
-                        if(call.isCanceled()){
+                        if (call.isCanceled()) {
                             return;
                         }
-                        mHandler.post(()->{
+                        mHandler.post(() -> {
                             try {
                                 if (response.code() != 200) {
                                     callBack.onFailure(call, new IOException());
@@ -146,19 +151,19 @@ public class OkHttpHelper {
                 });
     }
 
-    private static Request getRequestForGet(String url, Object tag){
-        if(url.isEmpty()){
+    private static Request getRequestForGet(String url, Object tag) {
+        if (url.isEmpty()) {
             Logger.e("OkHttpHelper-----getRequestForGet---> url 地址为空！！！");
             return null;
         }
         Request request;
-        if(tag != null){
+        if (tag != null) {
             request = new Request.Builder()
                     .url(url)
                     .get()
                     .tag(tag)
                     .build();
-        }else{
+        } else {
             request = new Request.Builder()
                     .url(url)
                     .get()
@@ -177,7 +182,7 @@ public class OkHttpHelper {
                 .enqueue(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        if(call.isCanceled()){
+                        if (call.isCanceled()) {
                             return;
                         }
                         mHandler.post(() -> listener.onDownloadFailed(e));
@@ -191,35 +196,35 @@ public class OkHttpHelper {
                         int len;
 
                         File dir = new File(destFileDir);
-                        if(!dir.exists()){
+                        if (!dir.exists()) {
                             dir.mkdirs();
                         }
-                        File file = new File(dir,fileName);
-                        try{
+                        File file = new File(dir, fileName);
+                        try {
                             is = response.body().byteStream();
                             long total = response.body().contentLength();
                             fos = new FileOutputStream(file);
                             long sum = 0L;
-                            while ((len = is.read(buf)) != -1){
-                                fos.write(buf,0,len);
+                            while ((len = is.read(buf)) != -1) {
+                                fos.write(buf, 0, len);
                                 sum += len;
                                 listener.onDownLoading(Math.round(sum * 1.0f / total * 100f));
                             }
                             fos.flush();
-                            if(call.isCanceled()){
+                            if (call.isCanceled()) {
                                 return;
                             }
                             mHandler.post(() -> listener.onDownloadSuccess(file));
-                        }catch (Exception e){
-                            if(call.isCanceled()){
+                        } catch (Exception e) {
+                            if (call.isCanceled()) {
                                 return;
                             }
                             mHandler.post(() -> listener.onDownloadFailed(e));
-                        }finally {
-                            if(is != null){
+                        } finally {
+                            if (is != null) {
                                 is.close();
                             }
-                            if(fos != null){
+                            if (fos != null) {
                                 fos.close();
 
                             }

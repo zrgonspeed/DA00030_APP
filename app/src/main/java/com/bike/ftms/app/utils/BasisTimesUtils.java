@@ -21,7 +21,8 @@ import java.util.Date;
  * @Author YYH
  * @Date 2021/4/19
  */
-public class BasisTimesUtils {public static int THEME_DEVICE_DEFAULT_LIGHT = AlertDialog.THEME_DEVICE_DEFAULT_LIGHT;
+public class BasisTimesUtils {
+    public static int THEME_DEVICE_DEFAULT_LIGHT = AlertDialog.THEME_DEVICE_DEFAULT_LIGHT;
     public static int THEME_DEVICE_DEFAULT_DARK = AlertDialog.THEME_DEVICE_DEFAULT_DARK;
     public static int THEME_TRADITIONAL = AlertDialog.THEME_TRADITIONAL;
     public static int THEME_HOLO_LIGHT = AlertDialog.THEME_HOLO_LIGHT;

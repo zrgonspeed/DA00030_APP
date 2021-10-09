@@ -173,4 +173,28 @@ public class RowerDataBean extends LitePalSupport {
     public void setSetCalorie(long setCalorie) {
         this.setCalorie = setCalorie;
     }
+
+    @Override
+    public String toString() {
+        return "RowerDataBean{" +
+                "strokes=" + strokes +
+                ", drag=" + drag +
+                ", interval=" + interval +
+                ", distance=" + distance +
+                ", sm=" + sm +
+                ", five_hundred=" + five_hundred +
+                ", time=" + time +
+                ", heart_rate=" + heart_rate +
+                ", ave_five_hundred=" + ave_five_hundred +
+                ", watts=" + watts +
+                ", ave_watts=" + ave_watts +
+                ", calorie=" + calorie +
+                ", calories_hr=" + calories_hr +
+                ", note='" + note + '\'' +
+                ", date=" + date +
+                ", setTime=" + setTime +
+                ", setDistance=" + setDistance +
+                ", setCalorie=" + setCalorie +
+                '}';
+    }
 }

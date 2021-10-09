@@ -29,6 +29,7 @@ public class TimeStringUtil {
         minute += hour * 60;
         return String.format("%02d:%02d", minute, second);
     }
+
     /**
      * 将秒转换为00:00(分钟:秒);
      * 分钟数会突破99
@@ -45,6 +46,7 @@ public class TimeStringUtil {
         minute += hour * 60;
         return String.format("%02d:%02d", minute, second);
     }
+
     /**
      * 将秒转换为00:00(分钟:秒);
      * 分钟数会突破99
@@ -58,8 +60,9 @@ public class TimeStringUtil {
         long hour = minute / 60;
         long second = time % 60;
         minute %= 60;
-        return String.format("%02d:%02d:%02d",hour, minute, second);
+        return String.format("%02d:%02d:%02d", hour, minute, second);
     }
+
     /**
      * 将毫秒转换为00:00(分钟:秒);
      * 分钟数会突破99
@@ -83,6 +86,7 @@ public class TimeStringUtil {
     /**
      * 将毫秒转换为00:00(分钟:秒);
      * 分钟数超过100会重置
+     *
      * @param value 毫秒
      * @return
      */
@@ -185,10 +189,11 @@ public class TimeStringUtil {
 
     /**
      * 秒转小时分钟 （xx hr xx min）
+     *
      * @param sec
      * @return
      */
-    public static String getSecToHrMin(long sec){
+    public static String getSecToHrMin(long sec) {
         long hr = sec / 3600;
         long min = (sec - hr * 3600) / 60;
         return hr + " hr " + min + " min";
@@ -225,26 +230,26 @@ public class TimeStringUtil {
 
     /**
      * 将秒转为小时分钟或者分钟秒
-     * @param value 秒
+     *
+     * @param value   秒
      * @param format1 时间格式(小时  分钟)
      * @param format2 时间格式（分钟  秒）
      * @return
      */
-    public static String getsecToHrMinOrMinSec(long value, String format1, String format2){
+    public static String getsecToHrMinOrMinSec(long value, String format1, String format2) {
         long time = Math.round(value);
         long hour = time / 60 / 60;
         String timeValue;
-        if(hour > 0){
-            timeValue = String.format(format1,hour,(value - hour * 60 * 60) / 60);//"%02d:%02d"
-        }else{
-            timeValue = String.format(format2,value / 60,value % 60);//"%02d:%02d"
+        if (hour > 0) {
+            timeValue = String.format(format1, hour, (value - hour * 60 * 60) / 60);//"%02d:%02d"
+        } else {
+            timeValue = String.format(format2, value / 60, value % 60);//"%02d:%02d"
         }
         return timeValue;
     }
 
     /**
-     *
-     * @param time  1541569323155
+     * @param time    1541569323155
      * @param pattern yyyy-MM-dd HH:mm:ss
      * @return 2018-11-07 13:42:03
      */

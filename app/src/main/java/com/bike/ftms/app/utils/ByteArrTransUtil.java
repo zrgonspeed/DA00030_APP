@@ -74,6 +74,7 @@ public class ByteArrTransUtil {
         s = (short) (s0 | s1);
         return s;
     }
+
     public static String toHexValue(byte[] messageDigest) {
         if (messageDigest == null)
             return "";

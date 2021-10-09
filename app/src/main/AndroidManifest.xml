@@ -26,7 +26,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.CreateNewAccountActivity"
+        <activity
+            android:name=".activity.CreateNewAccountActivity"
             android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activity.HeartRateMonitorActivity"

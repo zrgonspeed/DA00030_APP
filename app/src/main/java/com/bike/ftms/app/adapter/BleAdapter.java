@@ -44,8 +44,8 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
         holder.tvState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    if (list.get(position).getConnectState()==2) {
-                        return;
+                if (list.get(position).getConnectState() == 2) {
+                    return;
                 }
                 onItemClickListener.onItemClickListener(position);
             }

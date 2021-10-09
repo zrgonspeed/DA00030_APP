@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- 页面1 -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_workouts"
         android:layout_width="match_parent"
@@ -11,6 +12,7 @@
         android:orientation="vertical"
         android:visibility="visible">
 
+        <!--标题栏1-->
         <RelativeLayout
             android:id="@+id/rl1"
             android:layout_width="match_parent"
@@ -62,6 +64,7 @@
                 android:textStyle="bold" />
         </RelativeLayout>
 
+        <!--标题栏2-->
         <RelativeLayout
             android:id="@+id/rl2"
             android:layout_width="match_parent"
@@ -101,6 +104,7 @@
                 android:textStyle="bold" />
         </RelativeLayout>
 
+        <!-- 历史记录列表 -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_workouts"
             android:layout_width="match_parent"
@@ -109,6 +113,7 @@
             app:layout_constraintTop_toBottomOf="@id/rl2"
             app:layout_constraintVertical_weight="1" />
 
+        <!-- 删除提示 -->
         <RelativeLayout
             android:id="@+id/rl_delete"
             android:layout_width="match_parent"
@@ -179,6 +184,7 @@
             </LinearLayout>
         </RelativeLayout>
 
+        <!--  在线日志记录      -->
         <RelativeLayout
             android:id="@+id/rl_online"
             android:layout_width="match_parent"
@@ -234,6 +240,7 @@
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- 页面2 具体记录-->
     <LinearLayout
         android:id="@+id/ll_info"
         android:layout_width="match_parent"
@@ -306,8 +313,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            >
+            android:paddingBottom="6dp">
 
             <TextView
                 android:layout_width="0dp"

@@ -13,6 +13,7 @@
         android:text="NAME"
         android:textColor="@color/color_387E2F"
         android:textSize="16sp" />
+
     <TextView
         android:id="@+id/tv_address"
         android:layout_width="wrap_content"

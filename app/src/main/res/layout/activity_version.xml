@@ -74,5 +74,5 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@color/color_B5B3B3"
-        app:layout_constraintTop_toBottomOf="@id/tv_version"/>
+        app:layout_constraintTop_toBottomOf="@id/tv_version" />
 </androidx.constraintlayout.widget.ConstraintLayout>
