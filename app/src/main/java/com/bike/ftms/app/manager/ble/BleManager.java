@@ -23,6 +23,7 @@ import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.bean.FormatBean;
 import com.bike.ftms.app.bean.MyScanResult;
 import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.bean.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.common.RowerDataParam;
 import com.bike.ftms.app.serial.SerialCommand;
@@ -96,6 +97,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private long setDistance = 0;//间歇模式设定距离
     private long setCalorie = 0;//间歇模式设定卡路里
     private Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper()));
+    private int tempInterval;
 
     private BleManager() {
     }
@@ -1233,6 +1235,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 if (runStatus == RUN_STATUS_RUNNING) {
                     rowerDataBean.setDrag(resolveDate(data, RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
                     rowerDataBean.setInterval(resolveDate(data, RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
+
                     setTime = resolveDate(data, RowerDataParam.SET_TIME_INX, RowerDataParam.SET_TIME_LEN);
                     setDistance = resolveDate(data, RowerDataParam.SET_DISTANCE_INX, RowerDataParam.SET_DISTANCE_LEN);
                     setCalorie = resolveDate(data, RowerDataParam.SET_CALORIE_INX, RowerDataParam.SET_CALORIE_LEN);
@@ -1246,9 +1249,46 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
 //                    rowerDataBean.setMode(resolveDate(data, RowerDataParam.RUN_MODE_INX, RowerDataParam.RUN_MODE_LEN));
                     rowerDataBean.setReset_time(resolveDate(data, RowerDataParam.REST_TIME_INX, RowerDataParam.REST_TIME_LEN));
+                    rowerDataBean.setMode(MyConstant.INTERVAL_DISTANCE);
 
-                    rowerDataBean.setMode(MyConstant.GOAL_DISTANCE);
-//                    rowerDataBean.setReset_time(5);
+                    if (rowerDataBean.getInterval() > tempInterval) {
+                        RowerDataBean2 rowerDataBean2 = new RowerDataBean2();
+                        rowerDataBean2.setSetTargetDistance(rowerDataBean.getSetTargetDistance());
+                        rowerDataBean2.setSetTargetTime(rowerDataBean.getSetTargetTime());
+                        rowerDataBean2.setSetTargetCalorie(rowerDataBean.getSetTargetCalorie());
+
+                        rowerDataBean2.setReset_time(rowerDataBean.getReset_time());
+                        rowerDataBean2.setMode(rowerDataBean.getMode());
+
+                        rowerDataBean2.setAve_five_hundred(rowerDataBean.getAve_five_hundred());
+                        rowerDataBean2.setAve_watts(rowerDataBean.getAve_watts());
+                        rowerDataBean2.setCalorie(rowerDataBean.getCalorie());
+                        rowerDataBean2.setCalories_hr(rowerDataBean.getCalories_hr());
+                        rowerDataBean2.setDate(rowerDataBean.getDate());
+                        rowerDataBean2.setDistance(rowerDataBean.getDistance());
+                        rowerDataBean2.setDrag(rowerDataBean.getDrag());
+                        rowerDataBean2.setSm(rowerDataBean.getSm());
+                        rowerDataBean2.setFive_hundred(rowerDataBean.getFive_hundred());
+                        rowerDataBean2.setStrokes(rowerDataBean.getStrokes());
+                        rowerDataBean2.setTime(rowerDataBean.getTime());
+                        rowerDataBean2.setWatts(rowerDataBean.getWatts());
+                        rowerDataBean2.setHeart_rate(rowerDataBean.getHeart_rate());
+                        rowerDataBean2.setInterval(rowerDataBean.getInterval());
+                        rowerDataBean2.setNote(rowerDataBean.getNote());
+
+                        rowerDataBean2.setSetCalorie(rowerDataBean.getSetCalorie());
+                        rowerDataBean2.setSetDistance(rowerDataBean.getSetDistance());
+                        rowerDataBean2.setSetTime(rowerDataBean.getSetTime());
+
+                        rowerDataBean2.setRowerDataBean(rowerDataBean);
+                        rowerDataBean2.save();
+
+//                        rowerDataBean.getList().add(rowerDataBean2);
+
+                        Logger.d("sub_item= " + rowerDataBean2);
+                    }
+                    tempInterval = rowerDataBean.getInterval();
+
                     Logger.d("mode= " + rowerDataBean.getMode() + ",interval= " + rowerDataBean.getInterval() + ",rest time= " + rowerDataBean.getReset_time() + ",setDistance=" + setDistance + ",setTime=" + setTime + ",setCalorie=" + setCalorie);
                 } else {
                     rowerDataBean.setDrag(0);

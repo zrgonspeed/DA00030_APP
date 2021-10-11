@@ -5,6 +5,8 @@ import android.content.Context;
 
 import org.litepal.LitePalApplication;
 
+import tech.gujin.toast.ToastUtil;
+
 /**
  * @Description
  * @Author YYH
@@ -17,6 +19,8 @@ public class MyApplication extends LitePalApplication {
     public void onCreate() {
         super.onCreate();
         mContext = MyApplication.this;
+
+        ToastUtil.initialize(mContext);
     }
 
     public static Context getContext() {

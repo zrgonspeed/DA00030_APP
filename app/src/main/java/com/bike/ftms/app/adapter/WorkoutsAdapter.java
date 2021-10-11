@@ -138,7 +138,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         isShowDelete = showDelete;
     }
 
-    public class WorkoutsViewHolder extends RecyclerView.ViewHolder {
+    public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivDelete;
         private TextView tvDate;
         private TextView tvDistance;

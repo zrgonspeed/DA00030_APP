@@ -7,12 +7,9 @@ import org.litepal.crud.LitePalSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @Description
- * @Author YYH
- * @Date 2021/4/2
- */
-public class RowerDataBean extends LitePalSupport {
+public class RowerDataBean2 extends LitePalSupport {
+    private RowerDataBean rowerDataBean;
+
     private int strokes;
     private int drag;
     private int interval;
@@ -38,9 +35,8 @@ public class RowerDataBean extends LitePalSupport {
 
     private int mode = MyConstant.NORMAL;
     private int reset_time;
-    private List<RowerDataBean2> list = new ArrayList<>();
 
-    public RowerDataBean() {
+    public RowerDataBean2() {
     }
 
     public int getStrokes() {
@@ -256,11 +252,11 @@ public class RowerDataBean extends LitePalSupport {
                 '}';
     }
 
-    public List<RowerDataBean2> getList() {
-        return list;
+    public RowerDataBean getRowerDataBean() {
+        return rowerDataBean;
     }
 
-    public void setList(List<RowerDataBean2> list) {
-        this.list = list;
+    public void setRowerDataBean(RowerDataBean rowerDataBean) {
+        this.rowerDataBean = rowerDataBean;
     }
 }

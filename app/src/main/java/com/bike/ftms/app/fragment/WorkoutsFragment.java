@@ -19,8 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.WorkoutsAdapter;
+import com.bike.ftms.app.adapter.WorkoutsAdapter2;
 import com.bike.ftms.app.base.BaseFragment;
 import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.bean.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
@@ -32,6 +34,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import tech.gujin.toast.ToastUtil;
 
 /**
  * @Description
@@ -45,6 +48,10 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     TextView tvEdit;
     @BindView(R.id.rv_workouts)
     RecyclerView rvWorkouts;
+
+    @BindView(R.id.rv_workouts2)
+    RecyclerView rvWorkouts2;
+
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_title)
@@ -59,20 +66,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     RelativeLayout rlDelete;
     @BindView(R.id.rl_online)
     RelativeLayout rlOnline;
-    @BindView(R.id.tv_info_time)
-    TextView tvInfoTime;
-    @BindView(R.id.tv_info_meters)
-    TextView tvInfoMeters;
-    @BindView(R.id.tv_info_five_hundred)
-    TextView tvInfoFiveHundred;
-    @BindView(R.id.tv_info_cals)
-    TextView tvInfoCals;
-    @BindView(R.id.tv_info_watts)
-    TextView tvInfoWatts;
-    @BindView(R.id.tv_info_cal_hr)
-    TextView tvInfoCalHr;
-    @BindView(R.id.tv_info_sm)
-    TextView tvInfoSm;
+
     @BindView(R.id.tv_info_title)
     TextView tvInfoTitle;
     @BindView(R.id.edt_info_note)
@@ -80,6 +74,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     @BindView(R.id.tv_title_time)
     TextView tvTitleTime;
     private WorkoutsAdapter workoutsAdapter;
+    private WorkoutsAdapter2 workoutsAdapter2;
     private boolean isEdit = false;
     private List<RowerDataBean> rowerDataBeanList = new ArrayList<>();
     private int clickPosition;
@@ -125,7 +120,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && llWorkouts.getVisibility() == View.VISIBLE) {
             rowerDataBeanList.clear();
-            rowerDataBeanList.addAll(LitePal.order("date desc").find(RowerDataBean.class));
+            rowerDataBeanList.addAll(LitePal.order("date desc").find(RowerDataBean.class, true));
             workoutsAdapter.notifyDataSetChanged();
         }
     }
@@ -210,6 +205,69 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
 
     private void notifyInfoData() {
         RowerDataBean bean = rowerDataBeanList.get(clickPosition);
+
+        ArrayList<RowerDataBean2> list = new ArrayList<>(bean.getList());
+
+        // ToastUtil.show("list == " + list);
+        if (list.size() == 0) {
+            RowerDataBean2 rowerDataBean2 = new RowerDataBean2();
+            rowerDataBean2.setSetTargetDistance(bean.getSetTargetDistance());
+            rowerDataBean2.setSetTargetTime(bean.getSetTargetTime());
+            rowerDataBean2.setSetTargetCalorie(bean.getSetTargetCalorie());
+
+            rowerDataBean2.setReset_time(bean.getReset_time());
+            rowerDataBean2.setMode(bean.getMode());
+
+            rowerDataBean2.setAve_five_hundred(bean.getAve_five_hundred());
+            rowerDataBean2.setAve_watts(bean.getAve_watts());
+            rowerDataBean2.setCalorie(bean.getCalorie());
+            rowerDataBean2.setCalories_hr(bean.getCalories_hr());
+            rowerDataBean2.setDate(bean.getDate());
+            rowerDataBean2.setDistance(bean.getDistance());
+            rowerDataBean2.setDrag(bean.getDrag());
+            rowerDataBean2.setSm(bean.getSm());
+            rowerDataBean2.setFive_hundred(bean.getFive_hundred());
+            rowerDataBean2.setStrokes(bean.getStrokes());
+            rowerDataBean2.setTime(bean.getTime());
+            rowerDataBean2.setWatts(bean.getWatts());
+            rowerDataBean2.setHeart_rate(bean.getHeart_rate());
+            rowerDataBean2.setInterval(bean.getInterval());
+            rowerDataBean2.setNote(bean.getNote());
+
+            rowerDataBean2.setSetCalorie(bean.getSetCalorie());
+            rowerDataBean2.setSetDistance(bean.getSetDistance());
+            rowerDataBean2.setSetTime(bean.getSetTime());
+
+            rowerDataBean2.setRowerDataBean(bean);
+            list.add(rowerDataBean2);
+        }
+
+        if (bean.getMode() == MyConstant.INTERVAL_DISTANCE) {
+            RowerDataBean2 bb = new RowerDataBean2();
+            bb.setMode(bean.getMode());
+
+            for (RowerDataBean2 bean2 : list) {
+                // 平均
+                bb.setTime(bean2.getTime() + bb.getTime());
+                bb.setFive_hundred(bean2.getFive_hundred() + bb.getFive_hundred());
+                bb.setSm(bean2.getSm() + bb.getSm());
+
+                // 总和
+                bb.setCalorie(bean2.getCalorie() + bb.getCalorie());
+                bb.setSetDistance(bean2.getSetDistance() + bb.getSetDistance());
+                bb.setWatts(bean2.getWatts() + bb.getWatts());
+            }
+            bb.setTime(bb.getTime() / list.size());
+            bb.setFive_hundred(bb.getFive_hundred() / list.size());
+            bb.setSm(bb.getSm() / list.size());
+
+            list.add(bb);
+        }
+
+        workoutsAdapter2 = new WorkoutsAdapter2(list);
+        rvWorkouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rvWorkouts2.setAdapter(workoutsAdapter2);
+
         tvInfoTitle.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
 
         switch (bean.getMode()) {
@@ -238,28 +296,6 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
                 break;
         }
 
-        if (bean.getSetTime() == 0) {
-            tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-//            tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-        } else {
-            tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime() - bean.getTime()));
-//            tvTitleTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime() - bean.getTime()));
-        }
-
-        if (bean.getSetDistance() == 0) {
-            tvInfoMeters.setText(bean.getDistance() + "M");
-        } else {
-            tvInfoMeters.setText((bean.getSetDistance() - bean.getDistance()) + "M");
-        }
-        tvInfoFiveHundred.setText(TimeStringUtil.getSToMinSecValue(bean.getFive_hundred()));
-        if (bean.getSetCalorie() == 0) {
-            tvInfoCals.setText(String.valueOf(bean.getCalorie()));
-        } else {
-            tvInfoCals.setText(String.valueOf(bean.getSetCalorie() - bean.getCalorie()));
-        }
-        tvInfoWatts.setText(String.valueOf(bean.getWatts()));
-        tvInfoCalHr.setText(String.valueOf(bean.getCalories_hr()));
-        tvInfoSm.setText(String.valueOf(bean.getSm()));
         edtInfoNote.setText(bean.getNote() == null ? "" : bean.getNote());
 
     }

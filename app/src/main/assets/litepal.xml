@@ -7,6 +7,7 @@
     <!-- 映射模型 -->
     <list>
         <mapping class="com.bike.ftms.app.bean.RowerDataBean" />
+        <mapping class="com.bike.ftms.app.bean.RowerDataBean2" />
     </list>
 
 </litepal>
