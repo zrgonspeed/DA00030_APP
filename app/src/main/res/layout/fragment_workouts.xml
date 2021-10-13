@@ -364,7 +364,7 @@
                 android:layout_centerInParent="true"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/workouts_watts"
+                android:text="@string/workouts_sm"
                 android:textColor="@color/color_white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -386,7 +386,7 @@
                 android:layout_centerInParent="true"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/workouts_sm"
+                android:text="@string/workouts_watts"
                 android:textColor="@color/color_white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -394,14 +394,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="match_parent"
             android:padding="10dp">
 
             <!-- 历史记录的详细列表 -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_workouts2"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="match_parent" />
             <!--  <TextView
                   android:id="@+id/tv_info_time"
                   android:layout_width="0dp"

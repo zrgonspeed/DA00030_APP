@@ -58,6 +58,43 @@ public class RowerDataParam {
     public static int ENERGY_PER_MINUTE_LEN = 1;
 
     /**
+     * FTMS协议 自定义部分
+     **/
+    public static int RUN_MODE_INX = 1;
+    public static int RUN_MODE_LEN = 1;
+
+    public static int INTERVAL_STATUS_INX = 2;
+    public static int INTERVAL_STATUS_LEN = 1;
+
+    public static int RUN_STATUS_INX = 3;
+    public static int RUN_STATUS_LEN = 1;
+
+    public static int RUN_INTERVAL_INX = 4;
+    public static int RUN_INTERVAL_LEN = 1;
+
+    public static int GOAL_TIME_INX = 5;
+    public static int GOAL_TIME_LEN = 2;
+
+    public static int GOAL_DISTANCE_INX = 5;
+    public static int GOAL_DISTANCE_LEN = 4;
+
+    public static int GOAL_CALORIE_INX = 5;
+    public static int GOAL_CALORIE_LEN = 2;
+
+    public static int INTERVAL_TIME_INX = 5;
+    public static int INTERVAL_TIME_LEN = 2;
+
+    public static int INTERVAL_DISTANCE_INX = 5;
+    public static int INTERVAL_DISTANCE_LEN = 4;
+
+    public static int INTERVAL_CALORIE_INX = 5;
+    public static int INTERVAL_CALORIE_LEN = 2;
+
+    // todo
+    public static int INTERVAL_REST_TIME_INX = -1;
+    public static int INTERVAL_REST_TIME_LEN = 2;
+
+    /**
      * 自定义协议 ffe0接收通知
      **/
     public static int DRAG_INX = 3;
@@ -74,9 +111,6 @@ public class RowerDataParam {
 
     public static int SET_CALORIE_INX = 13;
     public static int SET_CALORIE_LEN = 2;
-
-    public static int RUN_MODE_INX = 17;
-    public static int RUN_MODE_LEN = 2;
 
     public static int REST_TIME_INX = 15;
     public static int REST_TIME_LEN = 2;

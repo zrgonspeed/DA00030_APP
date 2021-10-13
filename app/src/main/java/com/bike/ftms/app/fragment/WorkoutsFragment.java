@@ -24,6 +24,7 @@ import com.bike.ftms.app.base.BaseFragment;
 import com.bike.ftms.app.bean.RowerDataBean;
 import com.bike.ftms.app.bean.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
+import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import org.litepal.LitePal;
@@ -164,7 +165,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
             case R.id.tv_ok:
                 tvEdit.performClick();
                 int j = LitePal.deleteAll(RowerDataBean.class, "date=?", String.valueOf(rowerDataBeanList.get(deletePosition).getDate()));
-                if (j == 1) {
+                if (j > 0) {
                     rowerDataBeanList.remove(deletePosition);
                     workoutsAdapter.notifyDataSetChanged();
                     Toast.makeText(getContext(), "Delete successfully", Toast.LENGTH_LONG).show();
@@ -208,60 +209,84 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
 
         ArrayList<RowerDataBean2> list = new ArrayList<>(bean.getList());
 
-        // ToastUtil.show("list == " + list);
+        ToastUtil.show("list.size == " + list.size());
+        Logger.d("list.size == " + list.size());
         if (list.size() == 0) {
-            RowerDataBean2 rowerDataBean2 = new RowerDataBean2();
-            rowerDataBean2.setSetTargetDistance(bean.getSetTargetDistance());
-            rowerDataBean2.setSetTargetTime(bean.getSetTargetTime());
-            rowerDataBean2.setSetTargetCalorie(bean.getSetTargetCalorie());
-
-            rowerDataBean2.setReset_time(bean.getReset_time());
-            rowerDataBean2.setMode(bean.getMode());
-
-            rowerDataBean2.setAve_five_hundred(bean.getAve_five_hundred());
-            rowerDataBean2.setAve_watts(bean.getAve_watts());
-            rowerDataBean2.setCalorie(bean.getCalorie());
-            rowerDataBean2.setCalories_hr(bean.getCalories_hr());
-            rowerDataBean2.setDate(bean.getDate());
-            rowerDataBean2.setDistance(bean.getDistance());
-            rowerDataBean2.setDrag(bean.getDrag());
-            rowerDataBean2.setSm(bean.getSm());
-            rowerDataBean2.setFive_hundred(bean.getFive_hundred());
-            rowerDataBean2.setStrokes(bean.getStrokes());
-            rowerDataBean2.setTime(bean.getTime());
-            rowerDataBean2.setWatts(bean.getWatts());
-            rowerDataBean2.setHeart_rate(bean.getHeart_rate());
-            rowerDataBean2.setInterval(bean.getInterval());
-            rowerDataBean2.setNote(bean.getNote());
-
-            rowerDataBean2.setSetCalorie(bean.getSetCalorie());
-            rowerDataBean2.setSetDistance(bean.getSetDistance());
-            rowerDataBean2.setSetTime(bean.getSetTime());
-
-            rowerDataBean2.setRowerDataBean(bean);
+            RowerDataBean2 rowerDataBean2 = new RowerDataBean2(bean);
             list.add(rowerDataBean2);
         }
 
-        if (bean.getMode() == MyConstant.INTERVAL_DISTANCE) {
+        if (bean.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
             RowerDataBean2 bb = new RowerDataBean2();
-            bb.setMode(bean.getMode());
+            bb.setRunMode(bean.getRunMode());
+            bb.setCalories_hr(bean.getCalories_hr());
 
             for (RowerDataBean2 bean2 : list) {
                 // 平均
-                bb.setTime(bean2.getTime() + bb.getTime());
                 bb.setFive_hundred(bean2.getFive_hundred() + bb.getFive_hundred());
                 bb.setSm(bean2.getSm() + bb.getSm());
 
                 // 总和
+                bb.setTime(bean2.getTime() + bb.getTime());
                 bb.setCalorie(bean2.getCalorie() + bb.getCalorie());
-                bb.setSetDistance(bean2.getSetDistance() + bb.getSetDistance());
+                bb.setSetIntervalDistance(bean2.getSetIntervalDistance() + bb.getSetIntervalDistance());
                 bb.setWatts(bean2.getWatts() + bb.getWatts());
             }
-            bb.setTime(bb.getTime() / list.size());
             bb.setFive_hundred(bb.getFive_hundred() / list.size());
             bb.setSm(bb.getSm() / list.size());
 
-            list.add(bb);
+            bb.setInterval(-1);
+            list.add(0, bb);
+        }
+
+        if (bean.getRunMode() == MyConstant.INTERVAL_TIME) {
+            RowerDataBean2 bb = new RowerDataBean2();
+            bb.setRunMode(bean.getRunMode());
+            bb.setCalories_hr(bean.getCalories_hr());
+
+            for (RowerDataBean2 bean2 : list) {
+                // 平均
+                bb.setFive_hundred(bean2.getFive_hundred() + bb.getFive_hundred());
+                bb.setSm(bean2.getSm() + bb.getSm());
+
+                // 总和
+                bb.setSetIntervalTime(bean2.getSetIntervalTime() + bb.getSetIntervalTime());
+                bb.setCalorie(bean2.getCalorie() + bb.getCalorie());
+                bb.setDistance(bean2.getDistance() + bb.getDistance());
+                bb.setWatts(bean2.getWatts() + bb.getWatts());
+            }
+            bb.setFive_hundred(bb.getFive_hundred() / list.size());
+            bb.setSm(bb.getSm() / list.size());
+
+            bb.setInterval(-1);
+            list.add(0, bb);
+        }
+
+        if (bean.getRunMode() == MyConstant.INTERVAL_CALORIES) {
+            RowerDataBean2 bb = new RowerDataBean2();
+            bb.setRunMode(bean.getRunMode());
+            bb.setCalories_hr(bean.getCalories_hr());
+
+            for (RowerDataBean2 bean2 : list) {
+                // 平均
+                bb.setFive_hundred(bean2.getFive_hundred() + bb.getFive_hundred());
+                bb.setSm(bean2.getSm() + bb.getSm());
+
+                // 总和
+                bb.setSetIntervalCalorie(bean2.getSetIntervalCalorie() + bb.getSetIntervalCalorie());
+                bb.setTime(bean2.getTime() + bb.getTime());
+                bb.setDistance(bean2.getDistance() + bb.getDistance());
+                bb.setWatts(bean2.getWatts() + bb.getWatts());
+            }
+            bb.setFive_hundred(bb.getFive_hundred() / list.size());
+            bb.setSm(bb.getSm() / list.size());
+
+            bb.setInterval(-1);
+            list.add(0, bb);
+        }
+
+        for (RowerDataBean2 oo : list) {
+            Logger.d("oo == " + oo);
         }
 
         workoutsAdapter2 = new WorkoutsAdapter2(list);
@@ -270,27 +295,27 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
 
         tvInfoTitle.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
 
-        switch (bean.getMode()) {
+        switch (bean.getRunMode()) {
             case MyConstant.NORMAL:
                 tvTitleTime.setText(bean.getDistance() + "M");
                 break;
             case MyConstant.GOAL_TIME:
-                tvTitleTime.setText(TimeStringUtil.getSToMinSecValue(bean.getSetTargetTime()));
+                tvTitleTime.setText(TimeStringUtil.getSToMinSecValue(bean.getSetGoalTime()));
                 break;
             case MyConstant.GOAL_DISTANCE:
-                tvTitleTime.setText(bean.getSetTargetDistance() + "M");
+                tvTitleTime.setText(bean.getSetGoalDistance() + "M");
                 break;
             case MyConstant.GOAL_CALORIES:
-                tvTitleTime.setText(bean.getSetTargetCalorie() + "C");
+                tvTitleTime.setText(bean.getSetGoalCalorie() + "C");
                 break;
             case MyConstant.INTERVAL_TIME:
-                tvTitleTime.setText((bean.getInterval() + "x:" + bean.getSetTime() + "/:" + bean.getReset_time() + "R"));
+                tvTitleTime.setText((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
                 break;
             case MyConstant.INTERVAL_DISTANCE:
-                tvTitleTime.setText((bean.getInterval() + "x" + bean.getSetDistance() + "M" + "/:" + bean.getReset_time() + "R"));
+                tvTitleTime.setText((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
                 break;
             case MyConstant.INTERVAL_CALORIES:
-                tvTitleTime.setText((bean.getInterval() + "x" + bean.getSetCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
+                tvTitleTime.setText((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
                 break;
             default:
                 break;

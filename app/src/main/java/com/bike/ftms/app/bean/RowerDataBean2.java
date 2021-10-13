@@ -4,37 +4,74 @@ import com.bike.ftms.app.common.MyConstant;
 
 import org.litepal.crud.LitePalSupport;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RowerDataBean2 extends LitePalSupport {
-    private RowerDataBean rowerDataBean;
-
     private int strokes;
     private int drag;
     private int interval;
-    private long distance;
     private int sm;
     private long five_hundred;
-    private long time;
     private int heart_rate;
     private long ave_five_hundred;
     private int watts;
     private int ave_watts;
-    private int calorie;
     private int calories_hr;
     private String note;
     private long date;
-    private long setTime = 0;//间歇模式设定时间
-    private long setDistance = 0;//间歇模式设定距离
-    private long setCalorie = 0;//间歇模式设定卡路里
 
-    private long setTargetTime = 0;//目标模式设定时间
-    private long setTargetDistance = 0;//目标模式设定距离
-    private long setTargetCalorie = 0;//目标模式设定卡路里
+    private long time;
+    private long distance;
+    private int calorie;
+    private long setIntervalTime = 0;//间歇模式设定时间
+    private long setIntervalDistance = 0;//间歇模式设定距离
+    private long setIntervalCalorie = 0;//间歇模式设定卡路里
+    private long setGoalTime = 0;//目标模式设定时间
+    private long setGoalDistance = 0;//目标模式设定距离
+    private long setGoalCalorie = 0;//目标模式设定卡路里
 
-    private int mode = MyConstant.NORMAL;
+    @MyConstant.RunMode
+    private int runMode = MyConstant.NORMAL;
     private int reset_time;
+    @MyConstant.RunStatus
+    private int runStatus = MyConstant.RUN_STATUS_NO;
+    @MyConstant.IntervalStatus
+    private int intervalStatus = MyConstant.INTERVAL_STATUS_REST;
+    private int runInterval = 0;        // 各个模式的分段次数  0-255
+    private RowerDataBean rowerDataBean;
+
+    public RowerDataBean2(RowerDataBean bean) {
+        setTime(bean.getTime());
+        setDistance(bean.getDistance());
+        setCalorie(bean.getCalorie());
+
+        setSetGoalDistance(bean.getSetGoalDistance());
+        setSetGoalTime(bean.getSetGoalTime());
+        setSetGoalCalorie(bean.getSetGoalCalorie());
+
+        setSetIntervalCalorie(bean.getSetIntervalCalorie());
+        setSetIntervalDistance(bean.getSetIntervalDistance());
+        setSetIntervalTime(bean.getSetIntervalTime());
+
+        setRunMode(bean.getRunMode());
+        setRunInterval(bean.getRunInterval());
+        setRunStatus(bean.getRunStatus());
+        setIntervalStatus(bean.getIntervalStatus());
+        setReset_time(bean.getReset_time());
+
+        setAve_five_hundred(bean.getAve_five_hundred());
+        setAve_watts(bean.getAve_watts());
+        setCalories_hr(bean.getCalories_hr());
+        setDate(bean.getDate());
+        setDrag(bean.getDrag());
+        setSm(bean.getSm());
+        setFive_hundred(bean.getFive_hundred());
+        setStrokes(bean.getStrokes());
+        setWatts(bean.getWatts());
+        setHeart_rate(bean.getHeart_rate());
+        setInterval(bean.getInterval());
+        setNote(bean.getNote());
+
+        setRowerDataBean(bean);
+    }
 
     public RowerDataBean2() {
     }
@@ -159,36 +196,36 @@ public class RowerDataBean2 extends LitePalSupport {
         this.date = date;
     }
 
-    public long getSetTime() {
-        return setTime;
+    public long getSetIntervalTime() {
+        return setIntervalTime;
     }
 
-    public void setSetTime(long setTime) {
-        this.setTime = setTime;
+    public void setSetIntervalTime(long setIntervalTime) {
+        this.setIntervalTime = setIntervalTime;
     }
 
-    public long getSetDistance() {
-        return setDistance;
+    public long getSetIntervalDistance() {
+        return setIntervalDistance;
     }
 
-    public void setSetDistance(long setDistance) {
-        this.setDistance = setDistance;
+    public void setSetIntervalDistance(long setIntervalDistance) {
+        this.setIntervalDistance = setIntervalDistance;
     }
 
-    public long getSetCalorie() {
-        return setCalorie;
+    public long getSetIntervalCalorie() {
+        return setIntervalCalorie;
     }
 
-    public void setSetCalorie(long setCalorie) {
-        this.setCalorie = setCalorie;
+    public void setSetIntervalCalorie(long setIntervalCalorie) {
+        this.setIntervalCalorie = setIntervalCalorie;
     }
 
-    public int getMode() {
-        return mode;
+    public int getRunMode() {
+        return runMode;
     }
 
-    public void setMode(@MyConstant.RunMode int mode) {
-        this.mode = mode;
+    public void setRunMode(@MyConstant.RunMode int runMode) {
+        this.runMode = runMode;
     }
 
     public int getReset_time() {
@@ -199,34 +236,66 @@ public class RowerDataBean2 extends LitePalSupport {
         this.reset_time = reset_time;
     }
 
-    public long getSetTargetTime() {
-        return setTargetTime;
+    public long getSetGoalTime() {
+        return setGoalTime;
     }
 
-    public void setSetTargetTime(long setTargetTime) {
-        this.setTargetTime = setTargetTime;
+    public void setSetGoalTime(long setGoalTime) {
+        this.setGoalTime = setGoalTime;
     }
 
-    public long getSetTargetDistance() {
-        return setTargetDistance;
+    public long getSetGoalDistance() {
+        return setGoalDistance;
     }
 
-    public void setSetTargetDistance(long setTargetDistance) {
-        this.setTargetDistance = setTargetDistance;
+    public void setSetGoalDistance(long setGoalDistance) {
+        this.setGoalDistance = setGoalDistance;
     }
 
-    public long getSetTargetCalorie() {
-        return setTargetCalorie;
+    public long getSetGoalCalorie() {
+        return setGoalCalorie;
     }
 
-    public void setSetTargetCalorie(long setTargetCalorie) {
-        this.setTargetCalorie = setTargetCalorie;
+    public void setSetGoalCalorie(long setGoalCalorie) {
+        this.setGoalCalorie = setGoalCalorie;
+    }
+
+    public RowerDataBean getRowerDataBean() {
+        return rowerDataBean;
+    }
+
+    public void setRowerDataBean(RowerDataBean rowerDataBean) {
+        this.rowerDataBean = rowerDataBean;
+    }
+
+    public int getRunStatus() {
+        return runStatus;
+    }
+
+    public void setRunStatus(int runStatus) {
+        this.runStatus = runStatus;
+    }
+
+    public int getIntervalStatus() {
+        return intervalStatus;
+    }
+
+    public void setIntervalStatus(int intervalStatus) {
+        this.intervalStatus = intervalStatus;
+    }
+
+    public int getRunInterval() {
+        return runInterval;
+    }
+
+    public void setRunInterval(int runInterval) {
+        this.runInterval = runInterval;
     }
 
     @Override
     public String toString() {
-        return "RowerDataBean{" +
-                "strokes=" + strokes +
+        return "RowerDataBean2{" +
+                ", strokes=" + strokes +
                 ", drag=" + drag +
                 ", interval=" + interval +
                 ", distance=" + distance +
@@ -241,22 +310,17 @@ public class RowerDataBean2 extends LitePalSupport {
                 ", calories_hr=" + calories_hr +
                 ", note='" + note + '\'' +
                 ", date=" + date +
-                ", setTime=" + setTime +
-                ", setDistance=" + setDistance +
-                ", setCalorie=" + setCalorie +
-                ", setTargetTime=" + setTargetTime +
-                ", setTargetDistance=" + setTargetDistance +
-                ", setTargetCalorie=" + setTargetCalorie +
-                ", mode=" + mode +
+                ", setIntervalTime=" + setIntervalTime +
+                ", setIntervalDistance=" + setIntervalDistance +
+                ", setIntervalCalorie=" + setIntervalCalorie +
+                ", setGoalTime=" + setGoalTime +
+                ", setGoalDistance=" + setGoalDistance +
+                ", setGoalCalorie=" + setGoalCalorie +
+                ", runMode=" + runMode +
                 ", reset_time=" + reset_time +
+                ", runStatus=" + runStatus +
+                ", intervalStatus=" + intervalStatus +
+                ", runInterval=" + runInterval +
                 '}';
-    }
-
-    public RowerDataBean getRowerDataBean() {
-        return rowerDataBean;
-    }
-
-    public void setRowerDataBean(RowerDataBean rowerDataBean) {
-        this.rowerDataBean = rowerDataBean;
     }
 }
