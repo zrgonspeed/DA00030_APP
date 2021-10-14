@@ -28,7 +28,7 @@ public class RowerDataBean extends LitePalSupport {
 
     private long time;
     private long distance;
-    private int calorie;
+    private long calorie;
     private long setIntervalTime = 0;//间歇模式设定时间
     private long setIntervalDistance = 0;//间歇模式设定距离
     private long setIntervalCalorie = 0;//间歇模式设定卡路里
@@ -137,11 +137,11 @@ public class RowerDataBean extends LitePalSupport {
         this.ave_watts = ave_watts;
     }
 
-    public int getCalorie() {
+    public long getCalorie() {
         return calorie;
     }
 
-    public void setCalorie(int calorie) {
+    public void setCalorie(long calorie) {
         this.calorie = calorie;
     }
 

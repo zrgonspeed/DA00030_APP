@@ -20,7 +20,7 @@ public class RowerDataBean2 extends LitePalSupport {
 
     private long time;
     private long distance;
-    private int calorie;
+    private long calorie;
     private long setIntervalTime = 0;//间歇模式设定时间
     private long setIntervalDistance = 0;//间歇模式设定距离
     private long setIntervalCalorie = 0;//间歇模式设定卡路里
@@ -164,11 +164,11 @@ public class RowerDataBean2 extends LitePalSupport {
         this.ave_watts = ave_watts;
     }
 
-    public int getCalorie() {
+    public long getCalorie() {
         return calorie;
     }
 
-    public void setCalorie(int calorie) {
+    public void setCalorie(long calorie) {
         this.calorie = calorie;
     }
 
@@ -322,5 +322,43 @@ public class RowerDataBean2 extends LitePalSupport {
                 ", intervalStatus=" + intervalStatus +
                 ", runInterval=" + runInterval +
                 '}';
+    }
+
+    public RowerDataBean2 copy() {
+        RowerDataBean2 bean = new RowerDataBean2();
+        bean.setTime(getTime());
+        bean.setDistance(getDistance());
+        bean.setCalorie(getCalorie());
+
+        bean.setSetGoalDistance(getSetGoalDistance());
+        bean.setSetGoalTime(getSetGoalTime());
+        bean.setSetGoalCalorie(getSetGoalCalorie());
+
+        bean.setSetIntervalCalorie(getSetIntervalCalorie());
+        bean.setSetIntervalDistance(getSetIntervalDistance());
+        bean.setSetIntervalTime(getSetIntervalTime());
+
+        bean.setRunMode(getRunMode());
+        bean.setRunInterval(getRunInterval());
+        bean.setRunStatus(getRunStatus());
+        bean.setIntervalStatus(getIntervalStatus());
+        bean.setReset_time(getReset_time());
+
+        bean.setAve_five_hundred(getAve_five_hundred());
+        bean.setAve_watts(getAve_watts());
+        bean.setCalories_hr(getCalories_hr());
+        bean.setDate(getDate());
+        bean.setDrag(getDrag());
+        bean.setSm(getSm());
+        bean.setFive_hundred(getFive_hundred());
+        bean.setStrokes(getStrokes());
+        bean.setWatts(getWatts());
+        bean.setHeart_rate(getHeart_rate());
+        bean.setInterval(getInterval());
+        bean.setNote(getNote());
+
+        bean.setRowerDataBean(getRowerDataBean());
+
+        return bean;
     }
 }

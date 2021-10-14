@@ -16,6 +16,7 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.InformationPagerAdapter;
 import com.bike.ftms.app.base.BaseFragment;
 import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.TimeStringUtil;
 import com.bike.ftms.app.widget.VerticalViewPager;
 
@@ -65,7 +66,14 @@ public abstract class BaseHomeFragment extends BaseFragment {
 
     public void onRunData(RowerDataBean rowerDataBean) {
         tvStrokes.setText(String.valueOf(rowerDataBean.getStrokes()));
-        tvInterval.setText(String.valueOf(rowerDataBean.getInterval()));
+        if (rowerDataBean.getRunMode() == MyConstant.INTERVAL_TIME ||
+                rowerDataBean.getRunMode() == MyConstant.INTERVAL_DISTANCE ||
+                rowerDataBean.getRunMode() == MyConstant.INTERVAL_CALORIES
+        ) {
+            tvInterval.setText(String.valueOf(rowerDataBean.getInterval()));
+        } else {
+            tvInterval.setText(String.valueOf(rowerDataBean.getRunInterval() + 1));
+        }
         tvDistance.setText(String.valueOf(rowerDataBean.getDistance()));
         tvDrag.setText(String.valueOf(rowerDataBean.getDrag()));
         tvSm.setText(String.valueOf(rowerDataBean.getSm()));

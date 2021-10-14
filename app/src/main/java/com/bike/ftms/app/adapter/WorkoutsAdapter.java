@@ -85,27 +85,52 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
                 break;
             case MyConstant.INTERVAL_TIME:
                 holder.tvDistance.setText((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
-                holder.tvTime.setText(bean.getDistance() + "M");
-                break;
+                // 总距离
+            {
+                List<RowerDataBean2> list = bean.getList();
+                if (list.size() > 1) {
+                    long totalMeter = 0;
+                    for (RowerDataBean2 bean2 : list) {
+                        totalMeter += bean2.getDistance();
+                    }
+                    holder.tvTime.setText(totalMeter + "M");
+                } else {
+                    holder.tvTime.setText(bean.getDistance() + "M");
+                }
+            }
+            break;
             case MyConstant.INTERVAL_DISTANCE:
                 holder.tvDistance.setText((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
-
+            {
                 // 总时间
                 List<RowerDataBean2> list = bean.getList();
                 if (list.size() > 1) {
                     long totalTime = 0;
-                    for (RowerDataBean2 bean2: list) {
+                    for (RowerDataBean2 bean2 : list) {
                         totalTime += bean2.getTime();
                     }
                     holder.tvTime.setText(TimeStringUtil.getSToMinSecValue(totalTime));
                 } else {
                     holder.tvTime.setText(TimeStringUtil.getSToMinSecValue(bean.getTime()));
                 }
-                break;
+            }
+            break;
             case MyConstant.INTERVAL_CALORIES:
                 holder.tvDistance.setText((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
-                holder.tvTime.setText(bean.getDistance() + "M");
-                break;
+                // 总距离
+            {
+                List<RowerDataBean2> list = bean.getList();
+                if (list.size() > 1) {
+                    long totalMeter = 0;
+                    for (RowerDataBean2 bean2 : list) {
+                        totalMeter += bean2.getDistance();
+                    }
+                    holder.tvTime.setText(totalMeter + "M");
+                } else {
+                    holder.tvTime.setText(bean.getDistance() + "M");
+                }
+            }
+            break;
             default:
                 break;
         }

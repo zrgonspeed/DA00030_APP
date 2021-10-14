@@ -207,30 +207,47 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     private void notifyInfoData() {
         RowerDataBean bean = rowerDataBeanList.get(clickPosition);
 
-        ArrayList<RowerDataBean2> list = new ArrayList<>(bean.getList());
+        ArrayList<RowerDataBean2> list = new ArrayList<>();
+        for (RowerDataBean2 bean2 : bean.getList()
+        ) {
+            list.add(bean2.copy());
+        }
 
-        ToastUtil.show("list.size == " + list.size());
+//        ToastUtil.show("list.size == " + list.size());
         Logger.d("list.size == " + list.size());
         if (list.size() == 0) {
             RowerDataBean2 rowerDataBean2 = new RowerDataBean2(bean);
             list.add(rowerDataBean2);
         }
 
-        if (bean.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
+        if (bean.getRunMode() == MyConstant.GOAL_TIME) {
             RowerDataBean2 bb = new RowerDataBean2();
             bb.setRunMode(bean.getRunMode());
             bb.setCalories_hr(bean.getCalories_hr());
+            bb.setWatts(bean.getWatts());
 
+            long initDistance = 0;
+            long initTime = bean.getSetGoalTime();
+            long initCal = 0;
             for (RowerDataBean2 bean2 : list) {
                 // 平均
                 bb.setFive_hundred(bean2.getFive_hundred() + bb.getFive_hundred());
                 bb.setSm(bean2.getSm() + bb.getSm());
 
-                // 总和
-                bb.setTime(bean2.getTime() + bb.getTime());
-                bb.setCalorie(bean2.getCalorie() + bb.getCalorie());
-                bb.setSetIntervalDistance(bean2.getSetIntervalDistance() + bb.getSetIntervalDistance());
-                bb.setWatts(bean2.getWatts() + bb.getWatts());
+                // 每段的运动时间
+                bean2.setTime(initTime - bean2.getTime());
+                bb.setTime(bb.getTime() + bean2.getTime());
+                initTime = initTime - bean2.getTime();
+
+                // 每段的卡路里
+                bean2.setCalorie(bean2.getCalorie() - initCal);
+                bb.setCalorie(bb.getCalorie() + bean2.getCalorie());
+                initCal = initCal + bean2.getCalorie();
+
+                // 每段的运动距离 倒数
+                bean2.setDistance(bean2.getDistance() - initDistance);
+                bb.setDistance(bb.getDistance() + bean2.getDistance());
+                initDistance = initDistance + bean2.getDistance();
             }
             bb.setFive_hundred(bb.getFive_hundred() / list.size());
             bb.setSm(bb.getSm() / list.size());
@@ -239,10 +256,84 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
             list.add(0, bb);
         }
 
+        if (bean.getRunMode() == MyConstant.GOAL_DISTANCE) {
+            RowerDataBean2 bb = new RowerDataBean2();
+            bb.setRunMode(bean.getRunMode());
+            bb.setCalories_hr(bean.getCalories_hr());
+            bb.setWatts(bean.getWatts());
+
+            long initDistance = bean.getSetGoalDistance();
+            long initTime = 0;
+            long initCal = 0;
+            for (RowerDataBean2 bean2 : list) {
+                // 平均
+                bb.setFive_hundred(bean2.getFive_hundred() + bb.getFive_hundred());
+                bb.setSm(bean2.getSm() + bb.getSm());
+
+                // 每段的运动距离 倒数
+                bean2.setDistance(initDistance - bean2.getDistance());
+                bb.setDistance(bb.getDistance() + bean2.getDistance());
+                initDistance = initDistance - bean2.getDistance();
+
+                // 每段的运动时间
+                bean2.setTime(bean2.getTime() - initTime);
+                bb.setTime(bb.getTime() + bean2.getTime());
+                initTime = initTime + bean2.getTime();
+
+                // 每段的卡路里
+                bean2.setCalorie(bean2.getCalorie() - initCal);
+                bb.setCalorie(bb.getCalorie() + bean2.getCalorie());
+                initCal = initCal + bean2.getCalorie();
+            }
+            bb.setFive_hundred(bb.getFive_hundred() / list.size());
+            bb.setSm(bb.getSm() / list.size());
+
+            bb.setInterval(-1);
+            list.add(0, bb);
+        }
+
+        if (bean.getRunMode() == MyConstant.GOAL_CALORIES) {
+            RowerDataBean2 bb = new RowerDataBean2();
+            bb.setRunMode(bean.getRunMode());
+            bb.setCalories_hr(bean.getCalories_hr());
+            bb.setWatts(bean.getWatts());
+
+            long initDistance = 0;
+            long initTime = 0;
+            long initCal = bean.getSetGoalCalorie();
+            for (RowerDataBean2 bean2 : list) {
+                // 平均
+                bb.setFive_hundred(bean2.getFive_hundred() + bb.getFive_hundred());
+                bb.setSm(bean2.getSm() + bb.getSm());
+
+                // 每段的卡路里
+                bean2.setCalorie(initCal - bean2.getCalorie());
+                bb.setCalorie(bb.getCalorie() + bean2.getCalorie());
+                initCal = initCal - bean2.getCalorie();
+
+                // 每段的运动时间
+                bean2.setTime(bean2.getTime() - initTime);
+                bb.setTime(bb.getTime() + bean2.getTime());
+                initTime = initTime + bean2.getTime();
+
+                // 每段的运动距离 倒数
+                bean2.setDistance(bean2.getDistance() - initDistance);
+                bb.setDistance(bb.getDistance() + bean2.getDistance());
+                initDistance = initDistance + bean2.getDistance();
+            }
+            bb.setFive_hundred(bb.getFive_hundred() / list.size());
+            bb.setSm(bb.getSm() / list.size());
+
+            bb.setInterval(-1);
+            list.add(0, bb);
+        }
+
+
         if (bean.getRunMode() == MyConstant.INTERVAL_TIME) {
             RowerDataBean2 bb = new RowerDataBean2();
             bb.setRunMode(bean.getRunMode());
             bb.setCalories_hr(bean.getCalories_hr());
+            bb.setWatts(bean.getWatts() + bb.getWatts());
 
             for (RowerDataBean2 bean2 : list) {
                 // 平均
@@ -250,10 +341,50 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
                 bb.setSm(bean2.getSm() + bb.getSm());
 
                 // 总和
-                bb.setSetIntervalTime(bean2.getSetIntervalTime() + bb.getSetIntervalTime());
+                if (list.indexOf(bean2) == list.size() - 1) {
+                    if (bean2.getSetIntervalTime() == bean2.getTime()) {
+                        bb.setSetIntervalTime(bean2.getSetIntervalTime() + bb.getSetIntervalTime());
+                    } else {
+                        bb.setSetIntervalTime((bean2.getSetIntervalTime() - bean2.getTime()) + bb.getSetIntervalTime());
+                    }
+                } else {
+                    bb.setSetIntervalTime(bean2.getSetIntervalTime() + bb.getSetIntervalTime());
+                }
                 bb.setCalorie(bean2.getCalorie() + bb.getCalorie());
                 bb.setDistance(bean2.getDistance() + bb.getDistance());
-                bb.setWatts(bean2.getWatts() + bb.getWatts());
+
+            }
+            bb.setFive_hundred(bb.getFive_hundred() / list.size());
+            bb.setSm(bb.getSm() / list.size());
+
+            bb.setInterval(-1);
+            list.add(0, bb);
+        }
+
+        if (bean.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
+            RowerDataBean2 bb = new RowerDataBean2();
+            bb.setRunMode(bean.getRunMode());
+            bb.setCalories_hr(bean.getCalories_hr());
+            bb.setWatts(bean.getWatts() + bb.getWatts());
+
+            for (RowerDataBean2 bean2 : list) {
+                // 平均
+                bb.setFive_hundred(bean2.getFive_hundred() + bb.getFive_hundred());
+                bb.setSm(bean2.getSm() + bb.getSm());
+
+                // 总和
+                if (list.indexOf(bean2) == list.size() - 1) {
+                    if (bean2.getSetIntervalDistance() == bean2.getDistance()) {
+                        bb.setSetIntervalDistance(bean2.getSetIntervalDistance() + bb.getSetIntervalDistance());
+                    } else {
+                        bb.setSetIntervalDistance((bean2.getSetIntervalDistance() - bean2.getDistance()) + bb.getSetIntervalDistance());
+                    }
+                } else {
+                    bb.setSetIntervalDistance(bean2.getSetIntervalDistance() + bb.getSetIntervalDistance());
+                }
+                bb.setTime(bean2.getTime() + bb.getTime());
+                bb.setCalorie(bean2.getCalorie() + bb.getCalorie());
+
             }
             bb.setFive_hundred(bb.getFive_hundred() / list.size());
             bb.setSm(bb.getSm() / list.size());
@@ -266,6 +397,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
             RowerDataBean2 bb = new RowerDataBean2();
             bb.setRunMode(bean.getRunMode());
             bb.setCalories_hr(bean.getCalories_hr());
+            bb.setWatts(bean.getWatts() + bb.getWatts());
 
             for (RowerDataBean2 bean2 : list) {
                 // 平均
@@ -273,10 +405,18 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
                 bb.setSm(bean2.getSm() + bb.getSm());
 
                 // 总和
-                bb.setSetIntervalCalorie(bean2.getSetIntervalCalorie() + bb.getSetIntervalCalorie());
+                if (list.indexOf(bean2) == list.size() - 1) {
+                    if (bean2.getSetIntervalCalorie() == bean2.getCalorie()) {
+                        bb.setSetIntervalCalorie(bean2.getSetIntervalCalorie() + bb.getSetIntervalCalorie());
+                    } else {
+                        bb.setSetIntervalCalorie((bean2.getSetIntervalCalorie() - bean2.getCalorie()) + bb.getSetIntervalCalorie());
+                    }
+                } else {
+                    bb.setSetIntervalCalorie(bean2.getSetIntervalCalorie() + bb.getSetIntervalCalorie());
+                }
                 bb.setTime(bean2.getTime() + bb.getTime());
                 bb.setDistance(bean2.getDistance() + bb.getDistance());
-                bb.setWatts(bean2.getWatts() + bb.getWatts());
+
             }
             bb.setFive_hundred(bb.getFive_hundred() / list.size());
             bb.setSm(bb.getSm() / list.size());
