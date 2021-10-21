@@ -5,6 +5,7 @@ import com.bike.ftms.app.common.MyConstant;
 import org.litepal.crud.LitePalSupport;
 
 public class RowerDataBean2 extends LitePalSupport {
+    private int id;
     private int strokes;
     private int drag;
     private int interval;
@@ -36,44 +37,52 @@ public class RowerDataBean2 extends LitePalSupport {
     @MyConstant.IntervalStatus
     private int intervalStatus = MyConstant.INTERVAL_STATUS_REST;
     private int runInterval = 0;        // 各个模式的分段次数  0-255
-    private RowerDataBean rowerDataBean;
-
-    public RowerDataBean2(RowerDataBean bean) {
-        setTime(bean.getTime());
-        setDistance(bean.getDistance());
-        setCalorie(bean.getCalorie());
-
-        setSetGoalDistance(bean.getSetGoalDistance());
-        setSetGoalTime(bean.getSetGoalTime());
-        setSetGoalCalorie(bean.getSetGoalCalorie());
-
-        setSetIntervalCalorie(bean.getSetIntervalCalorie());
-        setSetIntervalDistance(bean.getSetIntervalDistance());
-        setSetIntervalTime(bean.getSetIntervalTime());
-
-        setRunMode(bean.getRunMode());
-        setRunInterval(bean.getRunInterval());
-        setRunStatus(bean.getRunStatus());
-        setIntervalStatus(bean.getIntervalStatus());
-        setReset_time(bean.getReset_time());
-
-        setAve_five_hundred(bean.getAve_five_hundred());
-        setAve_watts(bean.getAve_watts());
-        setCalories_hr(bean.getCalories_hr());
-        setDate(bean.getDate());
-        setDrag(bean.getDrag());
-        setSm(bean.getSm());
-        setFive_hundred(bean.getFive_hundred());
-        setStrokes(bean.getStrokes());
-        setWatts(bean.getWatts());
-        setHeart_rate(bean.getHeart_rate());
-        setInterval(bean.getInterval());
-        setNote(bean.getNote());
-
-        setRowerDataBean(bean);
-    }
+    private RowerDataBean1 rowerDataBean1;
 
     public RowerDataBean2() {
+    }
+
+    public RowerDataBean2(RowerDataBean1 bean1) {
+        setTime(bean1.getTime());
+        setDistance(bean1.getDistance());
+        setCalorie(bean1.getCalorie());
+
+        setSetGoalDistance(bean1.getSetGoalDistance());
+        setSetGoalTime(bean1.getSetGoalTime());
+        setSetGoalCalorie(bean1.getSetGoalCalorie());
+
+        setSetIntervalCalorie(bean1.getSetIntervalCalorie());
+        setSetIntervalDistance(bean1.getSetIntervalDistance());
+        setSetIntervalTime(bean1.getSetIntervalTime());
+
+        setRunMode(bean1.getRunMode());
+        setRunInterval(bean1.getRunInterval());
+        setRunStatus(bean1.getRunStatus());
+        setIntervalStatus(bean1.getIntervalStatus());
+        setReset_time(bean1.getReset_time());
+
+        setAve_five_hundred(bean1.getAve_five_hundred());
+        setAve_watts(bean1.getAve_watts());
+        setCalories_hr(bean1.getCalories_hr());
+        setDate(bean1.getDate());
+        setDrag(bean1.getDrag());
+        setSm(bean1.getSm());
+        setFive_hundred(bean1.getFive_hundred());
+        setStrokes(bean1.getStrokes());
+        setWatts(bean1.getWatts());
+        setHeart_rate(bean1.getHeart_rate());
+        setInterval(bean1.getInterval());
+        setNote(bean1.getNote());
+
+        setRowerDataBean1(bean1);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getStrokes() {
@@ -260,12 +269,12 @@ public class RowerDataBean2 extends LitePalSupport {
         this.setGoalCalorie = setGoalCalorie;
     }
 
-    public RowerDataBean getRowerDataBean() {
-        return rowerDataBean;
+    public RowerDataBean1 getRowerDataBean1() {
+        return rowerDataBean1;
     }
 
-    public void setRowerDataBean(RowerDataBean rowerDataBean) {
-        this.rowerDataBean = rowerDataBean;
+    public void setRowerDataBean1(RowerDataBean1 rowerDataBean1) {
+        this.rowerDataBean1 = rowerDataBean1;
     }
 
     public int getRunStatus() {
@@ -292,40 +301,10 @@ public class RowerDataBean2 extends LitePalSupport {
         this.runInterval = runInterval;
     }
 
-    @Override
-    public String toString() {
-        return "RowerDataBean2{" +
-                ", strokes=" + strokes +
-                ", drag=" + drag +
-                ", interval=" + interval +
-                ", distance=" + distance +
-                ", sm=" + sm +
-                ", five_hundred=" + five_hundred +
-                ", time=" + time +
-                ", heart_rate=" + heart_rate +
-                ", ave_five_hundred=" + ave_five_hundred +
-                ", watts=" + watts +
-                ", ave_watts=" + ave_watts +
-                ", calorie=" + calorie +
-                ", calories_hr=" + calories_hr +
-                ", note='" + note + '\'' +
-                ", date=" + date +
-                ", setIntervalTime=" + setIntervalTime +
-                ", setIntervalDistance=" + setIntervalDistance +
-                ", setIntervalCalorie=" + setIntervalCalorie +
-                ", setGoalTime=" + setGoalTime +
-                ", setGoalDistance=" + setGoalDistance +
-                ", setGoalCalorie=" + setGoalCalorie +
-                ", runMode=" + runMode +
-                ", reset_time=" + reset_time +
-                ", runStatus=" + runStatus +
-                ", intervalStatus=" + intervalStatus +
-                ", runInterval=" + runInterval +
-                '}';
-    }
-
     public RowerDataBean2 copy() {
         RowerDataBean2 bean = new RowerDataBean2();
+        bean.setId(getId());
+
         bean.setTime(getTime());
         bean.setDistance(getDistance());
         bean.setCalorie(getCalorie());
@@ -357,8 +336,42 @@ public class RowerDataBean2 extends LitePalSupport {
         bean.setInterval(getInterval());
         bean.setNote(getNote());
 
-        bean.setRowerDataBean(getRowerDataBean());
+        bean.setRowerDataBean1(getRowerDataBean1());
 
         return bean;
+    }
+
+    @Override
+    public String toString() {
+        return "RowerDataBean2{" +
+                "id=" + id +
+//                ", rowerDataBean1.id=" + rowerDataBean1.getId() +
+                ", strokes=" + strokes +
+                ", drag=" + drag +
+                ", interval=" + interval +
+                ", sm=" + sm +
+                ", five_hundred=" + five_hundred +
+                ", heart_rate=" + heart_rate +
+                ", ave_five_hundred=" + ave_five_hundred +
+                ", watts=" + watts +
+                ", ave_watts=" + ave_watts +
+                ", calories_hr=" + calories_hr +
+                ", note='" + note + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                ", distance=" + distance +
+                ", calorie=" + calorie +
+                ", setIntervalTime=" + setIntervalTime +
+                ", setIntervalDistance=" + setIntervalDistance +
+                ", setIntervalCalorie=" + setIntervalCalorie +
+                ", setGoalTime=" + setGoalTime +
+                ", setGoalDistance=" + setGoalDistance +
+                ", setGoalCalorie=" + setGoalCalorie +
+                ", runMode=" + runMode +
+                ", reset_time=" + reset_time +
+                ", runStatus=" + runStatus +
+                ", intervalStatus=" + intervalStatus +
+                ", runInterval=" + runInterval +
+                '}';
     }
 }

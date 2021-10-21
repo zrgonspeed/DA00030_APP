@@ -29,6 +29,12 @@ public class HorizontalViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        boolean result2 = onInterceptTouchEvent2(ev);
+//        Logger.d("result2 == " + result2);
+        return result2;
+    }
+
+    public boolean onInterceptTouchEvent2(MotionEvent ev) {
         if (!isSetIntercept) {
             return super.onInterceptTouchEvent(ev);
         }
@@ -50,9 +56,10 @@ public class HorizontalViewPager extends ViewPager {
                 lastX = x;
                 lastY = y;
                 // 拦截的判断
-                if (dealtX >= dealtY) {
+//                Logger.d("2 dealtX > dealtY == " + (dealtX - 10 > dealtY));
+                if (dealtX - 10 > dealtY) {
                     return true;
-                } else {
+                } else if (dealtY - 30 > dealtX) {
                     return false;
                 }
             case MotionEvent.ACTION_CANCEL:

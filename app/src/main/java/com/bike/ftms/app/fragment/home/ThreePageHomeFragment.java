@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.bean.RowerDataBean1;
 
 import butterknife.BindView;
 
@@ -40,9 +40,9 @@ public class ThreePageHomeFragment extends BaseHomeFragment {
 
     }
 
-    public void onRunData(RowerDataBean rowerDataBean) {
-        super.onRunData(rowerDataBean);
-        tvCalories.setText(String.valueOf(rowerDataBean.getCalorie()));
-        tvCaloriesHr.setText(String.valueOf(rowerDataBean.getCalories_hr()));
+    public void onRunData(RowerDataBean1 rowerDataBean1) {
+        super.onRunData(rowerDataBean1);
+        tvCalories.setText(String.valueOf(rowerDataBean1.getCalorie()));
+        tvCaloriesHr.setText(String.valueOf(rowerDataBean1.getCalories_hr()));
     }
 }

@@ -11,7 +11,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseFragment;
-import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.bean.RowerDataBean1;
+import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.fragment.home.OnePageHomeFragment;
 import com.bike.ftms.app.fragment.home.ThreePageHomeFragment;
 import com.bike.ftms.app.fragment.home.TwoPageHomeFragment;
@@ -85,12 +86,17 @@ public class HomeFragment extends BaseFragment {
 
     }
 
-    public void onRunData(RowerDataBean rowerDataBean) {
+    public void onRunData(RowerDataBean1 rowerDataBean1) {
         if (onePageHomeFragment == null || twoPageHomeFragment == null || threePageHomeFragment == null) {
             return;
         }
-        onePageHomeFragment.onRunData(rowerDataBean);
-        twoPageHomeFragment.onRunData(rowerDataBean);
-        threePageHomeFragment.onRunData(rowerDataBean);
+
+        if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_NO) {
+            rowerDataBean1 = new RowerDataBean1();
+        }
+
+        onePageHomeFragment.onRunData(rowerDataBean1);
+        twoPageHomeFragment.onRunData(rowerDataBean1);
+        threePageHomeFragment.onRunData(rowerDataBean1);
     }
 }

@@ -21,7 +21,7 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.WorkoutsAdapter;
 import com.bike.ftms.app.adapter.WorkoutsAdapter2;
 import com.bike.ftms.app.base.BaseFragment;
-import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.bean.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.Logger;
@@ -77,7 +77,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     private WorkoutsAdapter workoutsAdapter;
     private WorkoutsAdapter2 workoutsAdapter2;
     private boolean isEdit = false;
-    private List<RowerDataBean> rowerDataBeanList = new ArrayList<>();
+    private final List<RowerDataBean1> rowerDataBean1List = new ArrayList<>();
     private int clickPosition;
     private int deletePosition;
 
@@ -92,7 +92,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        workoutsAdapter = new WorkoutsAdapter(rowerDataBeanList);
+        workoutsAdapter = new WorkoutsAdapter(rowerDataBean1List);
         rvWorkouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rvWorkouts.setAdapter(workoutsAdapter);
         workoutsAdapter.addItemClickListener(this);
@@ -120,9 +120,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && llWorkouts.getVisibility() == View.VISIBLE) {
-            rowerDataBeanList.clear();
-            rowerDataBeanList.addAll(LitePal.order("date desc").find(RowerDataBean.class, true));
-            workoutsAdapter.notifyDataSetChanged();
+            refreshList1();
         }
     }
 
@@ -145,9 +143,9 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
             case R.id.tv_done:
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("note", edtInfoNote.getText().toString());
-                int i = LitePal.updateAll(RowerDataBean.class, contentValues, "date=?", String.valueOf(rowerDataBeanList.get(clickPosition).getDate()));
+                int i = LitePal.updateAll(RowerDataBean1.class, contentValues, "date=?", String.valueOf(rowerDataBean1List.get(clickPosition).getDate()));
                 if (i == 1) {
-                    rowerDataBeanList.get(clickPosition).setNote(edtInfoNote.getText().toString());
+                    rowerDataBean1List.get(clickPosition).setNote(edtInfoNote.getText().toString());
                     workoutsAdapter.notifyItemChanged(clickPosition);
                     Toast.makeText(getContext(), "Save successfully", Toast.LENGTH_LONG).show();
                 } else {
@@ -156,6 +154,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
                 break;
             case R.id.tv_workouts:
             case R.id.iv_info_back:
+                refreshList1();
                 llInfo.setVisibility(View.GONE);
                 llWorkouts.setVisibility(View.VISIBLE);
                 break;
@@ -164,9 +163,9 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
                 break;
             case R.id.tv_ok:
                 tvEdit.performClick();
-                int j = LitePal.deleteAll(RowerDataBean.class, "date=?", String.valueOf(rowerDataBeanList.get(deletePosition).getDate()));
+                int j = LitePal.deleteAll(RowerDataBean1.class, "date=?", String.valueOf(rowerDataBean1List.get(deletePosition).getDate()));
                 if (j > 0) {
-                    rowerDataBeanList.remove(deletePosition);
+                    rowerDataBean1List.remove(deletePosition);
                     workoutsAdapter.notifyDataSetChanged();
                     Toast.makeText(getContext(), "Delete successfully", Toast.LENGTH_LONG).show();
                 } else {
@@ -178,9 +177,15 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
         }
     }
 
+    private void refreshList1() {
+        rowerDataBean1List.clear();
+        rowerDataBean1List.addAll(LitePal.order("date desc").find(RowerDataBean1.class, true));
+        workoutsAdapter.notifyDataSetChanged();
+    }
+
     private void setEditView() {
         workoutsAdapter.setShowDelete(isEdit);
-        workoutsAdapter.notifyDataSetChanged();
+        refreshList1();
         if (isEdit) {
             tvUpload.setText(getString(R.string.workouts));
             tvUpload.setTextColor(getResources().getColor(R.color.color_black));
@@ -205,7 +210,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     }
 
     private void notifyInfoData() {
-        RowerDataBean bean = rowerDataBeanList.get(clickPosition);
+        RowerDataBean1 bean = rowerDataBean1List.get(clickPosition);
 
         ArrayList<RowerDataBean2> list = new ArrayList<>();
         for (RowerDataBean2 bean2 : bean.getList()
@@ -213,7 +218,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
             list.add(bean2.copy());
         }
 
-//        ToastUtil.show("list.size == " + list.size());
+        ToastUtil.show("list.size == " + list.size());
         Logger.d("list.size == " + list.size());
         if (list.size() == 0) {
             RowerDataBean2 rowerDataBean2 = new RowerDataBean2(bean);
@@ -426,7 +431,7 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
         }
 
         for (RowerDataBean2 oo : list) {
-            Logger.d("oo == " + oo);
+            Logger.e("oo == " + oo);
         }
 
         workoutsAdapter2 = new WorkoutsAdapter2(list);

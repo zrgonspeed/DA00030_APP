@@ -1,26 +1,15 @@
 package com.bike.ftms.app.fragment.home;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.adapter.InformationPagerAdapter;
 import com.bike.ftms.app.base.BaseFragment;
-import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.TimeStringUtil;
-import com.bike.ftms.app.widget.VerticalViewPager;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,20 +53,23 @@ public abstract class BaseHomeFragment extends BaseFragment {
 
     }
 
-    public void onRunData(RowerDataBean rowerDataBean) {
-        tvStrokes.setText(String.valueOf(rowerDataBean.getStrokes()));
-        if (rowerDataBean.getRunMode() == MyConstant.INTERVAL_TIME ||
-                rowerDataBean.getRunMode() == MyConstant.INTERVAL_DISTANCE ||
-                rowerDataBean.getRunMode() == MyConstant.INTERVAL_CALORIES
-        ) {
-            tvInterval.setText(String.valueOf(rowerDataBean.getInterval()));
-        } else {
-            tvInterval.setText(String.valueOf(rowerDataBean.getRunInterval() + 1));
+    public void onRunData(RowerDataBean1 rowerDataBean1) {
+        tvStrokes.setText(String.valueOf(rowerDataBean1.getStrokes()));
+
+        if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_NO) {
+            tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval()));
+        } else if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
+            if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
+                tvInterval.setText(String.valueOf(rowerDataBean1.getInterval()));
+            } else {
+                tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval() + 1));
+            }
         }
-        tvDistance.setText(String.valueOf(rowerDataBean.getDistance()));
-        tvDrag.setText(String.valueOf(rowerDataBean.getDrag()));
-        tvSm.setText(String.valueOf(rowerDataBean.getSm()));
-        tvHeartRate.setText(String.valueOf(rowerDataBean.getHeart_rate()));
-        tvTime.setText(TimeStringUtil.getSToHourMinSecValue(rowerDataBean.getTime()));
+
+        tvDistance.setText(String.valueOf(rowerDataBean1.getDistance()));
+        tvDrag.setText(String.valueOf(rowerDataBean1.getDrag()));
+        tvSm.setText(String.valueOf(rowerDataBean1.getSm()));
+        tvHeartRate.setText(String.valueOf(rowerDataBean1.getHeart_rate()));
+        tvTime.setText(TimeStringUtil.getSToHourMinSecValue(rowerDataBean1.getTime()));
     }
 }

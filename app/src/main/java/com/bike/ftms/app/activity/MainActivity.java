@@ -2,9 +2,11 @@ package com.bike.ftms.app.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -15,7 +17,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
-import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.bean.RowerDataBean1;
+import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.fragment.HomeFragment;
 import com.bike.ftms.app.fragment.WorkoutsFragment;
 import com.bike.ftms.app.manager.ble.BleManager;
@@ -23,7 +26,6 @@ import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.HorizontalViewPager;
 import com.bike.ftms.app.widget.YesOrNoDialog;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,7 +141,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         BleManager.getInstance().setonRunDataListener(this);
         if (!BleManager.isConnect) {
             showConnectHintDialog();
-            homeFragment.onRunData(new RowerDataBean());
+            homeFragment.onRunData(new RowerDataBean1());
         } else {
             if (yesOrNoDialog != null && yesOrNoDialog.isShowing()) {
                 yesOrNoDialog.dismiss();
@@ -150,8 +152,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
 
     @Override
-    public void onRunData(RowerDataBean rowerDataBean) {
-        Logger.d("MainActivity", rowerDataBean.toString());
+    public void onRunData(RowerDataBean1 rowerDataBean1) {
+        Logger.d("MainActivity", rowerDataBean1.toString());
 
         if (isOnPause) {
             return;
@@ -159,7 +161,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                homeFragment.onRunData(rowerDataBean);
+                homeFragment.onRunData(rowerDataBean1);
             }
         });
     }

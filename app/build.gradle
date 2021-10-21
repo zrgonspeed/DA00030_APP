@@ -9,7 +9,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.0.2 beta5 2021-10-21"
 
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
@@ -57,4 +57,5 @@ dependencies {
     implementation 'org.litepal.android:core:2.0.0'
 
     implementation 'tech.gujin:toast-util:1.1.1'
+    implementation 'com.amitshekhar.android:debug-db:1.0.0'
 }

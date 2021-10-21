@@ -22,6 +22,14 @@ public class MyConstant {
     public @interface RunMode {
     }
 
+    public static boolean isGoalMode(int mode) {
+        return mode == GOAL_TIME || mode == GOAL_DISTANCE || mode == GOAL_CALORIES;
+    }
+
+    public static boolean isIntervalMode(int mode) {
+        return mode == INTERVAL_TIME || mode == INTERVAL_DISTANCE || mode == INTERVAL_CALORIES;
+    }
+
     /********************** 运动状态 ************************/
     public static final int RUN_STATUS_NO = 0;
     public static final int RUN_STATUS_YES = 1;

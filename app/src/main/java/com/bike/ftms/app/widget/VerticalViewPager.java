@@ -35,6 +35,8 @@ public class VerticalViewPager extends ViewPager {
         setPageTransformer(true, new VerticalPageTransformer());
         // The easiest way to get rid of the overscroll drawing that happens on the left and right
         setOverScrollMode(OVER_SCROLL_NEVER);
+
+        requestDisallowInterceptTouchEvent(true);
     }
 
     private class VerticalPageTransformer implements ViewPager.PageTransformer {
@@ -80,6 +82,12 @@ public class VerticalViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        boolean result = onInterceptTouchEvent2(ev);
+//        Logger.d("result1 == " + result);
+        return result;
+    }
+
+    public boolean onInterceptTouchEvent2(MotionEvent ev) {
         if (!isVertical) {
             return false;
         }
@@ -103,6 +111,7 @@ public class VerticalViewPager extends ViewPager {
                 lastX = x;
                 lastY = y;
                 // 拦截的判断
+//                Logger.d("1 dealtX >= dealtY == " + (dealtX >= dealtY));
                 if (dealtX >= dealtY) {
                     return false;
                 } else {

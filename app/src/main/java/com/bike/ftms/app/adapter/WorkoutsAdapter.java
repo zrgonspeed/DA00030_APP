@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.bean.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.TimeStringUtil;
@@ -26,10 +26,10 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     private OnItemClickListener onItemClickListener;
     private OnItemDeleteListener onItemDeleteListener;
     private boolean isShowDelete = false;
-    private List<RowerDataBean> rowerDataBeanList;
+    private List<RowerDataBean1> rowerDataBean1List;
 
-    public WorkoutsAdapter(List<RowerDataBean> rowerDataBeanList) {
-        this.rowerDataBeanList = rowerDataBeanList;
+    public WorkoutsAdapter(List<RowerDataBean1> rowerDataBean1List) {
+        this.rowerDataBean1List = rowerDataBean1List;
     }
 
     @NonNull
@@ -41,7 +41,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     @Override
     public void onBindViewHolder(@NonNull WorkoutsAdapter.WorkoutsViewHolder holder, int position) {
-        RowerDataBean bean = rowerDataBeanList.get(position);
+        RowerDataBean1 bean = rowerDataBean1List.get(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,24 +134,11 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
             default:
                 break;
         }
-
-/*        if (bean.getSetDistance() == 0) {
-            // 表示不是间歇运动
-            holder.tvDistance.setText(bean.getDistance() + "M");
-        } else {
-//            holder.tvDistance.setText((bean.getSetDistance() - bean.getDistance()) + "M");
-            holder.tvDistance.setText((bean.getInterval() + "x" + bean.getSetCalorie() + "c" + "/:" + bean.getReset_time()));
-        }*/
-/*        if (bean.getSetTime() == 0) {
-            holder.tvTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-        } else {
-            holder.tvTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetTime() - bean.getTime()));
-        }*/
     }
 
     @Override
     public int getItemCount() {
-        return rowerDataBeanList.size();
+        return rowerDataBean1List.size();
     }
 
     public interface OnItemClickListener {

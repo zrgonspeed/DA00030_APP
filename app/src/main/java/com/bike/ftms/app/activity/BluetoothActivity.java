@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +28,9 @@ import butterknife.OnClick;
 
 public class BluetoothActivity extends BaseActivity implements OnScanConnectListener, BleAdapter.OnItemClickListener {
     private static final int BAIDU_READ_PHONE_STATE = 1000;
+    @Nullable
+    @BindView(R.id.tv_switch)
+    TextView tv_switch;
     @BindView(R.id.cb_switch)
     CheckBox cbSwitch;
     @BindView(R.id.ll_loading)
@@ -57,16 +62,24 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    if (tv_switch != null) {
+                        tv_switch.setText(getResources().getString(R.string.bluetooth_switch_enable));
+                    }
                     if (!BleManager.isConnect) {
                         scanDevice();
                     }
                 } else {
+                    if (tv_switch != null) {
+                        tv_switch.setText(getResources().getString(R.string.bluetooth_switch_disable));
+                    }
                     BleManager.getInstance().closeBLE();
                     BleManager.getInstance().getScanResults().clear();
                     BleManager.getInstance().stopScan();
                     BleManager.getInstance().disConnectAllDevice();
                     BleManager.getInstance().close();
-                    bleAdapter.notifyDataSetChanged();
+                    if (bleAdapter != null) {
+                        bleAdapter.notifyDataSetChanged();
+                    }
                     llLoading.setVisibility(View.GONE);
                     rvBle.setVisibility(View.GONE);
                 }
@@ -81,6 +94,9 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         BleManager.getInstance().setOnScanConnectListener(this);
         BleManager.getInstance().setIsScanHrDevice(getIntent().getBooleanExtra("isScanHrDevice", false));
         cbSwitch.setChecked(BleManager.getInstance().getBluetoothAdapter().isEnabled());
+        if (tv_switch != null) {
+            tv_switch.setText(cbSwitch.isChecked() ? getResources().getString(R.string.bluetooth_switch_enable) : getResources().getString(R.string.bluetooth_switch_disable));
+        }
         if (BleManager.getInstance().getBluetoothAdapter().isEnabled() && !BleManager.isCanning) {
             scanDevice();
         }

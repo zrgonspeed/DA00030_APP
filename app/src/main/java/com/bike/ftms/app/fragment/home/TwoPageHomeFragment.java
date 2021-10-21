@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.bean.RowerDataBean1;
 
 import butterknife.BindView;
 
@@ -40,9 +40,9 @@ public class TwoPageHomeFragment extends BaseHomeFragment {
         return R.layout.view_pager_home2;
     }
 
-    public void onRunData(RowerDataBean rowerDataBean) {
-        super.onRunData(rowerDataBean);
-        tvWatts.setText(String.valueOf(rowerDataBean.getWatts()));
-        tvAveWatts.setText(String.valueOf(rowerDataBean.getAve_watts()));
+    public void onRunData(RowerDataBean1 rowerDataBean1) {
+        super.onRunData(rowerDataBean1);
+        tvWatts.setText(String.valueOf(rowerDataBean1.getWatts()));
+        tvAveWatts.setText(String.valueOf(rowerDataBean1.getAve_watts()));
     }
 }

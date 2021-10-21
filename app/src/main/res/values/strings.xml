@@ -15,7 +15,8 @@
     <string name="setting_back">BACK</string>
     <string name="setting_settings">SETTINGS</string>
 
-    <string name="bluetooth_switch">Bluetooth Enable</string>
+    <string name="bluetooth_switch_enable">Bluetooth Enable</string>
+    <string name="bluetooth_switch_disable">Bluetooth Disable</string>
     <string name="bluetooth_scanning">Scanning for Devices</string>
 
     <string name="heart_rate_switch">HRM Bluetooth Smart Wireless</string>
@@ -57,7 +58,7 @@
     <string name="create_first_name">First Name：</string>
     <string name="create_last_name">Last Name：</string>
     <string name="create_gender">Gender：</string>
-    <string name="create_birth">Male Date of birth：</string>
+    <string name="create_birth">Date of birth：</string>
     <string name="create_country">Country：</string>
     <string name="create_email_address">Email Address：</string>
     <string name="create_username">Username：</string>

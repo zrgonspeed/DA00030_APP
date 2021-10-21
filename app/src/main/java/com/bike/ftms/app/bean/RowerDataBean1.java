@@ -12,7 +12,8 @@ import java.util.List;
  * @Author YYH
  * @Date 2021/4/2
  */
-public class RowerDataBean extends LitePalSupport {
+public class RowerDataBean1 extends LitePalSupport {
+    private int id;
     private int strokes;
     private int drag;
     private int interval;
@@ -46,7 +47,15 @@ public class RowerDataBean extends LitePalSupport {
     private int runInterval = 0;        // 各个模式的分段次数  0-255
     private List<RowerDataBean2> list = new ArrayList<>();
 
-    public RowerDataBean() {
+    public RowerDataBean1() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getStrokes() {
@@ -267,22 +276,23 @@ public class RowerDataBean extends LitePalSupport {
 
     @Override
     public String toString() {
-        return "RowerDataBean{" +
-                "strokes=" + strokes +
+        return "RowerDataBean1{" +
+                "id=" + id +
+                ", strokes=" + strokes +
                 ", drag=" + drag +
                 ", interval=" + interval +
-                ", distance=" + distance +
                 ", sm=" + sm +
                 ", five_hundred=" + five_hundred +
-                ", time=" + time +
                 ", heart_rate=" + heart_rate +
                 ", ave_five_hundred=" + ave_five_hundred +
                 ", watts=" + watts +
                 ", ave_watts=" + ave_watts +
-                ", calorie=" + calorie +
                 ", calories_hr=" + calories_hr +
                 ", note='" + note + '\'' +
                 ", date=" + date +
+                ", time=" + time +
+                ", distance=" + distance +
+                ", calorie=" + calorie +
                 ", setIntervalTime=" + setIntervalTime +
                 ", setIntervalDistance=" + setIntervalDistance +
                 ", setIntervalCalorie=" + setIntervalCalorie +

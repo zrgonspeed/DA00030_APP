@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.RowerDataBean;
+import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import butterknife.BindView;
@@ -44,9 +44,9 @@ public class OnePageHomeFragment extends BaseHomeFragment {
     }
 
     @Override
-    public void onRunData(RowerDataBean rowerDataBean) {
-        super.onRunData(rowerDataBean);
-        tvFiveHundred.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean.getFive_hundred()));
-        tvAveFiveHundred.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean.getAve_five_hundred()));
+    public void onRunData(RowerDataBean1 rowerDataBean1) {
+        super.onRunData(rowerDataBean1);
+        tvFiveHundred.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getFive_hundred()));
+        tvAveFiveHundred.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAve_five_hundred()));
     }
 }

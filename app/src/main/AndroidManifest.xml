@@ -28,7 +28,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.CreateNewAccountActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".activity.HeartRateMonitorActivity"
             android:screenOrientation="landscape" />

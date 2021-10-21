@@ -65,7 +65,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/bluetooth_switch"
+                    android:text="@string/bluetooth_scanning"
                     android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
@@ -92,12 +92,13 @@
             android:button="@drawable/btn_bluetooth_switch" />
 
         <TextView
+            android:id="@+id/tv_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/cb_switch"
-            android:text="@string/bluetooth_switch"
+            android:text="@string/bluetooth_switch_enable"
             android:textColor="@color/color_707070"
             android:textSize="16sp" />
     </RelativeLayout>
