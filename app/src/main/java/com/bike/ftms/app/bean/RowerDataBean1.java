@@ -2,6 +2,7 @@ package com.bike.ftms.app.bean;
 
 import com.bike.ftms.app.common.MyConstant;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 import java.util.ArrayList;
@@ -306,5 +307,27 @@ public class RowerDataBean1 extends LitePalSupport {
                 ", runInterval=" + runInterval +
                 ", list=" + list +
                 '}';
+    }
+
+    @Column(ignore = true)
+    private int flag = 1;
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int newFlag) {
+        if (newFlag == 2) {
+            this.flag = 2;
+            return;
+        }
+        if (this.flag == 3) {
+            return;
+        }
+        this.flag = newFlag;
+    }
+
+    public boolean getCanSave() {
+        return this.flag == 3;
     }
 }

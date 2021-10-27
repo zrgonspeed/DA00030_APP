@@ -29,11 +29,15 @@ import com.bike.ftms.app.utils.ByteArrTransUtil;
 import com.bike.ftms.app.utils.ConvertData;
 import com.bike.ftms.app.utils.DataTypeConversion;
 
+import org.litepal.crud.LitePalSupport;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
+import tech.gujin.toast.ToastUtil;
 
 public class BleManager implements CustomTimer.TimerCallBack {
     private String TAG = "BleManager";
@@ -142,9 +146,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 扫描蓝牙设备
      */
     public void scanDevice() {
+        Logger.e("mBluetoothAdapter == " + mBluetoothAdapter + "    isCanning == " +  isCanning);
         if (mBluetoothAdapter != null && !isCanning) {
-            if (!mBluetoothAdapter.isEnabled()) {
-                mBluetoothAdapter.enable();
+            boolean enabled = mBluetoothAdapter.isEnabled();
+            Logger.e("2 enabled == " + enabled);
+            if (!enabled) {
+                boolean enable = mBluetoothAdapter.enable();
+                Logger.e("2_1 enable == " + enable);
+
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -285,7 +294,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * @param position
      */
     public void connectDevice(int position) {
+        Logger.e("mBluetoothGattServices == " + mBluetoothGattServices);
+        if (mBluetoothGattServices != null)
+            Logger.e("mBluetoothGattServices.size == " + mBluetoothGattServices.size());
+        Logger.e("1 getScanResults(): " + getScanResults());
+
         if (getScanResults().get(position).getConnectState() == 1) {
+            disableCharacterNotifiy();
             disConnectDevice();
             return;
         }
@@ -310,6 +325,17 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
         if (onScanConnectListener != null) {
             onScanConnectListener.onNotifyData();
+        }
+    }
+
+    public void disableCharacterNotifiy() {
+        if (mBluetoothGattServices == null || mBluetoothGatt == null) {
+            return;
+        }
+        for (BluetoothGattService service : mBluetoothGattServices) {
+            for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                mBluetoothGatt.setCharacteristicNotification(characteristic, false);
+            }
         }
     }
 
@@ -377,7 +403,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
                 }
                 isConnect = true;
-                mBluetoothGatt.discoverServices();
+                if (mBluetoothGatt != null) {
+                    mBluetoothGatt.discoverServices();
+                }
                 Logger.d("isConnect=" + isConnect + ",isHeartbeatConnect=" + isHeartbeatConnect);
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(true, gatt.getDevice().getName());
@@ -499,7 +527,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
             isConnectTimer.setmAllTime(0L);
-            Logger.i(TAG, characteristic.getUuid() + ",onCharacteristicChanged::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
+            Logger.i(TAG, characteristic.getUuid().toString().substring(0, 8) + ",::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
 
             byte[] data = characteristic.getValue();
             rxDataPackage(data, characteristic.getUuid().toString());
@@ -840,18 +868,21 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 打开BLE
      */
     public void openBLE() {
+        Logger.e("1 enable == " + mBluetoothAdapter.isEnabled());
         if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
             isOpen = mBluetoothAdapter.enable();
+            Logger.e("1_1 isOpen == " + isOpen);
         }
     }
 
     /**
      * 关闭BLE
      */
-    public void closeBLE() {
+    public boolean closeBLE() {
         if (mBluetoothAdapter != null) {
-            mBluetoothAdapter.disable();
+            return mBluetoothAdapter.disable();
         }
+        return false;
     }
 
     /**
@@ -1011,12 +1042,27 @@ public class BleManager implements CustomTimer.TimerCallBack {
         canSave = false;
     }
 
+    boolean onlyHr = false;
+
     /**
      * 设置运动数据
      *
      * @param data
      */
     private void setRunData(byte[] data) {
+        if (onlyHr) {
+            if (!isHeartbeatConnect) {
+                rowerDataBean1.setHeart_rate(RowerDataParam.HEART_RATE_INX == -1 ? 0 : resolveData(data, RowerDataParam.HEART_RATE_INX, RowerDataParam.HEART_RATE_LEN));
+                if (onRunDataListener != null) {
+                    onRunDataListener.onRunData(rowerDataBean1);
+                }
+            }
+            return;
+        }
+
+        if (rowerDataBean1.getCanSave()) {
+            return;
+        }
         if (onRunDataListener == null || runStatus == RUN_STATUS_STOP) {
             return;
         }
@@ -1076,7 +1122,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         date[3] = (byte) Integer.parseInt(dates[0], 16);
         date[4] = (byte) Integer.parseInt(dates[1], 16);
         date[5] = (byte) Integer.parseInt(dates[2], 16);
-        byte[] bytes = new byte[date.length];
+        byte[] bytes = new byte[64];
         int len = SerialData.comPackage(date, bytes, date.length - 3);
         sendDescriptorByte(bytes, len);
         startTimerOfIsVerifyConnect();
@@ -1179,11 +1225,18 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
 
         if (uuid.contains("2ada") && isToExamine) {
-            Logger.d("-------------------------------------------------------------------");
+            // 单独显示心跳
+            if (data[3] == 0 && data[4] == 1) {
+                onlyHr = true;
+            } else {
+                onlyHr = false;
+            }
+
+            Logger.d("---------------------------2ada----------------------------------------");
             //停止运动
             if (data[3] == RUN_STATUS_STOP && runStatus != RUN_STATUS_STOP) {
-
                 Logger.d("----------------", "mode == " + rowerDataBean1.getRunMode());
+                canSave = false;
                 if (rowerDataBean1.getRunMode() == MyConstant.GOAL_TIME) {
                     // 时间是倒数的，用距离判断
                     if (rowerDataBean1.getDistance() >= 10) {
@@ -1207,11 +1260,20 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     }
                 }
 
-
+                if (canSave) {
+                    rowerDataBean1.setFlag(3);
+                    runStatus = data[3];
+                    return;
+                }
             }
             runStatus = data[3];
+            rowerDataBean1.setRunStatus(runStatus);
 
             if (onRunDataListener == null || runStatus == RUN_STATUS_STOP) {
+                return;
+            }
+
+            if (rowerDataBean1.getCanSave()) {
                 return;
             }
             // 都要设置的参数
@@ -1287,6 +1349,32 @@ public class BleManager implements CustomTimer.TimerCallBack {
             }
             if (data[1] == 0x41 && data[2] == 0x02 && isToExamine) {
                 sendRespondData(data);
+
+                if (runStatus == RUN_STATUS_STOP || rowerDataBean1.getCanSave()) {
+                    if (canSave && rowerDataBean1.getCanSave()) {
+                        Logger.e("1----RUN_STATUS_STOP----", "bean1  save : " + rowerDataBean1);
+                        Logger.e("1----RUN_STATUS_STOP----", "bean1.list: " + rowerDataBean1.getList());
+//                        rowerDataBean1.save();
+                        tempSave(rowerDataBean1);
+
+                        rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
+                        Logger.e("2----RUN_STATUS_STOP----", "bean2  save : " + rowerDataBean2);
+//                        rowerDataBean2.save();
+                        tempSave(rowerDataBean2);
+                        Logger.e("2----RUN_STATUS_STOP----", "bean1.list: " + rowerDataBean1.getList());
+
+                        rowerDataBean1 = new RowerDataBean1();
+                        canSave = false;
+                    }
+
+                    rowerDataBean1.setDrag(0);
+                    rowerDataBean1.setInterval(0);
+                    rowerDataBean1.setRunInterval(0);
+                    rowerDataBean1.setFlag(1);
+                    tempInterval1 = 0;
+                    tempInterval2 = 0;
+                }
+
                 if (runStatus == RUN_STATUS_RUNNING) {
                     rowerDataBean1.setDrag(resolveData(data, RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
                     rowerDataBean1.setInterval(resolveData(data, RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
@@ -1297,8 +1385,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
                             rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
                         } else {
                             if (tempInterval1 >= 1) {
-                                rowerDataBean2.save();
-                                Logger.e("----", "bean2.save " + rowerDataBean2);
+//                                rowerDataBean2.save();
+                                tempSave(rowerDataBean2);
+                                Logger.e("间歇运动 " + rowerDataBean2.getInterval(), "bean2.save " + rowerDataBean2);
                             }
                         }
                         tempInterval1 = rowerDataBean1.getInterval();
@@ -1307,31 +1396,12 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         if (rowerDataBean1.getRunInterval() <= tempInterval2) {
                             rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
                         } else {
-                            rowerDataBean2.save();
-                            Logger.e("----", "bean2.save " + rowerDataBean2);
+//                            rowerDataBean2.save();
+                            tempSave(rowerDataBean2);
+                            Logger.e("目标运动 " + rowerDataBean2.getRunInterval() + 1, "bean2.save " + rowerDataBean2);
                         }
                         tempInterval2 = rowerDataBean1.getRunInterval();
                     }
-                } else if (runStatus == RUN_STATUS_STOP) {
-                    if (canSave) {
-                        Logger.e("1----RUN_STATUS_STOP----", "bean1  save : " + rowerDataBean1);
-                        Logger.e("1----RUN_STATUS_STOP----", "bean1.list: " + rowerDataBean1.getList());
-                        rowerDataBean1.save();
-
-                        rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
-                        Logger.e("2----RUN_STATUS_STOP----", "bean2  save : " + rowerDataBean2);
-                        rowerDataBean2.save();
-                        Logger.e("2----RUN_STATUS_STOP----", "bean1.list: " + rowerDataBean1.getList());
-
-                        rowerDataBean1 = new RowerDataBean1();
-                        canSave = false;
-                    }
-
-                    rowerDataBean1.setDrag(0);
-                    rowerDataBean1.setInterval(0);
-                    rowerDataBean1.setRunInterval(0);
-                    tempInterval1 = 0;
-                    tempInterval2 = 0;
                 }
 
                 if (onRunDataListener != null) {
@@ -1339,5 +1409,18 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 }
             }
         }
+    }
+
+    public static void tempSave(LitePalSupport support) {
+        new Thread() {
+            public void run() {
+                Looper.prepare();
+                new Handler().post(() -> {
+                    ToastUtil.show("保存成功！", true, ToastUtil.Mode.REPLACEABLE);
+                });//在子线程中直接去new 一个handler
+                Looper.loop();    //这种情况下，Runnable对象是运行在子线程中的，可以进行联网操作，但是不能更新UI
+            }
+        }.start();
+        support.save();
     }
 }

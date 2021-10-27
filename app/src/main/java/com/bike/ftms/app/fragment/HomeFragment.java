@@ -92,7 +92,9 @@ public class HomeFragment extends BaseFragment {
         }
 
         if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_NO) {
+            RowerDataBean1 tempBean1 = rowerDataBean1;
             rowerDataBean1 = new RowerDataBean1();
+            rowerDataBean1.setHeart_rate(tempBean1.getHeart_rate());
         }
 
         onePageHomeFragment.onRunData(rowerDataBean1);

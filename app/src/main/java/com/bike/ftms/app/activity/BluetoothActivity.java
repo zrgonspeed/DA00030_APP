@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -62,26 +63,43 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    Logger.e("打开蓝牙啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊");
+
                     if (tv_switch != null) {
                         tv_switch.setText(getResources().getString(R.string.bluetooth_switch_enable));
                     }
                     if (!BleManager.isConnect) {
                         scanDevice();
                     }
+
+//                    if () {
+//
+//                    } else {
+//                        cbSwitch.setChecked(false);
+//                    }
+
                 } else {
+                    Logger.e("getScanResults(): " + BleManager.getInstance().getScanResults());
+                    Logger.e("断开蓝牙啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊");
                     if (tv_switch != null) {
                         tv_switch.setText(getResources().getString(R.string.bluetooth_switch_disable));
                     }
-                    BleManager.getInstance().closeBLE();
-                    BleManager.getInstance().getScanResults().clear();
-                    BleManager.getInstance().stopScan();
-                    BleManager.getInstance().disConnectAllDevice();
-                    BleManager.getInstance().close();
-                    if (bleAdapter != null) {
-                        bleAdapter.notifyDataSetChanged();
+
+                    boolean closed = BleManager.getInstance().closeBLE();
+                    if (closed) {
+                        BleManager.getInstance().stopScan();
+//                    BleManager.getInstance().disableCharacterNotifiy();
+//                    BleManager.getInstance().disConnectAllDevice();
+//                    BleManager.getInstance().getScanResults().clear();
+//                    BleManager.getInstance().close();
+                        if (bleAdapter != null) {
+                            bleAdapter.notifyDataSetChanged();
+                        }
+                        llLoading.setVisibility(View.GONE);
+                        rvBle.setVisibility(View.GONE);
+                    } else {
+                        cbSwitch.setChecked(true);
                     }
-                    llLoading.setVisibility(View.GONE);
-                    rvBle.setVisibility(View.GONE);
                 }
             }
         });
@@ -129,6 +147,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
                 != PackageManager.PERMISSION_GRANTED
         ) {
+            Logger.e("没有权限，请求权限");
             // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
             ActivityCompat.requestPermissions(BluetoothActivity.this, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -139,10 +158,17 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                     Manifest.permission.BLUETOOTH,
             }, BAIDU_READ_PHONE_STATE);
         } else {
+            Logger.e("有权限了");
             llLoading.setVisibility(View.VISIBLE);
             BleManager.getInstance().openBLE();
+            BleManager.getInstance().getScanResults().clear();
+            if (bleAdapter != null)
+                bleAdapter.notifyDataSetChanged();
             rvBle.setVisibility(View.VISIBLE);
-            BleManager.getInstance().scanDevice();
+
+            new Handler().postDelayed(() -> {
+                BleManager.getInstance().scanDevice();
+            }, 2000);
         }
     }
 
@@ -150,6 +176,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Logger.e("-----------------------------------------------------");
         switch (requestCode) {
             // requestCode即所声明的权限获取码，在checkSelfPermission时传入
             case BAIDU_READ_PHONE_STATE:
