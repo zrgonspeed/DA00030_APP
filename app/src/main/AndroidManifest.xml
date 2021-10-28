@@ -27,13 +27,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.CreateNewAccountActivity"
+            android:name=".activity.login.CreateNewAccountActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.HeartRateMonitorActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.login.LoginActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.VersionActivity"

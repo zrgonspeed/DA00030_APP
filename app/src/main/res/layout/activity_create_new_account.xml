@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.CreateNewAccountActivity">
+    tools:context=".activity.login.CreateNewAccountActivity">
 
+    <!--顶部返回按钮蓝-->
     <RelativeLayout
         android:id="@+id/rl"
         android:layout_width="match_parent"
@@ -31,6 +32,7 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
+    <!--标题-->
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
@@ -42,10 +44,13 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <!--表单-->
     <ScrollView
+        android:id="@+id/sv_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,6 +82,7 @@
                     android:background="@null"
                     android:imeOptions="actionDone"
                     android:singleLine="true"
+                    android:text="zhang"
                     android:textColor="@color/color_707070"
                     android:textSize="16sp" />
 
@@ -113,6 +119,7 @@
                     android:background="@null"
                     android:imeOptions="actionDone"
                     android:singleLine="true"
+                    android:text="ri guang"
                     android:textColor="@color/color_707070"
                     android:textSize="16sp" />
 
@@ -180,9 +187,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:imeOptions="actionDone"
                     android:layout_toRightOf="@id/tv_birth"
                     android:background="@null"
+                    android:imeOptions="actionDone"
                     android:singleLine="true"
                     android:textColor="@color/color_707070"
                     android:textSize="16sp" />
@@ -215,10 +222,10 @@
                     android:id="@+id/edt_country"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionDone"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_country"
                     android:background="@null"
+                    android:imeOptions="actionDone"
                     android:singleLine="true"
                     android:textColor="@color/color_707070"
                     android:textSize="16sp" />
@@ -249,13 +256,49 @@
 
                 <EditText
                     android:id="@+id/edt_email_address"
-                    android:layout_width="match_parent"
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_email_address"
                     android:background="@null"
-                    android:singleLine="true"
                     android:imeOptions="actionDone"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:text="631686921@qq.com"
+                    android:textColor="@color/color_707070"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_send_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="400dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/create_account_bg"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="发送验证码"
+                    android:textColor="@color/color_white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edt_email_code"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/tv_send_code"
+                    android:background="@null"
+                    android:hint="输入验证码"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:singleLine="true"
+                    android:text="123456"
                     android:textColor="@color/color_707070"
                     android:textSize="16sp" />
 
@@ -284,14 +327,15 @@
                     android:textSize="16sp" />
 
                 <EditText
-                    android:id="@+id/edt_username"
+                    android:id="@+id/edt_user_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionDone"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_username"
                     android:background="@null"
+                    android:imeOptions="actionDone"
                     android:singleLine="true"
+                    android:text="ZRG"
                     android:textColor="@color/color_707070"
                     android:textSize="16sp" />
 
@@ -324,12 +368,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:imeOptions="actionDone"
                     android:layout_toRightOf="@id/tv_password"
                     android:background="@null"
-                    android:singleLine="true"
-                    android:textColor="@color/color_707070"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:text="123456"
+                    android:textColor="@color/color_707070"
                     android:textSize="16sp" />
 
                 <View
@@ -361,12 +406,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:imeOptions="actionDone"
                     android:layout_toRightOf="@id/tv_confirm_password"
                     android:background="@null"
-                    android:singleLine="true"
-                    android:textColor="@color/color_707070"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:text="123456"
+                    android:textColor="@color/color_707070"
                     android:textSize="16sp" />
 
                 <View
@@ -396,5 +442,141 @@
         </LinearLayout>
     </ScrollView>
 
+    <!--输入验证码界面-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_code"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
+        <TextView
+            android:id="@+id/tv_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="已发送验证码到邮箱  123@qq.com"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/et_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="150dp"
+            android:height="50dp"
+            android:maxLength="6"
+            android:text="123456"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_create_account_send_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/create_account_bg"
+            android:gravity="center"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="@string/create_create_account"
+            android:textColor="@color/color_white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.95" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--注册成功界面-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_register_success"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_register_success"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="注册成功"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_register_success_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5秒后返回登录界面"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--注册失败界面-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_register_fail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_register_fail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="注册失败"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_register_fail_cause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="网络异常 - 验证码错误"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_register_fail_back"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/create_account_bg"
+            android:gravity="center"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="返回"
+            android:textColor="@color/color_white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

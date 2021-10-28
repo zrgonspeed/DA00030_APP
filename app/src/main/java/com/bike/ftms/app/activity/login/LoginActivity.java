@@ -1,4 +1,4 @@
-package com.bike.ftms.app.activity;
+package com.bike.ftms.app.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;

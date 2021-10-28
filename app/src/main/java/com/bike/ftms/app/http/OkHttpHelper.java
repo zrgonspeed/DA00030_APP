@@ -15,8 +15,10 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -25,23 +27,51 @@ import okhttp3.Response;
  * @Time 2019/08/19
  */
 public class OkHttpHelper {
+    private static final String TAG = "OkHttpHelper";
     private static OkHttpClient okHttpClient;
     private static Handler mHandler;
 
-    private static OkHttpClient getInstance() {
-        if (okHttpClient == null) {
+    private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
+    private static final MediaType MEDIA_TYPE_JSON_2 = MediaType.parse("application/x-www-form-urlencoded");
+    private static final MediaType MEDIA_TYPE_JSON_3 = MediaType.parse("application/json");
+    private static final MediaType MEDIA_OBJECT_STREAM = MediaType.parse("application/octet-stream");
+
+    private volatile static OkHttpHelper mHelper;
+
+    private OkHttpHelper() {
+        okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .build();
+        mHandler = new Handler(Looper.getMainLooper());
+    }
+
+//    public static OkHttpClient getInstance() {
+//        if (okHttpClient == null) {
+//            synchronized (OkHttpHelper.class) {
+//                if (okHttpClient == null) {
+//                    okHttpClient = new OkHttpClient.Builder()
+//                            .connectTimeout(10, TimeUnit.SECONDS)
+//                            .writeTimeout(10, TimeUnit.SECONDS)
+//                            .readTimeout(10, TimeUnit.SECONDS)
+//                            .build();
+//                    mHandler = new Handler(Looper.getMainLooper());
+//                }
+//            }
+//        }
+//        return okHttpClient;
+//    }
+
+    public static OkHttpHelper getInstance() {
+        if (mHelper == null) {
             synchronized (OkHttpHelper.class) {
-                if (okHttpClient == null) {
-                    okHttpClient = new OkHttpClient.Builder()
-                            .connectTimeout(10, TimeUnit.SECONDS)
-                            .writeTimeout(10, TimeUnit.SECONDS)
-                            .readTimeout(10, TimeUnit.SECONDS)
-                            .build();
-                    mHandler = new Handler(Looper.getMainLooper());
+                if (mHelper == null) {
+                    mHelper = new OkHttpHelper();
                 }
             }
         }
-        return okHttpClient;
+        return mHelper;
     }
 
     /**
@@ -54,6 +84,86 @@ public class OkHttpHelper {
     public static void get(String url, Object tag, OkHttpCallBack callBack) {
         commonGet(getRequestForGet(url, tag), callBack);
     }
+
+    /**
+     * post 请求
+     *
+     * @param url
+     * @param tag
+     * @param callBack
+     */
+    public void post(String url, String json, Object tag, OkHttpCallBack callBack) {
+        commonPost(getRequestForPost(url, json, tag), callBack);
+    }
+
+    private Request getRequestForPost(String url, String json, Object tag) {
+        Logger.d(TAG, "getRequestForPost---> " + url);
+        if (url.isEmpty()) {
+            return null;
+        }
+
+        try {
+            Logger.d(TAG, "post json >>> " + json);
+            RequestBody body = RequestBody.Companion.create(json, MEDIA_TYPE_JSON_3);
+
+            Request.Builder builder = new Request.Builder();
+            builder.url(url)
+                    .post(body);
+
+            if (tag != null) {
+                builder.tag(tag);
+            }
+
+            return builder.build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void commonPost(Request request, OkHttpCallBack callBack) {
+        if (request == null) {
+            return;
+        }
+        getInstance().okHttpClient
+                .newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        if (call.isCanceled()) {
+                            return;
+                        }
+                        getInstance().mHandler.post(() -> {
+                            if (callBack != null) {
+                                callBack.onFailure(call, e);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if (call.isCanceled()) {
+                            return;
+                        }
+                        String str = response.body().string();
+                        getInstance().mHandler.post(() -> {
+                            try {
+//                                if (response.code() != 200) {
+//                                    callBack.onFailure(call, new IOException());
+//                                } else {
+//                                    callBack.onSuccess(call, str);
+//                                }
+                                callBack.onSuccess(call, str);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                callBack.onFailure(call, new IOException());
+                            }
+                        });
+                    }
+                });
+    }
+
 
     /**
      * 下载文件
@@ -72,28 +182,26 @@ public class OkHttpHelper {
      *
      * @param tag
      */
-    public static void cacel(Object tag) {
-        if (tag == null) {
-            return;
-        }
-        for (Call call : getInstance().dispatcher().runningCalls()) {
-            if (tag.equals(call.request().tag())) {
-                call.cancel();
-            }
-        }
-        for (Call call : getInstance().dispatcher().queuedCalls()) {
-            if (tag.equals(call.request().tag())) {
-                call.cancel();
-            }
-        }
-    }
+//    public static void cacel(Object tag) {
+//        if (tag == null) {
+//            return;
+//        }
+//        for (Call call : getInstance().dispatcher().runningCalls()) {
+//            if (tag.equals(call.request().tag())) {
+//                call.cancel();
+//            }
+//        }
+//        for (Call call : getInstance().dispatcher().queuedCalls()) {
+//            if (tag.equals(call.request().tag())) {
+//                call.cancel();
+//            }
+//        }
+//    }
 
     /**
      * 判断tag是否存在
-     *
-     * @param tag
      */
-    public static boolean isTag(Object tag) {
+/*    public static boolean isTag(Object tag) {
         if (tag == null) {
             return false;
         }
@@ -108,13 +216,12 @@ public class OkHttpHelper {
             }
         }
         return false;
-    }
-
+    }*/
     private static void commonGet(Request request, OkHttpCallBack callBack) {
         if (request == null) {
             return;
         }
-        getInstance()
+        getInstance().okHttpClient
                 .newCall(request)
                 .enqueue(new Callback() {
                     @Override
@@ -177,7 +284,7 @@ public class OkHttpHelper {
                 .url(url)
                 .tag(tag)
                 .build();
-        getInstance()
+        getInstance().okHttpClient
                 .newCall(request)
                 .enqueue(new Callback() {
                     @Override

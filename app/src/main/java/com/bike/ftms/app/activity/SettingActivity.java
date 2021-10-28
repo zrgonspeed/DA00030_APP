@@ -7,11 +7,10 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.activity.login.LoginActivity;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.common.ParamData;
-import com.bike.ftms.app.manager.ble.BleManager;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SettingActivity extends BaseActivity {
