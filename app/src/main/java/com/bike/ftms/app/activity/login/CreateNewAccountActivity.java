@@ -1,19 +1,26 @@
 package com.bike.ftms.app.activity.login;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.andreabaccega.formedittextvalidator.EmptyValidator;
+import com.andreabaccega.formedittextvalidator.Validator;
+import com.andreabaccega.widget.DefaultEditTextValidator;
+import com.andreabaccega.widget.FormEditText;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.bean.RegisterBean;
 import com.bike.ftms.app.bean.RegisterMailBean;
+import com.bike.ftms.app.bean.ResultBean;
 import com.bike.ftms.app.http.OkHttpCallBack;
 import com.bike.ftms.app.http.OkHttpHelper;
 import com.bike.ftms.app.utils.BasisTimesUtils;
@@ -25,6 +32,8 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
+import okhttp3.Response;
+import tech.gujin.toast.ToastUtil;
 
 public class CreateNewAccountActivity extends BaseActivity {
 
@@ -41,17 +50,18 @@ public class CreateNewAccountActivity extends BaseActivity {
     private String[] countryItems;
 
     @BindView(R.id.edt_first_name)
-    EditText edt_first_name;
+    FormEditText edt_first_name;
     @BindView(R.id.edt_last_name)
-    EditText edt_last_name;
+    FormEditText edt_last_name;
     @BindView(R.id.edt_email_address)
-    EditText edt_email_address;
+    FormEditText edt_email_address;
     @BindView(R.id.edt_user_name)
-    EditText edt_user_name;
+    FormEditText edt_user_name;
     @BindView(R.id.edt_password)
-    EditText edt_password;
+    FormEditText edt_password;
     @BindView(R.id.edt_confirm_password)
-    EditText edt_confirm_password;
+    FormEditText edt_confirm_password;
+
 
     @BindView(R.id.sv_form)
     ScrollView sv_form;
@@ -60,7 +70,7 @@ public class CreateNewAccountActivity extends BaseActivity {
     ConstraintLayout cl_code;*/
 
     @BindView(R.id.edt_email_code)
-    EditText edt_email_code;
+    FormEditText edt_email_code;
 
     @BindView(R.id.tv_send_code)
     TextView tv_send_code;
@@ -76,6 +86,9 @@ public class CreateNewAccountActivity extends BaseActivity {
 
     @BindView(R.id.cl_register_fail)
     ConstraintLayout cl_register_fail;
+
+    FormEditText[] etArr = new FormEditText[7];
+    private InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +107,40 @@ public class CreateNewAccountActivity extends BaseActivity {
         edt_birth.setText(BasisTimesUtils.getDeviceTimeOfYMD());
         edt_gender.setText(sexItems[choiceSexInx]);
         edt_country.setText(countryItems[choiceCountryInx]);
+
+
+        etArr[0] = edt_first_name;
+        etArr[1] = edt_last_name;
+        etArr[2] = edt_email_code;
+        etArr[3] = edt_email_address;
+        etArr[4] = edt_user_name;
+        etArr[5] = edt_password;
+        etArr[6] = edt_confirm_password;
+        for (FormEditText formEditText : etArr) {
+//            validator.setEmptyAllowed(false, getApplicationContext());
+//            validator.setEmptyErrorString("不能为空");
+//            validator.resetValidators(getApplicationContext());
+//            formEditText.addValidator(new EmptyValidator("ss"));
+            formEditText.setOnFocusChangeListener((View v, boolean focus) -> {
+                Logger.e("focus: " + focus);
+                if (!focus) {
+                    formEditText.testValidity();
+                }
+            });
+        }
+
+
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
+
+/*    private EditTextFocusListener focusListener = new EditTextFocusListener();
+
+    private class EditTextFocusListener implements View.OnFocusChangeListener {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+//            v.testValidity();
+        }
+    }*/
 
     @Override
     protected void initView() {
@@ -107,6 +153,11 @@ public class CreateNewAccountActivity extends BaseActivity {
             R.id.tv_register_fail_back,
     })
     public void onViewClicked(View view) {
+        View currentFocus = getCurrentFocus();
+        if (currentFocus != null) {
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+
         switch (view.getId()) {
             case R.id.iv_back:
                 finish();
@@ -122,7 +173,12 @@ public class CreateNewAccountActivity extends BaseActivity {
                 break;
 
             case R.id.tv_send_code:
-                sendEmailToServer();
+                if (edt_email_address.testValidity()) {
+                    tv_send_code.setText("发送中...");
+                    new Thread(() -> {
+                        sendEmailToServer();
+                    }).start();
+                }
                 break;
             case R.id.tv_create_account:
                 // 1.校验数据
@@ -138,14 +194,29 @@ public class CreateNewAccountActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 校验表单
+     *
+     * @return
+     */
     private boolean checkField() {
-        String email = edt_email_address.getText().toString().trim();
-        if ("".equals(email)) {
-            // 邮箱不能为空
-            return false;
+        boolean allValid = true;
+        for (FormEditText formEditText : etArr) {
+            allValid = formEditText.testValidity() && allValid;
         }
 
-        return true;
+        String pass = edt_password.getText().toString().trim();
+        String pass2 = edt_confirm_password.getText().toString().trim();
+        if (!pass.equals("") && !pass2.equals("")) {
+            if (!pass.equals(pass2)) {
+                Logger.e("密码不一致");
+                ToastUtil.show("密码不一致", ToastUtil.Mode.REPLACEABLE);
+                return false;
+            }
+        }
+
+        Logger.e("allValid  == " + allValid);
+        return allValid;
     }
 
     /**
@@ -203,40 +274,63 @@ public class CreateNewAccountActivity extends BaseActivity {
      * 发送请求,先发送验证码到邮箱
      */
     private void sendEmailToServer() {
-        tv_send_code.setText("已发送");
-
         // 邮箱验证，成功则邮箱收到验证码，用户输入验证码
-        String mailCodeUrl = "http://rowerdata-test.anplus-tech.com/restapi/verify/email";
+        String mailCodeUrl = "http://192.168.50.21:8080" + "/restapi/verify/email";
         RegisterMailBean bean = new RegisterMailBean();
         bean.setEmail(edt_email_address.getText().toString().trim());
         bean.setType("register");
 
         String json = GsonUtil.GsonString(bean);
-        /*OkHttpHelper.getInstance().post(mailCodeUrl, json, null, new OkHttpCallBack() {
+        OkHttpHelper.getInstance().post(mailCodeUrl, json, null, new OkHttpCallBack() {
             @Override
             public void onFailure(Call call, IOException e) {
+                // 响应失败
                 Logger.e("请求失败！");
                 Logger.e(e.toString());
-                e.printStackTrace();
+                ToastUtil.show("请求超时或网络没打开", true, ToastUtil.Mode.REPLACEABLE);
+                tv_send_code.setText("发送失败");
             }
 
             @Override
-            public void onSuccess(Call call, String response) {
+            public void onSuccess(Call call, int httpCode, String response) {
                 // 响应成功，响应码不一定是200
-                Logger.e("onSuccess ->> response == " + response);
-                Logger.e("邮箱验证成功！已发送验证码到邮箱。");
+                // String resStr = response.body().string();
+                Logger.e("请求成功 ->> response.body().string() == " + response);
+                // {"code":"EmailError","message":"邮箱格式不正确"}
 
-                // 显示输入验证码的界面
-                cl_code.setVisibility(View.VISIBLE);
-                sv_form.setVisibility(View.GONE);
+                Logger.e("response.toString() == " + response.toString());
+                // Response{protocol=http/1.1, code=422, message=, url=http://192.168.50.180:8080/restapi/verify/email}
+
+                if (httpCode == 204) {
+                    // 正确响应，无响应体
+                    // 显示注册成功界面
+                    Logger.e("发送验证码成功");
+                    tv_send_code.setText("已发送");
+//                    cl_register_success.setVisibility(View.VISIBLE);
+                } else if (httpCode == 422) {
+                    // 错误响应，响应体包含错误信息
+                    // 显示注册失败界面
+                    Logger.e("发送验证码失败");
+                    ToastUtil.show("邮箱格式不对!");
+                    tv_send_code.setText("发送失败");
+
+                    // 封装响应体为bean
+                    ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
+                    Logger.e("resultBean == " + resultBean);
+                } else {
+                    // 可能是5xx系列，服务器错误
+                    Logger.e("发送验证码失败---------------------");
+                    sv_form.setVisibility(View.GONE);
+                }
+
             }
-        });*/
+        });
     }
 
     private void sendAllToServer() {
         // 假设邮箱验证通过，用户得到并输入了验证码
         // 封装全部参数
-        String userRegisterUrl = "http://rowerdata-test.anplus-tech.com/restapi/users/register";
+        String userRegisterUrl = "http://192.168.50.21:8080/restapi/users/register";
 
         RegisterBean registerBean = new RegisterBean();
         registerBean.setEmail(edt_email_address.getText().toString().trim());
@@ -246,38 +340,62 @@ public class CreateNewAccountActivity extends BaseActivity {
         registerBean.setUsername(edt_user_name.getText().toString().trim());
         registerBean.setGender(edt_gender.getText().toString().trim());
         registerBean.setPassword(edt_password.getText().toString().trim());
-        registerBean.setCode("6666");
+        registerBean.setCode(edt_email_code.getText().toString().trim());
 //        registerBean.setCountry(edt_country.getText().toString().trim());
 
         String registerBeanJson = GsonUtil.GsonString(registerBean);
-/*        OkHttpHelper.getInstance().post(userRegisterUrl, registerBeanJson, null, new OkHttpCallBack() {
+        OkHttpHelper.getInstance().post(userRegisterUrl, registerBeanJson, null, new OkHttpCallBack() {
             @Override
             public void onFailure(Call call, IOException e) {
+                // 响应失败
                 Logger.e("请求失败！");
                 Logger.e(e.toString());
-                e.printStackTrace();
+
+                // 网络没打开
+                // 请求超时
+                ToastUtil.show("请求超时或网络没打开", true, ToastUtil.Mode.REPLACEABLE);
             }
 
             @Override
-            public void onSuccess(Call call, String response) {
+            public void onSuccess(Call call, int httpCode, String response) {
                 // 响应成功，响应码不一定是200
-                Logger.e("请求成功 ->> response == " + response);
-                //if ()
-                Logger.e("注册成功" + response);
+                // String resStr = response.body().string();
+                Logger.e("请求成功 ->> response.body().string() == " + response);
+                // {"code":"EmailError","message":"邮箱格式不正确"}
 
-                // 显示注册成功界面
+                Logger.e("response.toString() == " + response.toString());
+                // Response{protocol=http/1.1, code=422, message=, url=http://192.168.50.180:8080/restapi/verify/email}
+
+                if (httpCode == 204) {
+                    // 正确响应，无响应体
+                    // 显示注册成功界面
+                    Logger.e("注册成功");
+                    cl_register_success.setVisibility(View.VISIBLE);
+                } else if (httpCode == 422 || httpCode == 403 || httpCode == 409) {
+                    // 错误响应，响应体包含错误信息
+                    // 显示注册失败界面
+                    Logger.e("注册失败");
+                    cl_register_fail.setVisibility(View.VISIBLE);
+
+                    // 封装响应体为bean
+                    ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
+                    Logger.e("resultBean == " + resultBean);
+                } else {
+                    // 可能是5xx系列，服务器错误
+                    Logger.e("注册失败---");
+                }
+                sv_form.setVisibility(View.GONE);
             }
-        });*/
+        });
 
-
-        if ("123456".equals(edt_email_code.getText().toString().trim())) {
-            // 注册成功
-            cl_register_success.setVisibility(View.VISIBLE);
-        } else {
-            // 注册失败
-            cl_register_fail.setVisibility(View.VISIBLE);
-        }
-        sv_form.setVisibility(View.GONE);
+// 随便测试
+//        if ("123456".equals(edt_email_code.getText().toString().trim())) {
+//            // 注册成功
+//            cl_register_success.setVisibility(View.VISIBLE);
+//        } else {
+//            // 注册失败
+//            cl_register_fail.setVisibility(View.VISIBLE);
+//        }
     }
 
     /**

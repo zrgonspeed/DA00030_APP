@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">bike FTMS app</string>
+    <string name="app_name">D-Fit</string>
     <string name="home_strokes">STROKES</string>
     <string name="home_drag">DRAG</string>
     <string name="home_interval">INTERVAL</string>

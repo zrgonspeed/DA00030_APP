@@ -145,16 +145,11 @@ public class OkHttpHelper {
                         if (call.isCanceled()) {
                             return;
                         }
+                        int httpCode = response.code();
                         String str = response.body().string();
                         getInstance().mHandler.post(() -> {
                             try {
-//                                if (response.code() != 200) {
-//                                    callBack.onFailure(call, new IOException());
-//                                } else {
-//                                    callBack.onSuccess(call, str);
-//                                }
-                                callBack.onSuccess(call, str);
-
+                                callBack.onSuccess(call, httpCode, str);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 callBack.onFailure(call, new IOException());
@@ -247,7 +242,7 @@ public class OkHttpHelper {
                                 if (response.code() != 200) {
                                     callBack.onFailure(call, new IOException());
                                 } else {
-                                    callBack.onSuccess(call, response.body().string());
+                                    callBack.onSuccess(call, response.code(), response.body().string());
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
