@@ -139,7 +139,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         isOnPause = false;
         m_wklk.acquire(); //设置保持唤醒
         BleManager.getInstance().setonRunDataListener(this);
-        if (!BleManager.isConnect) {
+        if (!BleManager.isConnect && !BleManager.isHeartbeatConnect) {
             showConnectHintDialog();
             homeFragment.onRunData(new RowerDataBean1());
         } else {

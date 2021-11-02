@@ -24,6 +24,7 @@ import com.bike.ftms.app.base.BaseFragment;
 import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.bean.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
+import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
@@ -477,9 +478,11 @@ public class WorkoutsFragment extends BaseFragment implements WorkoutsAdapter.On
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && llInfo.getVisibility() == View.VISIBLE) {
-            ivInfoBack.performClick();
-            return true;
+        if (llInfo != null) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && llInfo.getVisibility() == View.VISIBLE) {
+                ivInfoBack.performClick();
+                return true;
+            }
         }
         return false;
     }

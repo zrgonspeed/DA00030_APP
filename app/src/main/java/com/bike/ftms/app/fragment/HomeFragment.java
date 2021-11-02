@@ -94,6 +94,7 @@ public class HomeFragment extends BaseFragment {
         if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_NO) {
             RowerDataBean1 tempBean1 = rowerDataBean1;
             rowerDataBean1 = new RowerDataBean1();
+            // 停止运动，但心跳还是得显示。
             rowerDataBean1.setHeart_rate(tempBean1.getHeart_rate());
         }
 

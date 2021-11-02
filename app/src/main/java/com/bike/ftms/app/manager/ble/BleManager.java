@@ -14,6 +14,7 @@ import android.bluetooth.le.ScanSettings;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
+import android.os.SystemClock;
 
 import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.bean.MyScanResult;
@@ -51,7 +52,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private final byte RUN_STATUS_STOP = 0x00;
 
     public static boolean isConnect;  //是否连接
-    private boolean isHeartbeatConnect;//是否连接蓝牙腰带
+    public static boolean isHeartbeatConnect;//是否连接蓝牙腰带
     public static boolean isCanning;  //是否正在扫描
     public static boolean isOpen;     //是否打开定位及蓝牙
 
@@ -146,7 +147,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 扫描蓝牙设备
      */
     public void scanDevice() {
-        Logger.e("mBluetoothAdapter == " + mBluetoothAdapter + "    isCanning == " +  isCanning);
+        Logger.e("mBluetoothAdapter == " + mBluetoothAdapter + "    isCanning == " + isCanning);
         if (mBluetoothAdapter != null && !isCanning) {
             boolean enabled = mBluetoothAdapter.isEnabled();
             Logger.e("2 enabled == " + enabled);
@@ -345,12 +346,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
     public void disConnectDevice() {
         Logger.i("disConnectDevice");
         if (mBluetoothGatt != null && !isScanHrDevice) {
+            Logger.e("断开设备");
             mBluetoothGatt.disconnect();
-            mBluetoothGatt = null;
+//            mBluetoothGatt = null;
         }
         if (mBluetoothHrGatt != null && isScanHrDevice) {
+            Logger.e("断开心跳设备");
             mBluetoothHrGatt.disconnect();
-            mBluetoothHrGatt = null;
+//            mBluetoothHrGatt = null;
         }
     }
 
@@ -388,6 +391,38 @@ public class BleManager implements CustomTimer.TimerCallBack {
             Logger.i(TAG, "onConnectionStateChange status " + status);
             Logger.i(TAG, "onConnectionStateChange newState " + newState);
             Logger.i(TAG, "onConnectionStateChange " + gatt.getDevice().getName());
+
+            if (status != BluetoothGatt.GATT_SUCCESS) {
+                Logger.e("mBluetoothGatt.close();");
+                mBluetoothGatt.close();
+
+                rowerDataBean1 = new RowerDataBean1();
+                if (onRunDataListener != null) {
+                    onRunDataListener.onRunData(rowerDataBean1);
+                }
+                for (MyScanResult myScanResult : mScanResults) {
+                    if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
+                        myScanResult.setConnectState(0);
+                        isHrConnectTimer.closeTimer();
+                        if (connectHrScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
+                            connectHrScanResult.setConnectState(0);
+                        } else {
+                            connectHrScanResult = myScanResult;
+                        }
+                        break;
+                    }
+                }
+                isHeartbeatConnect = false;
+                if (onScanConnectListener != null) {
+                    onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
+                }
+
+                if (onScanConnectListener != null) {
+                    onScanConnectListener.onNotifyData();
+                }
+                return;
+            }
+
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
@@ -432,6 +467,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
                 }
+                //++++
+                Logger.e("mBluetoothGatt.close();");
+                mBluetoothGatt.close();
             }
             if (onScanConnectListener != null) {
                 onScanConnectListener.onNotifyData();
@@ -455,7 +493,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     list.addAll(localGattService1.getCharacteristics());
                 }
                 for (int i = 0; i < list.size(); i++) {
-                    Logger.d(TAG, "gattCharacteristic2=" + list.get(i).getUuid().toString());
+//                    Logger.d(TAG, "gattCharacteristic2=" + list.get(i).getUuid().toString());
 
                     if (list.get(i).getUuid().toString().contains("2ad1")) {
                         List<BluetoothGattDescriptor> bluetoothGattDescriptors = list.get(i).getDescriptors();
@@ -542,6 +580,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {//descriptor写
             super.onDescriptorWrite(gatt, descriptor, status);
+            // 写入到关联的远程设备上
             Logger.i(TAG, "onDescriptorWrite " + ConvertData.byteArrayToHexString(descriptor.getValue(), descriptor.getValue().length));
         }
 
@@ -585,6 +624,38 @@ public class BleManager implements CustomTimer.TimerCallBack {
             Logger.i(TAG, "onConnectionStateChange status " + status);
             Logger.i(TAG, "onConnectionStateChange newState " + newState);
             Logger.i(TAG, "onConnectionStateChange " + gatt.getDevice().getName());
+
+            if (status != BluetoothGatt.GATT_SUCCESS) {
+                Logger.e("mBluetoothHrGatt.close();");
+                mBluetoothHrGatt.close();
+
+                rowerDataBean1 = new RowerDataBean1();
+                if (onRunDataListener != null) {
+                    onRunDataListener.onRunData(rowerDataBean1);
+                }
+                for (MyScanResult myScanResult : mScanResults) {
+                    if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
+                        myScanResult.setConnectState(0);
+                        isHrConnectTimer.closeTimer();
+                        if (connectHrScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
+                            connectHrScanResult.setConnectState(0);
+                        } else {
+                            connectHrScanResult = myScanResult;
+                        }
+                        break;
+                    }
+                }
+                isHeartbeatConnect = false;
+                if (onScanConnectListener != null) {
+                    onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
+                }
+
+                if (onScanConnectListener != null) {
+                    onScanConnectListener.onNotifyData();
+                }
+                return;
+            }
+
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
@@ -600,13 +671,19 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     }
                 }
                 isHeartbeatConnect = true;
-                mBluetoothHrGatt.discoverServices();
+                if (mBluetoothHrGatt != null) {
+                    mBluetoothHrGatt.discoverServices();
+                }
                 Logger.d("isConnect=" + isConnect + ",isHeartbeatConnect=" + isHeartbeatConnect);
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(true, gatt.getDevice().getName());
                 }
                 // mBluetoothGatt.discoverServices();//
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                rowerDataBean1 = new RowerDataBean1();
+                if (onRunDataListener != null) {
+                    onRunDataListener.onRunData(rowerDataBean1);
+                }
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
                         myScanResult.setConnectState(0);
@@ -615,7 +692,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
                             connectHrScanResult.setConnectState(0);
                         } else {
                             connectHrScanResult = myScanResult;
-
                         }
                         break;
                     }
@@ -624,6 +700,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
                 }
+
+                //++++
+                Logger.e("mBluetoothHrGatt.close();");
+                mBluetoothHrGatt.close();
             }
             if (onScanConnectListener != null) {
                 onScanConnectListener.onNotifyData();
@@ -634,7 +714,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
-            Logger.i(TAG, "onServicesDiscovered status=" + status);
+            Logger.i(TAG, "Hr onServicesDiscovered status=" + status);
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 mBluetoothGattServices = mBluetoothHrGatt.getServices();
                 BluetoothGattService localGattService = mBluetoothHrGatt.getService(UUID.fromString(uuidHeartbeat));
@@ -662,7 +742,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 }
                 registrationGattCharacteristic();//注册通知
             } else {
-                Logger.d(TAG, "onServicesDiscovered received: " + status);
+                Logger.d(TAG, "Hr onServicesDiscovered received: " + status);
             }
         }
 
@@ -670,14 +750,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
-            Logger.i(TAG, "onCharacteristicWrite::" + ByteArrTransUtil.toHexValue(characteristic.getValue()));
+            Logger.i(TAG, "Hr onCharacteristicWrite::" + ByteArrTransUtil.toHexValue(characteristic.getValue()));
         }
 
         //调用mBluetoothGatt.readCharacteristic(characteristic)读取数据回调，在这里面接收数据
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicRead(gatt, characteristic, status);
-            Logger.i(TAG, "onCharacteristicRead::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
+            Logger.i(TAG, "Hr onCharacteristicRead::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
 
         }
 
@@ -686,12 +766,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
+            // 10秒内     这里没执行，就会断开连接
             isHrConnectTimer.setmAllTime(0L);
             Logger.i(TAG, characteristic.getUuid() + ",Hr onCharacteristicChanged::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
+
             if (characteristic.getUuid().toString().contains("2a37")) {
                 setHrData(characteristic.getValue());
             }
-
         }
 
         @Override
@@ -741,14 +822,16 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     mBluetoothGatt.disconnect();
                     mBluetoothGatt = null;
                 }
-                for (BluetoothGattCharacteristic gattCharacteristic : mBluetoothGatt.getService(UUID.fromString(uuidSendData)).getCharacteristics()) {
-                    if (gattCharacteristic.getUuid().toString().contains("ffe9")) {
-                        mBluetoothGattCharacteristic = gattCharacteristic;
-                        Logger.d(TAG, "mBluetoothGattCharacteristic=" + mBluetoothGattCharacteristic);
-                    }
-                    if (gattCharacteristic.getUuid().toString().contains("ffe0")) {//接收通道
-                        boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-                        Logger.i(TAG, gattCharacteristic.getUuid().toString() + ",注册通知::" + enabled);
+                if (mBluetoothGatt != null) {
+                    for (BluetoothGattCharacteristic gattCharacteristic : mBluetoothGatt.getService(UUID.fromString(uuidSendData)).getCharacteristics()) {
+                        if (gattCharacteristic.getUuid().toString().contains("ffe9")) {
+                            mBluetoothGattCharacteristic = gattCharacteristic;
+                            Logger.d(TAG, "mBluetoothGattCharacteristic=" + mBluetoothGattCharacteristic);
+                        }
+                        if (gattCharacteristic.getUuid().toString().contains("ffe0")) {//接收通道
+                            boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                            Logger.i(TAG, gattCharacteristic.getUuid().toString() + ",注册通知::" + enabled);
+                        }
                     }
                 }
                 mHandler.postDelayed(new Runnable() {
@@ -774,50 +857,52 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     }
                 }
             }*/
-            for (BluetoothGattCharacteristic gattCharacteristic : gattService.getCharacteristics()) {
-                //除了通过 BluetoothGatt#setCharacteristicNotification 开启 Android 端接收通知的开关，
-                // 还需要往 Characteristic 的 Descriptor 属性写入开启通知的数据开关使得当硬件的数据改变时，主动往手机发送数据。
+            if (gattService != null) {
+                for (BluetoothGattCharacteristic gattCharacteristic : gattService.getCharacteristics()) {
+                    //除了通过 BluetoothGatt#setCharacteristicNotification 开启 Android 端接收通知的开关，
+                    // 还需要往 Characteristic 的 Descriptor 属性写入开启通知的数据开关使得当硬件的数据改变时，主动往手机发送数据。
                /* if (gattCharacteristic.getUuid().toString().contains("ab01")) {//发送通道
                     mBluetoothGattCharacteristic = gattCharacteristic;
                     Logger.i(TAG, "发送通道::ab01");
                 }*/
 //                Logger.d(TAG, "gattCharacteristic1=" + gattCharacteristic.getUuid().toString());
 
-                if (gattCharacteristic.getUuid().toString().contains("2ad1")) {//接收通道
-                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-                    Logger.i(TAG, "注册通知::" + enabled);
-                }
-                if (gattCharacteristic.getUuid().toString().contains("2ad3")) {//接收通道
-                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-                    Logger.i(TAG, "注册通知::" + enabled);
-                }
-                if (gattCharacteristic.getUuid().toString().contains("2ada")) {//接收通道
-                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-                    Logger.i(TAG, "注册通知::" + enabled);
-                }
+                    if (gattCharacteristic.getUuid().toString().contains("2ad1")) {//接收通道
+                        boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                        Logger.i(TAG, "注册通知::" + enabled);
+                    }
+                    if (gattCharacteristic.getUuid().toString().contains("2ad3")) {//接收通道
+                        boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                        Logger.i(TAG, "注册通知::" + enabled);
+                    }
+                    if (gattCharacteristic.getUuid().toString().contains("2ada")) {//接收通道
+                        boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                        Logger.i(TAG, "注册通知::" + enabled);
+                    }
 
 //                if (gattCharacteristic.getUuid().toString().contains("2a23")) {//接收通道
 //                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
 //                    Logger.i(TAG, "注册通知::" + enabled);
 //                }
 
-                if (gattCharacteristic.getUuid().toString().contains("2a37")) {//接收通道
-                    boolean enabled = mBluetoothHrGatt.setCharacteristicNotification(gattCharacteristic, true);
-                    Logger.i(TAG, "注册通知::" + enabled);
+                    if (gattCharacteristic.getUuid().toString().contains("2a37")) {//接收通道
+                        boolean enabled = mBluetoothHrGatt.setCharacteristicNotification(gattCharacteristic, true);
+                        Logger.i(TAG, "注册通知::" + enabled);
+                    }
+                    if (gattCharacteristic.getUuid().toString().contains("2a38")) {//接收通道
+                        boolean enabled = mBluetoothHrGatt.setCharacteristicNotification(gattCharacteristic, true);
+                        Logger.i(TAG, "注册通知::" + enabled);
+                    }
+
+
+                    if (gattCharacteristic.getUuid().toString().contains("2ad6")) {
+                        boolean enabled = mBluetoothGatt.readCharacteristic(gattCharacteristic);
+                        Logger.i(TAG, "读::" + enabled);
+                    }
+
+                    Logger.i(TAG, "GattCharacteristic" + gattCharacteristic.getUuid().toString());
+
                 }
-                if (gattCharacteristic.getUuid().toString().contains("2a38")) {//接收通道
-                    boolean enabled = mBluetoothHrGatt.setCharacteristicNotification(gattCharacteristic, true);
-                    Logger.i(TAG, "注册通知::" + enabled);
-                }
-
-
-                if (gattCharacteristic.getUuid().toString().contains("2ad6")) {
-                    boolean enabled = mBluetoothGatt.readCharacteristic(gattCharacteristic);
-                    Logger.i(TAG, "读::" + enabled);
-                }
-
-                Logger.i(TAG, "GattCharacteristic" + gattCharacteristic.getUuid().toString());
-
             }
 
         }
@@ -847,20 +932,25 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 释放资源
      */
     public void close() {
-        if (mBluetoothGatt != null) {
-            mBluetoothGatt.close();
-            mBluetoothGatt = null;
-        }
         if (mBluetoothHrGatt != null) {
-            mBluetoothHrGatt.close();
-            mBluetoothHrGatt = null;
+            mBluetoothHrGatt.disconnect();
         }
-        if (connectHrScanResult != null) {
-            connectHrScanResult = null;
-        }
-        if (connectScanResult != null) {
-            connectScanResult = null;
-        }
+
+//
+//        if (mBluetoothGatt != null) {
+//            mBluetoothGatt.close();
+//            mBluetoothGatt = null;
+//        }
+//        if (mBluetoothHrGatt != null) {
+//            mBluetoothHrGatt.close();
+//            mBluetoothHrGatt = null;
+//        }
+//        if (connectHrScanResult != null) {
+//            connectHrScanResult = null;
+//        }
+//        if (connectScanResult != null) {
+//            connectScanResult = null;
+//        }
 
     }
 
@@ -1099,7 +1189,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (onRunDataListener == null) {
             return;
         }
+
+        if (rowerDataBean1 == null) {
+            rowerDataBean1 = new RowerDataBean1();
+        }
+
         String s = ConvertData.byteArrToBinStr(data);
+        // 0x16 == 22   0001 0110
         if ("0".equals(s.subSequence(7, 8))) {
             rowerDataBean1.setHeart_rate(ConvertData.byteToInt(data[1]));
         } else {
@@ -1192,7 +1288,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (lastTime == 10 && isHrConnectTag.equals(tag)) {
             if (mBluetoothHrGatt != null) {
                 mBluetoothHrGatt.disconnect();
-                mBluetoothHrGatt = null;
+//                mBluetoothHrGatt = null;
             }
 
             isHrConnectTimer.closeTimer();
@@ -1423,4 +1519,48 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }.start();
         support.save();
     }
+
+    /*public void startSend() {
+        rowerDataBean1 = new RowerDataBean1();
+
+        // 2ada
+        // 模拟
+        isToExamine = true;
+        // 2ada
+        // 0x20 0x00 0x05 0x01 0x00
+        byte[] data = new byte[5];
+        data[0] = 0x20;
+        data[1] = 0x00;
+        data[2] = 0x05;
+        data[3] = 0x01;
+        data[4] = 0x00;
+
+        byte[] finalData = data;
+        new Thread(() -> {
+            while (true) {
+                rxDataPackage(finalData, "2ada");
+                SystemClock.sleep(500);
+            }
+        }).start();
+
+
+        // 2ad1  ftms
+        // 0x7c 0x0b 0x92 0x53 0x02 0x5d 0x0a 0x00 0x5e 0x00 0x5e 0x00 0x93 0x01 0x93 0x01 0xeb 0x00 0x96 0x06 0x73 0x3c 0xb9 0x02
+        byte[] data2 = {0x7c, 0x0b, 0x70, 0x53, 0x02, 0x5d, 0x0a, 0x00, 0x5e, 0x00, 0x5e, 0x00, 0x70, 0x01, 0x70, 0x01, 0x70, 0x00, 0x70, 0x06, 0x73, 0x3c, 0x70, 0x02};
+        new Thread(() -> {
+            while (true) {
+                rxDataPackage(data2, "2ad1");
+                SystemClock.sleep(500);
+            }
+        }).start();
+
+        byte[] data3 = {0x16, 0x75, 0x33, 0x01, 0x0b, 0x01};
+        isHeartbeatConnect = true;
+        new Thread(() -> {
+            while (true) {
+                setHrData(data3);
+                SystemClock.sleep(500);
+            }
+        }).start();
+    }*/
 }
