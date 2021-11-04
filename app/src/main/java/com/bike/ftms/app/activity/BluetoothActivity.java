@@ -43,6 +43,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Logger.e("onCreate " + this.toString());
     }
 
     @Override
@@ -109,6 +111,9 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Override
     protected void onResume() {
         super.onResume();
+
+        Logger.e(getIntent().toString() + "");
+
         BleManager.getInstance().setOnScanConnectListener(this);
         BleManager.getInstance().setIsScanHrDevice(getIntent().getBooleanExtra("isScanHrDevice", false));
         cbSwitch.setChecked(BleManager.getInstance().getBluetoothAdapter().isEnabled());

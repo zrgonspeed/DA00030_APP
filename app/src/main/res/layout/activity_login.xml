@@ -62,16 +62,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
+            <com.andreabaccega.widget.FormEditText
                 android:id="@+id/edt_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
                 android:background="@null"
                 android:minWidth="300dp"
+                app:emptyErrorString=""
                 app:layout_constraintBottom_toBottomOf="@id/tv_user_name"
                 app:layout_constraintStart_toEndOf="@id/tv_user_name"
-                app:layout_constraintTop_toTopOf="@id/tv_user_name" />
+                app:layout_constraintTop_toTopOf="@id/tv_user_name"
+                app:testErrorString="用户名格式不对" />
 
             <View
                 android:id="@+id/view1"
@@ -96,14 +98,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view1" />
 
-            <EditText
+            <com.andreabaccega.widget.FormEditText
                 android:id="@+id/edt_password"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
                 android:background="@null"
-                android:minWidth="300dp"
                 android:inputType="numberPassword"
+                android:minWidth="300dp"
+                app:emptyErrorString=""
                 app:layout_constraintBottom_toBottomOf="@id/tv_password"
                 app:layout_constraintStart_toEndOf="@id/tv_password"
                 app:layout_constraintTop_toTopOf="@id/tv_password" />
@@ -144,12 +147,12 @@
                 android:text="@string/login_forget"
                 android:textColor="@color/color_1A91F9"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@id/tv_create"
+                app:layout_constraintBottom_toBottomOf="@id/tv_register"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tv_create" />
+                app:layout_constraintTop_toTopOf="@id/tv_register" />
 
             <TextView
-                android:id="@+id/tv_create"
+                android:id="@+id/tv_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

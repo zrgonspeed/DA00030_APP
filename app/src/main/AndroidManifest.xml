@@ -27,13 +27,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.login.CreateNewAccountActivity"
+            android:name=".activity.login.RegisterActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.HeartRateMonitorActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.login.LoginActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.VersionActivity"
@@ -53,6 +54,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+<!--        <activity-->
+<!--            android:name=".activity.crash.CrashActivity"-->
+<!--            android:screenOrientation="landscape" />-->
+<!--        <activity-->
+<!--            android:name=".activity.crash.RestartActivity"-->
+<!--            android:screenOrientation="landscape" />-->
     </application>
 
 </manifest>

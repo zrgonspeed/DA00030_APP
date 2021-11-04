@@ -3,7 +3,9 @@ package com.bike.ftms.app.activity.login;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -21,6 +23,7 @@ import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.bean.RegisterBean;
 import com.bike.ftms.app.bean.RegisterMailBean;
 import com.bike.ftms.app.bean.ResultBean;
+import com.bike.ftms.app.common.HttpParam;
 import com.bike.ftms.app.http.OkHttpCallBack;
 import com.bike.ftms.app.http.OkHttpHelper;
 import com.bike.ftms.app.utils.BasisTimesUtils;
@@ -35,7 +38,7 @@ import okhttp3.Call;
 import okhttp3.Response;
 import tech.gujin.toast.ToastUtil;
 
-public class CreateNewAccountActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity {
 
     // 下面3个字段用选择器
     @BindView(R.id.edt_birth)
@@ -87,6 +90,12 @@ public class CreateNewAccountActivity extends BaseActivity {
     @BindView(R.id.cl_register_fail)
     ConstraintLayout cl_register_fail;
 
+    @BindView(R.id.tv_register_success_count)
+    TextView tv_register_success_count;
+
+    @BindView(R.id.tv_register_fail_cause)
+    TextView tv_register_fail_cause;
+
     FormEditText[] etArr = new FormEditText[7];
     private InputMethodManager imm;
 
@@ -122,7 +131,7 @@ public class CreateNewAccountActivity extends BaseActivity {
 //            validator.resetValidators(getApplicationContext());
 //            formEditText.addValidator(new EmptyValidator("ss"));
             formEditText.setOnFocusChangeListener((View v, boolean focus) -> {
-                Logger.e("focus: " + focus);
+//                Logger.e("focus: " + focus);
                 if (!focus) {
                     formEditText.testValidity();
                 }
@@ -275,13 +284,13 @@ public class CreateNewAccountActivity extends BaseActivity {
      */
     private void sendEmailToServer() {
         // 邮箱验证，成功则邮箱收到验证码，用户输入验证码
-        String mailCodeUrl = "http://192.168.50.21:8080" + "/restapi/verify/email";
+//        String mailCodeUrl = "http://192.168.50.21:8080" + "/restapi/verify/email";
         RegisterMailBean bean = new RegisterMailBean();
         bean.setEmail(edt_email_address.getText().toString().trim());
         bean.setType("register");
 
         String json = GsonUtil.GsonString(bean);
-        OkHttpHelper.getInstance().post(mailCodeUrl, json, null, new OkHttpCallBack() {
+        OkHttpHelper.getInstance().post(HttpParam.MAIL_CODE_URL, json, null, new OkHttpCallBack() {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
@@ -330,7 +339,7 @@ public class CreateNewAccountActivity extends BaseActivity {
     private void sendAllToServer() {
         // 假设邮箱验证通过，用户得到并输入了验证码
         // 封装全部参数
-        String userRegisterUrl = "http://192.168.50.21:8080/restapi/users/register";
+//        String userRegisterUrl = "http://192.168.50.21:8080/restapi/users/register";
 
         RegisterBean registerBean = new RegisterBean();
         registerBean.setEmail(edt_email_address.getText().toString().trim());
@@ -344,7 +353,7 @@ public class CreateNewAccountActivity extends BaseActivity {
 //        registerBean.setCountry(edt_country.getText().toString().trim());
 
         String registerBeanJson = GsonUtil.GsonString(registerBean);
-        OkHttpHelper.getInstance().post(userRegisterUrl, registerBeanJson, null, new OkHttpCallBack() {
+        OkHttpHelper.getInstance().post(HttpParam.USER_REGISTER_URL, registerBeanJson, null, new OkHttpCallBack() {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
@@ -359,11 +368,9 @@ public class CreateNewAccountActivity extends BaseActivity {
             @Override
             public void onSuccess(Call call, int httpCode, String response) {
                 // 响应成功，响应码不一定是200
-                // String resStr = response.body().string();
                 Logger.e("请求成功 ->> response.body().string() == " + response);
                 // {"code":"EmailError","message":"邮箱格式不正确"}
 
-                Logger.e("response.toString() == " + response.toString());
                 // Response{protocol=http/1.1, code=422, message=, url=http://192.168.50.180:8080/restapi/verify/email}
 
                 if (httpCode == 204) {
@@ -371,16 +378,31 @@ public class CreateNewAccountActivity extends BaseActivity {
                     // 显示注册成功界面
                     Logger.e("注册成功");
                     cl_register_success.setVisibility(View.VISIBLE);
+
+                    // 5 秒后返回登录页面
+                    new Thread(() -> {
+                        for (int i = 5; i >= 1; i--) {
+                            int finalI = i;
+                            runOnUiThread(() -> {
+                                tv_register_success_count.setText(finalI + "秒后返回登录界面");
+                            });
+                            SystemClock.sleep(1000);
+                        }
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        finish();
+                    }).start();
                 } else if (httpCode == 422 || httpCode == 403 || httpCode == 409) {
                     // 错误响应，响应体包含错误信息
                     // 显示注册失败界面
-                    Logger.e("注册失败");
                     cl_register_fail.setVisibility(View.VISIBLE);
 
                     // 封装响应体为bean
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
-                    Logger.e("resultBean == " + resultBean);
+                    Logger.e("注册失败: " + resultBean);
+
+                    tv_register_fail_cause.setText(resultBean.getMessage());
                 } else {
+                    Logger.e("httpCode == " + httpCode + " 其它处理");
                     // 可能是5xx系列，服务器错误
                     Logger.e("注册失败---");
                 }

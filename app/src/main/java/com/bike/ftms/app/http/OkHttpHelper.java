@@ -92,11 +92,11 @@ public class OkHttpHelper {
      * @param tag
      * @param callBack
      */
-    public void post(String url, String json, Object tag, OkHttpCallBack callBack) {
+    public static void post(String url, String json, Object tag, OkHttpCallBack callBack) {
         commonPost(getRequestForPost(url, json, tag), callBack);
     }
 
-    private Request getRequestForPost(String url, String json, Object tag) {
+    private static Request getRequestForPost(String url, String json, Object tag) {
         Logger.d(TAG, "getRequestForPost---> " + url);
         if (url.isEmpty()) {
             return null;
@@ -121,7 +121,7 @@ public class OkHttpHelper {
         return null;
     }
 
-    private void commonPost(Request request, OkHttpCallBack callBack) {
+    private static void commonPost(Request request, OkHttpCallBack callBack) {
         if (request == null) {
             return;
         }
@@ -239,11 +239,12 @@ public class OkHttpHelper {
                         }
                         mHandler.post(() -> {
                             try {
-                                if (response.code() != 200) {
-                                    callBack.onFailure(call, new IOException());
-                                } else {
-                                    callBack.onSuccess(call, response.code(), response.body().string());
-                                }
+//                                if (response.code() != 200) {
+//                                    callBack.onFailure(call, new IOException());
+//                                } else {
+//                                    callBack.onSuccess(call, response.code(), response.body().string());
+//                                }
+                                callBack.onSuccess(call, response.code(), response.body().string());
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 callBack.onFailure(call, new IOException());
@@ -254,6 +255,7 @@ public class OkHttpHelper {
     }
 
     private static Request getRequestForGet(String url, Object tag) {
+        Logger.d(TAG, "getRequestForPost---> " + url);
         if (url.isEmpty()) {
             Logger.e("OkHttpHelper-----getRequestForGet---> url 地址为空！！！");
             return null;

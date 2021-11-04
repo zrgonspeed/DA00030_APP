@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.bean.RowerDataBean2;
+import com.bike.ftms.app.bean.RunDataInfo;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
@@ -20,25 +21,25 @@ import java.util.List;
  * @Author YYH
  * @Date 2021/4/12
  */
-public class WorkoutsAdapter2 extends RecyclerView.Adapter<WorkoutsAdapter2.WorkoutsViewHolder> {
-    private List<RowerDataBean2> rowerDataBean2List;
+public class WorkoutsNetAdapter2 extends RecyclerView.Adapter<WorkoutsNetAdapter2.WorkoutsViewHolder> {
+    private List<RunDataInfo> runDataInfos;
 
-    public WorkoutsAdapter2(List<RowerDataBean2> rowerDataBean2List) {
-        this.rowerDataBean2List = rowerDataBean2List;
+    public WorkoutsNetAdapter2(List<RunDataInfo> runDataInfos) {
+        this.runDataInfos = runDataInfos;
     }
 
     @NonNull
     @Override
-    public WorkoutsAdapter2.WorkoutsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public WorkoutsNetAdapter2.WorkoutsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workouts2, parent, false);
         return new WorkoutsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WorkoutsAdapter2.WorkoutsViewHolder holder, int position) {
-        RowerDataBean2 bean = rowerDataBean2List.get(position);
+    public void onBindViewHolder(@NonNull WorkoutsNetAdapter2.WorkoutsViewHolder holder, int position) {
+        RunDataInfo bean = runDataInfos.get(position);
 
-        switch (bean.getRunMode()) {
+        /*switch (bean.getRunMode()) {
             case MyConstant.NORMAL:
                 holder.tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
                 holder.tvInfoMeters.setText(bean.getDistance() + "M");
@@ -108,21 +109,21 @@ public class WorkoutsAdapter2 extends RecyclerView.Adapter<WorkoutsAdapter2.Work
                 break;
             default:
                 break;
-        }
+        }*/
 
-        holder.tvInfoFiveHundred.setText(TimeStringUtil.getSToMinSecValue(bean.getFive_hundred()));
-        holder.tvInfoWatts.setText(String.valueOf(bean.getWatts()));
-        holder.tvInfoCalHr.setText(String.valueOf(bean.getCalories_hr()));
-        holder.tvInfoSm.setText(String.valueOf(bean.getSm()));
-
-        if (bean.getInterval() == -1) {
-            holder.tvInfoInterval.setText(" ");
-        }
+//        holder.tvInfoFiveHundred.setText(TimeStringUtil.getSToMinSecValue(bean.getFive_hundred()));
+//        holder.tvInfoWatts.setText(String.valueOf(bean.getWatts()));
+//        holder.tvInfoCalHr.setText(String.valueOf(bean.getCalories_hr()));
+//        holder.tvInfoSm.setText(String.valueOf(bean.getSm()));
+//
+//        if (bean.getInterval() == -1) {
+//            holder.tvInfoInterval.setText(" ");
+//        }
     }
 
     @Override
     public int getItemCount() {
-        return rowerDataBean2List.size();
+        return runDataInfos.size();
     }
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {

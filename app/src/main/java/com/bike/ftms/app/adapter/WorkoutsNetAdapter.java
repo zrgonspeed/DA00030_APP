@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.bean.RowerDataBean2;
+import com.bike.ftms.app.bean.RunDataResult;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
@@ -22,51 +23,44 @@ import java.util.List;
  * @Author YYH
  * @Date 2021/4/12
  */
-public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutsViewHolder> {
+public class WorkoutsNetAdapter extends RecyclerView.Adapter<WorkoutsNetAdapter.WorkoutsViewHolder> {
     private OnItemClickListener onItemClickListener;
     private OnItemDeleteListener onItemDeleteListener;
     private boolean isShowDelete = false;
-    private List<RowerDataBean1> rowerDataBean1List;
+    private List<RunDataResult> runDataResults;
 
-    public WorkoutsAdapter(List<RowerDataBean1> rowerDataBean1List) {
-        this.rowerDataBean1List = rowerDataBean1List;
+    public WorkoutsNetAdapter(List<RunDataResult> runDataResults) {
+        this.runDataResults = runDataResults;
     }
 
     @NonNull
     @Override
-    public WorkoutsAdapter.WorkoutsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public WorkoutsNetAdapter.WorkoutsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workouts, parent, false);
         return new WorkoutsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WorkoutsAdapter.WorkoutsViewHolder holder, int position) {
-        RowerDataBean1 bean = rowerDataBean1List.get(position);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickListener.onItemClickListener(position);
-            }
-        });
-        holder.ivDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemDeleteListener.onItemDeleteListener(position);
-            }
-        });
+    public void onBindViewHolder(@NonNull WorkoutsNetAdapter.WorkoutsViewHolder holder, int position) {
+        RunDataResult bean = runDataResults.get(position);
+        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClickListener(position));
+        holder.ivDelete.setOnClickListener(v -> onItemDeleteListener.onItemDeleteListener(position));
         if (isShowDelete) {
             holder.ivDelete.setVisibility(View.VISIBLE);
         } else {
             holder.ivDelete.setVisibility(View.GONE);
         }
-        if (bean.getNote() != null && !"".equals(bean.getNote())) {
+        if (bean.getRemarks() != null && !"".equals(bean.getRemarks())) {
             holder.ivNote.setVisibility(View.VISIBLE);
         } else {
             holder.ivNote.setVisibility(View.GONE);
         }
-        holder.tvDate.setText(TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd HH:mm:ss"));
 
-        switch (bean.getRunMode()) {
+        holder.tvDate.setText(bean.getDate());
+        holder.tvDistance.setText(bean.getType());
+        holder.tvTime.setText(bean.getResult());
+
+        /*switch (bean.getRunMode()) {
             case MyConstant.NORMAL:
                 holder.tvDistance.setText(bean.getDistance() + "M");
                 holder.tvTime.setText(bean.getDistance() + "M");
@@ -133,12 +127,12 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
             break;
             default:
                 break;
-        }
+        }*/
     }
 
     @Override
     public int getItemCount() {
-        return rowerDataBean1List.size();
+        return runDataResults.size();
     }
 
     public interface OnItemClickListener {

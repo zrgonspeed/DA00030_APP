@@ -2,11 +2,9 @@ package com.bike.ftms.app.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -18,9 +16,10 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.fragment.HomeFragment;
 import com.bike.ftms.app.fragment.WorkoutsFragment;
+import com.bike.ftms.app.fragment.WorkoutsLocalFragment;
+import com.bike.ftms.app.fragment.WorkoutsNetFragment;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.utils.Logger;
@@ -51,6 +50,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     private YesOrNoDialog yesOrNoDialog;
     private boolean isOnPause = false;
 
+    private boolean isLogin = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,9 +74,15 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     protected void initView() {
         List<Fragment> homeFragments = new ArrayList<>();
         homeFragment = new HomeFragment();
-        workoutsFragment = new WorkoutsFragment();
         homeFragments.add(homeFragment);
+
+        if (isLogin) {
+            workoutsFragment = new WorkoutsNetFragment();
+        } else {
+            workoutsFragment = new WorkoutsLocalFragment();
+        }
         homeFragments.add(workoutsFragment);
+
         TabFragmentPagerAdapter adapter1 = new TabFragmentPagerAdapter(getSupportFragmentManager(), homeFragments);
         vp.setAdapter(adapter1);
         vp.setOffscreenPageLimit(2);
@@ -103,9 +110,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
             }
         });
-
     }
-
 
     @OnClick({R.id.btn_bluetooth, R.id.btn_setting})
     public void onViewClicked(View view) {
@@ -230,7 +235,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             exitTime = System.currentTimeMillis();
         } else {
             finish();
-            System.exit(0);
+//            System.exit(0);
         }
 
     }
