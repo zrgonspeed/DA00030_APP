@@ -50,7 +50,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     private YesOrNoDialog yesOrNoDialog;
     private boolean isOnPause = false;
 
-    private boolean isLogin = true;
+    private boolean isLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,7 +235,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             exitTime = System.currentTimeMillis();
         } else {
             finish();
-//            System.exit(0);
+            System.exit(0);
         }
 
     }

@@ -296,7 +296,7 @@ public class RegisterActivity extends BaseActivity {
                 // 响应失败
                 Logger.e("请求失败！");
                 Logger.e(e.toString());
-                ToastUtil.show("请求超时或网络没打开", true, ToastUtil.Mode.REPLACEABLE);
+                ToastUtil.show("连接超时", true, ToastUtil.Mode.REPLACEABLE);
                 tv_send_code.setText("发送失败");
             }
 
@@ -362,7 +362,7 @@ public class RegisterActivity extends BaseActivity {
 
                 // 网络没打开
                 // 请求超时
-                ToastUtil.show("请求超时或网络没打开", true, ToastUtil.Mode.REPLACEABLE);
+                ToastUtil.show("连接超时", true, ToastUtil.Mode.REPLACEABLE);
             }
 
             @Override

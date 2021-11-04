@@ -318,7 +318,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 } else {
                     connectHrScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
                     mBluetoothHrGatt = getScanResults().get(position).getScanResult().getDevice()
-                            .connectGatt(MyApplication.getContext(), true, mHrGattCallback);
+                            .connectGatt(MyApplication.getContext(), false, mHrGattCallback);
                 }
 
                 Logger.i(TAG, "connectDevice" + getScanResults().get(position).getScanResult().getDevice().getAddress());
@@ -393,8 +393,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
             Logger.i(TAG, "onConnectionStateChange " + gatt.getDevice().getName());
 
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                Logger.e("mBluetoothGatt.close();");
-                mBluetoothGatt.close();
+                if (mBluetoothGatt != null) {
+                    Logger.e("mBluetoothGatt.close();");
+                    mBluetoothGatt.close();
+                }
 
                 rowerDataBean1 = new RowerDataBean1();
                 if (onRunDataListener != null) {
@@ -468,8 +470,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
                 }
                 //++++
-                Logger.e("mBluetoothGatt.close();");
-                mBluetoothGatt.close();
+                if (mBluetoothGatt != null) {
+                    Logger.e("mBluetoothGatt.close();");
+                    mBluetoothGatt.close();
+                }
             }
             if (onScanConnectListener != null) {
                 onScanConnectListener.onNotifyData();
@@ -626,8 +630,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
             Logger.i(TAG, "onConnectionStateChange " + gatt.getDevice().getName());
 
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                Logger.e("mBluetoothHrGatt.close();");
-                mBluetoothHrGatt.close();
+                if (mBluetoothHrGatt != null) {
+                    Logger.e("mBluetoothHrGatt.close();");
+                    mBluetoothHrGatt.close();
+                }
 
                 rowerDataBean1 = new RowerDataBean1();
                 if (onRunDataListener != null) {
@@ -702,8 +708,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 }
 
                 //++++
-                Logger.e("mBluetoothHrGatt.close();");
-                mBluetoothHrGatt.close();
+                if (mBluetoothHrGatt != null) {
+                    Logger.e("mBluetoothHrGatt.close();");
+                    mBluetoothHrGatt.close();
+                }
             }
             if (onScanConnectListener != null) {
                 onScanConnectListener.onNotifyData();
@@ -1512,7 +1520,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             public void run() {
                 Looper.prepare();
                 new Handler().post(() -> {
-                    ToastUtil.show("保存成功！", true, ToastUtil.Mode.REPLACEABLE);
+//                    ToastUtil.show("保存成功！", true, ToastUtil.Mode.REPLACEABLE);
                 });//在子线程中直接去new 一个handler
                 Looper.loop();    //这种情况下，Runnable对象是运行在子线程中的，可以进行联网操作，但是不能更新UI
             }

@@ -134,7 +134,7 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
 
                 // 网络没打开
                 // 请求超时
-                ToastUtil.show("请求超时或网络没打开", true, ToastUtil.Mode.REPLACEABLE);
+                ToastUtil.show("连接超时", true, ToastUtil.Mode.REPLACEABLE);
             }
 
             @Override

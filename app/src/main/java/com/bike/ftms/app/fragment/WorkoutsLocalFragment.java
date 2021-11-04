@@ -217,7 +217,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             list.add(bean2.copy());
         }
 
-        ToastUtil.show("list.size == " + list.size());
+//        ToastUtil.show("list.size == " + list.size());
         Logger.d("list.size == " + list.size());
         if (list.size() == 0) {
             RowerDataBean2 rowerDataBean2 = new RowerDataBean2(bean);
