@@ -206,7 +206,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     @Override
     public void onScanSuccess() {
-        Logger.i("onScanSuccess");
+//        Logger.i("onScanSuccess");
         if (bleAdapter != null) {
             bleAdapter.notifyDataSetChanged();
         } else {
@@ -231,12 +231,9 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     @Override
     public void onNotifyData() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (bleAdapter != null) {
-                    bleAdapter.notifyDataSetChanged();
-                }
+        runOnUiThread(() -> {
+            if (bleAdapter != null) {
+                bleAdapter.notifyDataSetChanged();
             }
         });
 
