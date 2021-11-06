@@ -225,7 +225,7 @@ public class OkHttpHelper {
                             return;
                         }
                         mHandler.post(() -> {
-                            Logger.i("====onFailure======= " + request.url().toString() + "" + e);
+                            Logger.i(TAG,"====onFailure======= " + request.url().toString() + "" + e);
                             if (callBack != null) {
                                 callBack.onFailure(call, e);
                             }
@@ -257,7 +257,7 @@ public class OkHttpHelper {
     private static Request getRequestForGet(String url, Object tag) {
         Logger.d(TAG, "getRequestForPost---> " + url);
         if (url.isEmpty()) {
-            Logger.e("OkHttpHelper-----getRequestForGet---> url 地址为空！！！");
+            Logger.e(TAG,"OkHttpHelper-----getRequestForGet---> url 地址为空！！！");
             return null;
         }
         Request request;

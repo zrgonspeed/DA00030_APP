@@ -67,4 +67,10 @@ public class Logger {
             Log.v(tag, msg);
         }
     }
+
+    public static void w(String tag, String msg) {
+        if (isDebug) {
+            Log.w(tag, msg);
+        }
+    }
 }

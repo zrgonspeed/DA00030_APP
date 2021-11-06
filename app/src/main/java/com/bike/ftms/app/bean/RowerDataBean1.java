@@ -279,9 +279,27 @@ public class RowerDataBean1 extends LitePalSupport {
     public String toString() {
         return "RowerDataBean1{" +
                 "id=" + id +
+                ", runMode=" + runMode +
+                ", runStatus=" + runStatus +
+
+                ", time=" + time +
+                ", distance=" + distance +
+                ", calorie=" + calorie +
+
+                ", interval=" + interval +
+                ", setIntervalTime=" + setIntervalTime +
+                ", setIntervalDistance=" + setIntervalDistance +
+                ", setIntervalCalorie=" + setIntervalCalorie +
+                ", intervalStatus=" + intervalStatus +
+                ", reset_time=" + reset_time +
+
+                ", runInterval=" + runInterval +
+                ", setGoalTime=" + setGoalTime +
+                ", setGoalDistance=" + setGoalDistance +
+                ", setGoalCalorie=" + setGoalCalorie +
+
                 ", strokes=" + strokes +
                 ", drag=" + drag +
-                ", interval=" + interval +
                 ", sm=" + sm +
                 ", five_hundred=" + five_hundred +
                 ", heart_rate=" + heart_rate +
@@ -291,30 +309,12 @@ public class RowerDataBean1 extends LitePalSupport {
                 ", calories_hr=" + calories_hr +
                 ", note='" + note + '\'' +
                 ", date=" + date +
-                ", time=" + time +
-                ", distance=" + distance +
-                ", calorie=" + calorie +
-                ", setIntervalTime=" + setIntervalTime +
-                ", setIntervalDistance=" + setIntervalDistance +
-                ", setIntervalCalorie=" + setIntervalCalorie +
-                ", setGoalTime=" + setGoalTime +
-                ", setGoalDistance=" + setGoalDistance +
-                ", setGoalCalorie=" + setGoalCalorie +
-                ", runMode=" + runMode +
-                ", reset_time=" + reset_time +
-                ", runStatus=" + runStatus +
-                ", intervalStatus=" + intervalStatus +
-                ", runInterval=" + runInterval +
                 ", list=" + list +
                 '}';
     }
 
     @Column(ignore = true)
     private int flag = 1;
-
-    public int getFlag() {
-        return flag;
-    }
 
     public void setFlag(int newFlag) {
         if (newFlag == 2) {

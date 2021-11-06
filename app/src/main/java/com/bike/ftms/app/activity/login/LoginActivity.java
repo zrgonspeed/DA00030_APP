@@ -25,6 +25,7 @@ import tech.gujin.toast.ToastUtil;
 
 public class LoginActivity extends BaseActivity {
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
     @BindView(R.id.edt_user_name)
     FormEditText edt_user_name;
     @BindView(R.id.edt_password)
@@ -110,7 +111,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
-                Logger.e("请求失败！");
+                Logger.e(TAG,"请求失败！");
                 Logger.e(e.toString());
 
                 // 网络没打开
@@ -121,7 +122,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(Call call, int httpCode, String response) {
                 // 响应成功，响应码不一定是200
-                Logger.e("请求成功 ->> response.body().string() == " + response);
+                Logger.e(TAG,"请求成功 ->> response.body().string() == " + response);
 
                 if (httpCode == 200) {
                     /*
@@ -133,14 +134,14 @@ public class LoginActivity extends BaseActivity {
                     }
                      */
                     LoginSuccessBean loginSuccessBean = GsonUtil.GsonToBean(response, LoginSuccessBean.class);
-                    Logger.e("登录成功: " + loginSuccessBean.toString());
+                    Logger.e(TAG,"登录成功: " + loginSuccessBean.toString());
                 } else if (httpCode == 422 || httpCode == 404 || httpCode == 401) {
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
-                    Logger.e("登录失败:" + resultBean.toString());
+                    Logger.e(TAG,"登录失败:" + resultBean.toString());
                     ToastUtil.show("登录失败: " + resultBean.getMessage());
                 } else {
-                    Logger.e("httpCode == " + httpCode + " 其它处理");
-                    Logger.e("登录失败---");
+                    Logger.e(TAG,"httpCode == " + httpCode + " 其它处理");
+                    Logger.e(TAG,"登录失败---");
                     ToastUtil.show("登录失败: httpcode = " + httpCode);
                 }
             }

@@ -34,6 +34,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements OnRunDataListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.vp)
     HorizontalViewPager vp;
     @BindView(R.id.btn_bluetooth)
@@ -158,7 +159,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public void onRunData(RowerDataBean1 rowerDataBean1) {
-        Logger.d("MainActivity", rowerDataBean1.toString());
+        Logger.d(TAG, rowerDataBean1.toString());
 
         if (isOnPause) {
             return;
@@ -215,17 +216,17 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Logger.d("onKeyDown");
+        Logger.d(TAG, "onKeyDown");
         if (workoutsFragment.onKeyDown(keyCode, event)) {
             exitTime = 0;
             return false;
         }
-        Logger.d("onKeyDown1");
+        Logger.d(TAG, "onKeyDown1");
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             exit();
             return false;
         }
-        Logger.d("onKeyDown2");
+        Logger.d(TAG, "onKeyDown2");
         return super.onKeyDown(keyCode, event);
     }
 

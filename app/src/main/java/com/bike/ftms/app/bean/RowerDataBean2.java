@@ -345,10 +345,27 @@ public class RowerDataBean2 extends LitePalSupport {
     public String toString() {
         return "RowerDataBean2{" +
                 "id=" + id +
-//                ", rowerDataBean1.id=" + rowerDataBean1.getId() +
+                ", runMode=" + runMode +
+                ", runStatus=" + runStatus +
+
+                ", time=" + time +
+                ", distance=" + distance +
+                ", calorie=" + calorie +
+
+                ", interval=" + interval +
+                ", setIntervalTime=" + setIntervalTime +
+                ", setIntervalDistance=" + setIntervalDistance +
+                ", setIntervalCalorie=" + setIntervalCalorie +
+                ", intervalStatus=" + intervalStatus +
+                ", reset_time=" + reset_time +
+
+                ", runInterval=" + runInterval +
+                ", setGoalTime=" + setGoalTime +
+                ", setGoalDistance=" + setGoalDistance +
+                ", setGoalCalorie=" + setGoalCalorie +
+
                 ", strokes=" + strokes +
                 ", drag=" + drag +
-                ", interval=" + interval +
                 ", sm=" + sm +
                 ", five_hundred=" + five_hundred +
                 ", heart_rate=" + heart_rate +
@@ -358,20 +375,6 @@ public class RowerDataBean2 extends LitePalSupport {
                 ", calories_hr=" + calories_hr +
                 ", note='" + note + '\'' +
                 ", date=" + date +
-                ", time=" + time +
-                ", distance=" + distance +
-                ", calorie=" + calorie +
-                ", setIntervalTime=" + setIntervalTime +
-                ", setIntervalDistance=" + setIntervalDistance +
-                ", setIntervalCalorie=" + setIntervalCalorie +
-                ", setGoalTime=" + setGoalTime +
-                ", setGoalDistance=" + setGoalDistance +
-                ", setGoalCalorie=" + setGoalCalorie +
-                ", runMode=" + runMode +
-                ", reset_time=" + reset_time +
-                ", runStatus=" + runStatus +
-                ", intervalStatus=" + intervalStatus +
-                ", runInterval=" + runInterval +
                 '}';
     }
 }

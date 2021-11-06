@@ -51,6 +51,7 @@ import tech.gujin.toast.ToastUtil;
  * @Date 2021/3/31
  */
 public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNetAdapter.OnItemClickListener, WorkoutsNetAdapter.OnItemDeleteListener {
+    private static final String TAG = WorkoutsNetFragment.class.getSimpleName();
     @BindView(R.id.tv_upload)
     TextView tvUpload;
     @BindView(R.id.tv_edit)
@@ -129,7 +130,7 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
-                Logger.e("请求失败！");
+                Logger.e(TAG,"请求失败！");
                 Logger.e(e.toString());
 
                 // 网络没打开
@@ -140,7 +141,7 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
             @Override
             public void onSuccess(Call call, int httpCode, String response) {
                 // 响应成功，响应码不一定是200
-                Logger.e("请求成功 ->> response.body().string() == " + response);
+                Logger.e(TAG,"请求成功 ->> response.body().string() == " + response);
 
                 if (httpCode == 200) {
                     RunDataResultListDTO runDataResultListDTO = GsonUtil.GsonToBean(response, RunDataResultListDTO.class);
@@ -268,7 +269,7 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
         ArrayList<RunDataInfo> list = new ArrayList<>();
 
         for (RunDataInfo oo : list) {
-            Logger.e("oo == " + oo);
+            Logger.e(TAG,"oo == " + oo);
         }
 
         workoutsAdapter2 = new WorkoutsNetAdapter2(list);

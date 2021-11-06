@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.activity.login.LoginActivity;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter2;
 import com.bike.ftms.app.bean.RowerDataBean1;
@@ -42,6 +43,8 @@ import tech.gujin.toast.ToastUtil;
  * @Date 2021/3/31
  */
 public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsLocalAdapter.OnItemClickListener, WorkoutsLocalAdapter.OnItemDeleteListener {
+    private static final String TAG = WorkoutsLocalFragment.class.getSimpleName();
+
     @BindView(R.id.tv_upload)
     TextView tvUpload;
     @BindView(R.id.tv_edit)
@@ -218,7 +221,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         }
 
 //        ToastUtil.show("list.size == " + list.size());
-        Logger.d("list.size == " + list.size());
+        Logger.d(TAG,"list.size == " + list.size());
         if (list.size() == 0) {
             RowerDataBean2 rowerDataBean2 = new RowerDataBean2(bean);
             list.add(rowerDataBean2);
@@ -430,7 +433,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         }
 
         for (RowerDataBean2 oo : list) {
-            Logger.e("oo == " + oo);
+            Logger.e(TAG,"oo == " + oo);
         }
 
         workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(list);
