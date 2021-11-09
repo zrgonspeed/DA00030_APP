@@ -129,7 +129,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        m_wklk.release(); //解除保持唤醒
+        if (m_wklk.isHeld()) {
+            m_wklk.release(); //解除保持唤醒
+        }
     }
 
     @Override
