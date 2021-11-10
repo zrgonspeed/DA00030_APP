@@ -986,7 +986,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
             r = mBluetoothGatt.writeCharacteristic(mBluetoothGattCharacteristic);
             Logger.d(TAG, mBluetoothGattCharacteristic.getUuid().toString().substring(0, 8) + ",::" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length) + r);
         } else {
-            Logger.d(TAG, "Send:" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length) + r);
+//            Logger.d(TAG, "Send:" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length) + r);
+            Logger.e("发送到电子表失败");
         }
         return r;
     }
@@ -1564,6 +1565,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     isToExamine = true;
                     isVerifyConnectTimer.closeTimer();
                 }
+                return;
             }
             if (data[1] == 0x41 && data[2] == 0x02 && isToExamine) {
                 sendRespondData(data);

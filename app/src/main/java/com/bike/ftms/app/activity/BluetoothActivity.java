@@ -2,17 +2,20 @@ package com.bike.ftms.app.activity;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -43,13 +46,35 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     RecyclerView rvBle;
     private BleAdapter bleAdapter;
 
+    boolean first = true;
+    boolean hasFocus = false;
+
     private boolean isCalled = true;
+    private boolean isPre = false;
+
+    private BLEBroadcastReceiver bleBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        Logger.e(TAG,"onCreate " + this.toString());
+        Logger.i(TAG, "onCreate()");
+
+        //注册广播
+        initBLEBroadcastReceiver();
+    }
+
+    /**
+     * 注册广播
+     */
+    private void initBLEBroadcastReceiver() {
+        //注册广播接收
+        bleBroadcastReceiver = new BLEBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED); //开始扫描
+        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);//扫描结束
+        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);//手机蓝牙状态监听
+        registerReceiver(bleBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -59,12 +84,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     @Override
     protected void initData() {
-
     }
-
-
-    boolean isClicked = false;
-    boolean myChecked = false;
 
     @Override
     protected void initView() {
@@ -73,15 +93,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
         // 每点一次就拦住check事件等待蓝牙打开或关闭之后返回的状态
         cbSwitch.setOnClickListener((e) -> {
-            Logger.e("click+++++++++++++++++++++++++++++++++++");
-            isClicked = true;
-
-
-        });
-
-        cbSwitch.getViewTreeObserver().addOnDrawListener(() -> {
-            Logger.e("---------------------------------------");
-
+            isCalled = false;
         });
 
         cbSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -89,29 +101,28 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             Logger.e("buttonView.isPressed() == " + buttonView.isPressed());
 
             if (!buttonView.isPressed()) {
-                if (isCalled) {
-                    isCalled = false;
-                    cbSwitch.setEnabled(false);
-                } else {
-                    Logger.e("我要设置 " + isChecked);
-                    return;
-                }
-
+                isPre = isChecked;
                 return;
             }
+            cbSwitch.setChecked(isPre);
+
+            if (!isCalled) {
+                return;
+            }
+            // 代码设置的不会执行下去
             if (isChecked) {
                 Logger.e(TAG, "打开蓝牙?");
-                if (tv_switch != null) {
-                    tv_switch.setText(getResources().getString(R.string.bluetooth_switch_enable));
-                }
+
                 scanDevice();
             } else {
                 Logger.e(TAG, "断开蓝牙?");
-                if (tv_switch != null) {
-                    tv_switch.setText(getResources().getString(R.string.bluetooth_switch_disable));
-                }
 
                 BleManager.getInstance().closeBLE((disable) -> {
+                    if (this.isDestroyed()) {
+                        Logger.e(TAG, TAG + " is destroyed");
+                        return;
+                    }
+
                     runOnUiThread(() -> {
                         isCalled = true;
                         cbSwitch.setEnabled(true);
@@ -123,8 +134,16 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                             rvBle.setVisibility(View.GONE);
 
                             BleManager.getInstance().stopScan();
+                            if (tv_switch != null) {
+                                tv_switch.setText(getResources().getString(R.string.bluetooth_switch_disable));
+                            }
                         } else {
+                            llLoading.setVisibility(View.VISIBLE);
+                            rvBle.setVisibility(View.VISIBLE);
                             cbSwitch.setChecked(true);
+                            if (tv_switch != null) {
+                                tv_switch.setText(getResources().getString(R.string.bluetooth_switch_enable));
+                            }
                         }
                     });
 
@@ -132,7 +151,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 });
 
             }
-
         });
         rvBle.setNestedScrollingEnabled(false);
     }
@@ -147,9 +165,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     }
 
-    boolean first = true;
-
-    boolean hasFocus = false;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -158,45 +173,29 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         Logger.e(TAG, "onWindowFocusChanged " + hasFocus + " first " + first);
         Logger.e(TAG, "cbSwitch.isChecked() " + cbSwitch.isChecked());
 
-//        if (isClicked && hasFocus) {
-//            Logger.e("开始计时");
-//            new Handler().postDelayed(() -> {
-//                if (!isCalled) {
-//                    cbSwitch.setEnabled(false);
-//                } else {
-//                    cbSwitch.setEnabled(true);
-//                }
-//            }, 1000);
-//
-//        }
-
         if (hasFocus && !first && BleManager.getInstance().isOpen && !cbSwitch.isChecked()) {
-            cbSwitch.setChecked(true);
-//            cbSwitch.setEnabled(isCalled);
+//            if (BleManager.getInstance().getBluetoothAdapter().isEnabled()) {
+                cbSwitch.setChecked(true);
+//            }
         }
 
         if (hasFocus && !first && !BleManager.getInstance().isOpen && cbSwitch.isChecked()) {
-            cbSwitch.setChecked(false);
-//            cbSwitch.setEnabled(isCalled);
+//            if (!BleManager.getInstance().getBluetoothAdapter().isEnabled()) {
+                cbSwitch.setChecked(false);
+//            }
         }
 
         if (first && hasFocus) {
             boolean enabled = BleManager.getInstance().getBluetoothAdapter().isEnabled();
             if (!enabled || !cbSwitch.isChecked()) {
-//                cbSwitch.setChecked(true);
             }
             // cb为false时，再check false，不会触发回调
-
             if (tv_switch != null) {
                 tv_switch.setText(cbSwitch.isChecked() ? getResources().getString(R.string.bluetooth_switch_enable) : getResources().getString(R.string.bluetooth_switch_disable));
             }
-            if (BleManager.getInstance().getBluetoothAdapter().isEnabled() && !BleManager.isCanning) {
-//                scanDevice();
-            }
-
-//            Logger.e(TAG, "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww cbSwitch.isChecked() " + cbSwitch.isChecked());
 
             if (BleManager.getInstance().getBluetoothAdapter().isEnabled() && !cbSwitch.isChecked()) {
+                isPre = true;
                 cbSwitch.setPressed(true);
                 cbSwitch.setChecked(true);
             }
@@ -208,7 +207,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     private void scanDevice() {
         //判断是否为android6.0系统版本，如果是，需要动态添加权限
         if (Build.VERSION.SDK_INT >= 23) {
-            showContacts();
+            requestPermissionAndOpenLBE();
         } else {
             llLoading.setVisibility(View.VISIBLE);
             rvBle.setVisibility(View.VISIBLE);
@@ -216,8 +215,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         }
     }
 
-    //请求权限
-    public void showContacts() {
+    public void requestPermissionAndOpenLBE() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -243,8 +241,13 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                     Manifest.permission.ACCESS_COARSE_LOCATION,
             }, BAIDU_READ_PHONE_STATE);
         } else {
-            Logger.e(TAG, "有权限了");
+            Logger.e(TAG, "有权限");
             BleManager.getInstance().openBLE((isOpen) -> {
+                if (this.isDestroyed()) {
+                    Logger.e(TAG, TAG + " is destroyed");
+                    return;
+                }
+
                 runOnUiThread(() -> {
                     isCalled = true;
                     cbSwitch.setEnabled(true);
@@ -258,14 +261,21 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                             bleAdapter.notifyDataSetChanged();
                         }
                         rvBle.setVisibility(View.VISIBLE);
+                        if (tv_switch != null) {
+                            tv_switch.setText(getResources().getString(R.string.bluetooth_switch_enable));
+                        }
                     } else {
                         llLoading.setVisibility(View.GONE);
+                        rvBle.setVisibility(View.GONE);
                         cbSwitch.setChecked(false);
+                        if (tv_switch != null) {
+                            tv_switch.setText(getResources().getString(R.string.bluetooth_switch_disable));
+                        }
                     }
                 });
-
             });
 
+            // 另一种打开蓝牙的方式
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivity(enableBtIntent);
         }
@@ -286,6 +296,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                     BleManager.getInstance().scanDevice();
                 } else {
                     // 没有获取到权限，做特殊处理
+                    Logger.e("没有获取到权限");
                 }
                 break;
             default:
@@ -300,7 +311,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     @Override
     public void onScanSuccess() {
-//        Logger.i("onScanSuccess");
         if (bleAdapter != null) {
             bleAdapter.notifyDataSetChanged();
         } else {
@@ -330,7 +340,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 bleAdapter.notifyDataSetChanged();
             }
         });
-
     }
 
     @Override
@@ -345,4 +354,47 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         BleManager.getInstance().connectDevice(position);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //注销广播接收
+        unregisterReceiver(bleBroadcastReceiver);
+    }
+
+    /**
+     * 蓝牙广播接收器
+     */
+    private class BLEBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (TextUtils.equals(action, BluetoothAdapter.ACTION_DISCOVERY_STARTED)) { //开启搜索
+                Message message = new Message();
+//                message.what = START_DISCOVERY;
+//                mHandler.sendMessage(message);
+
+
+            } else if (TextUtils.equals(action, BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {//完成搜素
+                Message message = new Message();
+//                message.what = STOP_DISCOVERY;
+//                mHandler.sendMessage(message);
+
+            } else if (TextUtils.equals(action, BluetoothAdapter.ACTION_STATE_CHANGED)) {   //系统蓝牙状态监听
+
+                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+                if (state == BluetoothAdapter.STATE_OFF) {
+                    Message message = new Message();
+//                    message.what = BT_CLOSED;
+//                    mHandler.sendMessage(message);
+                    BleManager.getInstance().isOpen = false;
+                } else if (state == BluetoothAdapter.STATE_ON) {
+                    Message message = new Message();
+//                    message.what = BT_OPENED;
+//                    mHandler.sendMessage(message);
+                    BleManager.getInstance().isOpen = true;
+                }
+            }
+        }
+    }
 }

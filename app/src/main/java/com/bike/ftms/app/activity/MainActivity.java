@@ -126,25 +126,26 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (m_wklk.isHeld()) {
-            m_wklk.release(); //解除保持唤醒
-        }
-    }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Logger.i(TAG, "onPause()");
         isOnPause = true;
         m_wklk.release();//解除保持唤醒
         //BleManager.getInstance().setonRunDataListener(null);
+
+        if (yesOrNoDialog != null) {
+            yesOrNoDialog.cancel();
+            yesOrNoDialog = null;
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Logger.i(TAG, "onResume()");
+
         isOnPause = false;
         m_wklk.acquire(); //设置保持唤醒
         BleManager.getInstance().setonRunDataListener(this);
@@ -167,12 +168,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         if (isOnPause) {
             return;
         }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                homeFragment.onRunData(rowerDataBean1);
-            }
-        });
+        runOnUiThread(() -> homeFragment.onRunData(rowerDataBean1));
     }
 
     @Override
@@ -180,19 +176,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         if (isOnPause) {
             return;
         }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                showConnectHintDialog();
-            }
-        });
+        runOnUiThread(() -> showConnectHintDialog());
     }
 
-    @Override
-    public void onExit() {
-        finish();
-        System.exit(0);
-    }
 
     private void showConnectHintDialog() {
         if (yesOrNoDialog == null) {
@@ -233,7 +219,15 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    public void onExit() {
+        finish();
+        System.exit(0);
+    }
+
     public void exit() {
+        Logger.i(TAG, "exit()");
+
         if ((System.currentTimeMillis() - exitTime) > 2000) {
             Toast.makeText(getApplicationContext(), getString(R.string.home_exit), Toast.LENGTH_SHORT).show();
             exitTime = System.currentTimeMillis();
@@ -241,6 +235,20 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             finish();
             System.exit(0);
         }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Logger.i(TAG, "onDestroy()");
+
+        if (m_wklk.isHeld()) {
+            m_wklk.release(); //解除保持唤醒
+        }
+
+        if (yesOrNoDialog != null) {
+            yesOrNoDialog.cancel();
+            yesOrNoDialog = null;
+        }
     }
 }
