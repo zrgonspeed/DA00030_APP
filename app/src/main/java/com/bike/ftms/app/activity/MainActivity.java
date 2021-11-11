@@ -57,6 +57,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Logger.e(TAG, "onCreate()");
     }
 
     @Override
@@ -145,9 +146,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     protected void onResume() {
         super.onResume();
         Logger.i(TAG, "onResume()");
-
+        Logger.e(TAG, "this == " + this);
         isOnPause = false;
         m_wklk.acquire(); //设置保持唤醒
+        Logger.e(TAG, "BleManager == " + BleManager.getInstance());
         BleManager.getInstance().setonRunDataListener(this);
         if (!BleManager.isConnect && !BleManager.isHeartbeatConnect) {
             showConnectHintDialog();
@@ -233,7 +235,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             exitTime = System.currentTimeMillis();
         } else {
             finish();
-            System.exit(0);
+//            System.exit(0);
+            BleManager.getInstance().disConnectDevice();
         }
     }
 

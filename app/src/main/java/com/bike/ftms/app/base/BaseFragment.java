@@ -10,12 +10,16 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bike.ftms.app.fragment.home.BaseHomeFragment;
+import com.bike.ftms.app.utils.Logger;
+
 /**
  * @Description 基类fragment
  * @Author YeYueHong
  * @Date 2021/3/30
  */
 public abstract class BaseFragment extends Fragment {
+    private static final String TAG = BaseFragment.class.getSimpleName();
 
     protected Activity mActivity;
 
@@ -28,12 +32,15 @@ public abstract class BaseFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mActivity = (Activity) context;
+        Logger.i(TAG, "onAttach()");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container
             , Bundle savedInstanceState) {
+        Logger.i(TAG, "onCreateView()");
+
         View view = LayoutInflater.from(mActivity)
                 .inflate(getLayoutId(), container, false);
         initView(view, container, savedInstanceState);
@@ -44,6 +51,14 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
+        Logger.i(TAG, "onActivityCreated()");
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Logger.i(TAG, "setUserVisibleHint()" + isVisibleToUser);
     }
 
     /**

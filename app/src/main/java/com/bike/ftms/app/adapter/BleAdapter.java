@@ -1,8 +1,5 @@
 package com.bike.ftms.app.adapter;
 
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.le.ScanResult;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.BleAdapter.BleViewHolder;
 import com.bike.ftms.app.bean.MyScanResult;
+import com.bike.ftms.app.utils.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +22,7 @@ import java.util.List;
  */
 public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
 
+    private static final String TAG = BleAdapter.class.getSimpleName();
     private List<MyScanResult> list;
     private OnItemClickListener onItemClickListener;
 
@@ -41,14 +39,12 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BleViewHolder holder, int position) {
-        holder.tvState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (list.get(position).getConnectState() == 2) {
-                    return;
-                }
-                onItemClickListener.onItemClickListener(position);
+        holder.tvState.setOnClickListener(v -> {
+//            Logger.e(TAG, "list.get(position).getConnectState()  == " + list.get(position).getConnectState());
+            if (list.get(position).getConnectState() == 2) {
+                return;
             }
+            onItemClickListener.onItemClickListener(position, v);
         });
         holder.tvName.setText(list.get(position).getScanResult().getDevice().getName());
         holder.tvAddress.setText(list.get(position).getScanResult().getDevice().getAddress());
@@ -67,7 +63,7 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
     }
 
     public interface OnItemClickListener {
-        void onItemClickListener(int position);
+        void onItemClickListener(int position, View v);
     }
 
     public void addItemClickListener(OnItemClickListener listener) {

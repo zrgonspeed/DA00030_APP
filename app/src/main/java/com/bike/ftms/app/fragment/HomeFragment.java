@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -16,6 +17,7 @@ import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.fragment.home.OnePageHomeFragment;
 import com.bike.ftms.app.fragment.home.ThreePageHomeFragment;
 import com.bike.ftms.app.fragment.home.TwoPageHomeFragment;
+import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.VerticalViewPager;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import butterknife.ButterKnife;
  * @Date 2021/3/31
  */
 public class HomeFragment extends BaseFragment {
+    private static final String TAG = HomeFragment.class.getSimpleName();
     @BindView(R.id.vp_home_fragment)
     VerticalViewPager vpHomeFragment;
     @BindView(R.id.iv_bar)
@@ -48,6 +51,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
+        Logger.i(TAG, "initView()");
         ButterKnife.bind(this, view);
         onePageHomeFragment = new OnePageHomeFragment();
         twoPageHomeFragment = new TwoPageHomeFragment();
@@ -82,11 +86,21 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Logger.i(TAG, "onActivityCreated()");
+    }
+
+    @Override
     protected void initData() {
 
     }
 
     public void onRunData(RowerDataBean1 rowerDataBean1) {
+        Logger.e(TAG,"this == " + this);
+        Logger.e(TAG,"onePageHomeFragment == " + onePageHomeFragment);
+        Logger.e(TAG,"twoPageHomeFragment == " + twoPageHomeFragment);
+        Logger.e(TAG,"threePageHomeFragment == " + threePageHomeFragment);
         if (onePageHomeFragment == null || twoPageHomeFragment == null || threePageHomeFragment == null) {
             return;
         }
