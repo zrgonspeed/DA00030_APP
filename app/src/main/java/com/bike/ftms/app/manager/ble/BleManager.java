@@ -1673,6 +1673,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
     }
 
     private void saveRowDataBean1() {
+        // TODO: 2021/11/12 应该判断是否符合保存  如 运动不足5秒，等
+        Logger.e("saveRowDataBean1() -- canSave " + canSave + "       getCanSave() --- " + rowerDataBean1.getCanSave());
         if (canSave && rowerDataBean1.getCanSave()) {
             Logger.e(TAG, "1----RUN_STATUS_STOP----" + "bean1  save : " + rowerDataBean1);
             Logger.e(TAG, "1----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());

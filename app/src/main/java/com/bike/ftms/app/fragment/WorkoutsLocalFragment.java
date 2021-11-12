@@ -220,6 +220,9 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             list.add(bean2.copy());
         }
 
+        for (RowerDataBean2 oo : list) {
+            Logger.e(TAG,"oo == " + oo);
+        }
 //        ToastUtil.show("list.size == " + list.size());
         Logger.d(TAG,"list.size == " + list.size());
         if (list.size() == 0) {
@@ -276,6 +279,19 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 // 平均
                 bb.setFive_hundred(bean2.getFive_hundred() + bb.getFive_hundred());
                 bb.setSm(bean2.getSm() + bb.getSm());
+
+
+                /**
+                 *                if (list.indexOf(bean2) != list.size() - 1 ) {
+                 *                     bean2.setDistance(100);
+                 *                     bb.setDistance(bb.getDistance() + bean2.getDistance());
+                 *                     initDistance = initDistance - bean2.getDistance();
+                 *                 }else {
+                 *                     bean2.setDistance(initDistance - bean2.getDistance());
+                 *                     bb.setDistance(bb.getDistance() + bean2.getDistance());
+                 *                     initDistance = initDistance - bean2.getDistance();
+                 *                 }
+                 */
 
                 // 每段的运动距离 倒数
                 bean2.setDistance(initDistance - bean2.getDistance());
