@@ -80,5 +80,11 @@ public abstract class BaseFragment extends Fragment {
      * 执行数据的加载
      */
     protected abstract void initData();
+
+    @Override
+    public String toString() {
+        String s = super.toString();
+        return s.substring(s.indexOf('{') + 1, s.indexOf('('));
+    }
 }
 

@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import tech.gujin.toast.ToastUtil;
+
 public class BleManager implements CustomTimer.TimerCallBack {
     private String TAG = "BleManager";
     private final byte IDLE_BEGIN = 0;
@@ -48,7 +50,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private final byte RUN_STATUS_STOP = 0x00;
 
     public static boolean isConnect;  //是否连接
-    public static boolean isHeartbeatConnect;//是否连接蓝牙腰带
+    public static boolean isHrConnect;//是否连接蓝牙腰带
     public static boolean isCanning;  //是否正在扫描
     public static boolean isOpen;     //是否打开定位及蓝牙
 
@@ -91,16 +93,16 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
     private RowerDataBean1 rowerDataBean1;
     private RowerDataBean2 rowerDataBean2;
+    private boolean canSave = false;
 
     private short heart_rate = 0;   // 腰带心跳值，需要传给电子表
 
     private BleOpenCallBack bleOpenCallBack;
+    private BleClosedCallBack bleClosedCallBack;
 
     public interface BleOpenCallBack {
         void isOpen(boolean open);
     }
-
-    private BleClosedCallBack bleClosedCallBack;
 
     public interface BleClosedCallBack {
         void isClosed(boolean disable);
@@ -174,6 +176,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 return;
             }
             mHandler.postDelayed(() -> {
+                Logger.e(TAG, "扫描时间到了，停止扫描");
                 stopScan();
                 if (mScanResults.size() == 0) {//没有搜索到设备
                     Logger.d(TAG, "No devices were found");
@@ -287,6 +290,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         onScanConnectListener.onScanSuccess();
                     }
                     if (getScanResults().size() >= SCAN_MAX_COUNT) { //达到限制后停止扫描
+                        Logger.e("getScanResults().size() == " + getScanResults().size());
                         stopScan();
                     }
                 }
@@ -383,6 +387,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
             mBluetoothGatt.disconnect();
 //            mBluetoothGatt = null;
         }
+
+        isHrConnect = false;
         if (mBluetoothHrGatt != null && isScanHrDevice) {
             Logger.e(TAG, "断开心跳设备");
             mBluetoothHrGatt.disconnect();
@@ -491,12 +497,16 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     Logger.i(TAG, "4------寻找服务");
                     mBluetoothGatt.discoverServices();
                 }
-                Logger.d(TAG, "isConnect=" + isConnect + ",isHeartbeatConnect=" + isHeartbeatConnect);
+                Logger.d(TAG, "isConnect=" + isConnect + ",isHeartbeatConnect=" + isHrConnect);
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(true, gatt.getDevice().getName());
                 }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Logger.e(TAG, "断开设备回调");
+
+                // 保存运动数据
+                saveRowDataBean1();
+
                 BleManager.getInstance().mPosition = -1;
                 rowerDataBean1 = new RowerDataBean1();
                 if (onRunDataListener != null) {
@@ -736,7 +746,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         break;
                     }
                 }
-                isHeartbeatConnect = false;
+                isHrConnect = false;
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
                 }
@@ -760,11 +770,11 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         break;
                     }
                 }
-                isHeartbeatConnect = true;
+                isHrConnect = true;
                 if (mBluetoothHrGatt != null) {
                     mBluetoothHrGatt.discoverServices();
                 }
-                Logger.d(TAG, "isConnect=" + isConnect + ",isHeartbeatConnect=" + isHeartbeatConnect);
+                Logger.d(TAG, "isConnect=" + isConnect + ",isHeartbeatConnect=" + isHrConnect);
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(true, gatt.getDevice().getName());
                 }
@@ -789,7 +799,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         break;
                     }
                 }
-                isHeartbeatConnect = false;
+                isHrConnect = false;
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
                 }
@@ -1029,7 +1039,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         BleManager.getInstance().isOpen = false;
         BleManager.getInstance().isCanning = false;
         BleManager.getInstance().isConnect = false;
-        BleManager.getInstance().isHeartbeatConnect = false;
+        BleManager.getInstance().isHrConnect = false;
 
 //        if (mBluetoothHrGatt != null) {
 //            mBluetoothHrGatt.disconnect();
@@ -1286,9 +1296,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
      *
      * @param data
      */
-    private void setRunData(byte[] data) {
+    private void setRunData_2AD1(byte[] data) {
         if (onlyHr) {
-            if (!isHeartbeatConnect) {
+            if (!isHrConnect) {
                 rowerDataBean1.setHeart_rate(RowerDataParam.HEART_RATE_INX == -1 ? 0 : resolveData(data, RowerDataParam.HEART_RATE_INX, RowerDataParam.HEART_RATE_LEN));
                 if (onRunDataListener != null) {
                     onRunDataListener.onRunData(rowerDataBean1);
@@ -1310,7 +1320,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         rowerDataBean1.setFive_hundred(RowerDataParam.INSTANTANEOUS_PACE_INX == -1 ? 0 : resolveData(data, RowerDataParam.INSTANTANEOUS_PACE_INX, RowerDataParam.INSTANTANEOUS_PACE_LEN));
         rowerDataBean1.setCalorie(RowerDataParam.TOTAL_ENERGY_INX == -1 ? 0 : resolveData(data, RowerDataParam.TOTAL_ENERGY_INX, RowerDataParam.TOTAL_ENERGY_LEN));
         rowerDataBean1.setCalories_hr(RowerDataParam.ENERGY_PER_HOUR_INX == -1 ? 0 : resolveData(data, RowerDataParam.ENERGY_PER_HOUR_INX, RowerDataParam.ENERGY_PER_HOUR_LEN));
-        if (!isHeartbeatConnect) {
+        if (!isHrConnect) {
             rowerDataBean1.setHeart_rate(RowerDataParam.HEART_RATE_INX == -1 ? 0 : resolveData(data, RowerDataParam.HEART_RATE_INX, RowerDataParam.HEART_RATE_LEN));
         }
         rowerDataBean1.setWatts(RowerDataParam.INSTANTANEOUS_POWER_INX == -1 ? 0 : resolveData(data, RowerDataParam.INSTANTANEOUS_POWER_INX, RowerDataParam.INSTANTANEOUS_POWER_LEN));
@@ -1382,15 +1392,16 @@ public class BleManager implements CustomTimer.TimerCallBack {
 //        int len = SerialData.comPackage(bytes, respondByte, bytes.length - 3);
 //        sendDescriptorByte(respondByte, len);
 
-        byte[] bytes = new byte[data.length + 3];
+        // 0xfe 0x00 0x41 0x02  0xb4 0x00 0xcf 0x26 0xff
+        byte[] bytes = new byte[9];
         bytes[0] = (byte) SerialCommand.PACK_FRAME_HEADER;
         bytes[1] = (byte) 0x00;
-        System.arraycopy(data, 1, bytes, 2, data.length - 5);
+        System.arraycopy(data, 1, bytes, 2, 2);
 
         // 把腰带心跳值发给电子表
         byte[] hrBytes = ConvertData.shortToBytes(heart_rate);
-        bytes[bytes.length - 4] = hrBytes[1]; // 心跳
-        bytes[bytes.length - 5] = hrBytes[0]; // 低位在前，高位在后
+        bytes[4] = hrBytes[0]; // 心跳  低位在前，高位在后
+        bytes[5] = hrBytes[1];
 
         byte[] respondByte = new byte[64];
         int len = SerialData.comPackage(bytes, respondByte, bytes.length - 3);
@@ -1470,219 +1481,239 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
     }
 
-    boolean canSave = false;
 
     private void rxDataPackage(byte[] data, String uuid) {
         if (!isSendVerifyData) {
             isSendVerifyData = true;
             sendVerifyData();
+            return;
         }
 
         // 无2ad3处理
 
         if (uuid.contains("2ad1") && isToExamine) {
             setBleDataInx(new byte[]{data[0], data[1]});
-            setRunData(data);
+            setRunData_2AD1(data);
+            return;
         }
 
         if (uuid.contains("2ada") && isToExamine) {
-            // 单独显示心跳
-            if (data[3] == 0 && data[4] == 1) {
-                onlyHr = true;
-            } else {
-                onlyHr = false;
+            setRunData_2ADA(data);
+            return;
+        }
+
+        if (uuid.contains("ffe0")) {
+            setRunData_FFE0(data);
+            return;
+        }
+    }
+
+    private void setRunData_FFE0(byte[] data) {
+        //校对CRC码
+        if (data.length > 2 && data[1] == 0x40 && data[2] == 0x01) {
+            String[] dates = getCurDate().split("-");
+            byte[] date = new byte[3];
+            date[0] = (byte) Integer.parseInt(dates[0], 16);
+            date[1] = (byte) Integer.parseInt(dates[1], 16);
+            date[2] = (byte) Integer.parseInt(dates[2], 16);
+            byte[] calCRCBytes = ConvertData.shortToBytes(SerialData.calCRCByTable(ConvertData.subBytes(date, 0, date.length), date.length));
+            if (calCRCBytes[0] == data[3] && calCRCBytes[1] == data[4]) {
+                isToExamine = true;
+                isVerifyConnectTimer.closeTimer();
+            }
+            return;
+        }
+        if (data[1] == 0x41 && data[2] == 0x02 && isToExamine) {
+            sendRespondData(data);
+
+            if (runStatus == RUN_STATUS_STOP || rowerDataBean1.getCanSave()) {
+                saveRowDataBean1();
             }
 
-            Logger.d(TAG, "---↑------------------------2ada----------------------↑------------------");
-            //停止运动
-            if (data[3] == RUN_STATUS_STOP && runStatus != RUN_STATUS_STOP) {
-                Logger.d(TAG, "----------------data[3] == STOP-----------mode == " + rowerDataBean1.getRunMode());
-                canSave = false;
-                if (rowerDataBean1.getRunMode() == MyConstant.GOAL_TIME) {
-                    // 时间是倒数的，用距离判断
-                    if (rowerDataBean1.getDistance() >= 10) {
-                        canSave = true;
-                    }
-                } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME) {
-                    if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getDistance() >= 10) {
-                        canSave = true;
-                    }
-                } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
-                    if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getTime() >= 5) {
-                        canSave = true;
-                    }
-                } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_CALORIES) {
-                    if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getTime() >= 5) {
-                        canSave = true;
-                    }
-                } else {
-                    if (rowerDataBean1.getTime() >= 5) {
-                        canSave = true;
-                    }
-                }
+            if (runStatus == RUN_STATUS_RUNNING) {
+                rowerDataBean1.setDrag(resolveData(data, RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
+                rowerDataBean1.setInterval(resolveData(data, RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
 
-                if (canSave) {
-                    rowerDataBean1.setFlag(3);
-                    runStatus = data[3];
-                    return;
+                if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
+                    // 跳段时保存
+                    if (rowerDataBean1.getInterval() <= tempInterval1) {
+                        rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
+                    } else {
+                        if (tempInterval1 >= 1) {
+                            tempSave(rowerDataBean2);
+                            Logger.e(TAG, "间歇运动 " + rowerDataBean2.getInterval() + "   bean2.save " + rowerDataBean2);
+                        }
+                    }
+                    tempInterval1 = rowerDataBean1.getInterval();
+                } else if (MyConstant.isGoalMode(rowerDataBean1.getRunMode())) {
+                    // 跳段时保存
+                    if (rowerDataBean1.getRunInterval() <= tempInterval2) {
+                        rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
+                    } else {
+                        tempSave(rowerDataBean2);
+                        Logger.e(TAG, "目标运动 " + rowerDataBean2.getRunInterval() + 1 + "    bean2.save " + rowerDataBean2);
+                    }
+                    tempInterval2 = rowerDataBean1.getRunInterval();
                 }
-            }
-            runStatus = data[3];
-            rowerDataBean1.setRunStatus(runStatus);
-
-            if (onRunDataListener == null || runStatus == RUN_STATUS_STOP) {
-                return;
-            }
-
-            if (rowerDataBean1.getCanSave()) {
-                return;
-            }
-            // 都要设置的参数
-            int runMode = resolveData(data, RowerDataParam.RUN_MODE_INX, RowerDataParam.RUN_MODE_LEN);
-            int intervalStatus = resolveData(data, RowerDataParam.INTERVAL_STATUS_INX, RowerDataParam.INTERVAL_STATUS_LEN);
-            int runStatus = resolveData(data, RowerDataParam.RUN_STATUS_INX, RowerDataParam.RUN_STATUS_LEN);
-            int runInterval = resolveData(data, RowerDataParam.RUN_INTERVAL_INX, RowerDataParam.RUN_INTERVAL_LEN);
-            rowerDataBean1.setRunMode(runMode);
-            rowerDataBean1.setIntervalStatus(intervalStatus);
-            rowerDataBean1.setRunStatus(runStatus);
-            rowerDataBean1.setRunInterval(runInterval);
-
-            // 设置目标模式或间歇模式的指定值
-            if (MyConstant.isGoalMode(runMode)) {
-                switch (runMode) {
-                    case MyConstant.GOAL_TIME:
-                        int goalTime = resolveData(data, RowerDataParam.GOAL_TIME_INX + 1, RowerDataParam.GOAL_TIME_LEN);
-                        rowerDataBean1.setSetGoalTime(goalTime);
-                        break;
-                    case MyConstant.GOAL_DISTANCE:
-                        int goalDistance = resolveData(data, RowerDataParam.GOAL_DISTANCE_INX + 1, RowerDataParam.GOAL_DISTANCE_LEN);
-                        rowerDataBean1.setSetGoalDistance(goalDistance);
-                        break;
-                    case MyConstant.GOAL_CALORIES:
-                        int goalCalorie = resolveData(data, RowerDataParam.GOAL_CALORIE_INX + 1, RowerDataParam.GOAL_CALORIE_LEN);
-                        rowerDataBean1.setSetGoalCalorie(goalCalorie);
-                        break;
-                }
-            } else if (MyConstant.isIntervalMode(runMode)) {
-                switch (runMode) {
-                    case MyConstant.INTERVAL_TIME:
-                        int intervalTime = resolveData(data, RowerDataParam.INTERVAL_TIME_INX + 1, RowerDataParam.INTERVAL_TIME_LEN);
-                        rowerDataBean1.setSetIntervalTime(intervalTime);
-                        break;
-                    case MyConstant.INTERVAL_DISTANCE:
-                        int intervalDistance = resolveData(data, RowerDataParam.INTERVAL_DISTANCE_INX + 1, RowerDataParam.INTERVAL_DISTANCE_LEN);
-                        rowerDataBean1.setSetIntervalDistance(intervalDistance);
-                        break;
-                    case MyConstant.INTERVAL_CALORIES:
-                        int intervalCalorie = resolveData(data, RowerDataParam.INTERVAL_CALORIE_INX + 1, RowerDataParam.INTERVAL_CALORIE_LEN);
-                        rowerDataBean1.setSetIntervalCalorie(intervalCalorie);
-                        break;
-                }
-
-                // 休息时间
-                if (runMode == MyConstant.INTERVAL_DISTANCE) {
-                    RowerDataParam.INTERVAL_REST_TIME_INX = 10;
-                } else {
-                    RowerDataParam.INTERVAL_REST_TIME_INX = 8;
-                }
-                int intervalRestTime = resolveData(data, RowerDataParam.INTERVAL_REST_TIME_INX, RowerDataParam.INTERVAL_REST_TIME_LEN);
-                rowerDataBean1.setReset_time(intervalRestTime);
             }
 
             if (onRunDataListener != null) {
                 onRunDataListener.onRunData(rowerDataBean1);
             }
         }
+    }
 
-        if (uuid.contains("ffe0")) {
-            //校对CRC码
-            if (data.length > 2 && data[1] == 0x40 && data[2] == 0x01) {
-                String[] dates = getCurDate().split("-");
-                byte[] date = new byte[3];
-                date[0] = (byte) Integer.parseInt(dates[0], 16);
-                date[1] = (byte) Integer.parseInt(dates[1], 16);
-                date[2] = (byte) Integer.parseInt(dates[2], 16);
-                byte[] calCRCBytes = ConvertData.shortToBytes(SerialData.calCRCByTable(ConvertData.subBytes(date, 0, date.length), date.length));
-                if (calCRCBytes[0] == data[3] && calCRCBytes[1] == data[4]) {
-                    isToExamine = true;
-                    isVerifyConnectTimer.closeTimer();
+    private void setRunData_2ADA(byte[] data) {
+        // 单独显示心跳
+        if (data[3] == 0 && data[4] == 1) {
+            onlyHr = true;
+        } else {
+            onlyHr = false;
+        }
+
+        Logger.d(TAG, "---↑------------------------2ada----------------------↑------------------");
+        //停止运动
+        if (data[3] == RUN_STATUS_STOP && runStatus != RUN_STATUS_STOP) {
+            Logger.d(TAG, "----------------data[3] == STOP-----------mode == " + rowerDataBean1.getRunMode());
+            canSave = false;
+            if (rowerDataBean1.getRunMode() == MyConstant.GOAL_TIME) {
+                // 时间是倒数的，用距离判断
+                if (rowerDataBean1.getDistance() >= 10) {
+                    canSave = true;
                 }
+            } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME) {
+                if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getDistance() >= 10) {
+                    canSave = true;
+                }
+            } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
+                if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getTime() >= 5) {
+                    canSave = true;
+                }
+            } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_CALORIES) {
+                if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getTime() >= 5) {
+                    canSave = true;
+                }
+            } else {
+                if (rowerDataBean1.getTime() >= 5) {
+                    canSave = true;
+                }
+            }
+
+            if (canSave) {
+                rowerDataBean1.setFlag(3);
+                runStatus = data[3];
                 return;
             }
-            if (data[1] == 0x41 && data[2] == 0x02 && isToExamine) {
-                sendRespondData(data);
+        }
+        runStatus = data[3];
+        rowerDataBean1.setRunStatus(runStatus);
 
-                if (runStatus == RUN_STATUS_STOP || rowerDataBean1.getCanSave()) {
-                    if (canSave && rowerDataBean1.getCanSave()) {
-                        Logger.e(TAG, "1----RUN_STATUS_STOP----" + "bean1  save : " + rowerDataBean1);
-                        Logger.e(TAG, "1----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
-//                        rowerDataBean1.save();
-                        tempSave(rowerDataBean1);
+        if (onRunDataListener == null || runStatus == RUN_STATUS_STOP) {
+            return;
+        }
 
-                        rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
-                        Logger.e(TAG, "2----RUN_STATUS_STOP----" + "bean2  save : " + rowerDataBean2);
-//                        rowerDataBean2.save();
-                        tempSave(rowerDataBean2);
-                        Logger.e(TAG, "2----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
+        if (rowerDataBean1.getCanSave()) {
+            return;
+        }
+        // 都要设置的参数
+        int runMode = resolveData(data, RowerDataParam.RUN_MODE_INX, RowerDataParam.RUN_MODE_LEN);
+        int intervalStatus = resolveData(data, RowerDataParam.INTERVAL_STATUS_INX, RowerDataParam.INTERVAL_STATUS_LEN);
+        int runStatus = resolveData(data, RowerDataParam.RUN_STATUS_INX, RowerDataParam.RUN_STATUS_LEN);
+        int runInterval = resolveData(data, RowerDataParam.RUN_INTERVAL_INX, RowerDataParam.RUN_INTERVAL_LEN);
+        rowerDataBean1.setRunMode(runMode);
+        rowerDataBean1.setIntervalStatus(intervalStatus);
+        rowerDataBean1.setRunStatus(runStatus);
+        rowerDataBean1.setRunInterval(runInterval);
 
-                        rowerDataBean1 = new RowerDataBean1();
-                        canSave = false;
-                    }
-
-                    rowerDataBean1.setDrag(0);
-                    rowerDataBean1.setInterval(0);
-                    rowerDataBean1.setRunInterval(0);
-                    rowerDataBean1.setFlag(1);
-                    tempInterval1 = 0;
-                    tempInterval2 = 0;
-                }
-
-                if (runStatus == RUN_STATUS_RUNNING) {
-                    rowerDataBean1.setDrag(resolveData(data, RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
-                    rowerDataBean1.setInterval(resolveData(data, RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
-
-                    if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
-                        // 跳段时保存
-                        if (rowerDataBean1.getInterval() <= tempInterval1) {
-                            rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
-                        } else {
-                            if (tempInterval1 >= 1) {
-//                                rowerDataBean2.save();
-                                tempSave(rowerDataBean2);
-                                Logger.e(TAG, "间歇运动 " + rowerDataBean2.getInterval() + "   bean2.save " + rowerDataBean2);
-                            }
-                        }
-                        tempInterval1 = rowerDataBean1.getInterval();
-                    } else if (MyConstant.isGoalMode(rowerDataBean1.getRunMode())) {
-                        // 跳段时保存
-                        if (rowerDataBean1.getRunInterval() <= tempInterval2) {
-                            rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
-                        } else {
-//                            rowerDataBean2.save();
-                            tempSave(rowerDataBean2);
-                            Logger.e(TAG, "目标运动 " + rowerDataBean2.getRunInterval() + 1 + "    bean2.save " + rowerDataBean2);
-                        }
-                        tempInterval2 = rowerDataBean1.getRunInterval();
-                    }
-                }
-
-                if (onRunDataListener != null) {
-                    onRunDataListener.onRunData(rowerDataBean1);
-                }
+        // 设置目标模式或间歇模式的指定值
+        if (MyConstant.isGoalMode(runMode)) {
+            switch (runMode) {
+                case MyConstant.GOAL_TIME:
+                    int goalTime = resolveData(data, RowerDataParam.GOAL_TIME_INX + 1, RowerDataParam.GOAL_TIME_LEN);
+                    rowerDataBean1.setSetGoalTime(goalTime);
+                    break;
+                case MyConstant.GOAL_DISTANCE:
+                    int goalDistance = resolveData(data, RowerDataParam.GOAL_DISTANCE_INX + 1, RowerDataParam.GOAL_DISTANCE_LEN);
+                    rowerDataBean1.setSetGoalDistance(goalDistance);
+                    break;
+                case MyConstant.GOAL_CALORIES:
+                    int goalCalorie = resolveData(data, RowerDataParam.GOAL_CALORIE_INX + 1, RowerDataParam.GOAL_CALORIE_LEN);
+                    rowerDataBean1.setSetGoalCalorie(goalCalorie);
+                    break;
             }
+        } else if (MyConstant.isIntervalMode(runMode)) {
+            switch (runMode) {
+                case MyConstant.INTERVAL_TIME:
+                    int intervalTime = resolveData(data, RowerDataParam.INTERVAL_TIME_INX + 1, RowerDataParam.INTERVAL_TIME_LEN);
+                    rowerDataBean1.setSetIntervalTime(intervalTime);
+                    break;
+                case MyConstant.INTERVAL_DISTANCE:
+                    int intervalDistance = resolveData(data, RowerDataParam.INTERVAL_DISTANCE_INX + 1, RowerDataParam.INTERVAL_DISTANCE_LEN);
+                    rowerDataBean1.setSetIntervalDistance(intervalDistance);
+                    break;
+                case MyConstant.INTERVAL_CALORIES:
+                    int intervalCalorie = resolveData(data, RowerDataParam.INTERVAL_CALORIE_INX + 1, RowerDataParam.INTERVAL_CALORIE_LEN);
+                    rowerDataBean1.setSetIntervalCalorie(intervalCalorie);
+                    break;
+            }
+
+            // 休息时间
+            if (runMode == MyConstant.INTERVAL_DISTANCE) {
+                RowerDataParam.INTERVAL_REST_TIME_INX = 10;
+            } else {
+                RowerDataParam.INTERVAL_REST_TIME_INX = 8;
+            }
+            int intervalRestTime = resolveData(data, RowerDataParam.INTERVAL_REST_TIME_INX, RowerDataParam.INTERVAL_REST_TIME_LEN);
+            rowerDataBean1.setReset_time(intervalRestTime);
+        }
+
+        if (onRunDataListener != null) {
+            onRunDataListener.onRunData(rowerDataBean1);
         }
     }
 
+    private void saveRowDataBean1() {
+        if (canSave && rowerDataBean1.getCanSave()) {
+            Logger.e(TAG, "1----RUN_STATUS_STOP----" + "bean1  save : " + rowerDataBean1);
+            Logger.e(TAG, "1----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
+            tempSave(rowerDataBean1);
+
+            rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
+            Logger.e(TAG, "2----RUN_STATUS_STOP----" + "bean2  save : " + rowerDataBean2);
+
+            tempSave(rowerDataBean2);
+            Logger.e(TAG, "2----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
+
+            rowerDataBean1 = new RowerDataBean1();
+            canSave = false;
+
+            new Thread(() -> {
+                Looper.prepare();
+                new Handler().post(() -> {
+                    ToastUtil.show("保存成功！", true, ToastUtil.Mode.REPLACEABLE);
+                });
+                Looper.loop();
+            }).start();
+        }
+
+        rowerDataBean1.setDrag(0);
+        rowerDataBean1.setInterval(0);
+        rowerDataBean1.setRunInterval(0);
+        rowerDataBean1.setFlag(1);
+        tempInterval1 = 0;
+        tempInterval2 = 0;
+    }
+
     public static void tempSave(LitePalSupport support) {
-        new Thread() {
+/*        new Thread() {
             public void run() {
                 Looper.prepare();
                 new Handler().post(() -> {
-//                    ToastUtil.show("保存成功！", true, ToastUtil.Mode.REPLACEABLE);
+                    ToastUtil.show("保存成功！", true, ToastUtil.Mode.REPLACEABLE);
                 });//在子线程中直接去new 一个handler
                 Looper.loop();    //这种情况下，Runnable对象是运行在子线程中的，可以进行联网操作，但是不能更新UI
             }
-        }.start();
+        }.start();*/
         support.save();
     }
 

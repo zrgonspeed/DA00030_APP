@@ -469,7 +469,6 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         }
 
         edtInfoNote.setText(bean.getNote() == null ? "" : bean.getNote());
-
     }
 
     @Override

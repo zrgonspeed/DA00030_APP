@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,8 +28,6 @@ import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnScanConnectListener;
 import com.bike.ftms.app.utils.Logger;
-
-import java.util.LinkedList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -293,7 +290,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     private boolean isClicked = false;
 
     @Override
-    public void onItemClickListener(int position, View v) {
+    public void onItemClickListener(int position, View v, int connectState) {
         if (!isClicked) {
             if (position != BleManager.getInstance().mPosition && BleManager.getInstance().mPosition != -1) {
                 // 断开旧连接

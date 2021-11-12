@@ -3,7 +3,6 @@ package com.bike.ftms.app.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -151,7 +150,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         m_wklk.acquire(); //设置保持唤醒
         Logger.e(TAG, "BleManager == " + BleManager.getInstance());
         BleManager.getInstance().setonRunDataListener(this);
-        if (!BleManager.isConnect && !BleManager.isHeartbeatConnect) {
+        if (!BleManager.isConnect && !BleManager.isHrConnect) {
             showConnectHintDialog();
             homeFragment.onRunData(new RowerDataBean1());
         } else {

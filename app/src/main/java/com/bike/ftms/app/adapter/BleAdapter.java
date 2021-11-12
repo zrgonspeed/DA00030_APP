@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.BleAdapter.BleViewHolder;
 import com.bike.ftms.app.bean.MyScanResult;
-import com.bike.ftms.app.utils.Logger;
+import com.bike.ftms.app.manager.ble.BleManager;
 
 import java.util.List;
 
@@ -44,11 +44,12 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
             if (list.get(position).getConnectState() == 2) {
                 return;
             }
-            onItemClickListener.onItemClickListener(position, v);
+            onItemClickListener.onItemClickListener(position, v, list.get(position).getConnectState());
         });
         holder.tvName.setText(list.get(position).getScanResult().getDevice().getName());
         holder.tvAddress.setText(list.get(position).getScanResult().getDevice().getAddress());
         if (list.get(position).getConnectState() == 1) {
+            BleManager.getInstance().mPosition = position;
             holder.tvState.setText("Disconnect");
         } else if (list.get(position).getConnectState() == 2) {
             holder.tvState.setText("Connecting");
@@ -63,7 +64,7 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
     }
 
     public interface OnItemClickListener {
-        void onItemClickListener(int position, View v);
+        void onItemClickListener(int position, View v, int connectState);
     }
 
     public void addItemClickListener(OnItemClickListener listener) {

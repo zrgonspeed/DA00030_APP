@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 public class HomeFragment extends BaseFragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
     @BindView(R.id.vp_home_fragment)
-    VerticalViewPager vpHomeFragment;
+    VerticalViewPager verticalViewPager;
     @BindView(R.id.iv_bar)
     ImageView ivBar;
     private OnePageHomeFragment onePageHomeFragment;
@@ -56,14 +56,22 @@ public class HomeFragment extends BaseFragment {
         onePageHomeFragment = new OnePageHomeFragment();
         twoPageHomeFragment = new TwoPageHomeFragment();
         threePageHomeFragment = new ThreePageHomeFragment();
+
+
+        Logger.e(TAG, "HomeFragment == " + this);
+        Logger.e(TAG, "onePageHomeFragment == " + onePageHomeFragment);
+        Logger.e(TAG, "twoPageHomeFragment == " + twoPageHomeFragment);
+        Logger.e(TAG, "threePageHomeFragment == " + threePageHomeFragment);
+
+
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(onePageHomeFragment);
         fragmentList.add(twoPageHomeFragment);
         fragmentList.add(threePageHomeFragment);
-        vpHomeFragment.setOffscreenPageLimit(3);
+        verticalViewPager.setOffscreenPageLimit(3);
         TabFragmentPagerAdapter adapter = new TabFragmentPagerAdapter(getChildFragmentManager(), fragmentList);
-        vpHomeFragment.setAdapter(adapter);
-        vpHomeFragment.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        verticalViewPager.setAdapter(adapter);
+        verticalViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -97,10 +105,10 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void onRunData(RowerDataBean1 rowerDataBean1) {
-        Logger.e(TAG,"this == " + this);
-        Logger.e(TAG,"onePageHomeFragment == " + onePageHomeFragment);
-        Logger.e(TAG,"twoPageHomeFragment == " + twoPageHomeFragment);
-        Logger.e(TAG,"threePageHomeFragment == " + threePageHomeFragment);
+        Logger.e(TAG, "onRunData() --------------------------------------------------------------");
+        Logger.e(TAG, "onePageHomeFragment == " + onePageHomeFragment);
+        Logger.e(TAG, "twoPageHomeFragment == " + twoPageHomeFragment);
+        Logger.e(TAG, "threePageHomeFragment == " + threePageHomeFragment);
         if (onePageHomeFragment == null || twoPageHomeFragment == null || threePageHomeFragment == null) {
             return;
         }
