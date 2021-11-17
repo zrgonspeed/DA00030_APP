@@ -78,15 +78,17 @@ public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAda
                 holder.tvInfoInterval.setText(String.valueOf(bean.getInterval()));
                 break;
             case MyConstant.INTERVAL_DISTANCE:
-                if (position == rowerDataBean2List.size() - 1) {
-                    if (bean.getSetIntervalDistance() == bean.getDistance()) {
-                        holder.tvInfoMeters.setText(bean.getSetIntervalDistance() + "M");
-                    } else {
-                        holder.tvInfoMeters.setText(bean.getSetIntervalDistance() - bean.getDistance() + "M");
-                    }
-                } else {
-                    holder.tvInfoMeters.setText(bean.getSetIntervalDistance() + "M");
-                }
+//                if (position == rowerDataBean2List.size() - 1) {
+//                    if (bean.getSetIntervalDistance() == bean.getDistance()) {
+//                        holder.tvInfoMeters.setText(bean.getSetIntervalDistance() + "M");
+//                    } else {
+//                        holder.tvInfoMeters.setText(bean.getSetIntervalDistance() - bean.getDistance() + "M");
+//                    }
+//                } else {
+//                    holder.tvInfoMeters.setText(bean.getSetIntervalDistance() + "M");
+//                }
+
+                holder.tvInfoMeters.setText(bean.getDistance() + "M");
 
                 holder.tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
                 holder.tvInfoCals.setText(String.valueOf(bean.getCalorie()));
@@ -110,7 +112,7 @@ public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAda
                 break;
         }
 
-        holder.tvInfoFiveHundred.setText(TimeStringUtil.getSToMinSecValue(bean.getFive_hundred()));
+        holder.tvInfoFiveHundred.setText(TimeStringUtil.getSToMinSecValue(bean.getAve_five_hundred()));
         holder.tvInfoWatts.setText(String.valueOf(bean.getWatts()));
         holder.tvInfoCalHr.setText(String.valueOf(bean.getCalories_hr()));
         holder.tvInfoSm.setText(String.valueOf(bean.getSm()));

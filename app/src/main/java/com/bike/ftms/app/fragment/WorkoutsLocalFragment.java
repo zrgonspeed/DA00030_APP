@@ -169,9 +169,9 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 if (j > 0) {
                     rowerDataBean1List.remove(deletePosition);
                     workoutsLocalAdapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(), "Delete successfully", Toast.LENGTH_LONG).show();
+                    ToastUtil.show("Delete successfully", true, ToastUtil.Mode.REPLACEABLE);
                 } else {
-                    Toast.makeText(getContext(), "Delete fail", Toast.LENGTH_LONG).show();
+                    ToastUtil.show("Delete fail", true, ToastUtil.Mode.REPLACEABLE);
                 }
 
                 rlDelete.setVisibility(View.GONE);
@@ -221,10 +221,10 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         }
 
         for (RowerDataBean2 oo : list) {
-            Logger.e(TAG,"oo == " + oo);
+            Logger.e(TAG, "oo == " + oo);
         }
 //        ToastUtil.show("list.size == " + list.size());
-        Logger.d(TAG,"list.size == " + list.size());
+        Logger.d(TAG, "list.size == " + list.size());
         if (list.size() == 0) {
             RowerDataBean2 rowerDataBean2 = new RowerDataBean2(bean);
             list.add(rowerDataBean2);
@@ -397,13 +397,19 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
                 // 总和
                 if (list.indexOf(bean2) == list.size() - 1) {
-                    if (bean2.getSetIntervalDistance() == bean2.getDistance()) {
-                        bb.setSetIntervalDistance(bean2.getSetIntervalDistance() + bb.getSetIntervalDistance());
+/*                    if (bean2.getSetIntervalDistance() == bean2.getDistance()) {
+//                        bb.setSetIntervalDistance(bean2.getSetIntervalDistance() + bb.getSetIntervalDistance());
+                        bb.setDistance(bean2.getDistance() + bb.getDistance());
                     } else {
-                        bb.setSetIntervalDistance((bean2.getSetIntervalDistance() - bean2.getDistance()) + bb.getSetIntervalDistance());
-                    }
+//                        bb.setSetIntervalDistance((bean2.getSetIntervalDistance() - bean2.getDistance()) + bb.getSetIntervalDistance());
+                        bb.setDistance((bean2.getDistance() - bean2.getDistance()) + bb.getDistance());
+                    }*/
+
+                    bb.setDistance(bean2.getDistance() + bb.getDistance());
+
                 } else {
-                    bb.setSetIntervalDistance(bean2.getSetIntervalDistance() + bb.getSetIntervalDistance());
+//                    bb.setSetIntervalDistance(bean2.getSetIntervalDistance() + bb.getSetIntervalDistance());
+                    bb.setDistance(bean2.getDistance() + bb.getDistance());
                 }
                 bb.setTime(bean2.getTime() + bb.getTime());
                 bb.setCalorie(bean2.getCalorie() + bb.getCalorie());
@@ -449,7 +455,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         }
 
         for (RowerDataBean2 oo : list) {
-            Logger.e(TAG,"oo == " + oo);
+            Logger.e(TAG, "oo == " + oo);
         }
 
         workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(list);

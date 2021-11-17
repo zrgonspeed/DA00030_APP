@@ -57,7 +57,7 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
         if (isShowDelete) {
             holder.ivDelete.setVisibility(View.VISIBLE);
         } else {
-            holder.ivDelete.setVisibility(View.GONE);
+            holder.ivDelete.setVisibility(View.INVISIBLE);
         }
         if (bean.getNote() != null && !"".equals(bean.getNote())) {
             holder.ivNote.setVisibility(View.VISIBLE);

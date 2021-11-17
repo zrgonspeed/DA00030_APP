@@ -9,6 +9,7 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseFragment;
 import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
+import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
@@ -69,6 +70,15 @@ public abstract class BaseHomeFragment extends BaseFragment {
             } else {
                 tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval() + 1));
             }
+        }
+
+        // 直接运动模式，段数都是1，没有分段
+        if (rowerDataBean1.getRunMode() == MyConstant.NORMAL) {
+            tvInterval.setText("1");
+        }
+
+        if (BleManager.status == BleManager.STATUS_POST) {
+            tvInterval.setText("0");
         }
 
         tvDistance.setText(String.valueOf(rowerDataBean1.getDistance()));
