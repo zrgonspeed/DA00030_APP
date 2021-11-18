@@ -1707,13 +1707,47 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
     private void saveRowDataBean1() {
         // TODO: 2021/11/12 应该判断是否符合保存  如 运动不足5秒，等
-        Logger.e("saveRowDataBean1() -- canSave " + canSave + "       getCanSave() --- " + rowerDataBean1.getCanSave());
+
+
+        if (rowerDataBean1.getRunMode() == MyConstant.GOAL_TIME) {
+            // 时间是倒数的，用距离判断
+            if (rowerDataBean1.getDistance() >= 10) {
+                canSave = true;
+            }
+        } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME) {
+            if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getDistance() >= 10) {
+                canSave = true;
+            }
+        } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
+            if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getTime() >= 5) {
+                canSave = true;
+            }
+        } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_CALORIES) {
+            if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getTime() >= 5) {
+                canSave = true;
+            }
+        } else {
+            if (rowerDataBean1.getTime() >= 5) {
+                canSave = true;
+            }
+        }
+
+
+        Logger.e(TAG, "saveRowDataBean1() -- canSave " + canSave + "       getCanSave() --- " + rowerDataBean1.getCanSave());
         if (canSave && rowerDataBean1.getCanSave()) {
             Logger.e(TAG, "1----RUN_STATUS_STOP----" + "bean1  save : " + rowerDataBean1);
             Logger.e(TAG, "1----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
             tempSave(rowerDataBean1);
 
-            rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
+            // TODO: 2021/11/17
+            if (rowerDataBean2 != null) {
+                int runIntervalXXX = rowerDataBean2.getRunInterval();
+                rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
+                rowerDataBean2.setRunInterval(runIntervalXXX);
+            } else {
+                rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
+            }
+
             Logger.e(TAG, "2----RUN_STATUS_STOP----" + "bean2  save : " + rowerDataBean2);
 
             tempSave(rowerDataBean2);
@@ -1729,14 +1763,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 });
                 Looper.loop();
             }).start();
-        }
 
-        rowerDataBean1.setDrag(0);
-        rowerDataBean1.setInterval(0);
-        rowerDataBean1.setRunInterval(0);
-        rowerDataBean1.setFlag(1);
-        tempInterval1 = 0;
-        tempInterval2 = 0;
+            rowerDataBean1.setDrag(0);
+            rowerDataBean1.setInterval(0);
+            rowerDataBean1.setRunInterval(0);
+            rowerDataBean1.setFlag(1);
+            tempInterval1 = 0;
+            tempInterval2 = 0;
+        }
     }
 
     public static void tempSave(LitePalSupport support) {

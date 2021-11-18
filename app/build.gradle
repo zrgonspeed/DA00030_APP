@@ -9,7 +9,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0.3 beta2 2021-11-12"
+        versionName "1.0.3 beta2 2021-11-18"
 
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
