@@ -14,6 +14,7 @@ import android.bluetooth.le.ScanSettings;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
+import android.os.SystemClock;
 
 import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.bean.MyScanResult;
@@ -32,6 +33,7 @@ import org.litepal.crud.LitePalSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -143,7 +145,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
      *
      * @param onRunDataListener
      */
-    public void setonRunDataListener(OnRunDataListener onRunDataListener) {
+    public void setOnRunDataListener(OnRunDataListener onRunDataListener) {
         this.onRunDataListener = onRunDataListener;
     }
 
@@ -1830,4 +1832,18 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }).start();
     }*/
 
+    public void startThread() {
+        rowerDataBean1 = new RowerDataBean1();
+
+        new Thread(() -> {
+            while (true) {
+                rowerDataBean1.setDistance((long) (Math.random() * 66 + 1));
+                rowerDataBean1.setTime(new Date().getTime());
+                rowerDataBean1.setCalorie((long) (Math.random() * 10 + 1));
+                onRunDataListener.onRunData(rowerDataBean1);
+                SystemClock.sleep(1000);
+            }
+        }).start();
+
+    }
 }

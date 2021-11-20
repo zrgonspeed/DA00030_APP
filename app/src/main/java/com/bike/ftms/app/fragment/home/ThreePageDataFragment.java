@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.utils.TimeStringUtil;
+import com.bike.ftms.app.utils.Logger;
 
 import butterknife.BindView;
 
@@ -16,26 +16,30 @@ import butterknife.BindView;
  * @Author YeYueHong
  * @Date 2021/3/30
  */
-public class OnePageHomeFragment extends BaseHomeFragment {
+public class ThreePageDataFragment extends BasePageDataFragment {
+    private static final String TAG = ThreePageDataFragment.class.getSimpleName();
+    @BindView(R.id.tv_calories)
+    TextView tvCalories;
+    @BindView(R.id.tv_calories_hr)
+    TextView tvCaloriesHr;
 
+    public ThreePageDataFragment() {
+        Logger.i(TAG, "构造方法 ThreePageDataFragment()");
+    }
 
-    @BindView(R.id.tv_five_hundred)
-    TextView tvFiveHundred;
-    @BindView(R.id.tv_ave_five_hundred)
-    TextView tvAveFiveHundred;
-
-    public OnePageHomeFragment() {
+    @Override
+    protected String getTAG() {
+        return TAG;
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.view_pager_home1;
+        return R.layout.view_pager_home3;
     }
 
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
         super.initView(view, container, savedInstanceState);
-
     }
 
     @Override
@@ -43,10 +47,9 @@ public class OnePageHomeFragment extends BaseHomeFragment {
 
     }
 
-    @Override
     public void onRunData(RowerDataBean1 rowerDataBean1) {
         super.onRunData(rowerDataBean1);
-        tvFiveHundred.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getFive_hundred()));
-        tvAveFiveHundred.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAve_five_hundred()));
+        tvCalories.setText(String.valueOf(rowerDataBean1.getCalorie()));
+        tvCaloriesHr.setText(String.valueOf(rowerDataBean1.getCalories_hr()));
     }
 }

@@ -10,7 +10,6 @@ import com.bike.ftms.app.base.BaseFragment;
 import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.manager.ble.BleManager;
-import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import butterknife.BindView;
@@ -22,8 +21,8 @@ import butterknife.Unbinder;
  * @Author YeYueHong
  * @Date 2021/3/30
  */
-public abstract class BaseHomeFragment extends BaseFragment {
-    private static final String TAG = BaseHomeFragment.class.getSimpleName();
+public abstract class BasePageDataFragment extends BaseFragment {
+    private static final String TAG = BasePageDataFragment.class.getSimpleName();
     Unbinder unbinder;
     @BindView(R.id.tv_strokes)
     TextView tvStrokes;
@@ -43,14 +42,11 @@ public abstract class BaseHomeFragment extends BaseFragment {
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
         unbinder = ButterKnife.bind(this, view);
-        Logger.i(TAG, "initView()");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Logger.i(TAG, "onDestroy()");
-
         unbinder.unbind();
     }
 

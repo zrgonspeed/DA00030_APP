@@ -99,23 +99,18 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         rvWorkouts.setAdapter(workoutsLocalAdapter);
         workoutsLocalAdapter.addItemClickListener(this);
         workoutsLocalAdapter.addItemDeleteClickListener(this);
-        rlDelete.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
-        rlOnline.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        rlDelete.setOnTouchListener((v, event) -> true);
+        rlOnline.setOnTouchListener((v, event) -> true);
     }
 
     @Override
     protected void initData() {
 
+    }
+
+    @Override
+    protected String getTAG() {
+        return TAG;
     }
 
     @Override

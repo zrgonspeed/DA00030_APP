@@ -54,23 +54,78 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     private boolean isLogin = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Logger.e(TAG, "onCreate()");
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
 
-    @SuppressLint("InvalidWakeLockTag")
     @Override
-    protected void initData() {
-        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-        m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "cn");
-        m_wklk.acquire(); //设置保持唤醒
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Logger.i(TAG, "onCreate()");
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Logger.i(TAG, "onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Logger.i(TAG, "onResume()");
+        Logger.e(TAG, "this == " + this);
+        isOnPause = false;
+        m_wklk.acquire(); //设置保持唤醒
+        Logger.e(TAG, "BleManager == " + BleManager.getInstance());
+        BleManager.getInstance().setOnRunDataListener(this);
+        if (!BleManager.isConnect && !BleManager.isHrConnect) {
+            showConnectHintDialog();
+            homeFragment.onRunData(new RowerDataBean1());
+        } else {
+            if (yesOrNoDialog != null && yesOrNoDialog.isShowing()) {
+                yesOrNoDialog.dismiss();
+            }
+        }
+
+//        BleManager.getInstance().startThread();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Logger.i(TAG, "onPause()");
+        isOnPause = true;
+        m_wklk.release();//解除保持唤醒
+        //BleManager.getInstance().setonRunDataListener(null);
+
+        if (yesOrNoDialog != null) {
+            yesOrNoDialog.cancel();
+            yesOrNoDialog = null;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Logger.i(TAG, "onStop()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Logger.i(TAG, "onDestroy()");
+
+        if (m_wklk.isHeld()) {
+            m_wklk.release(); //解除保持唤醒
+        }
+
+        if (yesOrNoDialog != null) {
+            yesOrNoDialog.cancel();
+            yesOrNoDialog = null;
+        }
+    }
+
 
     @Override
     protected void initView() {
@@ -86,7 +141,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         homeFragments.add(workoutsFragment);
 
         TabFragmentPagerAdapter adapter1 = new TabFragmentPagerAdapter(getSupportFragmentManager(), homeFragments);
-        vp.setAdapter(adapter1);
+        vp.setAdapter(adapter1);    // 此时开始回调fragment生命周期
         vp.setOffscreenPageLimit(2);
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -114,6 +169,14 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         });
     }
 
+    @SuppressLint("InvalidWakeLockTag")
+    @Override
+    protected void initData() {
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+        m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "cn");
+        m_wklk.acquire(); //设置保持唤醒
+    }
+
     @OnClick({R.id.btn_bluetooth, R.id.btn_setting})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -125,42 +188,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
                 break;
         }
     }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Logger.i(TAG, "onPause()");
-        isOnPause = true;
-        m_wklk.release();//解除保持唤醒
-        //BleManager.getInstance().setonRunDataListener(null);
-
-        if (yesOrNoDialog != null) {
-            yesOrNoDialog.cancel();
-            yesOrNoDialog = null;
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Logger.i(TAG, "onResume()");
-        Logger.e(TAG, "this == " + this);
-        isOnPause = false;
-        m_wklk.acquire(); //设置保持唤醒
-        Logger.e(TAG, "BleManager == " + BleManager.getInstance());
-        BleManager.getInstance().setonRunDataListener(this);
-        if (!BleManager.isConnect && !BleManager.isHrConnect) {
-            showConnectHintDialog();
-            homeFragment.onRunData(new RowerDataBean1());
-        } else {
-            if (yesOrNoDialog != null && yesOrNoDialog.isShowing()) {
-                yesOrNoDialog.dismiss();
-            }
-        }
-
-    }
-
 
     @Override
     public void onRunData(RowerDataBean1 rowerDataBean1) {
@@ -239,18 +266,5 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Logger.i(TAG, "onDestroy()");
 
-        if (m_wklk.isHeld()) {
-            m_wklk.release(); //解除保持唤醒
-        }
-
-        if (yesOrNoDialog != null) {
-            yesOrNoDialog.cancel();
-            yesOrNoDialog = null;
-        }
-    }
 }

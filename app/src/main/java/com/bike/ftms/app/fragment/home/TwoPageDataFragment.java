@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.bean.RowerDataBean1;
+import com.bike.ftms.app.utils.Logger;
 
 import butterknife.BindView;
 
@@ -15,14 +16,16 @@ import butterknife.BindView;
  * @Author YeYueHong
  * @Date 2021/3/30
  */
-public class TwoPageHomeFragment extends BaseHomeFragment {
+public class TwoPageDataFragment extends BasePageDataFragment {
+    private static final String TAG = TwoPageDataFragment.class.getSimpleName();
 
     @BindView(R.id.tv_watts)
     TextView tvWatts;
     @BindView(R.id.tv_ave_watts)
     TextView tvAveWatts;
 
-    public TwoPageHomeFragment() {
+    public TwoPageDataFragment() {
+        Logger.i(TAG, "构造方法 TwoPageDataFragment()");
     }
 
     @Override
@@ -33,6 +36,11 @@ public class TwoPageHomeFragment extends BaseHomeFragment {
     @Override
     protected void initData() {
 
+    }
+
+    @Override
+    protected String getTAG() {
+        return TAG;
     }
 
     @Override

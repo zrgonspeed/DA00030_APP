@@ -13,10 +13,9 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseFragment;
 import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.fragment.home.OnePageHomeFragment;
-import com.bike.ftms.app.fragment.home.ThreePageHomeFragment;
-import com.bike.ftms.app.fragment.home.TwoPageHomeFragment;
+import com.bike.ftms.app.fragment.home.OnePageDataFragment;
+import com.bike.ftms.app.fragment.home.ThreePageDataFragment;
+import com.bike.ftms.app.fragment.home.TwoPageDataFragment;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.VerticalViewPager;
 
@@ -37,9 +36,9 @@ public class HomeFragment extends BaseFragment {
     VerticalViewPager verticalViewPager;
     @BindView(R.id.iv_bar)
     ImageView ivBar;
-    private OnePageHomeFragment onePageHomeFragment;
-    private TwoPageHomeFragment twoPageHomeFragment;
-    private ThreePageHomeFragment threePageHomeFragment;
+    private OnePageDataFragment onePageHomeFragment;
+    private TwoPageDataFragment twoPageHomeFragment;
+    private ThreePageDataFragment threePageHomeFragment;
 
     public HomeFragment() {
     }
@@ -53,9 +52,9 @@ public class HomeFragment extends BaseFragment {
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
         Logger.i(TAG, "initView()");
         ButterKnife.bind(this, view);
-        onePageHomeFragment = new OnePageHomeFragment();
-        twoPageHomeFragment = new TwoPageHomeFragment();
-        threePageHomeFragment = new ThreePageHomeFragment();
+        onePageHomeFragment = new OnePageDataFragment();
+        twoPageHomeFragment = new TwoPageDataFragment();
+        threePageHomeFragment = new ThreePageDataFragment();
 
 
         Logger.e(TAG, "HomeFragment == " + this);
@@ -94,9 +93,13 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
+    protected String getTAG() {
+        return TAG;
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Logger.i(TAG, "onActivityCreated()");
     }
 
     @Override
