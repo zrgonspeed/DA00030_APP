@@ -13,13 +13,17 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
+import com.bike.ftms.app.activity.setting.SettingActivity;
+import com.bike.ftms.app.activity.user.LoginActivity;
+import com.bike.ftms.app.activity.user.PersonalDataActivity;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.fragment.HomeFragment;
-import com.bike.ftms.app.fragment.WorkoutsFragment;
-import com.bike.ftms.app.fragment.WorkoutsLocalFragment;
-import com.bike.ftms.app.fragment.WorkoutsNetFragment;
+import com.bike.ftms.app.activity.fragment.HomeFragment;
+import com.bike.ftms.app.activity.fragment.workout.WorkoutsFragment;
+import com.bike.ftms.app.activity.fragment.workout.WorkoutsLocalFragment;
+import com.bike.ftms.app.activity.fragment.workout.WorkoutsNetFragment;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.utils.Logger;
@@ -37,6 +41,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.vp)
     HorizontalViewPager vp;
+    @BindView(R.id.btn_workout_login)
+    ImageView btn_workout_login;
     @BindView(R.id.btn_bluetooth)
     ImageView btnBluetooth;
     @BindView(R.id.btn_setting)
@@ -177,9 +183,15 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         m_wklk.acquire(); //设置保持唤醒
     }
 
-    @OnClick({R.id.btn_bluetooth, R.id.btn_setting})
+    @OnClick({R.id.btn_workout_user_info, R.id.btn_bluetooth, R.id.btn_setting, R.id.btn_workout_login})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_workout_login:
+                startActivity(new Intent(this, LoginActivity.class));
+                break;
+            case R.id.btn_workout_user_info:
+                startActivity(new Intent(this, PersonalDataActivity.class));
+                break;
             case R.id.btn_bluetooth:
                 startActivity(new Intent(this, BluetoothActivity.class));
                 break;

@@ -70,4 +70,19 @@
     <string name="create_gender_title">Please select gender: </string>
     <string name="create_confirm">Confirm</string>
     <string name="create_country_title">Please select country</string>
+
+
+    <!-- 个人资料 -->
+    <string name="personal_data_title">个人资料</string>
+    <string name="personal_data_head">头像</string>
+
+    <string name="personal_data_id">用户ID</string>
+    <string name="personal_data_name">昵称</string>
+    <string name="personal_data_name_hint">设置昵称</string>
+
+    <string name="personal_data_address">地区</string>
+    <string name="personal_data_address_hint">请选择</string>
+
+    <string name="personal_data_phone">手机号码</string>
+    <string name="personal_data_phone_hint">立即绑定</string>
 </resources>

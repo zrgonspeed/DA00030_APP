@@ -1,4 +1,4 @@
-package com.bike.ftms.app.activity;
+package com.bike.ftms.app.activity.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,9 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.activity.login.LoginActivity;
+import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
+import com.bike.ftms.app.activity.bluetooth.HeartRateMonitorActivity;
+import com.bike.ftms.app.activity.user.LoginActivity;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.common.ParamData;
 

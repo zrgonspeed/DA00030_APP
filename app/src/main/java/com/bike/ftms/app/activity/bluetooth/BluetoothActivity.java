@@ -1,4 +1,4 @@
-package com.bike.ftms.app.activity;
+package com.bike.ftms.app.activity.bluetooth;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;

@@ -1,4 +1,4 @@
-package com.bike.ftms.app.fragment;
+package com.bike.ftms.app.activity.fragment;
 
 import android.os.Bundle;
 import android.view.View;
@@ -13,9 +13,9 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseFragment;
 import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.fragment.home.OnePageDataFragment;
-import com.bike.ftms.app.fragment.home.ThreePageDataFragment;
-import com.bike.ftms.app.fragment.home.TwoPageDataFragment;
+import com.bike.ftms.app.activity.fragment.pagedata.OnePageDataFragment;
+import com.bike.ftms.app.activity.fragment.pagedata.ThreePageDataFragment;
+import com.bike.ftms.app.activity.fragment.pagedata.TwoPageDataFragment;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.VerticalViewPager;
 

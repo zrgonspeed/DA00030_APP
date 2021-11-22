@@ -1,4 +1,4 @@
-package com.bike.ftms.app.activity;
+package com.bike.ftms.app.activity.setting;
 
 import android.os.Bundle;
 import android.view.View;

@@ -1,4 +1,4 @@
-package com.bike.ftms.app.activity.login;
+package com.bike.ftms.app.activity.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.andreabaccega.widget.FormEditText;
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.activity.MainActivity;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.bean.LoginBean;
 import com.bike.ftms.app.bean.LoginSuccessBean;
@@ -51,11 +52,16 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.iv_back, R.id.btn_login, R.id.tv_forget, R.id.tv_register})
+    @OnClick({R.id.btn_login, R.id.tv_forget, R.id.tv_register, R.id.tv_skip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.iv_back:
+            case R.id.tv_skip:
+                // 游客进入
+                startActivity(new Intent(this, MainActivity.class));
                 finish();
+                break;
+            case R.id.iv_back:
+//                finish();
                 break;
             case R.id.btn_login:
                 // 1.校验
@@ -111,7 +117,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
-                Logger.e(TAG,"请求失败！");
+                Logger.e(TAG, "请求失败！");
                 Logger.e(e.toString());
 
                 // 网络没打开
@@ -122,7 +128,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(Call call, int httpCode, String response) {
                 // 响应成功，响应码不一定是200
-                Logger.e(TAG,"请求成功 ->> response.body().string() == " + response);
+                Logger.e(TAG, "请求成功 ->> response.body().string() == " + response);
 
                 if (httpCode == 200) {
                     /*
@@ -134,14 +140,14 @@ public class LoginActivity extends BaseActivity {
                     }
                      */
                     LoginSuccessBean loginSuccessBean = GsonUtil.GsonToBean(response, LoginSuccessBean.class);
-                    Logger.e(TAG,"登录成功: " + loginSuccessBean.toString());
+                    Logger.e(TAG, "登录成功: " + loginSuccessBean.toString());
                 } else if (httpCode == 422 || httpCode == 404 || httpCode == 401) {
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
-                    Logger.e(TAG,"登录失败:" + resultBean.toString());
+                    Logger.e(TAG, "登录失败:" + resultBean.toString());
                     ToastUtil.show("登录失败: " + resultBean.getMessage());
                 } else {
-                    Logger.e(TAG,"httpCode == " + httpCode + " 其它处理");
-                    Logger.e(TAG,"登录失败---");
+                    Logger.e(TAG, "httpCode == " + httpCode + " 其它处理");
+                    Logger.e(TAG, "登录失败---");
                     ToastUtil.show("登录失败: httpcode = " + httpCode);
                 }
             }

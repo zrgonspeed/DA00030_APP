@@ -3,5 +3,4 @@
     <item android:drawable="@drawable/btn_login_tap_bg" android:state_enabled="false" />
     <item android:drawable="@drawable/btn_login_tap_bg" android:state_pressed="true" />
     <item android:drawable="@drawable/btn_login_default_bg" />
-
 </selector>

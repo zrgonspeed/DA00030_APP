@@ -1,4 +1,4 @@
-package com.bike.ftms.app.fragment.home;
+package com.bike.ftms.app.activity.fragment.pagedata;
 
 import android.os.Bundle;
 import android.view.View;

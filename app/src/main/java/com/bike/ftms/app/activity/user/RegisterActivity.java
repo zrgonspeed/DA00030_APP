@@ -1,4 +1,4 @@
-package com.bike.ftms.app.activity.login;
+package com.bike.ftms.app.activity.user;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,15 +8,11 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.andreabaccega.formedittextvalidator.EmptyValidator;
-import com.andreabaccega.formedittextvalidator.Validator;
-import com.andreabaccega.widget.DefaultEditTextValidator;
 import com.andreabaccega.widget.FormEditText;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseActivity;
@@ -35,7 +31,6 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
-import okhttp3.Response;
 import tech.gujin.toast.ToastUtil;
 
 public class RegisterActivity extends BaseActivity {

@@ -1,9 +1,8 @@
-package com.bike.ftms.app.fragment;
+package com.bike.ftms.app.activity.fragment.workout;
 
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.activity.login.LoginActivity;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter2;
 import com.bike.ftms.app.bean.RowerDataBean1;
@@ -28,8 +26,10 @@ import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import org.litepal.LitePal;
+import org.litepal.crud.callback.FindMultiCallback;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,36 +46,36 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     private static final String TAG = WorkoutsLocalFragment.class.getSimpleName();
 
     @BindView(R.id.tv_upload)
-    TextView tvUpload;
+    TextView tv_upload;
     @BindView(R.id.tv_edit)
-    TextView tvEdit;
+    TextView tv_edit;
     @BindView(R.id.rv_workouts)
-    RecyclerView rvWorkouts;
+    RecyclerView rv_workouts;
 
     @BindView(R.id.rv_workouts2)
-    RecyclerView rvWorkouts2;
+    RecyclerView rv_workouts2;
 
     @BindView(R.id.iv_back)
-    ImageView ivBack;
+    ImageView iv_back;
     @BindView(R.id.tv_title)
-    TextView tvTitle;
+    TextView tv_title;
     @BindView(R.id.ll_workouts)
-    ConstraintLayout llWorkouts;
+    ConstraintLayout ll_workouts;
     @BindView(R.id.ll_info)
-    LinearLayout llInfo;
+    LinearLayout ll_info;
     @BindView(R.id.iv_info_back)
-    ImageView ivInfoBack;
+    ImageView iv_info_back;
     @BindView(R.id.rl_delete)
-    RelativeLayout rlDelete;
+    RelativeLayout rl_delete;
     @BindView(R.id.rl_online)
-    RelativeLayout rlOnline;
+    RelativeLayout rl_online;
 
     @BindView(R.id.tv_info_title)
-    TextView tvInfoTitle;
+    TextView tv_info_title;
     @BindView(R.id.edt_info_note)
-    EditText edtInfoNote;
+    EditText edt_info_note;
     @BindView(R.id.tv_title_time)
-    TextView tvTitleTime;
+    TextView tv_title_time;
     private WorkoutsLocalAdapter workoutsLocalAdapter;
     private WorkoutsLocalAdapter2 workoutsLocalAdapter2;
     private boolean isEdit = false;
@@ -95,12 +95,12 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         workoutsLocalAdapter = new WorkoutsLocalAdapter(rowerDataBean1List);
-        rvWorkouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        rvWorkouts.setAdapter(workoutsLocalAdapter);
+        rv_workouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rv_workouts.setAdapter(workoutsLocalAdapter);
         workoutsLocalAdapter.addItemClickListener(this);
         workoutsLocalAdapter.addItemDeleteClickListener(this);
-        rlDelete.setOnTouchListener((v, event) -> true);
-        rlOnline.setOnTouchListener((v, event) -> true);
+        rl_delete.setOnTouchListener((v, event) -> true);
+        rl_online.setOnTouchListener((v, event) -> true);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && llWorkouts.getVisibility() == View.VISIBLE) {
+        if (isVisibleToUser && ll_workouts.getVisibility() == View.VISIBLE) {
             refreshList1();
         }
     }
@@ -139,10 +139,10 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 break;
             case R.id.tv_done:
                 ContentValues contentValues = new ContentValues();
-                contentValues.put("note", edtInfoNote.getText().toString());
+                contentValues.put("note", edt_info_note.getText().toString());
                 int i = LitePal.updateAll(RowerDataBean1.class, contentValues, "date=?", String.valueOf(rowerDataBean1List.get(clickPosition).getDate()));
                 if (i == 1) {
-                    rowerDataBean1List.get(clickPosition).setNote(edtInfoNote.getText().toString());
+                    rowerDataBean1List.get(clickPosition).setNote(edt_info_note.getText().toString());
                     workoutsLocalAdapter.notifyItemChanged(clickPosition);
                     Toast.makeText(getContext(), "Save successfully", Toast.LENGTH_LONG).show();
                 } else {
@@ -152,14 +152,14 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             case R.id.tv_workouts:
             case R.id.iv_info_back:
                 refreshList1();
-                llInfo.setVisibility(View.GONE);
-                llWorkouts.setVisibility(View.VISIBLE);
+                ll_info.setVisibility(View.GONE);
+                ll_workouts.setVisibility(View.VISIBLE);
                 break;
             case R.id.tv_cancel:
-                rlDelete.setVisibility(View.GONE);
+                rl_delete.setVisibility(View.GONE);
                 break;
             case R.id.tv_ok:
-                tvEdit.performClick();
+                tv_edit.performClick();
                 int j = LitePal.deleteAll(RowerDataBean1.class, "date=?", String.valueOf(rowerDataBean1List.get(deletePosition).getDate()));
                 if (j > 0) {
                     rowerDataBean1List.remove(deletePosition);
@@ -169,32 +169,40 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                     ToastUtil.show("Delete fail", true, ToastUtil.Mode.REPLACEABLE);
                 }
 
-                rlDelete.setVisibility(View.GONE);
+                rl_delete.setVisibility(View.GONE);
                 break;
         }
     }
 
     private void refreshList1() {
-        rowerDataBean1List.clear();
-        rowerDataBean1List.addAll(LitePal.order("date desc").find(RowerDataBean1.class, true));
-        workoutsLocalAdapter.notifyDataSetChanged();
+        LitePal.order("date desc").findAsync(RowerDataBean1.class, true).listen(new FindMultiCallback() {
+            @Override
+            public <T> void onFinish(List<T> list) {
+                Logger.i(TAG, "数据库查找成功");
+                rowerDataBean1List.clear();
+                rowerDataBean1List.addAll((Collection<? extends RowerDataBean1>) list);
+                workoutsLocalAdapter.notifyDataSetChanged();
+            }
+        });
+
+//        rowerDataBean1List.addAll(LitePal.order("date desc").find(RowerDataBean1.class, true));
     }
 
     private void setEditView() {
         workoutsLocalAdapter.setShowDelete(isEdit);
         refreshList1();
         if (isEdit) {
-            tvUpload.setText(getString(R.string.workouts));
-            tvUpload.setTextColor(getResources().getColor(R.color.color_black));
-            ivBack.setVisibility(View.VISIBLE);
-            tvTitle.setText(getString(R.string.workouts_edit));
-            tvEdit.setText(getString(R.string.workouts_done));
+            tv_upload.setText(getString(R.string.workouts));
+            tv_upload.setTextColor(getResources().getColor(R.color.color_black));
+            iv_back.setVisibility(View.VISIBLE);
+            tv_title.setText(getString(R.string.workouts_edit));
+            tv_edit.setText(getString(R.string.workouts_done));
         } else {
-            tvUpload.setText(getString(R.string.workouts_upload));
-            tvUpload.setTextColor(getResources().getColor(R.color.color_0B4531));
-            ivBack.setVisibility(View.GONE);
-            tvTitle.setText(getString(R.string.workouts));
-            tvEdit.setText(getString(R.string.workouts_edit));
+            tv_upload.setText(getString(R.string.workouts_upload));
+            tv_upload.setTextColor(getResources().getColor(R.color.color_0B4531));
+            iv_back.setVisibility(View.GONE);
+            tv_title.setText(getString(R.string.workouts));
+            tv_edit.setText(getString(R.string.workouts_edit));
         }
     }
 
@@ -202,8 +210,8 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     public void onItemClickListener(int position) {
         clickPosition = position;
         notifyInfoData();
-        llInfo.setVisibility(View.VISIBLE);
-        llWorkouts.setVisibility(View.GONE);
+        ll_info.setVisibility(View.VISIBLE);
+        ll_workouts.setVisibility(View.GONE);
     }
 
     private void notifyInfoData() {
@@ -457,50 +465,50 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         }
 
         workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(list);
-        rvWorkouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        rvWorkouts2.setAdapter(workoutsLocalAdapter2);
+        rv_workouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rv_workouts2.setAdapter(workoutsLocalAdapter2);
 
-        tvInfoTitle.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
+        tv_info_title.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
 
         switch (bean.getRunMode()) {
             case MyConstant.NORMAL:
-                tvTitleTime.setText(bean.getDistance() + "M");
+                tv_title_time.setText(bean.getDistance() + "M");
                 break;
             case MyConstant.GOAL_TIME:
-                tvTitleTime.setText(TimeStringUtil.getSToMinSecValue(bean.getSetGoalTime()));
+                tv_title_time.setText(TimeStringUtil.getSToMinSecValue(bean.getSetGoalTime()));
                 break;
             case MyConstant.GOAL_DISTANCE:
-                tvTitleTime.setText(bean.getSetGoalDistance() + "M");
+                tv_title_time.setText(bean.getSetGoalDistance() + "M");
                 break;
             case MyConstant.GOAL_CALORIES:
-                tvTitleTime.setText(bean.getSetGoalCalorie() + "C");
+                tv_title_time.setText(bean.getSetGoalCalorie() + "C");
                 break;
             case MyConstant.INTERVAL_TIME:
-                tvTitleTime.setText((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
+                tv_title_time.setText((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
                 break;
             case MyConstant.INTERVAL_DISTANCE:
-                tvTitleTime.setText((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
+                tv_title_time.setText((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
                 break;
             case MyConstant.INTERVAL_CALORIES:
-                tvTitleTime.setText((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
+                tv_title_time.setText((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
                 break;
             default:
                 break;
         }
 
-        edtInfoNote.setText(bean.getNote() == null ? "" : bean.getNote());
+        edt_info_note.setText(bean.getNote() == null ? "" : bean.getNote());
     }
 
     @Override
     public void onItemDeleteListener(int position) {
         deletePosition = position;
-        rlDelete.setVisibility(View.VISIBLE);
+        rl_delete.setVisibility(View.VISIBLE);
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (llInfo != null) {
-            if (keyCode == KeyEvent.KEYCODE_BACK && llInfo.getVisibility() == View.VISIBLE) {
-                ivInfoBack.performClick();
+        if (ll_info != null) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && ll_info.getVisibility() == View.VISIBLE) {
+                iv_info_back.performClick();
                 return true;
             }
         }

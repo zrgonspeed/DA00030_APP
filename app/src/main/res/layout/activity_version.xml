@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.VersionActivity">
+    tools:context=".activity.setting.VersionActivity">
 
     <RelativeLayout
         android:id="@+id/rl"
@@ -46,7 +46,7 @@
         android:id="@+id/tv_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:text="1.0"
         android:textColor="@color/color_707070"
         android:textSize="17sp"
@@ -59,7 +59,7 @@
         android:id="@+id/btn_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:drawableRight="@drawable/btn_update"
         android:gravity="center"
         android:text="@string/version_new_version"
@@ -71,8 +71,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@color/color_B5B3B3"
         app:layout_constraintTop_toBottomOf="@id/tv_version" />
 </androidx.constraintlayout.widget.ConstraintLayout>

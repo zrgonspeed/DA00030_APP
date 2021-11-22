@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.BluetoothActivity">
+    tools:context=".activity.bluetooth.BluetoothActivity">
 
     <RelativeLayout
         android:id="@+id/rl"
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
             android:background="@null"
             android:button="@drawable/btn_bluetooth_switch" />
 
@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_toLeftOf="@id/cb_switch"
             android:text="@string/heart_rate_switch"
             android:textColor="@color/color_707070"

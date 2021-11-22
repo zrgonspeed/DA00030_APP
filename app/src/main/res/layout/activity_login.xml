@@ -5,41 +5,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.login.LoginActivity">
+    tools:context=".activity.user.LoginActivity">
 
     <RelativeLayout
         android:id="@+id/rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_F5F5F5">
+        android:background="@color/color_387E2F"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/login_title"
+            android:textColor="@color/color_white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_skip"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="-25dp"
+            android:layout_toStartOf="@id/iv_back"
+            android:gravity="center"
+            android:text="SKIP"
+            android:textColor="@color/color_white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/iv_back"
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@drawable/btn_back" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/iv_back"
-            android:text="@string/setting_back"
-            android:textColor="@color/color_black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:rotation="180"
+            android:src="@drawable/btn_back"
+            android:visibility="visible" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_title"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_387E2F"
-        android:padding="10dp"
-        android:text="@string/login_title"
-        android:textColor="@color/color_white"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="80dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -47,13 +73,13 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="20dp"
                 android:text="@string/login_user_name"
@@ -66,9 +92,10 @@
                 android:id="@+id/edt_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:background="@null"
                 android:minWidth="300dp"
+                android:text="zrg"
                 app:emptyErrorString=""
                 app:layout_constraintBottom_toBottomOf="@id/tv_user_name"
                 app:layout_constraintStart_toEndOf="@id/tv_user_name"
@@ -79,9 +106,9 @@
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:background="@color/color_B5B3B3"
                 app:layout_constraintTop_toBottomOf="@id/edt_user_name" />
 
@@ -89,7 +116,7 @@
                 android:id="@+id/tv_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="20dp"
                 android:text="@string/login_password"
@@ -102,10 +129,12 @@
                 android:id="@+id/edt_password"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:background="@null"
                 android:inputType="numberPassword"
                 android:minWidth="300dp"
+                android:text="123"
+                android:windowSoftInputMode="adjustUnspecified|stateHidden"
                 app:emptyErrorString=""
                 app:layout_constraintBottom_toBottomOf="@id/tv_password"
                 app:layout_constraintStart_toEndOf="@id/tv_password"
@@ -115,9 +144,9 @@
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:background="@color/color_B5B3B3"
                 app:layout_constraintTop_toBottomOf="@id/edt_password" />
 
@@ -125,9 +154,9 @@
                 android:id="@+id/btn_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="25dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
                 android:background="@drawable/btn_login_bg"
                 android:gravity="center"
                 android:padding="15dp"
@@ -141,7 +170,7 @@
                 android:id="@+id/tv_forget"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/text_underline"
                 android:text="@string/login_forget"
@@ -155,29 +184,30 @@
                 android:id="@+id/tv_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="45dp"
                 android:background="@drawable/text_underline"
                 android:gravity="center"
                 android:text="@string/login_create"
                 android:textColor="@color/color_1A91F9"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@id/iv_enter"
-                app:layout_constraintEnd_toStartOf="@id/iv_enter"
-                app:layout_constraintTop_toTopOf="@id/iv_enter" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
             <ImageView
                 android:id="@+id/iv_enter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_enter"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
                 android:text="@string/login_hint"
                 android:textColor="@color/color_707070"

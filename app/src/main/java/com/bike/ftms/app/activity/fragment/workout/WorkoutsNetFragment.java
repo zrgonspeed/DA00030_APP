@@ -1,4 +1,4 @@
-package com.bike.ftms.app.fragment;
+package com.bike.ftms.app.activity.fragment.workout;
 
 import android.content.ContentValues;
 import android.os.Bundle;
@@ -21,17 +21,14 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.WorkoutsNetAdapter;
 import com.bike.ftms.app.adapter.WorkoutsNetAdapter2;
 import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.bean.RowerDataBean2;
 import com.bike.ftms.app.bean.RunDataInfo;
 import com.bike.ftms.app.bean.RunDataResult;
 import com.bike.ftms.app.bean.RunDataResultListDTO;
 import com.bike.ftms.app.common.HttpParam;
-import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.http.OkHttpCallBack;
 import com.bike.ftms.app.http.OkHttpHelper;
 import com.bike.ftms.app.utils.GsonUtil;
 import com.bike.ftms.app.utils.Logger;
-import com.bike.ftms.app.utils.TimeStringUtil;
 
 import org.litepal.LitePal;
 

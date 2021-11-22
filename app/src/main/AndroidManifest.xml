@@ -29,27 +29,20 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.login.RegisterActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".activity.HeartRateMonitorActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".activity.login.LoginActivity"
+            android:name=".activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.VersionActivity"
+            android:name=".activity.user.RegisterActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.BluetoothActivity"
+            android:name=".activity.bluetooth.HeartRateMonitorActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.SettingActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:screenOrientation="landscape">
+            android:name=".activity.user.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,7 +50,18 @@
             </intent-filter>
         </activity>
 
-
+        <activity
+            android:name=".activity.user.PersonalDataActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.setting.VersionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.bluetooth.BluetoothActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.setting.SettingActivity"
+            android:screenOrientation="landscape" />
         <!--        <activity-->
         <!--            android:name=".activity.crash.CrashActivity"-->
         <!--            android:screenOrientation="landscape" />-->
