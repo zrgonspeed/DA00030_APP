@@ -10,13 +10,21 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
 import com.bike.ftms.app.activity.bluetooth.HeartRateMonitorActivity;
 import com.bike.ftms.app.activity.user.LoginActivity;
+import com.bike.ftms.app.activity.user.RegisterActivity;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.common.ParamData;
 
 import butterknife.OnClick;
 
 public class SettingActivity extends BaseActivity {
+    private static final String TAG = SettingActivity.class.getSimpleName();
+
     private final int HR_REQUEST_CODE = 100;
+
+    @Override
+    protected String getTAG() {
+        return TAG;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

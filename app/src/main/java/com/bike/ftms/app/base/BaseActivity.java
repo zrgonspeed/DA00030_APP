@@ -23,11 +23,12 @@ import butterknife.Unbinder;
 public abstract class BaseActivity extends AppCompatActivity {
     private Unbinder unbinder;
 
+    protected abstract String getTAG();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Timber.i("%s - onCreate", this.getClass().getSimpleName());
-        Logger.i("onCreate()");
+        Logger.i(getTAG() + " - " + "onCreate()");
 
         SystemUiUtils.reMoveTitle(this);
         setContentView(getLayoutId());
@@ -58,37 +59,32 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        Timber.i("%s - onStart", this.getClass().getSimpleName());
-        Logger.i("onStart()");
+        Logger.i(getTAG() + " - " + "onStart()");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        Timber.i("%s - onResume", this.getClass().getSimpleName());
-        Logger.i("onResume()");
+        Logger.i(getTAG() + " - " + "onResume()");
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Logger.i("onPause()");
-//        Timber.i("%s - onPause", this.getClass().getSimpleName());
+        Logger.i(getTAG() + " - " + "onPause()");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        Timber.i("%s - onStop", this.getClass().getSimpleName());
-        Logger.i("onStop()");
+        Logger.i(getTAG() + " - " + "onStop()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        Timber.i("%s - onDestroy", this.getClass().getSimpleName());
-        Logger.i("onDestroy()");
+        Logger.i(getTAG() + " - " + "onDestroy()");
         unbinder.unbind();
     }
 }

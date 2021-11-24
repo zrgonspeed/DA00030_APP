@@ -38,8 +38,8 @@ import butterknife.OnClick;
 
 
 public class MainActivity extends BaseActivity implements OnRunDataListener {
-
     private static final String TAG = MainActivity.class.getSimpleName();
+
     @BindView(R.id.vp)
     HorizontalViewPager vp;
     @BindView(R.id.btn_workout_login)
@@ -62,6 +62,11 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
+    }
+
+    @Override
+    protected String getTAG() {
+        return TAG;
     }
 
     @Override

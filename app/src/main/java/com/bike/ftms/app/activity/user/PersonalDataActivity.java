@@ -18,6 +18,11 @@ public class PersonalDataActivity extends BaseActivity {
     ImageView iv_back;
 
     @Override
+    protected String getTAG() {
+        return TAG;
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.personal_data_activity;
     }

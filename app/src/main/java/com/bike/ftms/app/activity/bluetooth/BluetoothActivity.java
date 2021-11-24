@@ -34,7 +34,7 @@ import butterknife.OnClick;
 
 public class BluetoothActivity extends BaseActivity implements OnScanConnectListener, BleAdapter.OnItemClickListener,
         BleManager.BleOpenCallBack, BleManager.BleClosedCallBack {
-    public static final String TAG = BluetoothActivity.class.getSimpleName();
+    private static final String TAG = BluetoothActivity.class.getSimpleName();
     private static final int PERMISSION_STATE_CODE = 1000;
     @Nullable
     @BindView(R.id.tv_switch)
@@ -52,6 +52,11 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     private boolean isPre = false;
 
     private BLEBroadcastReceiver bleBroadcastReceiver;
+
+    @Override
+    protected String getTAG() {
+        return TAG;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

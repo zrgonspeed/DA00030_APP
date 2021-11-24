@@ -12,9 +12,15 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class VersionActivity extends BaseActivity {
+    private static final String TAG = VersionActivity.class.getSimpleName();
 
     @BindView(R.id.tv_version_apk_value)
     TextView tv_version_apk_value;
+
+    @Override
+    protected String getTAG() {
+        return TAG;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

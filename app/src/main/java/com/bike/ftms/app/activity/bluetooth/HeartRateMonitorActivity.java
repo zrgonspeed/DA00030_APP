@@ -5,6 +5,13 @@ import android.os.Bundle;
 import com.bike.ftms.app.R;
 
 public class HeartRateMonitorActivity extends BluetoothActivity {
+    private static final String TAG = HeartRateMonitorActivity.class.getSimpleName();
+
+    @Override
+    protected String getTAG() {
+        return TAG;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

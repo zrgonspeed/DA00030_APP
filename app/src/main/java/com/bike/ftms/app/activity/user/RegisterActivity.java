@@ -35,8 +35,8 @@ import tech.gujin.toast.ToastUtil;
 
 
 public class RegisterActivity extends BaseActivity {
-
     private static final String TAG = RegisterActivity.class.getSimpleName();
+
     // 下面3个字段用选择器
     @BindView(R.id.edt_birth)
     TextView edt_birth;
@@ -95,6 +95,11 @@ public class RegisterActivity extends BaseActivity {
 
     FormEditText[] etArr = new FormEditText[7];
     private InputMethodManager imm;
+
+    @Override
+    protected String getTAG() {
+        return TAG;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

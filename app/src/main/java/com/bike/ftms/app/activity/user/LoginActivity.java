@@ -34,6 +34,11 @@ public class LoginActivity extends BaseActivity {
     FormEditText edt_password;
 
     @Override
+    protected String getTAG() {
+        return TAG;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
