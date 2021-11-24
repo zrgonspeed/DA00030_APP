@@ -21,6 +21,8 @@ import butterknife.Unbinder;
  * @Date 2021/3/27
  */
 public abstract class BaseActivity extends AppCompatActivity {
+    private static String TAG = BaseActivity.class.getSimpleName();
+
     private Unbinder unbinder;
 
     protected abstract String getTAG();

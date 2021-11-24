@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * @Date 2021/3/30
  */
 public abstract class BaseFragment extends Fragment {
-    private String TAG = BaseFragment.class.getSimpleName();
+    private static String TAG = BaseFragment.class.getSimpleName();
 
     protected Activity mActivity;
 
@@ -36,9 +36,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onAttach(@NotNull Context context) {
         super.onAttach(context);
-        TAG = getTAG();
         this.mActivity = (Activity) context;
-//        Logger.e("%s - 1 onAttach()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "1 onAttach()");
     }
 
@@ -53,8 +51,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Logger.e("2 onCreate()");
-//        Logger.e("%s - 2 onCreate()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "2 onCreate()");
     }
 
@@ -62,7 +58,6 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        Logger.e("%s - 3 onCreateView()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "3 onCreateView()");
 
         View view = LayoutInflater.from(mActivity).inflate(getLayoutId(), container, false);
@@ -80,8 +75,6 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
-//        Logger.e("4 onActivityCreated()");
-//        Logger.e("%s - 4 onActivityCreated()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "4 onActivityCreated()");
 
     }
@@ -94,7 +87,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-//        Logger.e("%s - 5 onStart()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "5 onStart()");
     }
 
@@ -106,7 +98,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        Logger.e("%s - 6 onResume()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "6 onResume()");
         Logger.d(getTAG() + " - " + "Fragment 处于活动状态");
     }
@@ -117,8 +108,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-//        Logger.e("7 onPause()");
-//        Logger.e("%s - 7 onPause()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "7 onPause()");
     }
 
@@ -129,7 +118,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-//        Logger.e("%s - 8 onStop()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "8 onStop()");
 
     }
@@ -143,8 +131,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        Logger.e("9 onDestroyView()");
-//        Logger.e("%s - 9 onDestroyView()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "9 onDestroyView()");
     }
 
@@ -155,8 +141,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        Logger.e("10 onDestroy()");
-//        Logger.e("%s - 10 onDestroy()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "10 onDestroy()");
 
     }
@@ -168,8 +152,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-//        Logger.e("11 onDetach()");
-//        Logger.e("%s - 11 onDetach()", this.getClass().getSimpleName());
         Logger.d(getTAG() + " - " + "11 onDetach()");
 
     }
