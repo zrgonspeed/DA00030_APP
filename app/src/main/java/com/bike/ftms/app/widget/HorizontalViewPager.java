@@ -51,8 +51,8 @@ public class HorizontalViewPager extends ViewPager {
             case MotionEvent.ACTION_MOVE:
                 dealtX += Math.abs(x - lastX);
                 dealtY += Math.abs(y - lastY);
-                /*Logger.d(TAG, "dealtX:=" + dealtX);
-                Logger.d(TAG, "dealtY:=" + dealtY);*/
+                /*Timber.d(TAG + " - dealtX:=" + dealtX);
+                Timber.d(TAG + " - dealtY:=" + dealtY);*/
                 lastX = x;
                 lastY = y;
                 // 拦截的判断

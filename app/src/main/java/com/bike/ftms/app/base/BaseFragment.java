@@ -14,6 +14,8 @@ import com.bike.ftms.app.utils.Logger;
 
 import org.jetbrains.annotations.NotNull;
 
+import timber.log.Timber;
+
 /**
  * @Description 基类fragment
  * @Author YeYueHong
@@ -36,7 +38,8 @@ public abstract class BaseFragment extends Fragment {
         super.onAttach(context);
         TAG = getTAG();
         this.mActivity = (Activity) context;
-        Logger.i(TAG, "1 onAttach()");
+        Timber.i(TAG, " - 1 onAttach()");
+//        Timber.i("%s - 1 onAttach()", this.getClass().getSimpleName());
     }
 
     protected abstract String getTAG();
@@ -50,15 +53,18 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Logger.i(TAG, "2 onCreate()");
+        Timber.i(TAG + " - 2 onCreate()");
+//        Timber.i("%s - 2 onCreate()", this.getClass().getSimpleName());
+
     }
 
 
     @Nullable
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Logger.i(TAG, "3 onCreateView()");
-        Logger.e(TAG, "ViewGroup = " + container);
+        Timber.i(TAG + " - 3 onCreateView()");
+
+        Timber.e(TAG + " - ViewGroup = " + container);
 
         View view = LayoutInflater.from(mActivity).inflate(getLayoutId(), container, false);
         initView(view, container, savedInstanceState);
@@ -75,7 +81,7 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
-        Logger.i(TAG, "4 onActivityCreated()");
+        Timber.i(TAG + " - 4 onActivityCreated()");
     }
 
     /**
@@ -86,7 +92,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Logger.i(TAG, "5 onStart()");
+        Timber.i(TAG + " - 5 onStart()");
     }
 
     /**
@@ -97,9 +103,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Logger.i(TAG, "6 onResume()");
+        Timber.i(TAG + " - 6 onResume()");
 
-        Logger.i(TAG, "Fragment 处于活动状态");
+        Timber.i(TAG + " - Fragment 处于活动状态");
     }
 
     /**
@@ -108,7 +114,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Logger.i(TAG, "7 onPause()");
+        Timber.i(TAG + " - 7 onPause()");
     }
 
     /**
@@ -118,7 +124,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Logger.i(TAG, "8 onStop()");
+        Timber.i(TAG + " - 8 onStop()");
     }
 
     /**
@@ -130,7 +136,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Logger.i(TAG, "9 onDestroyView()");
+        Timber.i(TAG + " - 9 onDestroyView()");
     }
 
     /**
@@ -139,7 +145,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Logger.i(TAG, "10 onDestroy()");
+        Timber.i(TAG + " - 10 onDestroy()");
     }
 
     /**
@@ -149,13 +155,13 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Logger.e(TAG, "11 onDetach()");
+        Timber.e(TAG + " - 11 onDetach()");
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Logger.i(getTAG(), "setUserVisibleHint() " + isVisibleToUser);
+        Timber.i(getTAG() + " - setUserVisibleHint() " + isVisibleToUser);
     }
 
     /**

@@ -82,6 +82,9 @@
 
     <string name="personal_data_address">地区</string>
     <string name="personal_data_address_hint">请选择</string>
+    <string name="personal_data_email">邮箱</string>
+    <string name="personal_data_birthday">生日</string>
+    <string name="personal_data_sex">性别</string>
 
     <string name="personal_data_phone">手机号码</string>
     <string name="personal_data_phone_hint">立即绑定</string>

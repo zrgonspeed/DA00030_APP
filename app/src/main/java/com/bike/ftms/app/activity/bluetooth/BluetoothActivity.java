@@ -31,6 +31,7 @@ import com.bike.ftms.app.utils.Logger;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class BluetoothActivity extends BaseActivity implements OnScanConnectListener, BleAdapter.OnItemClickListener,
         BleManager.BleOpenCallBack, BleManager.BleClosedCallBack {
@@ -57,8 +58,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Logger.i(TAG, "onCreate()");
-        Logger.e(TAG, "thread == " + Thread.currentThread().toString());
+        Timber.e(TAG + " - thread == " + Thread.currentThread().toString());
     }
 
     /**
@@ -81,13 +81,13 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     @Override
     protected void initData() {
-        Logger.i(TAG, "initData()");
+        Timber.i(TAG + " - initData()");
 
     }
 
     @Override
     protected void initView() {
-        Logger.i(TAG, "initView()");
+        Timber.i(TAG + " - initView()");
         BleManager.getInstance().getBluetoothAdapter();
         rvBle.setNestedScrollingEnabled(false);
 
@@ -97,8 +97,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         });
 
         cbSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Logger.e(TAG, "OnCheckedChange--------------cbSwitch.isChecked() == " + cbSwitch.isChecked() + " isChecked == " + isChecked);
-            Logger.e(TAG, "buttonView.isPressed() == " + buttonView.isPressed());
+            Timber.e(TAG + " - OnCheckedChange--------------cbSwitch.isChecked() == " + cbSwitch.isChecked() + " isChecked == " + isChecked);
+            Timber.e(TAG + " - buttonView.isPressed() == " + buttonView.isPressed());
 
             if (!buttonView.isPressed()) {
                 isPre = isChecked;
@@ -111,11 +111,11 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             }
             // 代码设置的不会执行下去
             if (isChecked) {
-                Logger.e(TAG, "打开蓝牙?");
+                Timber.e(TAG + " - 打开蓝牙?");
 
                 scanDevice();
             } else {
-                Logger.e(TAG, "断开蓝牙?");
+                Timber.e(TAG + " - 断开蓝牙?");
                 BleManager.getInstance().closeBLE(this);
             }
         });
@@ -124,8 +124,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Override
     protected void onResume() {
         super.onResume();
-        Logger.i(TAG, "onResume()");
-
         BleManager.getInstance().setOnScanConnectListener(this);
         BleManager.getInstance().setIsScanHrDevice(getIntent().getBooleanExtra("isScanHrDevice", false));
         //注册广播
@@ -136,8 +134,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        Logger.e(TAG, "onWindowFocusChanged " + hasFocus + " first " + first);
-        Logger.e(TAG, "cbSwitch.isChecked() " + cbSwitch.isChecked());
+        Timber.e(TAG + " - onWindowFocusChanged " + hasFocus + " first " + first);
+        Timber.e(TAG + " - cbSwitch.isChecked() " + cbSwitch.isChecked());
 
         if (hasFocus && !first && BleManager.getInstance().isOpen && !cbSwitch.isChecked()) {
 //            if (BleManager.getInstance().getBluetoothAdapter().isEnabled()) {
@@ -195,7 +193,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
                 != PackageManager.PERMISSION_GRANTED
         ) {
-            Logger.e(TAG, "没有权限，请求权限");
+            Timber.e(TAG + " - 没有权限，请求权限");
             // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
             ActivityCompat.requestPermissions(BluetoothActivity.this, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -207,7 +205,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                     Manifest.permission.ACCESS_COARSE_LOCATION,
             }, PERMISSION_STATE_CODE);
         } else {
-            Logger.e(TAG, "有权限");
+            Timber.e(TAG + " - 有权限");
             BleManager.getInstance().openBLE(this);
 
             // 另一种打开蓝牙的方式
@@ -220,7 +218,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Logger.e(TAG, "-----------------------------------------------------");
+        Timber.e(TAG + " - -----------------------------------------------------");
         switch (requestCode) {
             // requestCode即所声明的权限获取码，在checkSelfPermission时传入
             case PERMISSION_STATE_CODE:
@@ -376,24 +374,24 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Logger.e(TAG, "蓝牙广播接收：action == " + action);
+            Timber.e(TAG + " - 蓝牙广播接收：action == " + action);
 
             if (TextUtils.equals(action, BluetoothAdapter.ACTION_DISCOVERY_STARTED)) { //开启搜索
                 Message message = new Message();
-                Logger.e(TAG, "蓝牙广播接收：开启搜索");
+                Timber.e(TAG + " - 蓝牙广播接收：开启搜索");
             } else if (TextUtils.equals(action, BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {//完成搜素
                 Message message = new Message();
 //                message.what = STOP_DISCOVERY;
 //                mHandler.sendMessage(message);
-                Logger.e(TAG, "蓝牙广播接收：完成搜素");
+                Timber.e(TAG + " - 蓝牙广播接收：完成搜素");
             } else if (TextUtils.equals(action, BluetoothAdapter.ACTION_STATE_CHANGED)) {   //系统蓝牙状态监听
                 int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                Logger.e(TAG, "蓝牙广播接收：state == " + state);
+                Timber.e(TAG + " - 蓝牙广播接收：state == " + state);
                 if (state == BluetoothAdapter.STATE_OFF) {
                     Message message = new Message();
 //                    message.what = BT_CLOSED;
 //                    mHandler.sendMessage(message);
-                    Logger.e(TAG, "蓝牙广播接收：蓝牙关闭");
+                    Timber.e(TAG + " - 蓝牙广播接收：蓝牙关闭");
 
 
                     BleManager.getInstance().closed();
@@ -403,14 +401,14 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                     Message message = new Message();
 //                    message.what = BT_OPENED;
 //                    mHandler.sendMessage(message);
-                    Logger.e(TAG, "蓝牙广播接收：蓝牙开启");
+                    Timber.e(TAG + " - 蓝牙广播接收：蓝牙开启");
 
 //                    BleManager.getInstance().isOpen = true;
 //                    isOpen(true);
                 } else if (state == BluetoothAdapter.STATE_TURNING_OFF) {
-                    Logger.e(TAG, "蓝牙广播接收：蓝牙关闭中");
+                    Timber.e(TAG + " - 蓝牙广播接收：蓝牙关闭中");
                 } else if (state == BluetoothAdapter.STATE_TURNING_ON) {
-                    Logger.e(TAG, "蓝牙广播接收：蓝牙开启中");
+                    Timber.e(TAG + " - 蓝牙广播接收：蓝牙开启中");
                 }
             }
         }

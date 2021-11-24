@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import tech.gujin.toast.ToastUtil;
+import timber.log.Timber;
 
 public class BleManager implements CustomTimer.TimerCallBack {
     private String TAG = "BleManager";
@@ -167,7 +168,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         }
 
-        Logger.e(TAG, "mBluetoothAdapter == null ? " + (mBluetoothAdapter == null));
+        Timber.e(TAG + " - mBluetoothAdapter == null ? " + (mBluetoothAdapter == null));
         return mBluetoothAdapter;
     }
 
@@ -175,20 +176,20 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 扫描蓝牙设备
      */
     public void scanDevice() {
-        Logger.e(TAG, "mBluetoothAdapter == " + mBluetoothAdapter + "    isCanning == " + isCanning);
+        Timber.e(TAG + " - mBluetoothAdapter == " + mBluetoothAdapter + "    isCanning == " + isCanning);
         if (mBluetoothAdapter != null && !isCanning) {
             boolean enabled = mBluetoothAdapter.isEnabled();
-            Logger.e(TAG, "2 enabled == " + enabled);
+            Timber.e(TAG + " - 2 enabled == " + enabled);
             if (!enabled) {
                 boolean enable = mBluetoothAdapter.enable();
-                Logger.e(TAG, "2_1 enable == " + enable);
+                Timber.e(TAG + " - 2_1 enable == " + enable);
                 return;
             }
             mHandler.postDelayed(() -> {
-                Logger.e(TAG, "扫描时间到了，停止扫描");
+                Timber.e(TAG + " - 扫描时间到了，停止扫描");
                 stopScan();
                 if (mScanResults.size() == 0) {//没有搜索到设备
-                    Logger.d(TAG, "No devices were found");
+                    Timber.d(TAG + " - No devices were found");
                 }
             }, SCAN_PERIOD);
             isCanning = true;
@@ -233,7 +234,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         new ParcelUuid(UUID.fromString(uuid))).build();*/
                 mBluetoothAdapter.getBluetoothLeScanner().startScan(mScanCallback);
             }
-            Logger.i(TAG, "1------开始扫描设备");
+            Timber.i(TAG + " - 1------开始扫描设备");
         }
     }
 
@@ -249,13 +250,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
             }
 
             if (onScanConnectListener != null) {
-                Logger.e(TAG, "thread == " + Thread.currentThread().toString());
+                Timber.e(TAG + " - thread == " + Thread.currentThread().toString());
                 mHandler.post(() -> {
                     onScanConnectListener.onStopScan();
                 });
             }
 
-            Logger.i(TAG, "停止扫描设备");
+            Timber.i(TAG + " - 停止扫描设备");
         }
     }
 
@@ -266,16 +267,16 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
-            //Logger.i(TAG, "onScanResult:" + result.getDevice().getName());
-           /* Logger.i(TAG, "onScanResult" + result.getDevice().toString());          //D5:EA:80:77:23:39
-            Logger.i(TAG, "onScanResult" + result.getDevice().getUuids());            //null
-            Logger.i(TAG, "onScanResult" + result.getDevice().getType());             //2
-            Logger.i(TAG, "onScanResult" + result.getDevice().getName());             //PZ-PA051BA
-            Logger.i(TAG, "onScanResult" + result.getDevice().getAddress());          //D5:EA:80:77:23:39
-            Logger.i(TAG, "onScanResult" + result.getDevice().getBluetoothClass());   //1f00
-            Logger.i(TAG, "onScanResult" + result.getDevice().getAlias());            //null
-            Logger.i(TAG, "onScanResult" + result.getDevice().getBondState());        //10
-            Logger.i(TAG, "onScanResult" + result.toString());
+            //Timber.i(TAG + " - onScanResult:" + result.getDevice().getName());
+           /* Timber.i(TAG + " - onScanResult" + result.getDevice().toString());          //D5:EA:80:77:23:39
+            Timber.i(TAG + " - onScanResult" + result.getDevice().getUuids());            //null
+            Timber.i(TAG + " - onScanResult" + result.getDevice().getType());             //2
+            Timber.i(TAG + " - onScanResult" + result.getDevice().getName());             //PZ-PA051BA
+            Timber.i(TAG + " - onScanResult" + result.getDevice().getAddress());          //D5:EA:80:77:23:39
+            Timber.i(TAG + " - onScanResult" + result.getDevice().getBluetoothClass());   //1f00
+            Timber.i(TAG + " - onScanResult" + result.getDevice().getAlias());            //null
+            Timber.i(TAG + " - onScanResult" + result.getDevice().getBondState());        //10
+            Timber.i(TAG + " - onScanResult" + result.toString());
             //设备广播（ScanRecord）
             //result.getScanRecord().getServiceUuids()   mServiceUuids=[0000ab00-0000-1000-8000-00805f9b34fb]*/
 
@@ -283,8 +284,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
             String deviceAddress = result.getDevice().getAddress();
             String deviceName = result.getDevice().getName();
 
-            //             Logger.i(TAG, "2------扫描结果回调");
-//            Logger.d(TAG, "name=" + deviceName + " address=" + deviceAddress);
+            //             Timber.i(TAG + " - 2------扫描结果回调");
+//            Timber.d(TAG + " - name=" + deviceName + " address=" + deviceAddress);
 
             if (deviceName != null && !deviceName.trim().equals("") && deviceAddress != null) {
                 boolean isAdd = true;//第一次无需查重
@@ -311,13 +312,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onBatchScanResults(List<ScanResult> results) {
             super.onBatchScanResults(results);
-            Logger.i(TAG, "onBatchScanResults");
+            Timber.i(TAG + " - onBatchScanResults");
         }
 
         @Override
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
-            Logger.i(TAG, "onScanFailed" + errorCode);
+            Timber.i(TAG + " - onScanFailed" + errorCode);
         }
 
     };
@@ -330,16 +331,16 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * @param position
      */
     public void connectDevice(int position) {
-        Logger.i(TAG, "2------connectDevice(" + position + ")");
+        Timber.i(TAG + " - 2------connectDevice(" + position + ")");
         if (mBluetoothGattServices != null) {
-            Logger.d(TAG, "mBluetoothGattServices.size == " + mBluetoothGattServices.size());
+            Timber.d(TAG + " - mBluetoothGattServices.size == " + mBluetoothGattServices.size());
         }
-        Logger.d(TAG, "getScanResults(): " + getScanResults().size());
+        Timber.d(TAG + " - getScanResults(): " + getScanResults().size());
 
         if (getScanResults().get(position).getConnectState() == 1) {
             disableCharacterNotifiy();
             disConnectDevice();
-            Logger.e(TAG, "2------disConnectDevice()");
+            Timber.e(TAG + " - 2------disConnectDevice()");
             BleManager.getInstance().mPosition = -1;
             return;
         }
@@ -359,7 +360,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                             .connectGatt(MyApplication.getContext(), false, mHrGattCallback);
                 }
 
-                Logger.d(TAG, "connectDevice " + getScanResults().get(position).getScanResult().getDevice().getAddress());
+                Timber.d(TAG + " - connectDevice " + getScanResults().get(position).getScanResult().getDevice().getAddress());
             }
         }
         if (onScanConnectListener != null) {
@@ -368,7 +369,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     }
 
     public void disableCharacterNotifiy() {
-        Logger.i(TAG, "disableCharacterNotifiy()");
+        Timber.i(TAG + " - disableCharacterNotifiy()");
         if (mBluetoothGattServices == null || mBluetoothGatt == null) {
             return;
         }
@@ -389,17 +390,17 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 断开蓝牙设备
      */
     public void disConnectDevice() {
-        Logger.i(TAG, "disConnectDevice");
+        Timber.i(TAG + " - disConnectDevice");
         isConnect = false;
         if (mBluetoothGatt != null && !isScanHrDevice) {
-            Logger.e(TAG, "断开设备");
+            Timber.e(TAG + " - 断开设备");
             mBluetoothGatt.disconnect();
 //            mBluetoothGatt = null;
         }
 
         isHrConnect = false;
         if (mBluetoothHrGatt != null && isScanHrDevice) {
-            Logger.e(TAG, "断开心跳设备");
+            Timber.e(TAG + " - 断开心跳设备");
             mBluetoothHrGatt.disconnect();
 //            mBluetoothHrGatt = null;
         }
@@ -428,22 +429,22 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
             super.onPhyUpdate(gatt, txPhy, rxPhy, status);
-            Logger.i(TAG, "onPhyUpdate");
+            Timber.i(TAG + " - onPhyUpdate");
         }
 
         @Override
         public void onPhyRead(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
             super.onPhyRead(gatt, txPhy, rxPhy, status);
-            Logger.i(TAG, "onPhyRead");
+            Timber.i(TAG + " - onPhyRead");
         }
 
         //当连接状态发生改变
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
-            Logger.i(TAG, "onConnectionStateChange status " + status);
-            Logger.i(TAG, "onConnectionStateChange newState " + newState);
-            Logger.i(TAG, "onConnectionStateChange name " + gatt.getDevice().getName());
+            Timber.i(TAG + " - onConnectionStateChange status " + status);
+            Timber.i(TAG + " - onConnectionStateChange newState " + newState);
+            Timber.i(TAG + " - onConnectionStateChange name " + gatt.getDevice().getName());
 
             // 防止多次收发数据
 //            if (isConnect) {
@@ -453,7 +454,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             if (status != BluetoothGatt.GATT_SUCCESS) {
                 BleManager.getInstance().mPosition = -1;
                 if (mBluetoothGatt != null) {
-                    Logger.e(TAG, "mBluetoothGatt.close();");
+                    Timber.e(TAG + " - mBluetoothGatt.close();");
                     mBluetoothGatt.close();
                 }
 
@@ -487,7 +488,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             }
 
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                Logger.i(TAG, "3------连接成功");
+                Timber.i(TAG + " - 3------连接成功");
                 // 为对应的扫描结果设置连接状态
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
@@ -503,15 +504,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 }
                 isConnect = true;
                 if (mBluetoothGatt != null) {
-                    Logger.i(TAG, "4------寻找服务");
+                    Timber.i(TAG + " - 4------寻找服务");
                     mBluetoothGatt.discoverServices();
                 }
-                Logger.d(TAG, "isConnect=" + isConnect + ",isHeartbeatConnect=" + isHrConnect);
+                Timber.d(TAG + " - isConnect=" + isConnect + ",isHeartbeatConnect=" + isHrConnect);
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(true, gatt.getDevice().getName());
                 }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                Logger.e(TAG, "断开设备回调");
+                Timber.e(TAG + " - 断开设备回调");
 
                 // 保存运动数据
                 saveRowDataBean1();
@@ -542,7 +543,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 }
                 //++++
                 if (mBluetoothGatt != null) {
-                    Logger.e(TAG, "mBluetoothGatt.close();");
+                    Timber.e(TAG + " - mBluetoothGatt.close();");
                     mBluetoothGatt.close();
                 }
             }
@@ -555,15 +556,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
-            Logger.i(TAG, "onServicesDiscovered status=" + status);
+            Timber.i(TAG + " - onServicesDiscovered status=" + status);
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                Logger.i(TAG, "5------发现服务 status " + status);
+                Timber.i(TAG + " - 5------发现服务 status " + status);
 
                 // 这个蓝牙设备的所有service
                 mBluetoothGattServices = mBluetoothGatt.getServices();
                 for (BluetoothGattService service : mBluetoothGattServices) {
-//                    Logger.d(TAG, "service uuid = " + service.getUuid());
+//                    Timber.d(TAG + " - service uuid = " + service.getUuid());
                 }
 
                 // 指定一个service
@@ -572,9 +573,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 List<BluetoothGattCharacteristic> list = new ArrayList<>();
                 if (localGattService != null) {
                     list = localGattService.getCharacteristics();
-                    Logger.d(TAG, "localGattService = " + localGattService.getUuid());
+                    Timber.d(TAG + " - localGattService = " + localGattService.getUuid());
                     for (BluetoothGattCharacteristic c : list) {
-//                        Logger.d(TAG, "c = " + c.getUuid());
+//                        Timber.d(TAG + " - c = " + c.getUuid());
                     }
                 }
 
@@ -585,15 +586,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     List<BluetoothGattCharacteristic> characteristics = localGattService1.getCharacteristics();
                     list.addAll(characteristics);
 
-                    Logger.d(TAG, "localGattService1 = " + localGattService1.getUuid());
+                    Timber.d(TAG + " - localGattService1 = " + localGattService1.getUuid());
                     for (BluetoothGattCharacteristic c : characteristics) {
-//                        Logger.d(TAG, "c = " + c.getUuid());
+//                        Timber.d(TAG + " - c = " + c.getUuid());
                     }
                 }
 
 //                Logger.i("c列表 = ");
                 for (int i = 0; i < list.size(); i++) {
-//                    Logger.d(TAG, "c = " + list.get(i).getUuid().toString());
+//                    Timber.d(TAG + " - c = " + list.get(i).getUuid().toString());
 
                     if (list.get(i).getUuid().toString().contains("2ad1")) {
                         List<BluetoothGattDescriptor> bluetoothGattDescriptors = list.get(i).getDescriptors();
@@ -639,7 +640,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 }
                 registrationGattCharacteristic();//注册通知
             } else {
-                Logger.d(TAG, "onServicesDiscovered received: " + status);
+                Timber.d(TAG + " - onServicesDiscovered received: " + status);
             }
 
         }
@@ -648,14 +649,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
-//            Logger.i(TAG, "onCharacteristicWrite::" + ByteArrTransUtil.toHexValue(characteristic.getValue()));
+//            Timber.i(TAG + " - onCharacteristicWrite::" + ByteArrTransUtil.toHexValue(characteristic.getValue()));
         }
 
         //调用mBluetoothGatt.readCharacteristic(characteristic)读取数据回调，在这里面接收数据
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicRead(gatt, characteristic, status);
-            Logger.i(TAG, "onCharacteristicRead::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
+            Timber.i(TAG + " - onCharacteristicRead::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
 
         }
 
@@ -679,7 +680,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {//descriptor读
             super.onDescriptorRead(gatt, descriptor, status);
-            Logger.i(TAG, "onDescriptorRead");
+            Timber.i(TAG + " - onDescriptorRead");
         }
 
         @Override
@@ -687,26 +688,26 @@ public class BleManager implements CustomTimer.TimerCallBack {
             super.onDescriptorWrite(gatt, descriptor, status);
             // 写入 0x01 0x00
             // 写入到关联的远程设备上
-            Logger.i(TAG, "onDescriptorWrite " + ConvertData.byteArrayToHexString(descriptor.getValue(), descriptor.getValue().length));
+            Timber.i(TAG + " - onDescriptorWrite " + ConvertData.byteArrayToHexString(descriptor.getValue(), descriptor.getValue().length));
         }
 
         @Override
         public void onReliableWriteCompleted(BluetoothGatt gatt, int status) {
             super.onReliableWriteCompleted(gatt, status);
-            Logger.i(TAG, "onReliableWriteCompleted");
+            Timber.i(TAG + " - onReliableWriteCompleted");
         }
 
         //调用mBluetoothGatt.readRemoteRssi()时的回调，rssi即信号强度
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {//读Rssi
             super.onReadRemoteRssi(gatt, rssi, status);
-            Logger.i(TAG, "onReadRemoteRssi");
+            Timber.i(TAG + " - onReadRemoteRssi");
         }
 
         @Override
         public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
             super.onMtuChanged(gatt, mtu, status);
-            Logger.i(TAG, "onMtuChanged");
+            Timber.i(TAG + " - onMtuChanged");
         }
     };
 
@@ -714,26 +715,26 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
             super.onPhyUpdate(gatt, txPhy, rxPhy, status);
-            Logger.i(TAG, "onPhyUpdate");
+            Timber.i(TAG + " - onPhyUpdate");
         }
 
         @Override
         public void onPhyRead(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
             super.onPhyRead(gatt, txPhy, rxPhy, status);
-            Logger.i(TAG, "onPhyRead");
+            Timber.i(TAG + " - onPhyRead");
         }
 
         //当连接状态发生改变
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
-            Logger.i(TAG, "onConnectionStateChange status " + status);
-            Logger.i(TAG, "onConnectionStateChange newState " + newState);
-            Logger.i(TAG, "onConnectionStateChange name " + gatt.getDevice().getName());
+            Timber.i(TAG + " - onConnectionStateChange status " + status);
+            Timber.i(TAG + " - onConnectionStateChange newState " + newState);
+            Timber.i(TAG + " - onConnectionStateChange name " + gatt.getDevice().getName());
 
             if (status != BluetoothGatt.GATT_SUCCESS) {
                 if (mBluetoothHrGatt != null) {
-                    Logger.e(TAG, "mBluetoothHrGatt.close();");
+                    Timber.e(TAG + " - mBluetoothHrGatt.close();");
                     mBluetoothHrGatt.close();
                 }
 
@@ -783,13 +784,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 if (mBluetoothHrGatt != null) {
                     mBluetoothHrGatt.discoverServices();
                 }
-                Logger.d(TAG, "isConnect=" + isConnect + ",isHeartbeatConnect=" + isHrConnect);
+                Timber.d(TAG + " - isConnect=" + isConnect + ",isHeartbeatConnect=" + isHrConnect);
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(true, gatt.getDevice().getName());
                 }
                 // mBluetoothGatt.discoverServices();//
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                Logger.e(TAG, "断开心跳设备回调");
+                Timber.e(TAG + " - 断开心跳设备回调");
                 rowerDataBean1 = new RowerDataBean1();
                 if (onRunDataListener != null) {
                     onRunDataListener.onRunData(rowerDataBean1);
@@ -815,7 +816,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
                 //++++
                 if (mBluetoothHrGatt != null) {
-                    Logger.e(TAG, "mBluetoothHrGatt.close();");
+                    Timber.e(TAG + " - mBluetoothHrGatt.close();");
                     mBluetoothHrGatt.close();
                 }
             }
@@ -828,7 +829,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
-            Logger.i(TAG, "Hr onServicesDiscovered status=" + status);
+            Timber.i(TAG + " - Hr onServicesDiscovered status=" + status);
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 mBluetoothGattServices = mBluetoothHrGatt.getServices();
                 BluetoothGattService localGattService = mBluetoothHrGatt.getService(UUID.fromString(uuidHeartbeat));
@@ -842,7 +843,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         for (BluetoothGattDescriptor bluetoothGattDescriptor : bluetoothGattDescriptors) {
                             bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                             mBluetoothHrGatt.writeDescriptor(bluetoothGattDescriptor);
-                            Logger.d(TAG, "bluetoothGattDescriptor" + bluetoothGattDescriptor.getUuid());
+                            Timber.d(TAG + " - bluetoothGattDescriptor" + bluetoothGattDescriptor.getUuid());
                         }
                     }
                     if (list.get(i).getUuid().toString().contains("2a38")) {
@@ -850,13 +851,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         for (BluetoothGattDescriptor bluetoothGattDescriptor : bluetoothGattDescriptors) {
                             bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                             boolean r = mBluetoothHrGatt.writeDescriptor(bluetoothGattDescriptor);
-                            Logger.d(TAG, "bluetoothGattDescriptor" + bluetoothGattDescriptor.getUuid() + "," + r);
+                            Timber.d(TAG + " - bluetoothGattDescriptor" + bluetoothGattDescriptor.getUuid() + "," + r);
                         }
                     }
                 }
                 registrationGattCharacteristic();//注册通知
             } else {
-                Logger.d(TAG, "Hr onServicesDiscovered received: " + status);
+                Timber.d(TAG + " - Hr onServicesDiscovered received: " + status);
             }
         }
 
@@ -864,14 +865,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
-//            Logger.i(TAG, "Hr onCharacteristicWrite::" + ByteArrTransUtil.toHexValue(characteristic.getValue()));
+//            Timber.i(TAG + " - Hr onCharacteristicWrite::" + ByteArrTransUtil.toHexValue(characteristic.getValue()));
         }
 
         //调用mBluetoothGatt.readCharacteristic(characteristic)读取数据回调，在这里面接收数据
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicRead(gatt, characteristic, status);
-            Logger.i(TAG, "Hr onCharacteristicRead::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
+            Timber.i(TAG + " - Hr onCharacteristicRead::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
 
         }
 
@@ -892,32 +893,32 @@ public class BleManager implements CustomTimer.TimerCallBack {
         @Override
         public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {//descriptor读
             super.onDescriptorRead(gatt, descriptor, status);
-            Logger.i(TAG, "onDescriptorRead");
+            Timber.i(TAG + " - onDescriptorRead");
         }
 
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {//descriptor写
             super.onDescriptorWrite(gatt, descriptor, status);
-            Logger.i(TAG, "onDescriptorWrite " + ConvertData.byteArrayToHexString(descriptor.getValue(), descriptor.getValue().length));
+            Timber.i(TAG + " - onDescriptorWrite " + ConvertData.byteArrayToHexString(descriptor.getValue(), descriptor.getValue().length));
         }
 
         @Override
         public void onReliableWriteCompleted(BluetoothGatt gatt, int status) {
             super.onReliableWriteCompleted(gatt, status);
-            Logger.i(TAG, "onReliableWriteCompleted");
+            Timber.i(TAG + " - onReliableWriteCompleted");
         }
 
         //调用mBluetoothGatt.readRemoteRssi()时的回调，rssi即信号强度
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {//读Rssi
             super.onReadRemoteRssi(gatt, rssi, status);
-            Logger.i(TAG, "onReadRemoteRssi");
+            Timber.i(TAG + " - onReadRemoteRssi");
         }
 
         @Override
         public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
             super.onMtuChanged(gatt, mtu, status);
-            Logger.i(TAG, "onMtuChanged");
+            Timber.i(TAG + " - onMtuChanged");
         }
     };
 
@@ -940,7 +941,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     for (BluetoothGattCharacteristic gattCharacteristic : mBluetoothGatt.getService(UUID.fromString(uuidSendData)).getCharacteristics()) {
                         if (gattCharacteristic.getUuid().toString().contains("ffe9")) {
                             mBluetoothGattCharacteristic = gattCharacteristic;
-                            Logger.d(TAG, "mBluetoothGattCharacteristic=ffe9  " + mBluetoothGattCharacteristic.getUuid());
+                            Timber.d(TAG + " - mBluetoothGattCharacteristic=ffe9  " + mBluetoothGattCharacteristic.getUuid());
                         }
                         if (gattCharacteristic.getUuid().toString().contains("ffe0")) {//接收通道
                             boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
@@ -959,12 +960,12 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 gattService = mBluetoothHrGatt.getService(UUID.fromString(uuidHeartbeat));
             }
            /* for (BluetoothGattService gattService1 : mBluetoothGatt.getServices()) {
-                Logger.d(TAG, "=========================================");
-                Logger.d(TAG, "getServices=" + gattService1.getUuid().toString());
+                Timber.d(TAG + " - =========================================");
+                Timber.d(TAG + " - getServices=" + gattService1.getUuid().toString());
                 for (BluetoothGattCharacteristic gattCharacteristic : gattService1.getCharacteristics()) {
-                    Logger.d(TAG, "gattCharacteristic=" + gattCharacteristic.getUuid().toString());
+                    Timber.d(TAG + " - gattCharacteristic=" + gattCharacteristic.getUuid().toString());
                     for (BluetoothGattDescriptor bluetoothGattDescriptor : gattCharacteristic.getDescriptors()) {
-                        Logger.d(TAG, "getDescriptors=" + bluetoothGattDescriptor.getUuid().toString());
+                        Timber.d(TAG + " - getDescriptors=" + bluetoothGattDescriptor.getUuid().toString());
                     }
                 }
             }*/
@@ -974,44 +975,44 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     // 还需要往 Characteristic 的 Descriptor 属性写入开启通知的数据开关使得当硬件的数据改变时，主动往手机发送数据。
                /* if (gattCharacteristic.getUuid().toString().contains("ab01")) {//发送通道
                     mBluetoothGattCharacteristic = gattCharacteristic;
-                    Logger.i(TAG, "发送通道::ab01");
+                    Timber.i(TAG + " - 发送通道::ab01");
                 }*/
-//                Logger.d(TAG, "gattCharacteristic1=" + gattCharacteristic.getUuid().toString());
+//                Timber.d(TAG + " - gattCharacteristic1=" + gattCharacteristic.getUuid().toString());
 
                     if (gattCharacteristic.getUuid().toString().contains("2ad1")) {//接收通道
                         boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-//                        Logger.i(TAG, "注册通知::" + enabled);
+//                        Timber.i(TAG + " - 注册通知::" + enabled);
                     }
                     if (gattCharacteristic.getUuid().toString().contains("2ad3")) {//接收通道
                         boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-//                        Logger.i(TAG, "注册通知::" + enabled);
+//                        Timber.i(TAG + " - 注册通知::" + enabled);
                     }
                     if (gattCharacteristic.getUuid().toString().contains("2ada")) {//接收通道
                         boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-//                        Logger.i(TAG, "注册通知::" + enabled);
+//                        Timber.i(TAG + " - 注册通知::" + enabled);
                     }
 
 //                if (gattCharacteristic.getUuid().toString().contains("2a23")) {//接收通道
 //                    boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-//                    Logger.i(TAG, "注册通知::" + enabled);
+//                    Timber.i(TAG + " - 注册通知::" + enabled);
 //                }
 
                     if (gattCharacteristic.getUuid().toString().contains("2a37")) {//接收通道
                         boolean enabled = mBluetoothHrGatt.setCharacteristicNotification(gattCharacteristic, true);
-//                        Logger.i(TAG, "注册通知::" + enabled);
+//                        Timber.i(TAG + " - 注册通知::" + enabled);
                     }
                     if (gattCharacteristic.getUuid().toString().contains("2a38")) {//接收通道
                         boolean enabled = mBluetoothHrGatt.setCharacteristicNotification(gattCharacteristic, true);
-//                        Logger.i(TAG, "注册通知::" + enabled);
+//                        Timber.i(TAG + " - 注册通知::" + enabled);
                     }
 
 
                     if (gattCharacteristic.getUuid().toString().contains("2ad6")) {
                         boolean enabled = mBluetoothGatt.readCharacteristic(gattCharacteristic);
-                        Logger.i(TAG, "2ad6 读::" + enabled);
+                        Timber.i(TAG + " - 2ad6 读::" + enabled);
                     }
 
-//                    Logger.i(TAG, "GattCharacteristic " + gattCharacteristic.getUuid().toString());
+//                    Timber.i(TAG + " - GattCharacteristic " + gattCharacteristic.getUuid().toString());
 
                 }
             }
@@ -1033,7 +1034,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             r = mBluetoothGatt.writeCharacteristic(mBluetoothGattCharacteristic);
             Logger.d(TAG, mBluetoothGattCharacteristic.getUuid().toString().substring(0, 8) + ",::" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length));
         } else {
-//            Logger.d(TAG, "Send:" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length) + r);
+//            Timber.d(TAG + " - Send:" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length) + r);
             Logger.e("发送到电子表失败");
         }
         return r;
@@ -1077,7 +1078,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     public void openBLE(BleOpenCallBack bleOpenCallBack) {
         this.bleOpenCallBack = bleOpenCallBack;
         boolean enabled = mBluetoothAdapter.isEnabled();
-        Logger.e(TAG, "enable == " + enabled);
+        Timber.e(TAG + " - enable == " + enabled);
         if (enabled) {
             isOpen = enabled;
             mHandler.post(() -> bleOpenCallBack.isOpen(isOpen));
@@ -1091,12 +1092,12 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
             new Thread(() -> {
                 isOpen = mBluetoothAdapter.enable();
-                Logger.e(TAG, "isOpen == " + isOpen);
+                Timber.e(TAG + " - isOpen == " + isOpen);
 
                 if (!isOpen) {
                     isOpen = mBluetoothAdapter.isEnabled();
                 }
-                Logger.e(TAG, "isOpen == " + isOpen);
+                Timber.e(TAG + " - isOpen == " + isOpen);
 
                 if (isOpen) {
                     mHandler.postDelayed(() -> {
@@ -1119,25 +1120,25 @@ public class BleManager implements CustomTimer.TimerCallBack {
             new Thread(() -> {
                 // true 表示适配器关闭已开始，或 false 表示立即错误
                 boolean disable = mBluetoothAdapter.disable();
-                Logger.e(TAG, "mBluetoothAdapter.disable() == " + disable);
+                Timber.e(TAG + " - mBluetoothAdapter.disable() == " + disable);
 
                 if (disable) {
                     isOpen = false;
 
-                    Logger.e(TAG, "断开蓝牙");
+                    Timber.e(TAG + " - 断开蓝牙");
                     BleManager.getInstance().disableCharacterNotifiy();
                     BleManager.getInstance().disConnectDevice();
                     BleManager.getInstance().stopScan();
 
                     mHandler.removeCallbacksAndMessages(null);
                 } else {
-                    Logger.e(TAG, "断开蓝牙失败");
+                    Timber.e(TAG + " - 断开蓝牙失败");
                 }
 
                 mHandler.post(() -> bleClosedCallBack.isClosed(disable));
             }).start();
         } else {
-            Logger.e(TAG, "mBluetoothAdapter == null");
+            Timber.e(TAG + " - mBluetoothAdapter == null");
         }
     }
 
@@ -1179,7 +1180,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         int inxLen = 2;
         String s = ConvertData.byteArrToBinStr(data);
 
-        Logger.d(TAG, "------------s == " + s);
+        Timber.d(TAG + " - ------------s == " + s);
 
         String[] strings = s.split(",");
         StringBuffer stringBuffer = new StringBuffer();
@@ -1200,44 +1201,44 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         inxLen = inxLen + RowerDataParam.STROKE_RATE_LEN;
                         RowerDataParam.STROKE_COUNT_INX = inxLen;
                         inxLen = inxLen + RowerDataParam.STROKE_COUNT_LEN;
-                        Logger.d(TAG, "setBleDataInx  STROKE_RATE_INX=" + RowerDataParam.STROKE_RATE_INX);
+                        Timber.d(TAG + " - setBleDataInx  STROKE_RATE_INX=" + RowerDataParam.STROKE_RATE_INX);
                     }
                     break;
                 case 1:
                     RowerDataParam.AVERAGE_STROKE_RATE_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.AVERAGE_STROKE_RATE_LEN;
-                    Logger.d(TAG, "setBleDataInx  AVERAGE_STROKE_RATE_INX=" + RowerDataParam.AVERAGE_STROKE_RATE_INX);
+                    Timber.d(TAG + " - setBleDataInx  AVERAGE_STROKE_RATE_INX=" + RowerDataParam.AVERAGE_STROKE_RATE_INX);
                     break;
                 case 2:
                     RowerDataParam.TOTAL_DISTANCE_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.TOTAL_DISTANCE_LEN;
-                    Logger.d(TAG, "setBleDataInx  TOTAL_DISTANCE_INX=" + RowerDataParam.TOTAL_DISTANCE_INX);
+                    Timber.d(TAG + " - setBleDataInx  TOTAL_DISTANCE_INX=" + RowerDataParam.TOTAL_DISTANCE_INX);
                     break;
                 case 3:
                     RowerDataParam.INSTANTANEOUS_PACE_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.INSTANTANEOUS_PACE_LEN;
-                    Logger.d(TAG, "setBleDataInx  INSTANTANEOUS_PACE_INX=" + RowerDataParam.INSTANTANEOUS_PACE_INX);
+                    Timber.d(TAG + " - setBleDataInx  INSTANTANEOUS_PACE_INX=" + RowerDataParam.INSTANTANEOUS_PACE_INX);
                     break;
                 case 4:
                     RowerDataParam.AVERAGE_PACE_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.AVERAGE_PACE_LEN;
-                    Logger.d(TAG, "setBleDataInx  AVERAGE_PACE_INX=" + RowerDataParam.AVERAGE_PACE_INX);
+                    Timber.d(TAG + " - setBleDataInx  AVERAGE_PACE_INX=" + RowerDataParam.AVERAGE_PACE_INX);
                     break;
                 case 5:
                     RowerDataParam.INSTANTANEOUS_POWER_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.INSTANTANEOUS_POWER_LEN;
-                    Logger.d(TAG, "setBleDataInx  INSTANTANEOUS_POWER_INX=" + RowerDataParam.INSTANTANEOUS_POWER_INX);
+                    Timber.d(TAG + " - setBleDataInx  INSTANTANEOUS_POWER_INX=" + RowerDataParam.INSTANTANEOUS_POWER_INX);
 
                     break;
                 case 6:
                     RowerDataParam.AVERAGE_POWER_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.AVERAGE_POWER_LEN;
-                    Logger.d(TAG, "setBleDataInx  AVERAGE_POWER_INX=" + RowerDataParam.AVERAGE_POWER_INX);
+                    Timber.d(TAG + " - setBleDataInx  AVERAGE_POWER_INX=" + RowerDataParam.AVERAGE_POWER_INX);
                     break;
                 case 7:
                     RowerDataParam.RESISTANCE_LEVEL_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.RESISTANCE_LEVEL_LEN;
-                    Logger.d(TAG, "setBleDataInx  RESISTANCE_LEVEL_INX=" + RowerDataParam.RESISTANCE_LEVEL_INX);
+                    Timber.d(TAG + " - setBleDataInx  RESISTANCE_LEVEL_INX=" + RowerDataParam.RESISTANCE_LEVEL_INX);
                     break;
                 case 8:
                     RowerDataParam.TOTAL_ENERGY_INX = inxLen;
@@ -1246,27 +1247,27 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     inxLen = inxLen + RowerDataParam.ENERGY_PER_HOUR_LEN;
                     RowerDataParam.ENERGY_PER_MINUTE_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.ENERGY_PER_MINUTE_LEN;
-                    Logger.d(TAG, "setBleDataInx  TOTAL_ENERGY_INX=" + RowerDataParam.TOTAL_ENERGY_INX);
+                    Timber.d(TAG + " - setBleDataInx  TOTAL_ENERGY_INX=" + RowerDataParam.TOTAL_ENERGY_INX);
                     break;
                 case 9:
                     RowerDataParam.HEART_RATE_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.HEART_RATE_LEN;
-                    Logger.d(TAG, "setBleDataInx  HEART_RATE_INX=" + RowerDataParam.HEART_RATE_INX);
+                    Timber.d(TAG + " - setBleDataInx  HEART_RATE_INX=" + RowerDataParam.HEART_RATE_INX);
                     break;
                 case 10:
                     RowerDataParam.METABOLIC_EQUIVALENT_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.METABOLIC_EQUIVALENT_LEN;
-                    Logger.d(TAG, "setBleDataInx  METABOLIC_EQUIVALENT_INX=" + RowerDataParam.METABOLIC_EQUIVALENT_INX);
+                    Timber.d(TAG + " - setBleDataInx  METABOLIC_EQUIVALENT_INX=" + RowerDataParam.METABOLIC_EQUIVALENT_INX);
                     break;
                 case 11:
                     RowerDataParam.ELAPSED_TIME_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.ELAPSED_TIME_LEN;
-                    Logger.d(TAG, "setBleDataInx  ELAPSED_TIME_INX=" + RowerDataParam.ELAPSED_TIME_INX);
+                    Timber.d(TAG + " - setBleDataInx  ELAPSED_TIME_INX=" + RowerDataParam.ELAPSED_TIME_INX);
                     break;
                 case 12:
                     RowerDataParam.REMAINING_TIME_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.REMAINING_TIME_LEN;
-                    Logger.d(TAG, "setBleDataInx  REMAINING_TIME_INX=" + RowerDataParam.REMAINING_TIME_INX);
+                    Timber.d(TAG + " - setBleDataInx  REMAINING_TIME_INX=" + RowerDataParam.REMAINING_TIME_INX);
                     break;
             }
 
@@ -1418,7 +1419,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             if (onRunDataListener != null) {
                 onRunDataListener.disConnect();
             }
-            Logger.d(TAG, "断开连接");
+            Timber.d(TAG + " - 断开连接");
             return;
         }
         if (lastTime == 10 && isHrConnectTag.equals(tag)) {
@@ -1428,7 +1429,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             }
 
             isHrConnectTimer.closeTimer();
-            Logger.d(TAG, "断开连接Hr");
+            Timber.d(TAG + " - 断开连接Hr");
             return;
         }
         if (lastTime == 3 && isVerifyConnectTag.equals(tag)) {
@@ -1540,10 +1541,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
             onlyHr = false;
         }
 
-        Logger.d(TAG, "---↑------------------------2ada----------------------↑------------------");
+        Timber.d(TAG + " - ---↑------------------------2ada----------------------↑------------------");
         //停止运动
         if (data[3] == RUN_STATUS_STOP && runStatus != RUN_STATUS_STOP) {
-            Logger.d(TAG, "----------------data[3] == STOP-----------mode == " + rowerDataBean1.getRunMode());
+            Timber.d(TAG + " - ----------------data[3] == STOP-----------mode == " + rowerDataBean1.getRunMode());
             canSave = false;
             if (rowerDataBean1.getRunMode() == MyConstant.GOAL_TIME) {
                 // 时间是倒数的，用距离判断
@@ -1680,7 +1681,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     } else {
                         if (tempInterval1 >= 1) {
                             tempSave(rowerDataBean2);
-                            Logger.e(TAG, "间歇运动 " + rowerDataBean2.getInterval() + "   bean2.save " + rowerDataBean2);
+                            Timber.e(TAG + " - 间歇运动 " + rowerDataBean2.getInterval() + "   bean2.save " + rowerDataBean2);
                         }
                     }
                     tempInterval1 = rowerDataBean1.getInterval();
@@ -1695,7 +1696,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         rowerDataBean2.setRunInterval(runIntervalXXX);
 
                         tempSave(rowerDataBean2);
-                        Logger.e(TAG, "目标运动 " + rowerDataBean2.getRunInterval() + "    bean2.save " + rowerDataBean2);
+                        Timber.e(TAG + " - 目标运动 " + rowerDataBean2.getRunInterval() + "    bean2.save " + rowerDataBean2);
                     }
                     tempInterval2 = rowerDataBean1.getRunInterval();
                 }
@@ -1735,10 +1736,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
 
 
-        Logger.e(TAG, "saveRowDataBean1() -- canSave " + canSave + "       getCanSave() --- " + rowerDataBean1.getCanSave());
+        Timber.e(TAG + " - saveRowDataBean1() -- canSave " + canSave + "       getCanSave() --- " + rowerDataBean1.getCanSave());
         if (canSave && rowerDataBean1.getCanSave()) {
-            Logger.e(TAG, "1----RUN_STATUS_STOP----" + "bean1  save : " + rowerDataBean1);
-            Logger.e(TAG, "1----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
+            Timber.e(TAG + " - 1----RUN_STATUS_STOP----" + "bean1  save : " + rowerDataBean1);
+            Timber.e(TAG + " - 1----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
             tempSave(rowerDataBean1);
 
             // TODO: 2021/11/17
@@ -1750,10 +1751,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
             }
 
-            Logger.e(TAG, "2----RUN_STATUS_STOP----" + "bean2  save : " + rowerDataBean2);
+            Timber.e(TAG + " - 2----RUN_STATUS_STOP----" + "bean2  save : " + rowerDataBean2);
 
             tempSave(rowerDataBean2);
-            Logger.e(TAG, "2----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
+            Timber.e(TAG + " - 2----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
 
             rowerDataBean1 = new RowerDataBean1();
             canSave = false;

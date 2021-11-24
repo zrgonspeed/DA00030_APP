@@ -10,6 +10,7 @@ import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.utils.Logger;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
 /**
  * @Description
@@ -24,7 +25,7 @@ public class ThreePageDataFragment extends BasePageDataFragment {
     TextView tvCaloriesHr;
 
     public ThreePageDataFragment() {
-        Logger.i(TAG, "构造方法 ThreePageDataFragment()");
+        Timber.i(TAG + " - 构造方法 ThreePageDataFragment()");
     }
 
     @Override

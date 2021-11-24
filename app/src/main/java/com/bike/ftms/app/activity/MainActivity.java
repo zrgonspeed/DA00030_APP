@@ -35,6 +35,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements OnRunDataListener {
 
@@ -49,7 +50,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     ImageView btnSetting;
     @BindView(R.id.iv_page)
     ImageView ivPage;
-    private View page1, page2, page3;
     private PowerManager.WakeLock m_wklk;//屏幕锁屏
     private HomeFragment homeFragment;
     private WorkoutsFragment workoutsFragment;
@@ -67,23 +67,20 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Logger.i(TAG, "onCreate()");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Logger.i(TAG, "onStart()");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Logger.i(TAG, "onResume()");
-        Logger.e(TAG, "this == " + this);
+        Timber.e(TAG + " - this == " + this);
         isOnPause = false;
         m_wklk.acquire(); //设置保持唤醒
-        Logger.e(TAG, "BleManager == " + BleManager.getInstance());
+        Timber.e(TAG + " - BleManager == " + BleManager.getInstance());
         BleManager.getInstance().setOnRunDataListener(this);
         if (!BleManager.isConnect && !BleManager.isHrConnect) {
             showConnectHintDialog();
@@ -100,7 +97,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected void onPause() {
         super.onPause();
-        Logger.i(TAG, "onPause()");
         isOnPause = true;
         m_wklk.release();//解除保持唤醒
         //BleManager.getInstance().setonRunDataListener(null);
@@ -114,13 +110,11 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected void onStop() {
         super.onStop();
-        Logger.i(TAG, "onStop()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Logger.i(TAG, "onDestroy()");
 
         if (m_wklk.isHeld()) {
             m_wklk.release(); //解除保持唤醒
@@ -245,17 +239,17 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Logger.d(TAG, "onKeyDown");
+        Timber.d(TAG + " - onKeyDown");
         if (workoutsFragment.onKeyDown(keyCode, event)) {
             exitTime = 0;
             return false;
         }
-        Logger.d(TAG, "onKeyDown1");
+        Timber.d(TAG + " - onKeyDown1");
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             exit();
             return false;
         }
-        Logger.d(TAG, "onKeyDown2");
+        Timber.d(TAG + " - onKeyDown2");
         return super.onKeyDown(keyCode, event);
     }
 
@@ -266,7 +260,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     }
 
     public void exit() {
-        Logger.i(TAG, "exit()");
+        Timber.i(TAG + " - exit()");
 
         if ((System.currentTimeMillis() - exitTime) > 2000) {
             Toast.makeText(getApplicationContext(), getString(R.string.home_exit), Toast.LENGTH_SHORT).show();

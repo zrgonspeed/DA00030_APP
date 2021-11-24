@@ -24,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * @Description
@@ -50,17 +51,17 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
-        Logger.i(TAG, "initView()");
+        Timber.i(TAG + " - initView()");
         ButterKnife.bind(this, view);
         onePageHomeFragment = new OnePageDataFragment();
         twoPageHomeFragment = new TwoPageDataFragment();
         threePageHomeFragment = new ThreePageDataFragment();
 
 
-        Logger.e(TAG, "HomeFragment == " + this);
-        Logger.e(TAG, "onePageHomeFragment == " + onePageHomeFragment);
-        Logger.e(TAG, "twoPageHomeFragment == " + twoPageHomeFragment);
-        Logger.e(TAG, "threePageHomeFragment == " + threePageHomeFragment);
+        Timber.e(TAG + " - HomeFragment == " + this);
+        Timber.e(TAG + " - onePageHomeFragment == " + onePageHomeFragment);
+        Timber.e(TAG + " - twoPageHomeFragment == " + twoPageHomeFragment);
+        Timber.e(TAG + " - threePageHomeFragment == " + threePageHomeFragment);
 
 
         List<Fragment> fragmentList = new ArrayList<>();
@@ -108,10 +109,10 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void onRunData(RowerDataBean1 rowerDataBean1) {
-        Logger.e(TAG, "onRunData() --------------------------------------------------------------");
-        Logger.e(TAG, "onePageHomeFragment == " + onePageHomeFragment);
-        Logger.e(TAG, "twoPageHomeFragment == " + twoPageHomeFragment);
-        Logger.e(TAG, "threePageHomeFragment == " + threePageHomeFragment);
+        Timber.e(TAG + " - onRunData() --------------------------------------------------------------");
+        Timber.e(TAG + " - onePageHomeFragment == " + onePageHomeFragment);
+        Timber.e(TAG + " - twoPageHomeFragment == " + twoPageHomeFragment);
+        Timber.e(TAG + " - threePageHomeFragment == " + threePageHomeFragment);
         if (onePageHomeFragment == null || twoPageHomeFragment == null || threePageHomeFragment == null) {
             return;
         }

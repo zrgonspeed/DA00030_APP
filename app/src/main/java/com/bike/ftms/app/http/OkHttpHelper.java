@@ -20,6 +20,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import timber.log.Timber;
 
 /**
  * @Description 这里用一句话描述
@@ -97,13 +98,13 @@ public class OkHttpHelper {
     }
 
     private static Request getRequestForPost(String url, String json, Object tag) {
-        Logger.d(TAG, "getRequestForPost---> " + url);
+        Timber.d(TAG + " - getRequestForPost---> " + url);
         if (url.isEmpty()) {
             return null;
         }
 
         try {
-            Logger.d(TAG, "post json >>> " + json);
+            Timber.d(TAG + " - post json >>> " + json);
             RequestBody body = RequestBody.Companion.create(json, MEDIA_TYPE_JSON_3);
 
             Request.Builder builder = new Request.Builder();
@@ -255,7 +256,7 @@ public class OkHttpHelper {
     }
 
     private static Request getRequestForGet(String url, Object tag) {
-        Logger.d(TAG, "getRequestForPost---> " + url);
+        Timber.d(TAG + " - getRequestForPost---> " + url);
         if (url.isEmpty()) {
             Logger.e(TAG,"OkHttpHelper-----getRequestForGet---> url 地址为空！！！");
             return null;

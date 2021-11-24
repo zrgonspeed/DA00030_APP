@@ -28,6 +28,15 @@
             android:textColor="@color/color_black"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="VERSION"
+            android:textColor="@color/color_black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <TextView
@@ -40,19 +49,33 @@
         android:textColor="@color/color_white"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/rl" />
 
     <TextView
-        android:id="@+id/tv_version"
+        android:id="@+id/tv_version_apk_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="APK"
+        android:textColor="@color/color_707070"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <TextView
+        android:id="@+id/tv_version_apk_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:text="1.0"
         android:textColor="@color/color_707070"
         android:textSize="17sp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_version_apk_name"
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
     <TextView
@@ -69,10 +92,61 @@
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
     <View
+        android:id="@+id/v_v1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:background="@color/color_B5B3B3"
-        app:layout_constraintTop_toBottomOf="@id/tv_version" />
+        app:layout_constraintTop_toBottomOf="@id/tv_version_apk_name" />
+
+
+    <!--第二栏-->
+    <TextView
+        android:id="@+id/tv_version_dzb_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="电子表"
+        android:textColor="@color/color_707070"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/v_v1" />
+
+    <TextView
+        android:id="@+id/tv_version_dzb_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="1.0"
+        android:textColor="@color/color_707070"
+        android:textSize="17sp"
+        app:layout_constraintStart_toEndOf="@id/tv_version_dzb_name"
+        app:layout_constraintTop_toBottomOf="@id/v_v1" />
+
+    <TextView
+        android:id="@+id/btn_update_dzb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:drawableRight="@drawable/btn_update"
+        android:gravity="center"
+        android:text="@string/version_new_version"
+        android:textSize="17sp"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/v_v1" />
+
+    <View
+        android:id="@+id/v_v2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/color_B5B3B3"
+        app:layout_constraintTop_toBottomOf="@id/tv_version_dzb_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

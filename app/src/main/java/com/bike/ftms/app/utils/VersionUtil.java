@@ -134,30 +134,6 @@ public class VersionUtil {
     }
 
     /**
-     * @return 获取SDK版本号 旧方式
-     */
-    public static String getSdkVersion_1() {
-        String versionOS = android.os.Build.VERSION.RELEASE;
-        return versionOS;
-    }
-
-    /**
-     * @return 获取SDK版本号 新方式
-     */
-    public static String getSdkVersion_2() {
-        String value = "";
-        try {
-            Class<?> classType = Class.forName("android.os.SystemProperties");
-            Method getMethod = classType.getDeclaredMethod("get", new Class<?>[]{String.class});
-            value = (String) getMethod.invoke(classType, new Object[]{"ro.anplus.version"});
-            Log.i("===", "---" + value);
-        } catch (Exception e) {
-            Log.e("===", "---" + e.getMessage(), e);
-        }
-        return value;
-    }
-
-    /**
      * @return 获取当前系统的版本号
      */
     public static String getFireWareVersion() {

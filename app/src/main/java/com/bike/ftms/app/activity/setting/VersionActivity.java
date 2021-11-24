@@ -13,8 +13,8 @@ import butterknife.OnClick;
 
 public class VersionActivity extends BaseActivity {
 
-    @BindView(R.id.tv_version)
-    TextView tvVersion;
+    @BindView(R.id.tv_version_apk_value)
+    TextView tv_version_apk_value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class VersionActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        tvVersion.setText(VersionUtil.getAppVersionName(this));
+        tv_version_apk_value.setText(VersionUtil.getAppVersionName(this));
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
 /**
  * @Description
@@ -26,7 +27,7 @@ public class OnePageDataFragment extends BasePageDataFragment {
     TextView tvAveFiveHundred;
 
     public OnePageDataFragment() {
-        Logger.i(TAG, "构造方法 OnePageDataFragment()");
+        Timber.i(TAG + " - 构造方法 OnePageDataFragment()");
     }
 
     @Override

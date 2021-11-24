@@ -3,9 +3,12 @@ package com.bike.ftms.app.base;
 import android.app.Application;
 import android.content.Context;
 
+import com.bike.ftms.app.utils.DebugLoggerTree;
+
 import org.litepal.LitePalApplication;
 
 import tech.gujin.toast.ToastUtil;
+import timber.log.Timber;
 
 /**
  * @Description
@@ -19,7 +22,7 @@ public class MyApplication extends LitePalApplication {
     public void onCreate() {
         super.onCreate();
         mContext = MyApplication.this;
-
+        Timber.plant(new DebugLoggerTree());
         ToastUtil.initialize(mContext);
     }
 

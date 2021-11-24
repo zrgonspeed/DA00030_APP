@@ -5,53 +5,160 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <!--
-        <com.hjq.bar.TitleBar
-            android:layout_width="match_parent"
+
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_F5F5F5"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:src="@drawable/btn_back" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:title="@string/personal_data_title" />-->
+            android:layout_centerInParent="true"
+            android:text="个人信息"
+            android:textColor="@color/color_black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
-    <com.bike.ftms.app.widget.SettingBar
-        android:id="@+id/fl_person_data_avatar"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/white_selector"
-        app:bar_leftText="@string/personal_data_head">
+        android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_person_data_avatar"
-            android:layout_width="@dimen/dp_110"
-            android:layout_height="@dimen/dp_110"
-            android:layout_gravity="end|center_vertical"
-            android:layout_margin="@dimen/dp_20"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/avatar_placeholder_ic" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-    </com.bike.ftms.app.widget.SettingBar>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <!--
+                    <com.hjq.bar.TitleBar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/personal_data_title" />-->
 
-    <com.bike.ftms.app.widget.SettingBar
-        android:id="@+id/sb_person_data_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
-        android:background="@color/white"
-        app:bar_leftText="@string/personal_data_id"
-        tools:bar_rightText="880634" />
+                <!--            <ImageView
+                                android:id="@+id/iv_back"
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:src="@drawable/btn_back" />-->
 
-    <com.bike.ftms.app.widget.SettingBar
-        android:id="@+id/sb_person_data_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:bar_leftText="@string/personal_data_name"
-        app:bar_rightTextHint="@string/personal_data_name_hint"
-        tools:bar_rightText="Android 轮子哥" />
+                <com.bike.ftms.app.widget.SettingBar
+                    android:id="@+id/fl_person_data_avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bar_leftTextHint="">
 
-    <com.bike.ftms.app.widget.SettingBar
-        android:id="@+id/sb_person_data_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:bar_leftText="@string/personal_data_address"
-        app:bar_rightDrawable="@drawable/arrows_right_ic"
-        app:bar_rightTextHint="@string/personal_data_address_hint" />
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_person_data_avatar"
+                        android:layout_width="@dimen/dp_150"
+                        android:layout_height="@dimen/dp_150"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/dp_20"
+                        android:background="@drawable/logo"
+                        android:scaleType="centerCrop"
+                        tools:src="@drawable/avatar_placeholder_ic" />
+                </com.bike.ftms.app.widget.SettingBar>
 
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_60" />
+
+                <com.bike.ftms.app.widget.SettingBar
+                    android:id="@+id/sb_person_data_signout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="退出登录"
+                        android:textColor="@color/black" />
+                </com.bike.ftms.app.widget.SettingBar>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.bike.ftms.app.widget.SettingBar
+                    android:id="@+id/sb_person_data_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    app:bar_leftText="姓名"
+                    app:bar_rightText="张日光"
+                    tools:bar_rightText="880634" />
+
+                <com.bike.ftms.app.widget.SettingBar
+                    android:id="@+id/sb_person_data_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bar_leftText="用户名"
+                    app:bar_rightText="鲁班8号"
+                    app:bar_rightTextHint="@string/personal_data_name_hint"
+                    tools:bar_rightText="Android 轮子哥" />
+
+                <com.bike.ftms.app.widget.SettingBar
+                    android:id="@+id/sb_person_data_sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bar_leftText="@string/personal_data_sex"
+                    app:bar_rightDrawable="@drawable/arrows_right_ic"
+                    app:bar_rightText="男"
+                    app:bar_rightTextHint="@string/personal_data_address_hint" />
+
+                <com.bike.ftms.app.widget.SettingBar
+                    android:id="@+id/sb_person_data_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bar_leftText="@string/personal_data_address"
+                    app:bar_rightDrawable="@drawable/arrows_right_ic"
+                    app:bar_rightText="中国"
+                    app:bar_rightTextHint="@string/personal_data_address_hint" />
+
+                <com.bike.ftms.app.widget.SettingBar
+                    android:id="@+id/sb_person_data_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bar_leftText="@string/personal_data_email"
+                    app:bar_rightDrawable="@drawable/arrows_right_ic"
+                    app:bar_rightText="631686921@qq.com"
+                    app:bar_rightTextHint="@string/personal_data_address_hint" />
+                <!--
+                    <com.hjq.bar.TitleBar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/personal_data_title" />-->
+
+                <com.bike.ftms.app.widget.SettingBar
+                    android:id="@+id/sb_person_data_birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bar_leftText="@string/personal_data_birthday"
+                    app:bar_rightDrawable="@drawable/arrows_right_ic"
+                    app:bar_rightText="1997-04-20"
+                    app:bar_rightTextHint="@string/personal_data_address_hint" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

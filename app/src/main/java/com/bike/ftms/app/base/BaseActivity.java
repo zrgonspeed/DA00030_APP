@@ -6,10 +6,14 @@ import android.view.WindowManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bike.ftms.app.bean.RowerDataBean1;
+import com.bike.ftms.app.manager.ble.BleManager;
+import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.SystemUiUtils;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * @Description
@@ -22,6 +26,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.i("%s - onCreate", this.getClass().getSimpleName());
+
         SystemUiUtils.reMoveTitle(this);
         setContentView(getLayoutId());
         unbinder = ButterKnife.bind(this);
@@ -47,9 +53,35 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected abstract void initView();
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Timber.i("%s - onStart", this.getClass().getSimpleName());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Timber.i("%s - onResume", this.getClass().getSimpleName());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Timber.i("%s - onPause", this.getClass().getSimpleName());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Timber.i("%s - onStop", this.getClass().getSimpleName());
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Timber.i("%s - onDestroy", this.getClass().getSimpleName());
         unbinder.unbind();
     }
 }

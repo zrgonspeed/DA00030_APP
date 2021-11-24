@@ -40,7 +40,7 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull BleViewHolder holder, int position) {
         holder.tvState.setOnClickListener(v -> {
-//            Logger.e(TAG, "list.get(position).getConnectState()  == " + list.get(position).getConnectState());
+//            Timber.e(TAG + " - list.get(position).getConnectState()  == " + list.get(position).getConnectState());
             if (list.get(position).getConnectState() == 2) {
                 return;
             }
