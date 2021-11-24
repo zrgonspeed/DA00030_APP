@@ -32,7 +32,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
 import tech.gujin.toast.ToastUtil;
-import timber.log.Timber;
+
 
 public class RegisterActivity extends BaseActivity {
 
@@ -128,7 +128,7 @@ public class RegisterActivity extends BaseActivity {
 //            validator.resetValidators(getApplicationContext());
 //            formEditText.addValidator(new EmptyValidator("ss"));
             formEditText.setOnFocusChangeListener((View v, boolean focus) -> {
-//                Timber.e(TAG,"focus: " + focus);
+//                Logger.e(TAG,"focus: " + focus);
                 if (!focus) {
                     formEditText.testValidity();
                 }
@@ -215,13 +215,13 @@ public class RegisterActivity extends BaseActivity {
         String pass2 = edt_confirm_password.getText().toString().trim();
         if (!pass.equals("") && !pass2.equals("")) {
             if (!pass.equals(pass2)) {
-                Timber.e("密码不一致");
+                Logger.e("密码不一致");
                 ToastUtil.show("密码不一致", ToastUtil.Mode.REPLACEABLE);
                 return false;
             }
         }
 
-        Timber.e("" + "allValid  == " + allValid);
+        Logger.e("" + "allValid  == " + allValid);
         return allValid;
     }
 
@@ -291,8 +291,8 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
-                Timber.e("请求失败！");
-                Timber.e(e.toString());
+                Logger.e("请求失败！");
+                Logger.e(e.toString());
                 ToastUtil.show("连接超时", true, ToastUtil.Mode.REPLACEABLE);
                 tv_send_code.setText("发送失败");
             }
@@ -301,31 +301,31 @@ public class RegisterActivity extends BaseActivity {
             public void onSuccess(Call call, int httpCode, String response) {
                 // 响应成功，响应码不一定是200
                 // String resStr = response.body().string();
-                Timber.e("请求成功 ->> response.body().string() == " + response);
+                Logger.e("请求成功 ->> response.body().string() == " + response);
                 // {"code":"EmailError","message":"邮箱格式不正确"}
 
-                Timber.e("response.toString() == " + response.toString());
+                Logger.e("response.toString() == " + response.toString());
                 // Response{protocol=http/1.1, code=422, message=, url=http://192.168.50.180:8080/restapi/verify/email}
 
                 if (httpCode == 204) {
                     // 正确响应，无响应体
                     // 显示注册成功界面
-                    Timber.e("发送验证码成功");
+                    Logger.e("发送验证码成功");
                     tv_send_code.setText("已发送");
 //                    cl_register_success.setVisibility(View.VISIBLE);
                 } else if (httpCode == 422) {
                     // 错误响应，响应体包含错误信息
                     // 显示注册失败界面
-                    Timber.e("发送验证码失败");
+                    Logger.e("发送验证码失败");
                     ToastUtil.show("邮箱格式不对!");
                     tv_send_code.setText("发送失败");
 
                     // 封装响应体为bean
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
-                    Timber.e("resultBean == " + resultBean);
+                    Logger.e("resultBean == " + resultBean);
                 } else {
                     // 可能是5xx系列，服务器错误
-                    Timber.e("发送验证码失败---------------------");
+                    Logger.e("发送验证码失败---------------------");
                     sv_form.setVisibility(View.GONE);
                 }
 
@@ -354,8 +354,8 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
-                Timber.e("请求失败！");
-                Timber.e(e.toString());
+                Logger.e("请求失败！");
+                Logger.e(e.toString());
 
                 // 网络没打开
                 // 请求超时
@@ -365,7 +365,7 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void onSuccess(Call call, int httpCode, String response) {
                 // 响应成功，响应码不一定是200
-                Timber.e("请求成功 ->> response.body().string() == " + response);
+                Logger.e("请求成功 ->> response.body().string() == " + response);
                 // {"code":"EmailError","message":"邮箱格式不正确"}
 
                 // Response{protocol=http/1.1, code=422, message=, url=http://192.168.50.180:8080/restapi/verify/email}
@@ -373,7 +373,7 @@ public class RegisterActivity extends BaseActivity {
                 if (httpCode == 204) {
                     // 正确响应，无响应体
                     // 显示注册成功界面
-                    Timber.e("注册成功");
+                    Logger.e("注册成功");
                     cl_register_success.setVisibility(View.VISIBLE);
 
                     // 5 秒后返回登录页面
@@ -395,13 +395,13 @@ public class RegisterActivity extends BaseActivity {
 
                     // 封装响应体为bean
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
-                    Timber.e("注册失败: " + resultBean);
+                    Logger.e("注册失败: " + resultBean);
 
                     tv_register_fail_cause.setText(resultBean.getMessage());
                 } else {
-                    Timber.e("httpCode == " + httpCode + " 其它处理");
+                    Logger.e("httpCode == " + httpCode + " 其它处理");
                     // 可能是5xx系列，服务器错误
-                    Timber.e("注册失败---");
+                    Logger.e("注册失败---");
                 }
                 sv_form.setVisibility(View.GONE);
             }

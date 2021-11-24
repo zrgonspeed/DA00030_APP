@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import timber.log.Timber;
+
 
 public class VersionManager {
 
@@ -30,7 +30,7 @@ public class VersionManager {
                 return "";
             }
         } catch (Exception e) {
-            Timber.e("VersionInfo" + " - " + "Exception: " + e);
+            Logger.e("VersionInfo" + " - " + "Exception: " + e);
         }
         return versionName;
     }

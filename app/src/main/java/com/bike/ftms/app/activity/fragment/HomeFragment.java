@@ -24,7 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
+
 
 /**
  * @Description
@@ -51,17 +51,17 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
-        Timber.i("initView()");
+        Logger.i("initView()");
         ButterKnife.bind(this, view);
         onePageHomeFragment = new OnePageDataFragment();
         twoPageHomeFragment = new TwoPageDataFragment();
         threePageHomeFragment = new ThreePageDataFragment();
 
 
-        Timber.e("HomeFragment == " + this);
-        Timber.e("onePageHomeFragment == " + onePageHomeFragment);
-        Timber.e("twoPageHomeFragment == " + twoPageHomeFragment);
-        Timber.e("threePageHomeFragment == " + threePageHomeFragment);
+        Logger.e("HomeFragment == " + this);
+        Logger.e("onePageHomeFragment == " + onePageHomeFragment);
+        Logger.e("twoPageHomeFragment == " + twoPageHomeFragment);
+        Logger.e("threePageHomeFragment == " + threePageHomeFragment);
 
 
         List<Fragment> fragmentList = new ArrayList<>();
@@ -109,10 +109,10 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void onRunData(RowerDataBean1 rowerDataBean1) {
-        Timber.e("onRunData() --------------------------------------------------------------");
-        Timber.e("onePageHomeFragment == " + onePageHomeFragment);
-        Timber.e("twoPageHomeFragment == " + twoPageHomeFragment);
-        Timber.e("threePageHomeFragment == " + threePageHomeFragment);
+        Logger.e("onRunData() --------------------------------------------------------------");
+        Logger.e("onePageHomeFragment == " + onePageHomeFragment);
+        Logger.e("twoPageHomeFragment == " + twoPageHomeFragment);
+        Logger.e("threePageHomeFragment == " + threePageHomeFragment);
         if (onePageHomeFragment == null || twoPageHomeFragment == null || threePageHomeFragment == null) {
             return;
         }

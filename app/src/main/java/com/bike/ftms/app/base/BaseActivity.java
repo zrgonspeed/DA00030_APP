@@ -13,7 +13,7 @@ import com.bike.ftms.app.utils.SystemUiUtils;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
+
 
 /**
  * @Description
@@ -26,7 +26,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.i("%s - onCreate", this.getClass().getSimpleName());
+//        Timber.i("%s - onCreate", this.getClass().getSimpleName());
+        Logger.i("onCreate()");
 
         SystemUiUtils.reMoveTitle(this);
         setContentView(getLayoutId());
@@ -57,31 +58,37 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Timber.i("%s - onStart", this.getClass().getSimpleName());
+//        Timber.i("%s - onStart", this.getClass().getSimpleName());
+        Logger.i("onStart()");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Timber.i("%s - onResume", this.getClass().getSimpleName());
+//        Timber.i("%s - onResume", this.getClass().getSimpleName());
+        Logger.i("onResume()");
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Timber.i("%s - onPause", this.getClass().getSimpleName());
+        Logger.i("onPause()");
+//        Timber.i("%s - onPause", this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Timber.i("%s - onStop", this.getClass().getSimpleName());
+//        Timber.i("%s - onStop", this.getClass().getSimpleName());
+        Logger.i("onStop()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Timber.i("%s - onDestroy", this.getClass().getSimpleName());
+//        Timber.i("%s - onDestroy", this.getClass().getSimpleName());
+        Logger.i("onDestroy()");
         unbinder.unbind();
     }
 }

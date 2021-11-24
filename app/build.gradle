@@ -63,7 +63,7 @@ dependencies {
     implementation 'com.andreabaccega:android-form-edittext:1.3.5'
 
     // 日志打印框架：https://github.com/JakeWharton/timber
-    implementation 'com.jakewharton.timber:timber:4.7.1'
+//    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // 日志调试框架：https://github.com/getActivity/Logcat
     // 可在手机上显示logcat

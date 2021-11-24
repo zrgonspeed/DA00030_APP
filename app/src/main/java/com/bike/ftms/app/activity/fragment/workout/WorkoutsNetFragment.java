@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Call;
 import tech.gujin.toast.ToastUtil;
-import timber.log.Timber;
+
 
 /**
  * @Description
@@ -128,8 +128,8 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
-                Timber.e("请求失败！");
-                Timber.e(TAG + "-" + e.toString());
+                Logger.e("请求失败！");
+                Logger.e(e.toString());
 
                 // 网络没打开
                 // 请求超时
@@ -139,7 +139,7 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
             @Override
             public void onSuccess(Call call, int httpCode, String response) {
                 // 响应成功，响应码不一定是200
-                Timber.e("请求成功 ->> response.body().string() == " + response);
+                Logger.e("请求成功 ->> response.body().string() == " + response);
 
                 if (httpCode == 200) {
                     RunDataResultListDTO runDataResultListDTO = GsonUtil.GsonToBean(response, RunDataResultListDTO.class);
@@ -272,7 +272,7 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
         ArrayList<RunDataInfo> list = new ArrayList<>();
 
         for (RunDataInfo oo : list) {
-            Timber.e("oo == " + oo);
+            Logger.e("oo == " + oo);
         }
 
         workoutsAdapter2 = new WorkoutsNetAdapter2(list);

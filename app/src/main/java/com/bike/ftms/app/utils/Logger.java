@@ -21,25 +21,31 @@ public class Logger {
 
     public static void i(String msg) {
         if (isDebug) {
-            Log.i(TAG, msg);
+            Log.i(getTAG(), msg);
         }
     }
 
     public static void d(String msg) {
         if (isDebug) {
-            Log.d(TAG, msg);
+            Log.d(getTAG(), msg);
         }
     }
 
     public static void e(String msg) {
         if (isDebug) {
-            Log.e(TAG, msg);
+            Log.e(getTAG(), msg);
         }
     }
 
     public static void v(String msg) {
         if (isDebug) {
-            Log.v(TAG, msg);
+            Log.v(getTAG(), msg);
+        }
+    }
+
+    public static void w(String msg) {
+        if (isDebug) {
+            Log.w(getTAG(), msg);
         }
     }
 
@@ -72,5 +78,26 @@ public class Logger {
         if (isDebug) {
             Log.w(tag, msg);
         }
+    }
+
+    private static String getTAG() {
+        StackTraceElement[] sts = Thread.currentThread().getStackTrace();
+        if (sts != null) {
+            for (StackTraceElement st : sts) {
+                if (st.isNativeMethod()) {
+                    continue;
+                }
+                if (st.getClassName().equals(Thread.class.getName())) {
+                    continue;
+                }
+                if (st.getClassName().equals(Logger.class.getName())) {
+                    continue;
+                }
+                String className = st.getClassName();
+                int i = className.lastIndexOf(".");
+                return "(" + st.getFileName() + ":" + st.getLineNumber() + ")";
+            }
+        }
+        return null;
     }
 }

@@ -9,7 +9,7 @@ import com.bike.ftms.app.utils.Logger;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import timber.log.Timber;
+
 
 public class PersonalDataActivity extends BaseActivity {
     private static final String TAG = PersonalDataActivity.class.getSimpleName();
@@ -24,12 +24,12 @@ public class PersonalDataActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        Timber.i("initData()");
+        Logger.i("initData()");
     }
 
     @Override
     protected void initView() {
-        Timber.i("initView()");
+        Logger.i("initView()");
     }
 
     @OnClick({R.id.iv_back, R.id.sb_person_data_signout})
@@ -39,7 +39,7 @@ public class PersonalDataActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.sb_person_data_signout:
-                Timber.e("点击了 退出登录 按钮");
+                Logger.e("点击了 退出登录 按钮");
                 finish();
                 break;
             default:

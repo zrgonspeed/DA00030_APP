@@ -45,8 +45,8 @@ public class MyViewPager extends ViewPager {
             case MotionEvent.ACTION_MOVE:
                 dealtX += Math.abs(x - lastX);
                 dealtY += Math.abs(y - lastY);
-               *//* Timber.d("dealtX:=" + dealtX);
-                Timber.d("dealtY:=" + dealtY);*//*
+               *//* Logger.e("dealtX:=" + dealtX);
+                Logger.e("dealtY:=" + dealtY);*//*
                 lastX = x;
                 lastY = y;
                 // 拦截的判断

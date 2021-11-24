@@ -10,7 +10,7 @@ import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.utils.Logger;
 
 import butterknife.BindView;
-import timber.log.Timber;
+
 
 /**
  * @Description
@@ -26,7 +26,7 @@ public class TwoPageDataFragment extends BasePageDataFragment {
     TextView tvAveWatts;
 
     public TwoPageDataFragment() {
-        Timber.i("构造方法 TwoPageDataFragment()");
+        Logger.i("构造方法 TwoPageDataFragment()");
     }
 
     @Override

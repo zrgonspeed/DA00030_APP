@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import timber.log.Timber;
+
 
 /**
  * @Description 这里用一句话描述
@@ -109,7 +109,7 @@ public class BluetoothHelper {
         if (mBtScanner == null || !mBtAdapter.isEnabled()) {
             mBtAdapter = mBluetoothManager.getAdapter();
             if (mBtAdapter == null) {
-                Timber.d("====> mBtAdapter == null ！！！");
+                Logger.d("====> mBtAdapter == null ！！！");
                 return;
             }
 
@@ -133,7 +133,7 @@ public class BluetoothHelper {
             } else {
                 mBtScanner = mBtAdapter.getBluetoothLeScanner();
                 if (mBtScanner == null) {
-                    Timber.d("====> mBtScanner == null ！！！");
+                    Logger.d("====> mBtScanner == null ！！！");
                     return;
                 }
             }
@@ -147,7 +147,7 @@ public class BluetoothHelper {
                     super.onScanResult(callbackType, result);
                     if (lastResultTime == 0) {
                         lastResultTime = result.getTimestampNanos();
-                        Timber.d("recode begin time = " + lastResultTime);
+                        Logger.d("recode begin time = " + lastResultTime);
                     }
                     if (Math.abs(result.getRssi()) > rssi) {
                         return;
@@ -162,13 +162,13 @@ public class BluetoothHelper {
                 @Override
                 public void onBatchScanResults(List<ScanResult> results) {
                     super.onBatchScanResults(results);
-                    Timber.d(">>>>>>> onBatchScanResults >>>>>>" + results.size());
+                    Logger.d(">>>>>>> onBatchScanResults >>>>>>" + results.size());
                 }
 
                 @Override
                 public void onScanFailed(int errorCode) {
                     super.onScanFailed(errorCode);
-                    Timber.d(">>>>>>> onScanFailed >>>>>>" + errorCode);
+                    Logger.d(">>>>>>> onScanFailed >>>>>>" + errorCode);
                 }
             };
         }
@@ -221,7 +221,7 @@ public class BluetoothHelper {
                 @Override
                 public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
                     super.onConnectionStateChange(gatt, status, newState);
-                    Timber.d("============= onConnectionStateChange newState ================= " + newState);
+                    Logger.d("============= onConnectionStateChange newState ================= " + newState);
                     if (newState == BluetoothProfile.STATE_CONNECTED) {
                         isConnectBt = true;
                         //连接上后，紧接着就是要寻找里面 Service
@@ -247,21 +247,21 @@ public class BluetoothHelper {
                 @Override
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
-                    Timber.d("============= onServicesDiscovered status ================= " + status);
+                    Logger.d("============= onServicesDiscovered status ================= " + status);
                     if (status != BluetoothGatt.GATT_SUCCESS) {
-                        Timber.d("get GATT Service fail！！！");
+                        Logger.d("get GATT Service fail！！！");
                         return;
                     }
                     BluetoothGattService localGattService = mBtGatt.getService(UUID.fromString("0000180d-0000-1000-8000-00805f9b34fb"));
                     if (localGattService == null) {
-                        Timber.d("get GATT Service {0000180d-0000-1000-8000-00805f9b34fb} fail！！！");
+                        Logger.d("get GATT Service {0000180d-0000-1000-8000-00805f9b34fb} fail！！！");
                         return;
                     }
                     notifyCharacteristic = localGattService.getCharacteristic(UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb"));
                     writeCharacteristic = localGattService.getCharacteristic(UUID.fromString("00002a38-0000-1000-8000-00805f9b34fb"));
 
                     if (notifyCharacteristic == null) {
-                        Timber.d("get GATT Service 【notifyCharacteristic】fail！！！");
+                        Logger.d("get GATT Service 【notifyCharacteristic】fail！！！");
                         return;
                     }
                     boolean result = mBtGatt.setCharacteristicNotification(notifyCharacteristic, true);
@@ -300,7 +300,7 @@ public class BluetoothHelper {
                 @Override
                 public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
                     super.onCharacteristicChanged(gatt, characteristic);
-                    Timber.d("=====================  onCharacteristicChanged  ====================");
+                    Logger.d("=====================  onCharacteristicChanged  ====================");
 
                     if (UUID.fromString(UUIDManager.UUID_HEART_RATE_MEASUREMENT).equals(characteristic.getUuid())) {
                         int flag = characteristic.getProperties();
@@ -381,7 +381,7 @@ public class BluetoothHelper {
                 case MSG_WHAT_SCAN_RESULT:
                     if (msg.arg1 == -1) {
                         //停止扫描失败 返回 强制中断扫描
-                        Timber.d(mHelper.TAG + " - " + "start scan fail !!!");
+                        Logger.d(mHelper.TAG + " - " + "start scan fail !!!");
                         mHelper.stopScan();
                         if (mHelper.mBtCallBack != null) {
                             mHelper.mBtCallBack.onScanResult(-1, null);
@@ -400,7 +400,7 @@ public class BluetoothHelper {
                         }
                         mHelper.mBtCallBack.onScanResult(msg.arg1, mHelper.scanResults);
                         mHelper.scanResults = new ArrayList<>();
-                        Timber.d(mHelper.TAG + " - " + "scan time out !!!");
+                        Logger.d(mHelper.TAG + " - " + "scan time out !!!");
                     }
 
                     if (result.getDevice().getType() == BluetoothDevice.DEVICE_TYPE_UNKNOWN) {
@@ -441,7 +441,7 @@ public class BluetoothHelper {
                 case MSG_WHAT_BT_OPEN:
                     mHelper.mBtScanner = mHelper.mBtAdapter.getBluetoothLeScanner();
                     if (mHelper.mBtScanner == null) {
-                        Timber.d(mHelper.TAG + " - " + "====> get fail 【BluetoothLeScanner】 ！！！");
+                        Logger.d(mHelper.TAG + " - " + "====> get fail 【BluetoothLeScanner】 ！！！");
                         return;
                     }
 

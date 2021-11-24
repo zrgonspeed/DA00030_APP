@@ -14,7 +14,7 @@ import com.bike.ftms.app.utils.Logger;
 
 import org.jetbrains.annotations.NotNull;
 
-import timber.log.Timber;
+
 
 /**
  * @Description 基类fragment
@@ -38,7 +38,8 @@ public abstract class BaseFragment extends Fragment {
         super.onAttach(context);
         TAG = getTAG();
         this.mActivity = (Activity) context;
-        Timber.d("%s - 1 onAttach()", this.getClass().getSimpleName());
+//        Logger.e("%s - 1 onAttach()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "1 onAttach()");
     }
 
     protected abstract String getTAG();
@@ -52,18 +53,17 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Timber.d("2 onCreate()");
-        Timber.d("%s - 2 onCreate()", this.getClass().getSimpleName());
-
+//        Logger.e("2 onCreate()");
+//        Logger.e("%s - 2 onCreate()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "2 onCreate()");
     }
 
 
     @Nullable
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Timber.d("%s - 3 onCreateView()", this.getClass().getSimpleName());
-
-//        Timber.e("ViewGroup = " + container);
+//        Logger.e("%s - 3 onCreateView()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "3 onCreateView()");
 
         View view = LayoutInflater.from(mActivity).inflate(getLayoutId(), container, false);
         initView(view, container, savedInstanceState);
@@ -80,8 +80,10 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
-//        Timber.d("4 onActivityCreated()");
-        Timber.d("%s - 4 onActivityCreated()", this.getClass().getSimpleName());
+//        Logger.e("4 onActivityCreated()");
+//        Logger.e("%s - 4 onActivityCreated()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "4 onActivityCreated()");
+
     }
 
     /**
@@ -92,9 +94,8 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-//        Timber.d("5 onStart()");
-        Timber.d("%s - 5 onStart()", this.getClass().getSimpleName());
-
+//        Logger.e("%s - 5 onStart()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "5 onStart()");
     }
 
     /**
@@ -105,11 +106,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        Timber.d("6 onResume()");
-        Timber.d("%s - 6 onResume()", this.getClass().getSimpleName());
-
-
-        Timber.d("Fragment 处于活动状态");
+//        Logger.e("%s - 6 onResume()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "6 onResume()");
+        Logger.d(getTAG() + " - " + "Fragment 处于活动状态");
     }
 
     /**
@@ -118,9 +117,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-//        Timber.d("7 onPause()");
-        Timber.d("%s - 7 onPause()", this.getClass().getSimpleName());
-
+//        Logger.e("7 onPause()");
+//        Logger.e("%s - 7 onPause()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "7 onPause()");
     }
 
     /**
@@ -130,8 +129,8 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-//        Timber.d("8 onStop()");
-        Timber.d("%s - 8 onStop()", this.getClass().getSimpleName());
+//        Logger.e("%s - 8 onStop()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "8 onStop()");
 
     }
 
@@ -144,9 +143,11 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        Timber.d("9 onDestroyView()");
-        Timber.d("%s - 9 onDestroyView()", this.getClass().getSimpleName());
+//        Logger.e("9 onDestroyView()");
+//        Logger.e("%s - 9 onDestroyView()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "9 onDestroyView()");
     }
+
 
     /**
      * 当这个fragment不再使用时调用。需要注意的是，它即使经过了onDestroy()阶段，但仍然能从Activity中找到，因为它还没有Detach。
@@ -154,8 +155,10 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        Timber.d("10 onDestroy()");
-        Timber.d("%s - 10 onDestroy()", this.getClass().getSimpleName());
+//        Logger.e("10 onDestroy()");
+//        Logger.e("%s - 10 onDestroy()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "10 onDestroy()");
+
     }
 
     /**
@@ -165,14 +168,16 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-//        Timber.e("11 onDetach()");
-        Timber.d("%s - 11 onDetach()", this.getClass().getSimpleName());
+//        Logger.e("11 onDetach()");
+//        Logger.e("%s - 11 onDetach()", this.getClass().getSimpleName());
+        Logger.d(getTAG() + " - " + "11 onDetach()");
+
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Timber.d(getTAG() + " - setUserVisibleHint() " + isVisibleToUser);
+        Logger.d(getTAG() + " - setUserVisibleHint() " + isVisibleToUser);
     }
 
     /**

@@ -36,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import tech.gujin.toast.ToastUtil;
-import timber.log.Timber;
+
 
 /**
  * @Description
@@ -179,7 +179,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         LitePal.order("date desc").findAsync(RowerDataBean1.class, true).listen(new FindMultiCallback() {
             @Override
             public <T> void onFinish(List<T> list) {
-                Timber.i("数据库查找成功");
+                Logger.i("数据库查找成功");
                 rowerDataBean1List.clear();
                 rowerDataBean1List.addAll((Collection<? extends RowerDataBean1>) list);
                 workoutsLocalAdapter.notifyDataSetChanged();
@@ -225,10 +225,10 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         }
 
         for (RowerDataBean2 oo : list) {
-            Timber.e("oo == " + oo);
+            Logger.e("oo == " + oo);
         }
 //        ToastUtil.show("list.size == " + list.size());
-        Timber.d("list.size == " + list.size());
+        Logger.d("list.size == " + list.size());
         if (list.size() == 0) {
             RowerDataBean2 rowerDataBean2 = new RowerDataBean2(bean);
             list.add(rowerDataBean2);
@@ -462,7 +462,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         }
 
         for (RowerDataBean2 oo : list) {
-            Timber.e("oo == " + oo);
+            Logger.e("oo == " + oo);
         }
 
         workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(list);
