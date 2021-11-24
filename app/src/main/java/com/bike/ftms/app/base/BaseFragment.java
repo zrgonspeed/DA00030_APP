@@ -38,8 +38,7 @@ public abstract class BaseFragment extends Fragment {
         super.onAttach(context);
         TAG = getTAG();
         this.mActivity = (Activity) context;
-        Timber.i(TAG, " - 1 onAttach()");
-//        Timber.i("%s - 1 onAttach()", this.getClass().getSimpleName());
+        Timber.d("%s - 1 onAttach()", this.getClass().getSimpleName());
     }
 
     protected abstract String getTAG();
@@ -53,8 +52,8 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.i(TAG + " - 2 onCreate()");
-//        Timber.i("%s - 2 onCreate()", this.getClass().getSimpleName());
+//        Timber.d("2 onCreate()");
+        Timber.d("%s - 2 onCreate()", this.getClass().getSimpleName());
 
     }
 
@@ -62,9 +61,9 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Timber.i(TAG + " - 3 onCreateView()");
+        Timber.d("%s - 3 onCreateView()", this.getClass().getSimpleName());
 
-        Timber.e(TAG + " - ViewGroup = " + container);
+//        Timber.e("ViewGroup = " + container);
 
         View view = LayoutInflater.from(mActivity).inflate(getLayoutId(), container, false);
         initView(view, container, savedInstanceState);
@@ -81,7 +80,8 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
-        Timber.i(TAG + " - 4 onActivityCreated()");
+//        Timber.d("4 onActivityCreated()");
+        Timber.d("%s - 4 onActivityCreated()", this.getClass().getSimpleName());
     }
 
     /**
@@ -92,7 +92,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Timber.i(TAG + " - 5 onStart()");
+//        Timber.d("5 onStart()");
+        Timber.d("%s - 5 onStart()", this.getClass().getSimpleName());
+
     }
 
     /**
@@ -103,9 +105,11 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Timber.i(TAG + " - 6 onResume()");
+//        Timber.d("6 onResume()");
+        Timber.d("%s - 6 onResume()", this.getClass().getSimpleName());
 
-        Timber.i(TAG + " - Fragment 处于活动状态");
+
+        Timber.d("Fragment 处于活动状态");
     }
 
     /**
@@ -114,7 +118,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Timber.i(TAG + " - 7 onPause()");
+//        Timber.d("7 onPause()");
+        Timber.d("%s - 7 onPause()", this.getClass().getSimpleName());
+
     }
 
     /**
@@ -124,7 +130,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Timber.i(TAG + " - 8 onStop()");
+//        Timber.d("8 onStop()");
+        Timber.d("%s - 8 onStop()", this.getClass().getSimpleName());
+
     }
 
     /**
@@ -136,7 +144,8 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Timber.i(TAG + " - 9 onDestroyView()");
+//        Timber.d("9 onDestroyView()");
+        Timber.d("%s - 9 onDestroyView()", this.getClass().getSimpleName());
     }
 
     /**
@@ -145,7 +154,8 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Timber.i(TAG + " - 10 onDestroy()");
+//        Timber.d("10 onDestroy()");
+        Timber.d("%s - 10 onDestroy()", this.getClass().getSimpleName());
     }
 
     /**
@@ -155,13 +165,14 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Timber.e(TAG + " - 11 onDetach()");
+//        Timber.e("11 onDetach()");
+        Timber.d("%s - 11 onDetach()", this.getClass().getSimpleName());
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Timber.i(getTAG() + " - setUserVisibleHint() " + isVisibleToUser);
+        Timber.d(getTAG() + " - setUserVisibleHint() " + isVisibleToUser);
     }
 
     /**

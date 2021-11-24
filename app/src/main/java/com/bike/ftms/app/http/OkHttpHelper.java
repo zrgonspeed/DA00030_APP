@@ -98,13 +98,13 @@ public class OkHttpHelper {
     }
 
     private static Request getRequestForPost(String url, String json, Object tag) {
-        Timber.d(TAG + " - getRequestForPost---> " + url);
+        Timber.d("getRequestForPost---> " + url);
         if (url.isEmpty()) {
             return null;
         }
 
         try {
-            Timber.d(TAG + " - post json >>> " + json);
+            Timber.d("post json >>> " + json);
             RequestBody body = RequestBody.Companion.create(json, MEDIA_TYPE_JSON_3);
 
             Request.Builder builder = new Request.Builder();
@@ -226,7 +226,7 @@ public class OkHttpHelper {
                             return;
                         }
                         mHandler.post(() -> {
-                            Logger.i(TAG,"====onFailure======= " + request.url().toString() + "" + e);
+                            Timber.i("" + "====onFailure======= " + request.url().toString() + "" + e);
                             if (callBack != null) {
                                 callBack.onFailure(call, e);
                             }
@@ -256,9 +256,9 @@ public class OkHttpHelper {
     }
 
     private static Request getRequestForGet(String url, Object tag) {
-        Timber.d(TAG + " - getRequestForPost---> " + url);
+        Timber.d("getRequestForPost---> " + url);
         if (url.isEmpty()) {
-            Logger.e(TAG,"OkHttpHelper-----getRequestForGet---> url 地址为空！！！");
+            Timber.e("OkHttpHelper-----getRequestForGet---> url 地址为空！！！");
             return null;
         }
         Request request;

@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseActivity;
-import com.bike.ftms.app.utils.VersionUtil;
+import com.bike.ftms.app.manager.VersionManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -28,7 +28,7 @@ public class VersionActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        tv_version_apk_value.setText(VersionUtil.getAppVersionName(this));
+        tv_version_apk_value.setText(VersionManager.getAppVersionName(this));
     }
 
     @Override

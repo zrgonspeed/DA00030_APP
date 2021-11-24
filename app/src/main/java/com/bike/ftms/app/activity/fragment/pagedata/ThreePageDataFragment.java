@@ -25,7 +25,7 @@ public class ThreePageDataFragment extends BasePageDataFragment {
     TextView tvCaloriesHr;
 
     public ThreePageDataFragment() {
-        Timber.i(TAG + " - 构造方法 ThreePageDataFragment()");
+        Timber.i("构造方法 ThreePageDataFragment()");
     }
 
     @Override

@@ -4,22 +4,25 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.bike.ftms.app.utils.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import timber.log.Timber;
+
 public class VersionManager {
 
     /**
-     * 获取App版本号
-     *
-     * @param context
-     * @return
+     * @param
+     * @explain 获取App版本号
      */
     public static String getAppVersionName(Context context) {
         String versionName = "";
         try {
+            // ---get the package info---
             PackageManager pm = context.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
             versionName = pi.versionName;
@@ -27,7 +30,7 @@ public class VersionManager {
                 return "";
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e("VersionInfo" + " - " + "Exception: " + e);
         }
         return versionName;
     }

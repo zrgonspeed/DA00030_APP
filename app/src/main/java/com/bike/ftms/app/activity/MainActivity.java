@@ -77,10 +77,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected void onResume() {
         super.onResume();
-        Timber.e(TAG + " - this == " + this);
+        Timber.e("this == " + this);
         isOnPause = false;
         m_wklk.acquire(); //设置保持唤醒
-        Timber.e(TAG + " - BleManager == " + BleManager.getInstance());
+        Timber.e("BleManager == " + BleManager.getInstance());
         BleManager.getInstance().setOnRunDataListener(this);
         if (!BleManager.isConnect && !BleManager.isHrConnect) {
             showConnectHintDialog();
@@ -197,7 +197,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public void onRunData(RowerDataBean1 rowerDataBean1) {
-        Logger.d(TAG, rowerDataBean1.toString());
+        Timber.d("" + rowerDataBean1.toString());
 
         if (isOnPause) {
             return;
@@ -239,17 +239,17 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Timber.d(TAG + " - onKeyDown");
+        Timber.d("onKeyDown");
         if (workoutsFragment.onKeyDown(keyCode, event)) {
             exitTime = 0;
             return false;
         }
-        Timber.d(TAG + " - onKeyDown1");
+        Timber.d("onKeyDown1");
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             exit();
             return false;
         }
-        Timber.d(TAG + " - onKeyDown2");
+        Timber.d("onKeyDown2");
         return super.onKeyDown(keyCode, event);
     }
 
@@ -260,7 +260,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     }
 
     public void exit() {
-        Timber.i(TAG + " - exit()");
+        Timber.i("exit()");
 
         if ((System.currentTimeMillis() - exitTime) > 2000) {
             Toast.makeText(getApplicationContext(), getString(R.string.home_exit), Toast.LENGTH_SHORT).show();

@@ -36,7 +36,7 @@ public class FormatBean {
             syn_code = bytes[bytes.length - 2];
             stop_code = bytes[bytes.length - 1];
             //KLog.i("BleManager","FormatBean:bytes"+ Arrays.toString(bytes));
-            Logger.i("BleManager", "FormatBean:toHex" + ByteArrTransUtil.toHexValue(bytes));
+//            Logger.i("BleManager", "FormatBean:toHex" + ByteArrTransUtil.toHexValue(bytes));
         }
 
     }
@@ -50,7 +50,7 @@ public class FormatBean {
         bytes[5 + data_body.length] = onSynSum();
         bytes[bytes.length - 1] = stop_code;
         //KLog.i("BleManager","FormatBean:toByteArray"+ Arrays.toString(bytes));
-        Logger.i("BleManager", "FormatBean:toHex" + ByteArrTransUtil.toHexValue(bytes));
+//        Logger.i("BleManager", "FormatBean:toHex" + ByteArrTransUtil.toHexValue(bytes));
         return bytes;
     }
 

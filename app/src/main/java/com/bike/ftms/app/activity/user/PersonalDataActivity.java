@@ -24,12 +24,12 @@ public class PersonalDataActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        Timber.i(TAG + " - initData()");
+        Timber.i("initData()");
     }
 
     @Override
     protected void initView() {
-        Timber.i(TAG + " - initView()");
+        Timber.i("initView()");
     }
 
     @OnClick({R.id.iv_back, R.id.sb_person_data_signout})
@@ -39,7 +39,7 @@ public class PersonalDataActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.sb_person_data_signout:
-                Timber.e(TAG + " - 点击了 退出登录 按钮");
+                Timber.e("点击了 退出登录 按钮");
                 finish();
                 break;
             default:
