@@ -45,10 +45,15 @@ public class PersonalDataActivity extends BaseActivity {
                 break;
             case R.id.sb_person_data_signout:
                 Logger.e("点击了 退出登录 按钮");
+                signOut();
                 finish();
                 break;
             default:
                 break;
         }
+    }
+
+    private void signOut() {
+        UserManager.getInstance().signOut();
     }
 }

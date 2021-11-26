@@ -10,6 +10,7 @@ import com.bike.ftms.app.base.BaseFragment;
 import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.manager.ble.BleManager;
+import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import butterknife.BindView;
@@ -41,6 +42,7 @@ public abstract class BasePageDataFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
+        Logger.i(getTAG() + " initView() " + this);
         unbinder = ButterKnife.bind(this, view);
     }
 
@@ -69,7 +71,7 @@ public abstract class BasePageDataFragment extends BaseFragment {
         }
 
         // 直接运动模式，段数都是1，没有分段
-        if (rowerDataBean1.getRunMode() == MyConstant.NORMAL) {
+        if (rowerDataBean1.getRunMode() == MyConstant.NORMAL && rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
             tvInterval.setText("1");
         }
 

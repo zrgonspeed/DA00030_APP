@@ -26,6 +26,11 @@ public abstract class BaseFragment extends Fragment {
 
     protected Activity mActivity;
 
+    public BaseFragment() {
+        super();
+        Logger.i("构造方法 " + getTAG() + "()  " + this);
+    }
+
     /**
      * onAttach()在fragment与Activity关联之后调调查用。
      * 需要注意的是，初始化fragment参数可以从getArguments()获得，但是，当Fragment附加到Activity之后，就无法再调用setArguments()。

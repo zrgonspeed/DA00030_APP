@@ -3,12 +3,16 @@ package com.bike.ftms.app.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -17,6 +21,7 @@ import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
 import com.bike.ftms.app.activity.setting.SettingActivity;
 import com.bike.ftms.app.activity.user.LoginActivity;
 import com.bike.ftms.app.activity.user.PersonalDataActivity;
+import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.bean.RowerDataBean1;
@@ -24,6 +29,7 @@ import com.bike.ftms.app.activity.fragment.HomeFragment;
 import com.bike.ftms.app.activity.fragment.workout.WorkoutsFragment;
 import com.bike.ftms.app.activity.fragment.workout.WorkoutsLocalFragment;
 import com.bike.ftms.app.activity.fragment.workout.WorkoutsNetFragment;
+import com.bike.ftms.app.manager.VersionManager;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.utils.Logger;
@@ -35,6 +41,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import tech.gujin.toast.ToastUtil;
 
 
 public class MainActivity extends BaseActivity implements OnRunDataListener {
@@ -42,8 +49,14 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @BindView(R.id.vp)
     HorizontalViewPager vp;
+    @BindView(R.id.tv_version_apk_name)
+    TextView tv_version_apk_name;
     @BindView(R.id.btn_workout_login)
     ImageView btn_workout_login;
+    @BindView(R.id.btn_workout_user_info)
+    ImageView btn_workout_user_info;
+    @BindView(R.id.tv_username)
+    TextView tv_username;
     @BindView(R.id.btn_bluetooth)
     ImageView btnBluetooth;
     @BindView(R.id.btn_setting)
@@ -96,7 +109,19 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             }
         }
 
-//        BleManager.getInstance().startThread();
+
+        // 判断是否登录，去显示下方用户名头像
+        if (UserManager.getInstance().getUserId() != -1) {
+            // 已登录
+            btn_workout_login.setVisibility(View.GONE);
+            btn_workout_user_info.setVisibility(View.VISIBLE);
+            tv_username.setVisibility(View.VISIBLE);
+        } else {
+            // 未登录
+            btn_workout_login.setVisibility(View.VISIBLE);
+            btn_workout_user_info.setVisibility(View.GONE);
+            tv_username.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -129,6 +154,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             yesOrNoDialog.cancel();
             yesOrNoDialog = null;
         }
+
+        BleManager.getInstance().disConnectDevice();
+        BleManager.getInstance().destroy();
     }
 
 
@@ -180,6 +208,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "cn");
         m_wklk.acquire(); //设置保持唤醒
+
+        tv_version_apk_name.setText(VersionManager.getAppVersionName(this));
     }
 
     @OnClick({R.id.btn_workout_user_info, R.id.btn_bluetooth, R.id.btn_setting, R.id.btn_workout_login})
@@ -202,7 +232,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public void onRunData(RowerDataBean1 rowerDataBean1) {
-        Logger.e("" + rowerDataBean1.toString());
+        Logger.d("" + rowerDataBean1.toString());
 
         if (isOnPause) {
             return;
@@ -260,22 +290,32 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public void onExit() {
+//        finish();
+//        System.exit(0);
+        BleManager.getInstance().disConnectDevice();
+        BleManager.getInstance().destroy();
         finish();
-        System.exit(0);
     }
 
     public void exit() {
         Logger.i("exit()");
 
         if ((System.currentTimeMillis() - exitTime) > 2000) {
-            Toast.makeText(getApplicationContext(), getString(R.string.home_exit), Toast.LENGTH_SHORT).show();
+            ToastUtil.show(getString(R.string.home_exit), false);
             exitTime = System.currentTimeMillis();
         } else {
-            finish();
+            onExit();
 //            System.exit(0);
-            BleManager.getInstance().disConnectDevice();
         }
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
 
+    @Override
+    public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+    }
 }

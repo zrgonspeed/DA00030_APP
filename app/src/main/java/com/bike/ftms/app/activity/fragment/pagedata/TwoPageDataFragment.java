@@ -26,7 +26,6 @@ public class TwoPageDataFragment extends BasePageDataFragment {
     TextView tvAveWatts;
 
     public TwoPageDataFragment() {
-        Logger.i("构造方法 TwoPageDataFragment()");
     }
 
     @Override

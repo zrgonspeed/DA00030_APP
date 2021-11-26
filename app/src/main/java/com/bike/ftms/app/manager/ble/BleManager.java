@@ -24,6 +24,7 @@ import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.common.RowerDataParam;
 import com.bike.ftms.app.serial.SerialCommand;
 import com.bike.ftms.app.serial.SerialData;
+import com.bike.ftms.app.storage.SpManager;
 import com.bike.ftms.app.utils.CustomTimer;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.ConvertData;
@@ -97,7 +98,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private final String isVerifyConnectTag = "isVerifyConnect";
     private byte runStatus = RUN_STATUS_STOP;
 
-    private Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper()));
+    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper()));
     private int tempInterval1 = 0;
     private int tempInterval2 = 0;
 
@@ -109,6 +110,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
     private BleOpenCallBack bleOpenCallBack;
     private BleClosedCallBack bleClosedCallBack;
+
+    public void setBleOpenCallBack(BleOpenCallBack bleOpenCallBack) {
+        this.bleOpenCallBack = bleOpenCallBack;
+    }
+
+    public void setBleClosedCallBack(BleClosedCallBack bleClosedCallBack) {
+        this.bleClosedCallBack = bleClosedCallBack;
+    }
 
     public interface BleOpenCallBack {
         void isOpen(boolean open);
@@ -263,7 +272,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     /**
      * 扫描结果回调
      */
-    private ScanCallback mScanCallback = new ScanCallback() {
+    private final ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
@@ -409,6 +418,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
     public void destroy() {
         mBluetoothGatt = null;
         mBluetoothHrGatt = null;
+
+        bleClosedCallBack = null;
+        bleOpenCallBack = null;
+
+        onRunDataListener = null;
+        onScanConnectListener = null;
+//        mScanCallback = null;
+
+//        instance = null;
     }
 
     /**
@@ -573,7 +591,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 List<BluetoothGattCharacteristic> list = new ArrayList<>();
                 if (localGattService != null) {
                     list = localGattService.getCharacteristics();
-                    Logger.e("localGattService = " + localGattService.getUuid());
+                    Logger.d("localGattService = " + localGattService.getUuid());
                     for (BluetoothGattCharacteristic c : list) {
 //                        Logger.e("c = " + c.getUuid());
                     }
@@ -586,7 +604,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     List<BluetoothGattCharacteristic> characteristics = localGattService1.getCharacteristics();
                     list.addAll(characteristics);
 
-                    Logger.e("localGattService1 = " + localGattService1.getUuid());
+                    Logger.d("localGattService1 = " + localGattService1.getUuid());
                     for (BluetoothGattCharacteristic c : characteristics) {
 //                        Logger.e("c = " + c.getUuid());
                     }
@@ -601,7 +619,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         for (BluetoothGattDescriptor bluetoothGattDescriptor : bluetoothGattDescriptors) {
                             boolean r = bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                             mBluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
-                            Logger.e("" +list.get(i).getUuid().toString() + ",bluetoothGattDescriptor " + r);
+                            Logger.d("" + list.get(i).getUuid().toString() + ",bluetoothGattDescriptor " + r);
                         }
                     }
                     if (list.get(i).getUuid().toString().contains("2ad3")) {
@@ -609,7 +627,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         for (BluetoothGattDescriptor bluetoothGattDescriptor : bluetoothGattDescriptors) {
                             boolean r = bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                             mBluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
-                            Logger.e("" +list.get(i).getUuid().toString() + ",bluetoothGattDescriptor " + r);
+                            Logger.d("" + list.get(i).getUuid().toString() + ",bluetoothGattDescriptor " + r);
                         }
                     }
                     if (list.get(i).getUuid().toString().contains("ffe0")) {
@@ -617,7 +635,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         for (BluetoothGattDescriptor bluetoothGattDescriptor : bluetoothGattDescriptors) {
                             boolean r = bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                             mBluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
-                            Logger.e("" +list.get(i).getUuid().toString() + ",bluetoothGattDescriptor " + r);
+                            Logger.d("" + list.get(i).getUuid().toString() + ",bluetoothGattDescriptor " + r);
                         }
                     }
                     if (list.get(i).getUuid().toString().contains("2ada")) {
@@ -625,7 +643,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         for (BluetoothGattDescriptor bluetoothGattDescriptor : bluetoothGattDescriptors) {
                             boolean r = bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                             mBluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
-                            Logger.e("" +list.get(i).getUuid().toString() + ",bluetoothGattDescriptor " + r);
+                            Logger.d("" + list.get(i).getUuid().toString() + ",bluetoothGattDescriptor " + r);
                         }
                     }
 
@@ -1032,7 +1050,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (mBluetoothGattCharacteristic != null && mBluetoothGatt != null) {
             mBluetoothGattCharacteristic.setValue(sendBytes);
             r = mBluetoothGatt.writeCharacteristic(mBluetoothGattCharacteristic);
-            Logger.d("" +mBluetoothGattCharacteristic.getUuid().toString().substring(0, 8) + ",::" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length));
+            Logger.d("" + mBluetoothGattCharacteristic.getUuid().toString().substring(0, 8) + ",::" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length));
         } else {
 //            Logger.d("Send:" + ConvertData.byteArrayToHexString(sendBytes, sendBytes.length) + r);
             Logger.e("发送到电子表失败");
@@ -1116,6 +1134,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 关闭BLE
      */
     public void closeBLE(BleClosedCallBack bleClosedCallBack) {
+        this.bleClosedCallBack = bleClosedCallBack;
+
         if (mBluetoothAdapter != null) {
             new Thread(() -> {
                 // true 表示适配器关闭已开始，或 false 表示立即错误
@@ -1649,8 +1669,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
             return;
         }
 
-        //校对CRC码
-        if (data.length > 2 && data[1] == 0x40 && data[2] == 0x01) {
+        // 校对CRC码 和 获取机种标识
+        // ffe9   0xfe 0x40 0x01 0x21 0x11 0x25 0x10 0x4e 0xff
+        // ffe0   0xfe 0x40 0x01 0x32 0x9a 0x01 0xa3 0x2b 0xff
+        if (data.length > 8 && data[1] == 0x40 && data[2] == 0x01) {
             String[] dates = getCurDate().split("-");
             byte[] date = new byte[3];
             date[0] = (byte) Integer.parseInt(dates[0], 16);
@@ -1661,6 +1683,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 isToExamine = true;
                 isVerifyConnectTimer.closeTimer();
             }
+
+            // 机种标识 当前是 0x01
+            byte flag = data[5];
+            SpManager.setTreadmill_flag(flag);
             return;
         }
         if (data[1] == 0x41 && data[2] == 0x02 && isToExamine) {

@@ -2,7 +2,9 @@ package com.bike.ftms.app.base;
 
 import android.content.Context;
 
+import com.bike.ftms.app.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
+import com.squareup.leakcanary.LeakCanary;
 
 import org.litepal.LitePalApplication;
 
@@ -28,6 +30,9 @@ public class MyApplication extends LitePalApplication {
         super.onCreate();
         Logger.e("onCreate()--------------------------------------------------");
         mContext = MyApplication.this;
+        SpManager.init(mContext);
+
         ToastUtil.initialize(mContext);
+        LeakCanary.install(this);
     }
 }

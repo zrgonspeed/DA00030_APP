@@ -202,9 +202,9 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
                 if (i == 1) {
                     runDataResults.get(clickPosition).setRemarks(edtInfoNote.getText().toString());
                     workoutsAdapter.notifyItemChanged(clickPosition);
-                    Toast.makeText(getContext(), "Save successfully", Toast.LENGTH_LONG).show();
+                    ToastUtil.show("Save successfully", true);
                 } else {
-                    Toast.makeText(getContext(), "Save fail", Toast.LENGTH_LONG).show();
+                    ToastUtil.show("Save fail", true);
                 }
                 break;
             case R.id.tv_workouts:
@@ -222,9 +222,9 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
                 if (j > 0) {
                     runDataResults.remove(deletePosition);
                     workoutsAdapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(), "Delete successfully", Toast.LENGTH_LONG).show();
+                    ToastUtil.show("Delete successfully", true);
                 } else {
-                    Toast.makeText(getContext(), "Delete fail", Toast.LENGTH_LONG).show();
+                    ToastUtil.show("Delete fail", true);
                 }
 
                 rlDelete.setVisibility(View.GONE);

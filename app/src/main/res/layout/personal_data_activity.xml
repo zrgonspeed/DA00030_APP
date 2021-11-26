@@ -70,7 +70,7 @@
                         android:layout_height="@dimen/dp_150"
                         android:layout_gravity="center"
                         android:layout_margin="@dimen/dp_20"
-                        android:background="@drawable/logo"
+                        android:background="@drawable/test_lb7"
                         android:scaleType="centerCrop"
                         tools:src="@drawable/avatar_placeholder_ic" />
                 </com.bike.ftms.app.widget.SettingBar>
@@ -123,7 +123,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:bar_leftText="@string/personal_data_sex"
-                    app:bar_rightDrawable="@drawable/arrows_right_ic"
                     app:bar_rightText="男"
                     app:bar_rightTextHint="@string/personal_data_address_hint" />
 
@@ -132,7 +131,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:bar_leftText="@string/personal_data_address"
-                    app:bar_rightDrawable="@drawable/arrows_right_ic"
                     app:bar_rightText="中国"
                     app:bar_rightTextHint="@string/personal_data_address_hint" />
 
@@ -141,7 +139,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:bar_leftText="@string/personal_data_email"
-                    app:bar_rightDrawable="@drawable/arrows_right_ic"
                     app:bar_rightText="631686921@qq.com"
                     app:bar_rightTextHint="@string/personal_data_address_hint" />
                 <!--
@@ -155,7 +152,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:bar_leftText="@string/personal_data_birthday"
-                    app:bar_rightDrawable="@drawable/arrows_right_ic"
                     app:bar_rightText="1997-04-20"
                     app:bar_rightTextHint="@string/personal_data_address_hint" />
             </LinearLayout>

@@ -1,8 +1,10 @@
 package com.bike.ftms.app.base;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,6 +33,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Logger.i(getTAG() + " - " + "onCreate()");
+
+        Logger.e(getTAG(), "onCreate() savedInstanceState == " + savedInstanceState);
 
         SystemUiUtils.reMoveTitle(this);
         setContentView(getLayoutId());
@@ -88,5 +92,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         Logger.i(getTAG() + " - " + "onDestroy()");
         unbinder.unbind();
+    }
+
+    /**
+     * onStop() 和  onDestroy()之间
+     * @param outState
+     */
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Logger.i(getTAG() + " - " + "onSaveInstanceState()");
+    }
+
+    /**
+     * onStart() 和 onResume()之间
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onRestoreInstanceState(@Nullable Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Logger.i(getTAG() + " - " + "onRestoreInstanceState()");
     }
 }

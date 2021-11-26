@@ -74,15 +74,30 @@ public class LoginActivity extends BaseActivity {
                 boolean isOk = checkField();
                 if (isOk) {
                     // 2.发送到服务器
-                    sendAllToServer();
+//                    sendAllToServer();
+                    sendAllToServer2();
                 }
-                // 2.请求
                 break;
             case R.id.tv_forget:
                 break;
             case R.id.tv_register:
                 startActivity(new Intent(this, RegisterActivity.class));
                 break;
+        }
+    }
+
+    /**
+     * 测试
+     */
+    private void sendAllToServer2() {
+        String pass = edt_password.getText().toString().trim();
+        String userName = edt_user_name.getText().toString().trim();
+
+        if ("zrg".equals(userName) && "123".equals(pass)) {
+            // 登录成功
+            loginSuccess();
+        } else {
+            loginFail();
         }
     }
 
@@ -119,7 +134,7 @@ public class LoginActivity extends BaseActivity {
         loginBean.setPassword(pass);
         String jsonStr = GsonUtil.GsonString(loginBean);
 
-        OkHttpHelper.getInstance().post(HttpParam.USER_LOGIN_URL, jsonStr, null, new OkHttpCallBack() {
+        OkHttpHelper.post(HttpParam.USER_LOGIN_URL, jsonStr, null, new OkHttpCallBack() {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
@@ -147,6 +162,8 @@ public class LoginActivity extends BaseActivity {
                      */
                     LoginSuccessBean loginSuccessBean = GsonUtil.GsonToBean(response, LoginSuccessBean.class);
                     Logger.e("登录成功: " + loginSuccessBean.toString());
+
+                    loginSuccess();
                 } else if (httpCode == 422 || httpCode == 404 || httpCode == 401) {
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
                     Logger.e("登录失败:" + resultBean.toString());
@@ -159,4 +176,21 @@ public class LoginActivity extends BaseActivity {
             }
         });
     }
+
+    private void loginSuccess() {
+        ToastUtil.show("登录成功");
+
+        // TODO: 2021/11/24 传入 userId
+        UserManager.getInstance().setUserId(952637);
+
+        // 页面跳转
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+
+    private void loginFail() {
+        ToastUtil.show("登录失败");
+        UserManager.getInstance().setUserId(-1);
+    }
+
 }

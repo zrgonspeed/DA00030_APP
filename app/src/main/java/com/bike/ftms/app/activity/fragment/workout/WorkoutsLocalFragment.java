@@ -145,9 +145,9 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 if (i == 1) {
                     rowerDataBean1List.get(clickPosition).setNote(edt_info_note.getText().toString());
                     workoutsLocalAdapter.notifyItemChanged(clickPosition);
-                    Toast.makeText(getContext(), "Save successfully", Toast.LENGTH_LONG).show();
+                    ToastUtil.show("Save successfully", true);
                 } else {
-                    Toast.makeText(getContext(), "Save fail", Toast.LENGTH_LONG).show();
+                    ToastUtil.show("Save fail", true);
                 }
                 break;
             case R.id.tv_workouts:

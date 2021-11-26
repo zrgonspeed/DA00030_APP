@@ -284,6 +284,9 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         super.onPause();
         BleManager.getInstance().setOnScanConnectListener(null);
         BleManager.getInstance().stopScan();
+        BleManager.getInstance().setBleOpenCallBack(null);
+        BleManager.getInstance().setBleClosedCallBack(null);
+
         //注销广播接收
         unregisterReceiver(bleBroadcastReceiver);
     }

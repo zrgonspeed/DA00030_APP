@@ -16,6 +16,7 @@ import com.bike.ftms.app.bean.RowerDataBean1;
 import com.bike.ftms.app.activity.fragment.pagedata.OnePageDataFragment;
 import com.bike.ftms.app.activity.fragment.pagedata.ThreePageDataFragment;
 import com.bike.ftms.app.activity.fragment.pagedata.TwoPageDataFragment;
+import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.VerticalViewPager;
 
@@ -51,12 +52,17 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
-        Logger.i("initView()");
+        Logger.i("initView() " + this);
         ButterKnife.bind(this, view);
         onePageHomeFragment = new OnePageDataFragment();
         twoPageHomeFragment = new TwoPageDataFragment();
         threePageHomeFragment = new ThreePageDataFragment();
 
+
+        MyConstant.homeFragment = this.toString();
+        MyConstant.oneObject = onePageHomeFragment.toString();
+        MyConstant.twoObject = twoPageHomeFragment.toString();
+        MyConstant.threeObject = threePageHomeFragment.toString();
 
         Logger.e("HomeFragment == " + this);
         Logger.e("onePageHomeFragment == " + onePageHomeFragment);
@@ -109,11 +115,13 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void onRunData(RowerDataBean1 rowerDataBean1) {
-        Logger.e("onRunData() --------------------------------------------------------------");
-        Logger.e("onePageHomeFragment == " + onePageHomeFragment);
-        Logger.e("twoPageHomeFragment == " + twoPageHomeFragment);
-        Logger.e("threePageHomeFragment == " + threePageHomeFragment);
         if (onePageHomeFragment == null || twoPageHomeFragment == null || threePageHomeFragment == null) {
+            Logger.e("onRunData() --------------------------------------------------------------");
+            Logger.e("HomeFragment == " + this + " old object == " + MyConstant.homeFragment);
+
+            Logger.e("onePageHomeFragment == " + onePageHomeFragment + " old object == " + MyConstant.oneObject);
+            Logger.e("twoPageHomeFragment == " + twoPageHomeFragment + " old object == " + MyConstant.twoObject);
+            Logger.e("threePageHomeFragment == " + threePageHomeFragment + " old object == " + MyConstant.threeObject);
             return;
         }
 

@@ -20,6 +20,25 @@
         android:background="@color/color_387E2F">
 
         <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="@dimen/dp_25"
+            android:layout_height="@dimen/dp_25"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_5"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/tv_version_apk_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_35"
+            android:text="1.0.3 beta3 2077-88-99"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:visibility="visible" />
+
+        <ImageView
             android:id="@+id/btn_workout_login"
             android:layout_width="40dp"
             android:layout_height="25dp"
@@ -51,7 +70,7 @@
             android:layout_marginEnd="10dp"
             android:layout_toStartOf="@id/btn_bluetooth"
             android:paddingStart="90dp"
-            android:src="@drawable/logo" />
+            android:src="@drawable/test_lb7" />
 
         <ImageView
             android:id="@+id/btn_bluetooth"

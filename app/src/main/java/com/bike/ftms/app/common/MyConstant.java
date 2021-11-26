@@ -48,4 +48,9 @@ public class MyConstant {
     @Retention(RetentionPolicy.SOURCE)
     public @interface IntervalStatus {
     }
+
+    public static String homeFragment = "";
+    public static String oneObject = "";
+    public static String twoObject = "";
+    public static String threeObject = "";
 }

@@ -27,7 +27,6 @@ public class OnePageDataFragment extends BasePageDataFragment {
     TextView tvAveFiveHundred;
 
     public OnePageDataFragment() {
-        Logger.i("构造方法 OnePageDataFragment()");
     }
 
     @Override
