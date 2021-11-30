@@ -1,4 +1,4 @@
-package com.bike.ftms.app.bean;
+package com.bike.ftms.app.bean.bluetooth;
 
 import android.bluetooth.le.ScanResult;
 

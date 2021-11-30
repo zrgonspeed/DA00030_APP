@@ -1,6 +1,9 @@
-package com.bike.ftms.app.bean;
+package com.bike.ftms.app.bean.rundata;
 
+
+import com.bike.ftms.app.bean.rundata.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
+import com.bike.ftms.app.utils.TimeStringUtil;
 
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
@@ -329,5 +332,95 @@ public class RowerDataBean1 extends LitePalSupport {
 
     public boolean getCanSave() {
         return this.flag == 3;
+    }
+
+    // 特有
+    private String result;
+    private String type;
+
+    private void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    private void setResult(String result) {
+        this.result = result;
+    }
+
+    public void setTypeAndResult() {
+        switch (getRunMode()) {
+            case MyConstant.NORMAL:
+                setType(getDistance() + "M");
+                setResult(getDistance() + "M");
+                break;
+            case MyConstant.GOAL_TIME:
+                setType(TimeStringUtil.getSToMinSecValue(getSetGoalTime()));
+                setResult(getDistance() + "M");
+                break;
+            case MyConstant.GOAL_CALORIES:
+                setType(getSetGoalCalorie() + "C");
+                setResult(getDistance() + "M");
+                break;
+            case MyConstant.GOAL_DISTANCE:
+                setType(getSetGoalDistance() + "M");
+                setResult(TimeStringUtil.getSToMinSecValue(getTime()));
+                break;
+            case MyConstant.INTERVAL_TIME: {
+                setType((getInterval() + "x:" + getSetIntervalTime() + "/:" + getReset_time() + "R"));
+                // 总距离
+
+                List<RowerDataBean2> list = getList();
+                if (list.size() > 1) {
+                    long totalMeter = 0;
+                    for (RowerDataBean2 bean2 : list) {
+                        totalMeter += bean2.getDistance();
+                    }
+                    setResult(totalMeter + "M");
+                } else {
+                    setResult(getDistance() + "M");
+                }
+            }
+            break;
+            case MyConstant.INTERVAL_CALORIES: {
+                setType((getInterval() + "x" + getSetIntervalCalorie() + "C" + "/:" + getReset_time() + "R"));
+                // 总距离
+                List<RowerDataBean2> list = getList();
+                if (list.size() > 1) {
+                    long totalMeter = 0;
+                    for (RowerDataBean2 bean2 : list) {
+                        totalMeter += bean2.getDistance();
+                    }
+                    setResult(totalMeter + "M");
+                } else {
+                    setResult(getDistance() + "M");
+                }
+            }
+            break;
+            case MyConstant.INTERVAL_DISTANCE: {
+                setType((getInterval() + "x" + getSetIntervalDistance() + "M" + "/:" + getReset_time() + "R"));
+
+                // 总时间
+                List<RowerDataBean2> list = getList();
+                if (list.size() > 1) {
+                    long totalTime = 0;
+                    for (RowerDataBean2 bean2 : list) {
+                        totalTime += bean2.getTime();
+                    }
+                    setResult(TimeStringUtil.getSToMinSecValue(totalTime));
+                } else {
+                    setResult(TimeStringUtil.getSToMinSecValue(getTime()));
+                }
+            }
+            break;
+            default:
+                break;
+        }
     }
 }

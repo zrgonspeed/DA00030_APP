@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.RowerDataBean2;
+import com.bike.ftms.app.bean.rundata.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.TimeStringUtil;
 

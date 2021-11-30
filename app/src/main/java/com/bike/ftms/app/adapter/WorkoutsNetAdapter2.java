@@ -9,10 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.RowerDataBean2;
-import com.bike.ftms.app.bean.RunDataInfo;
-import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.utils.TimeStringUtil;
+import com.bike.ftms.app.bean.rundata.RunDataInfoDTO;
 
 import java.util.List;
 
@@ -22,10 +19,10 @@ import java.util.List;
  * @Date 2021/4/12
  */
 public class WorkoutsNetAdapter2 extends RecyclerView.Adapter<WorkoutsNetAdapter2.WorkoutsViewHolder> {
-    private List<RunDataInfo> runDataInfos;
+    private List<RunDataInfoDTO> runDataInfoDTOS;
 
-    public WorkoutsNetAdapter2(List<RunDataInfo> runDataInfos) {
-        this.runDataInfos = runDataInfos;
+    public WorkoutsNetAdapter2(List<RunDataInfoDTO> runDataInfoDTOS) {
+        this.runDataInfoDTOS = runDataInfoDTOS;
     }
 
     @NonNull
@@ -37,7 +34,7 @@ public class WorkoutsNetAdapter2 extends RecyclerView.Adapter<WorkoutsNetAdapter
 
     @Override
     public void onBindViewHolder(@NonNull WorkoutsNetAdapter2.WorkoutsViewHolder holder, int position) {
-        RunDataInfo bean = runDataInfos.get(position);
+        RunDataInfoDTO bean = runDataInfoDTOS.get(position);
 
         /*switch (bean.getRunMode()) {
             case MyConstant.NORMAL:
@@ -123,7 +120,7 @@ public class WorkoutsNetAdapter2 extends RecyclerView.Adapter<WorkoutsNetAdapter
 
     @Override
     public int getItemCount() {
-        return runDataInfos.size();
+        return runDataInfoDTOS.size();
     }
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {

@@ -1,4 +1,4 @@
-package com.bike.ftms.app.bean;
+package com.bike.ftms.app.bean.rundata;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class RunDataResultListDTO {
     private String next;
 
-    private List<RunDataResult> runDataResults;
+    private List<RunDataResultDTO> runDataResultDTOS;
 
     public String getNext() {
         return next;
@@ -26,19 +26,19 @@ public class RunDataResultListDTO {
         this.next = next;
     }
 
-    public List<RunDataResult> getRunDataResults() {
-        return runDataResults;
+    public List<RunDataResultDTO> getRunDataResultDTOS() {
+        return runDataResultDTOS;
     }
 
-    public void setRunDataResults(List<RunDataResult> runDataResults) {
-        this.runDataResults = runDataResults;
+    public void setRunDataResultDTOS(List<RunDataResultDTO> runDataResultDTOS) {
+        this.runDataResultDTOS = runDataResultDTOS;
     }
 
     @Override
     public String toString() {
         return "RunDataResultListDTO{" +
                 "next='" + next + '\'' +
-                ", runDataResults=" + runDataResults +
+                ", runDataResultDTOS=" + runDataResultDTOS +
                 '}';
     }
 }

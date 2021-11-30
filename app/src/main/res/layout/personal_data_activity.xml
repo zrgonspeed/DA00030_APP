@@ -70,9 +70,8 @@
                         android:layout_height="@dimen/dp_150"
                         android:layout_gravity="center"
                         android:layout_margin="@dimen/dp_20"
-                        android:background="@drawable/test_lb7"
-                        android:scaleType="centerCrop"
-                        tools:src="@drawable/avatar_placeholder_ic" />
+                        android:background="@drawable/user_header_def_2"
+                        android:scaleType="centerCrop" />
                 </com.bike.ftms.app.widget.SettingBar>
 
                 <View
@@ -101,7 +100,7 @@
                 android:orientation="vertical">
 
                 <com.bike.ftms.app.widget.SettingBar
-                    android:id="@+id/sb_person_data_id"
+                    android:id="@+id/sb_person_data_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
@@ -110,7 +109,7 @@
                     tools:bar_rightText="880634" />
 
                 <com.bike.ftms.app.widget.SettingBar
-                    android:id="@+id/sb_person_data_name"
+                    android:id="@+id/sb_person_data_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:bar_leftText="用户名"
@@ -119,7 +118,7 @@
                     tools:bar_rightText="Android 轮子哥" />
 
                 <com.bike.ftms.app.widget.SettingBar
-                    android:id="@+id/sb_person_data_sex"
+                    android:id="@+id/sb_person_data_gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:bar_leftText="@string/personal_data_sex"

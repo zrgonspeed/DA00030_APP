@@ -1,4 +1,4 @@
-package com.bike.ftms.app.bean;
+package com.bike.ftms.app.bean.user;
 
 public class RegisterBean {
 
@@ -19,6 +19,7 @@ public class RegisterBean {
     private String lastname;
     private String gender;
     private String birthday;
+    private String country;
     private String username;
     private String password;
     private String code;
@@ -87,6 +88,15 @@ public class RegisterBean {
         this.code = code;
     }
 
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
     @Override
     public String toString() {
         return "RegisterBean{" +
@@ -95,6 +105,7 @@ public class RegisterBean {
                 ", lastname='" + lastname + '\'' +
                 ", gender='" + gender + '\'' +
                 ", birthday='" + birthday + '\'' +
+                ", country='" + country + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", code='" + code + '\'' +

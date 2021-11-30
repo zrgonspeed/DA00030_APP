@@ -16,9 +16,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.andreabaccega.widget.FormEditText;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseActivity;
-import com.bike.ftms.app.bean.RegisterBean;
-import com.bike.ftms.app.bean.RegisterMailBean;
-import com.bike.ftms.app.bean.ResultBean;
+import com.bike.ftms.app.bean.user.RegisterBean;
+import com.bike.ftms.app.bean.user.RegisterMailBean;
+import com.bike.ftms.app.bean.user.ResultBean;
 import com.bike.ftms.app.common.HttpParam;
 import com.bike.ftms.app.http.OkHttpCallBack;
 import com.bike.ftms.app.http.OkHttpHelper;
@@ -186,9 +186,7 @@ public class RegisterActivity extends BaseActivity {
             case R.id.tv_send_code:
                 if (edt_email_address.testValidity()) {
                     tv_send_code.setText("发送中...");
-                    new Thread(() -> {
-                        sendEmailToServer();
-                    }).start();
+                    new Thread(this::sendEmailToServer).start();
                 }
                 break;
             case R.id.tv_create_account:
@@ -292,7 +290,7 @@ public class RegisterActivity extends BaseActivity {
         bean.setType("register");
 
         String json = GsonUtil.GsonString(bean);
-        OkHttpHelper.getInstance().post(HttpParam.MAIL_CODE_URL, json, null, new OkHttpCallBack() {
+        OkHttpHelper.post(HttpParam.MAIL_CODE_URL, json, null, new OkHttpCallBack() {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
@@ -352,10 +350,10 @@ public class RegisterActivity extends BaseActivity {
         registerBean.setGender(edt_gender.getText().toString().trim());
         registerBean.setPassword(edt_password.getText().toString().trim());
         registerBean.setCode(edt_email_code.getText().toString().trim());
-//        registerBean.setCountry(edt_country.getText().toString().trim());
+        registerBean.setCountry(edt_country.getText().toString().trim());
 
         String registerBeanJson = GsonUtil.GsonString(registerBean);
-        OkHttpHelper.getInstance().post(HttpParam.USER_REGISTER_URL, registerBeanJson, null, new OkHttpCallBack() {
+        OkHttpHelper.post(HttpParam.USER_REGISTER_URL, registerBeanJson, null, new OkHttpCallBack() {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败

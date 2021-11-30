@@ -3,11 +3,11 @@
     <!-- 数据库名称 -->
     <dbname value="RowerDataDB" />
     <!-- 数据库版本号 -->
-    <version value="3" />
+    <version value="4" />
     <!-- 映射模型 -->
     <list>
-        <mapping class="com.bike.ftms.app.bean.RowerDataBean1" />
-        <mapping class="com.bike.ftms.app.bean.RowerDataBean2" />
+        <mapping class="com.bike.ftms.app.bean.rundata.RowerDataBean1" />
+        <mapping class="com.bike.ftms.app.bean.rundata.RowerDataBean2" />
     </list>
 
 </litepal>

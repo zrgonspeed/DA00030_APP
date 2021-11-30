@@ -1,15 +1,11 @@
 package com.bike.ftms.app.base;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.SystemUiUtils;
 

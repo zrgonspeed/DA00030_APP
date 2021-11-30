@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,10 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.WorkoutsNetAdapter;
 import com.bike.ftms.app.adapter.WorkoutsNetAdapter2;
-import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.bean.RunDataInfo;
-import com.bike.ftms.app.bean.RunDataResult;
-import com.bike.ftms.app.bean.RunDataResultListDTO;
+import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.bean.rundata.RunDataInfoDTO;
+import com.bike.ftms.app.bean.rundata.RunDataResultDTO;
+import com.bike.ftms.app.bean.rundata.RunDataResultListDTO;
 import com.bike.ftms.app.common.HttpParam;
 import com.bike.ftms.app.http.OkHttpCallBack;
 import com.bike.ftms.app.http.OkHttpHelper;
@@ -84,7 +83,7 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
     private WorkoutsNetAdapter workoutsAdapter;
     private WorkoutsNetAdapter2 workoutsAdapter2;
     private boolean isEdit = false;
-    private List<RunDataResult> runDataResults = new ArrayList<>();
+    private List<RunDataResultDTO> runDataResultDTOS = new ArrayList<>();
     private int clickPosition;
     private int deletePosition;
 
@@ -99,7 +98,7 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        workoutsAdapter = new WorkoutsNetAdapter(runDataResults);
+        workoutsAdapter = new WorkoutsNetAdapter(runDataResultDTOS);
         rvWorkouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rvWorkouts.setAdapter(workoutsAdapter);
         workoutsAdapter.addItemClickListener(this);
@@ -145,11 +144,11 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
                     RunDataResultListDTO runDataResultListDTO = GsonUtil.GsonToBean(response, RunDataResultListDTO.class);
 
                     String next = runDataResultListDTO.getNext();
-                    List<RunDataResult> runDataResults = runDataResultListDTO.getRunDataResults();
-//                    Logger.i(runDataResults.toString());
+                    List<RunDataResultDTO> runDataResultDTOS = runDataResultListDTO.getRunDataResultDTOS();
+//                    Logger.i(runDataResultDTOS.toString());
 
                     //
-                    WorkoutsNetFragment.this.runDataResults = runDataResults;
+                    WorkoutsNetFragment.this.runDataResultDTOS = runDataResultDTOS;
 
                     // 显示列表数据
                     workoutsAdapter.notifyDataSetChanged();
@@ -198,9 +197,9 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
             case R.id.tv_done:
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("note", edtInfoNote.getText().toString());
-                int i = LitePal.updateAll(RowerDataBean1.class, contentValues, "date=?", String.valueOf(runDataResults.get(clickPosition).getDate()));
+                int i = LitePal.updateAll(RowerDataBean1.class, contentValues, "date=?", String.valueOf(runDataResultDTOS.get(clickPosition).getDate()));
                 if (i == 1) {
-                    runDataResults.get(clickPosition).setRemarks(edtInfoNote.getText().toString());
+                    runDataResultDTOS.get(clickPosition).setRemarks(edtInfoNote.getText().toString());
                     workoutsAdapter.notifyItemChanged(clickPosition);
                     ToastUtil.show("Save successfully", true);
                 } else {
@@ -218,9 +217,9 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
                 break;
             case R.id.tv_ok:
                 tvEdit.performClick();
-                int j = LitePal.deleteAll(RowerDataBean1.class, "date=?", String.valueOf(runDataResults.get(deletePosition).getDate()));
+                int j = LitePal.deleteAll(RowerDataBean1.class, "date=?", String.valueOf(runDataResultDTOS.get(deletePosition).getDate()));
                 if (j > 0) {
-                    runDataResults.remove(deletePosition);
+                    runDataResultDTOS.remove(deletePosition);
                     workoutsAdapter.notifyDataSetChanged();
                     ToastUtil.show("Delete successfully", true);
                 } else {
@@ -233,8 +232,8 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
     }
 
     private void refreshList1() {
-        runDataResults.clear();
-//        runDataResults.addAll(LitePal.order("date desc").find(RowerDataBean1.class, true));
+        runDataResultDTOS.clear();
+//        runDataResultDTOS.addAll(LitePal.order("date desc").find(RowerDataBean1.class, true));
         getRunDataResultList();
     }
 
@@ -268,10 +267,10 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
      * 刷新详细列表
      */
     private void notifyInfoData() {
-        RunDataResult bean = runDataResults.get(clickPosition);
-        ArrayList<RunDataInfo> list = new ArrayList<>();
+        RunDataResultDTO bean = runDataResultDTOS.get(clickPosition);
+        ArrayList<RunDataInfoDTO> list = new ArrayList<>();
 
-        for (RunDataInfo oo : list) {
+        for (RunDataInfoDTO oo : list) {
             Logger.e("oo == " + oo);
         }
 

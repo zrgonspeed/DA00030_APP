@@ -9,7 +9,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +23,7 @@ import com.bike.ftms.app.activity.user.PersonalDataActivity;
 import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
-import com.bike.ftms.app.bean.RowerDataBean1;
+import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.activity.fragment.HomeFragment;
 import com.bike.ftms.app.activity.fragment.workout.WorkoutsFragment;
 import com.bike.ftms.app.activity.fragment.workout.WorkoutsLocalFragment;
@@ -101,7 +100,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         Logger.e("BleManager == " + BleManager.getInstance());
         BleManager.getInstance().setOnRunDataListener(this);
         if (!BleManager.isConnect && !BleManager.isHrConnect) {
-            showConnectHintDialog();
+            if (vp.getCurrentItem() == 0) {
+                showConnectHintDialog();
+            }
             homeFragment.onRunData(new RowerDataBean1());
         } else {
             if (yesOrNoDialog != null && yesOrNoDialog.isShowing()) {
@@ -111,11 +112,13 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
 
         // 判断是否登录，去显示下方用户名头像
-        if (UserManager.getInstance().getUserId() != -1) {
+        if (UserManager.getInstance().getUser() != null) {
             // 已登录
             btn_workout_login.setVisibility(View.GONE);
             btn_workout_user_info.setVisibility(View.VISIBLE);
+            btn_workout_user_info.setImageResource(R.drawable.user_header_def_2);
             tv_username.setVisibility(View.VISIBLE);
+            tv_username.setText(UserManager.getInstance().getUser().getUsername());
         } else {
             // 未登录
             btn_workout_login.setVisibility(View.VISIBLE);

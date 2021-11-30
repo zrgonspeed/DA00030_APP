@@ -149,7 +149,7 @@ public class BasisTimesUtils {
     public static String getDeviceTimeOfYMD() {
         String date = "";
         try {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             date = df.format(new Date());
         } catch (Exception e) {
             e.printStackTrace();

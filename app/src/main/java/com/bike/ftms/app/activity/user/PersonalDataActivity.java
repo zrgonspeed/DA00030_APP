@@ -5,7 +5,9 @@ import android.widget.ImageView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseActivity;
+import com.bike.ftms.app.bean.user.LoginSuccessBean;
 import com.bike.ftms.app.utils.Logger;
+import com.bike.ftms.app.widget.SettingBar;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -16,6 +18,19 @@ public class PersonalDataActivity extends BaseActivity {
 
     @BindView(R.id.iv_back)
     ImageView iv_back;
+
+    @BindView(R.id.sb_person_data_name)
+    SettingBar sb_person_data_name;
+    @BindView(R.id.sb_person_data_username)
+    SettingBar sb_person_data_username;
+    @BindView(R.id.sb_person_data_gender)
+    SettingBar sb_person_data_gender;
+    @BindView(R.id.sb_person_data_address)
+    SettingBar sb_person_data_address;
+    @BindView(R.id.sb_person_data_email)
+    SettingBar sb_person_data_email;
+    @BindView(R.id.sb_person_data_birthday)
+    SettingBar sb_person_data_birthday;
 
     @Override
     protected String getTAG() {
@@ -35,6 +50,18 @@ public class PersonalDataActivity extends BaseActivity {
     @Override
     protected void initView() {
         Logger.i("initView()");
+
+        LoginSuccessBean user = UserManager.getInstance().getUser();
+        if (user == null) {
+            return;
+        }
+
+        sb_person_data_name.setRightText(user.getFirstname() + user.getLastname());
+        sb_person_data_username.setRightText(user.getUsername());
+        sb_person_data_address.setRightText(user.getCountry());
+        sb_person_data_birthday.setRightText(user.getBirthday());
+        sb_person_data_gender.setRightText(user.getGender());
+        sb_person_data_email.setRightText(user.getEmail());
     }
 
     @OnClick({R.id.iv_back, R.id.sb_person_data_signout})

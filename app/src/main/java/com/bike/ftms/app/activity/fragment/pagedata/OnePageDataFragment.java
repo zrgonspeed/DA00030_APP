@@ -6,8 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.utils.Logger;
+import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import butterknife.BindView;

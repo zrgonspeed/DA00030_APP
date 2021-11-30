@@ -1,8 +1,13 @@
 package com.bike.ftms.app.activity.user;
 
+import androidx.annotation.NonNull;
+
+import com.bike.ftms.app.bean.user.LoginSuccessBean;
+
 public class UserManager {
     private static UserManager instance;
-    private int userId = -1;
+    //    private int userId = -1;
+    private LoginSuccessBean user;
 
     public static UserManager getInstance() {
         if (instance == null) {
@@ -14,16 +19,24 @@ public class UserManager {
         }
         return instance;
     }
-
+/*
     public void setUserId(int userId) {
         this.userId = userId;
     }
 
     public int getUserId() {
         return userId;
-    }
+    }*/
 
     public void signOut() {
-        this.userId = -1;
+        this.user = null;
+    }
+
+    public void setUser(@NonNull LoginSuccessBean bean) {
+        this.user = bean;
+    }
+
+    public LoginSuccessBean getUser() {
+        return user;
     }
 }

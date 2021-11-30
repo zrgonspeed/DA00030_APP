@@ -10,11 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.bean.RowerDataBean2;
-import com.bike.ftms.app.bean.RunDataResult;
-import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.utils.TimeStringUtil;
+import com.bike.ftms.app.bean.rundata.RunDataResultDTO;
 
 import java.util.List;
 
@@ -27,10 +23,10 @@ public class WorkoutsNetAdapter extends RecyclerView.Adapter<WorkoutsNetAdapter.
     private OnItemClickListener onItemClickListener;
     private OnItemDeleteListener onItemDeleteListener;
     private boolean isShowDelete = false;
-    private List<RunDataResult> runDataResults;
+    private List<RunDataResultDTO> runDataResultDTOS;
 
-    public WorkoutsNetAdapter(List<RunDataResult> runDataResults) {
-        this.runDataResults = runDataResults;
+    public WorkoutsNetAdapter(List<RunDataResultDTO> runDataResultDTOS) {
+        this.runDataResultDTOS = runDataResultDTOS;
     }
 
     @NonNull
@@ -42,7 +38,7 @@ public class WorkoutsNetAdapter extends RecyclerView.Adapter<WorkoutsNetAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull WorkoutsNetAdapter.WorkoutsViewHolder holder, int position) {
-        RunDataResult bean = runDataResults.get(position);
+        RunDataResultDTO bean = runDataResultDTOS.get(position);
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClickListener(position));
         holder.ivDelete.setOnClickListener(v -> onItemDeleteListener.onItemDeleteListener(position));
         if (isShowDelete) {
@@ -132,7 +128,7 @@ public class WorkoutsNetAdapter extends RecyclerView.Adapter<WorkoutsNetAdapter.
 
     @Override
     public int getItemCount() {
-        return runDataResults.size();
+        return runDataResultDTOS.size();
     }
 
     public interface OnItemClickListener {

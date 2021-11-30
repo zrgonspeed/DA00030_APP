@@ -8,9 +8,9 @@ import com.andreabaccega.widget.FormEditText;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.MainActivity;
 import com.bike.ftms.app.base.BaseActivity;
-import com.bike.ftms.app.bean.LoginBean;
-import com.bike.ftms.app.bean.LoginSuccessBean;
-import com.bike.ftms.app.bean.ResultBean;
+import com.bike.ftms.app.bean.user.LoginBean;
+import com.bike.ftms.app.bean.user.LoginSuccessBean;
+import com.bike.ftms.app.bean.user.ResultBean;
 import com.bike.ftms.app.common.HttpParam;
 import com.bike.ftms.app.http.OkHttpCallBack;
 import com.bike.ftms.app.http.OkHttpHelper;
@@ -74,8 +74,8 @@ public class LoginActivity extends BaseActivity {
                 boolean isOk = checkField();
                 if (isOk) {
                     // 2.发送到服务器
-//                    sendAllToServer();
-                    sendAllToServer2();
+                    sendAllToServer();
+//                    sendAllToServer2();
                 }
                 break;
             case R.id.tv_forget:
@@ -95,7 +95,7 @@ public class LoginActivity extends BaseActivity {
 
         if ("zrg".equals(userName) && "123".equals(pass)) {
             // 登录成功
-            loginSuccess();
+            loginSuccess(null);
         } else {
             loginFail();
         }
@@ -161,9 +161,7 @@ public class LoginActivity extends BaseActivity {
                     }
                      */
                     LoginSuccessBean loginSuccessBean = GsonUtil.GsonToBean(response, LoginSuccessBean.class);
-                    Logger.e("登录成功: " + loginSuccessBean.toString());
-
-                    loginSuccess();
+                    loginSuccess(loginSuccessBean);
                 } else if (httpCode == 422 || httpCode == 404 || httpCode == 401) {
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
                     Logger.e("登录失败:" + resultBean.toString());
@@ -177,11 +175,11 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void loginSuccess() {
+    private void loginSuccess(LoginSuccessBean loginSuccessBean) {
+        Logger.e("登录成功: " + loginSuccessBean.toString());
         ToastUtil.show("登录成功");
 
-        // TODO: 2021/11/24 传入 userId
-        UserManager.getInstance().setUserId(952637);
+        UserManager.getInstance().setUser(loginSuccessBean);
 
         // 页面跳转
         startActivity(new Intent(this, MainActivity.class));
@@ -190,7 +188,6 @@ public class LoginActivity extends BaseActivity {
 
     private void loginFail() {
         ToastUtil.show("登录失败");
-        UserManager.getInstance().setUserId(-1);
     }
 
 }

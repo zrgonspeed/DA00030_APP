@@ -4,7 +4,7 @@ public class HttpParam {
     // String mailCodeUrl = "http://192.168.50.21:8080" + "/restapi/verify/email";
 
     // http://rowerdata-test.anplus-tech.com
-    private final static String DOMAIN = "http://192.168.50.21:8080";
+    private final static String DOMAIN = "http://rowerdata-test.anplus-tech.com"; // "http://192.168.50.21:8080";
 
     // RESTful
     private final static String MAIL_CODE_REST = "/restapi/verify/email";

@@ -1,4 +1,4 @@
-package com.bike.ftms.app.bean;
+package com.bike.ftms.app.bean.user;
 
 public class ResultBean {
     private int httpCode;

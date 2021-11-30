@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.bean.RowerDataBean2;
+import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.bean.rundata.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
@@ -66,7 +66,10 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
         }
         holder.tvDate.setText(TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd HH:mm:ss"));
 
-        switch (bean.getRunMode()) {
+        bean.setTypeAndResult();
+        holder.tvDistance.setText(bean.getType());
+        holder.tvTime.setText(bean.getResult());
+        /*switch (bean.getRunMode()) {
             case MyConstant.NORMAL:
                 holder.tvDistance.setText(bean.getDistance() + "M");
                 holder.tvTime.setText(bean.getDistance() + "M");
@@ -133,7 +136,7 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
             break;
             default:
                 break;
-        }
+        }*/
     }
 
     @Override

@@ -17,9 +17,9 @@ import android.os.ParcelUuid;
 import android.os.SystemClock;
 
 import com.bike.ftms.app.base.MyApplication;
-import com.bike.ftms.app.bean.MyScanResult;
-import com.bike.ftms.app.bean.RowerDataBean1;
-import com.bike.ftms.app.bean.RowerDataBean2;
+import com.bike.ftms.app.bean.bluetooth.MyScanResult;
+import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.bean.rundata.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.common.RowerDataParam;
 import com.bike.ftms.app.serial.SerialCommand;
@@ -1779,6 +1779,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
             Logger.e("2----RUN_STATUS_STOP----" + "bean2  save : " + rowerDataBean2);
 
+            // mode 0没有 bean2，会多出
             tempSave(rowerDataBean2);
             Logger.e("2----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
 

@@ -12,7 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseFragment;
-import com.bike.ftms.app.bean.RowerDataBean1;
+import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.activity.fragment.pagedata.OnePageDataFragment;
 import com.bike.ftms.app.activity.fragment.pagedata.ThreePageDataFragment;
 import com.bike.ftms.app.activity.fragment.pagedata.TwoPageDataFragment;

@@ -1,4 +1,7 @@
-package com.bike.ftms.app.bean;
+package com.bike.ftms.app.bean.rundata;
+
+import com.bike.ftms.app.common.MyConstant;
+import com.bike.ftms.app.utils.TimeStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +12,7 @@ import java.util.List;
  * "result": "73M",
  * "remarks":"备注信息"
  */
-public class RunDataResult {
+public class RunDataResultDTO {
     private String workout_id;
 
     private String date;
@@ -17,7 +20,14 @@ public class RunDataResult {
     private String result;
     private String remarks; // 备注信息
 
-    private List<RunDataInfo> runDataInfos = new ArrayList<>();
+    private List<RunDataInfoDTO> runDataInfoDTOS = new ArrayList<>();
+
+    public RunDataResultDTO() {
+    }
+
+    public RunDataResultDTO(RowerDataBean1 bean1) {
+        toSelf(bean1);
+    }
 
     public String getWorkout_id() {
         return workout_id;
@@ -59,23 +69,39 @@ public class RunDataResult {
         this.remarks = remarks;
     }
 
-    public void setRunDataInfos(List<RunDataInfo> runDataInfos) {
-        this.runDataInfos = runDataInfos;
+    public void setRunDataInfoDTOS(List<RunDataInfoDTO> runDataInfoDTOS) {
+        this.runDataInfoDTOS = runDataInfoDTOS;
     }
 
-    public List<RunDataInfo> getRunDataInfos() {
-        return runDataInfos;
+    public List<RunDataInfoDTO> getRunDataInfoDTOS() {
+        return runDataInfoDTOS;
     }
 
     @Override
     public String toString() {
-        return "RunDataResult{" +
+        return "RunDataResultDTO{" +
                 "workout_id='" + workout_id + '\'' +
                 ", date='" + date + '\'' +
                 ", type='" + type + '\'' +
                 ", result='" + result + '\'' +
                 ", remarks='" + remarks + '\'' +
-                ", runDataInfos=" + runDataInfos +
+                ", runDataInfoDTOS=" + runDataInfoDTOS +
                 '}';
+    }
+
+    /**
+     * 上传到服务器的数据对象
+     *
+     * @param bean1
+     */
+    private void toSelf(RowerDataBean1 bean1) {
+        setDate(TimeStringUtil.getDate2String(bean1.getDate(), "yyyy-MM-dd HH:mm:ss"));
+        setRemarks(bean1.getNote());
+
+        bean1.setTypeAndResult();
+        setType(bean1.getType());
+        setResult(bean1.getResult());
+
+
     }
 }

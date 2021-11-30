@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseFragment;
-import com.bike.ftms.app.bean.RowerDataBean1;
+import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.utils.Logger;
