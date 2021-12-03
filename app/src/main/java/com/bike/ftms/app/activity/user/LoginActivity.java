@@ -160,7 +160,7 @@ public class LoginActivity extends BaseActivity {
 
                 // 网络没打开
                 // 请求超时
-                ToastUtil.show("连接超时", true, ToastUtil.Mode.REPLACEABLE);
+                ToastUtil.show(R.string.timeout, true, ToastUtil.Mode.REPLACEABLE);
             }
 
             @Override
@@ -185,11 +185,11 @@ public class LoginActivity extends BaseActivity {
                 } else if (httpCode == 422 || httpCode == 404 || httpCode == 401) {
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
                     Logger.e("登录失败:" + resultBean.toString());
-                    ToastUtil.show("登录失败: " + resultBean.getMessage());
+                    ToastUtil.show(getString(R.string.Login_fail) + resultBean.getMessage());
                 } else {
                     Logger.e("httpCode == " + httpCode + " 其它处理");
                     Logger.e("登录失败---");
-                    ToastUtil.show("登录失败: httpcode = " + httpCode);
+                    ToastUtil.show(getString(R.string.Login_fail_httpcode) + httpCode);
                 }
             }
         });
@@ -197,7 +197,7 @@ public class LoginActivity extends BaseActivity {
 
     private void loginSuccess(LoginSuccessBean loginSuccessBean) {
         Logger.e("登录成功: " + loginSuccessBean.toString());
-        ToastUtil.show("登录成功");
+        ToastUtil.show(getString(R.string.login_success));
 
         UserManager.getInstance().setUser(loginSuccessBean);
 
@@ -207,7 +207,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void loginFail() {
-        ToastUtil.show("登录失败");
+        ToastUtil.show(R.string.Login_fail);
     }
 
 }

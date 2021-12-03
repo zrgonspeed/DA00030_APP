@@ -132,7 +132,7 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
 
                 // 网络没打开
                 // 请求超时
-                ToastUtil.show("连接超时", true, ToastUtil.Mode.REPLACEABLE);
+                ToastUtil.show(getString(R.string.timeout), true, ToastUtil.Mode.REPLACEABLE);
             }
 
             @Override
@@ -201,9 +201,9 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
                 if (i == 1) {
                     runDataResultDTOS.get(clickPosition).setRemarks(edtInfoNote.getText().toString());
                     workoutsAdapter.notifyItemChanged(clickPosition);
-                    ToastUtil.show("Save successfully", true);
+                    ToastUtil.show(R.string.save_success, true);
                 } else {
-                    ToastUtil.show("Save fail", true);
+                    ToastUtil.show(R.string.save_fail, true);
                 }
                 break;
             case R.id.tv_workouts:
@@ -221,9 +221,9 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
                 if (j > 0) {
                     runDataResultDTOS.remove(deletePosition);
                     workoutsAdapter.notifyDataSetChanged();
-                    ToastUtil.show("Delete successfully", true);
+                    ToastUtil.show(R.string.delete_success, true);
                 } else {
-                    ToastUtil.show("Delete fail", true);
+                    ToastUtil.show(getString(R.string.delete_fail), true);
                 }
 
                 rlDelete.setVisibility(View.GONE);

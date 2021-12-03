@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">D-Fit</string>
-    <string name="home_strokes">STROKES</string>
-    <string name="home_drag">DRAG</string>
-    <string name="home_interval">INTERVAL</string>
-    <string name="home_ave_500">AVE/500M</string>
-    <string name="home_500">/500M</string>
-    <string name="home_sm">S/M</string>
-    <string name="home_watts">WATTS</string>
-    <string name="home_ave_watts">AVE WATTS</string>
-    <string name="home_calories">CALORIES</string>
-    <string name="home_calories_hr">CALORIES/HR</string>
+    <string name="home_strokes" translatable="false">STROKES</string>
+    <string name="home_drag" translatable="false">DRAG</string>
+    <string name="home_interval" translatable="false">INTERVAL</string>
+    <string name="home_ave_500" translatable="false">AVE/500M</string>
+    <string name="home_500" translatable="false">/500M</string>
+    <string name="home_sm" translatable="false">S/M</string>
+    <string name="home_watts" translatable="false">WATTS</string>
+    <string name="home_ave_watts" translatable="false">AVE WATTS</string>
+    <string name="home_calories" translatable="false">CALORIES</string>
+    <string name="home_calories_hr" translatable="false">CALORIES/HR</string>
     <string name="home_exit">Are you sure to exit ?</string>
 
     <string name="setting_back">BACK</string>
@@ -22,20 +22,20 @@
     <string name="heart_rate_switch">HRM Bluetooth Smart Wireless</string>
     <string name="heart_rate_scanning">Heart Rate Monitors - Tap to select / disconnect</string>
 
-    <string name="workouts">WORKOUTS</string>
+    <string name="workouts" translatable="false">WORKOUTS</string>
     <string name="workouts_upload">UPLOAD</string>
     <string name="workouts_edit">EDIT</string>
-    <string name="workouts_date">DATE</string>
-    <string name="workouts_type">TYPE</string>
-    <string name="workouts_result">RESULT</string>
+    <string name="workouts_date" translatable="false">DATE</string>
+    <string name="workouts_type" translatable="false">TYPE</string>
+    <string name="workouts_result" translatable="false">RESULT</string>
     <string name="workouts_done">DONE</string>
-    <string name="workouts_time">TIME</string>
-    <string name="workouts_meters">METERS</string>
-    <string name="workouts_500">/500M</string>
-    <string name="workouts_clas">CALS</string>
-    <string name="workouts_watts">WATTS</string>
-    <string name="workouts_cal_hr">CAL/HR</string>
-    <string name="workouts_sm">S/M</string>
+    <string name="workouts_time" translatable="false">TIME</string>
+    <string name="workouts_meters" translatable="false">METERS</string>
+    <string name="workouts_500" translatable="false">/500M</string>
+    <string name="workouts_clas" translatable="false">CALS</string>
+    <string name="workouts_watts" translatable="false">WATTS</string>
+    <string name="workouts_cal_hr" translatable="false">CAL/HR</string>
+    <string name="workouts_sm" translatable="false">S/M</string>
     <string name="workouts_info_delete">Delete</string>
     <string name="workouts_cancel">Cancel</string>
     <string name="workouts_ok">OK</string>
@@ -73,19 +73,42 @@
 
 
     <!-- 个人资料 -->
-    <string name="personal_data_title">个人资料</string>
-    <string name="personal_data_head">头像</string>
+    <string name="personal_data_head">Avatar</string>
 
-    <string name="personal_data_id">用户ID</string>
-    <string name="personal_data_name">昵称</string>
-    <string name="personal_data_name_hint">设置昵称</string>
+    <string name="personal_data_id">User ID</string>
+    <string name="personal_data_name">Nick name</string>
+    <string name="personal_data_name_hint">Set nickname</string>
 
-    <string name="personal_data_address">地区</string>
-    <string name="personal_data_address_hint">请选择</string>
-    <string name="personal_data_email">邮箱</string>
-    <string name="personal_data_birthday">生日</string>
-    <string name="personal_data_sex">性别</string>
+    <string name="personal_data_address">Area</string>
+    <string name="personal_data_address_hint">Please choose</string>
+    <string name="personal_data_email">Email</string>
+    <string name="personal_data_birthday">Birthday</string>
+    <string name="personal_data_sex">Gender</string>
 
-    <string name="personal_data_phone">手机号码</string>
-    <string name="personal_data_phone_hint">立即绑定</string>
+    <string name="personal_data_phone">Phone</string>
+    <string name="personal_data_phone_hint">Bind now</string>
+    <string name="personal_data_title">Personal information</string>
+    <string name="logged">Already logged</string>
+    <string name="timeout">Connection timed out</string>
+    <string name="cannot_upload">Not yet open to upload</string>
+    <string name="not_support_location">The device does not support location services</string>
+    <string name="save_success">Save successfully</string>
+    <string name="save_fail">Save fail</string>
+    <string name="delete_success">Delete successfully</string>
+    <string name="upload_success">Uploaded successfully</string>
+    <string name="upload_fail">"Upload failed: "</string>
+    <string name="upload_fail_httpcode">"Upload failed: httpcode = "</string>
+    <string name="delete_fail">Delete fail</string>
+    <string name="Login_fail">"Login failed: "</string>
+    <string name="Login_fail_httpcode">"Login failed: httpcode = "</string>
+    <string name="login_success">Login successful</string>
+    <string name="inconsistent_passwords">Inconsistent passwords</string>
+    <string name="email_format_error">The email format is wrong!</string>
+    <string name="send_email_fail">email_send_fail</string>
+    <string name="email_send_fail">email_send_fail</string>
+    <string name="text_1">seconds return home</string>
+    <string name="dzb">digital watch</string>
+    <string name="sign_out">Sign out</string>
+    <string name="user_name">UserName</string>
+    <string name="has_sent">email_has_sent</string>
 </resources>

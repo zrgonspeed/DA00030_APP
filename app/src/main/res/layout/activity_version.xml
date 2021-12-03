@@ -109,7 +109,7 @@
         android:layout_marginStart="10dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:text="电子表"
+        android:text="@string/dzb"
         android:textColor="@color/color_707070"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"

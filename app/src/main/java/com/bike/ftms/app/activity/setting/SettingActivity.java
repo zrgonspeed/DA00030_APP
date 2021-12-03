@@ -58,7 +58,7 @@ public class SettingActivity extends BaseActivity {
                 if (UserManager.getInstance().getUser() == null) {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
-                    ToastUtil.show("已登录", ToastUtil.Mode.REPLACEABLE);
+                    ToastUtil.show(getString(R.string.logged), ToastUtil.Mode.REPLACEABLE);
                 }
                 break;
             case R.id.iv_setting_bluetooth:

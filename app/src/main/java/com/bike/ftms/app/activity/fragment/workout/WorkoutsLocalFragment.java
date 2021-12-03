@@ -142,7 +142,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 }
                 break;
             case R.id.tv_upload:
-                ToastUtil.show("暂未开放上传", true, ToastUtil.Mode.REPLACEABLE);
+                ToastUtil.show(getString(R.string.cannot_upload), true, ToastUtil.Mode.REPLACEABLE);
 //                uploadRunData();
                 break;
             case R.id.tv_edit:
@@ -156,9 +156,9 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 if (i == 1) {
                     rowerDataBean1List.get(clickPosition).setNote(edt_info_note.getText().toString());
                     workoutsLocalAdapter.notifyItemChanged(clickPosition);
-                    ToastUtil.show("Save successfully", true);
+                    ToastUtil.show(getString(R.string.save_success), true);
                 } else {
-                    ToastUtil.show("Save fail", true);
+                    ToastUtil.show(getString(R.string.save_fail), true);
                 }
                 break;
             case R.id.tv_workouts:
@@ -176,9 +176,9 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 if (j > 0) {
                     rowerDataBean1List.remove(deletePosition);
                     workoutsLocalAdapter.notifyDataSetChanged();
-                    ToastUtil.show("Delete successfully", true, ToastUtil.Mode.REPLACEABLE);
+                    ToastUtil.show(getString(R.string.delete_success), true, ToastUtil.Mode.REPLACEABLE);
                 } else {
-                    ToastUtil.show("Delete fail", true, ToastUtil.Mode.REPLACEABLE);
+                    ToastUtil.show(getString(R.string.delete_fail), true, ToastUtil.Mode.REPLACEABLE);
                 }
 
                 rl_delete.setVisibility(View.GONE);
@@ -583,7 +583,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
                 // 网络没打开
                 // 请求超时
-                ToastUtil.show("连接超时", true, ToastUtil.Mode.REPLACEABLE);
+                ToastUtil.show(R.string.timeout, true, ToastUtil.Mode.REPLACEABLE);
             }
 
             @Override
@@ -595,15 +595,15 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                     UploadResult resultBean = GsonUtil.GsonToBean(response, UploadResult.class);
 
                     Logger.e("上传成功: workout_id == " + resultBean.getWorkout_id());
-                    ToastUtil.show("上传成功");
+                    ToastUtil.show(getString(R.string.upload_success));
                 } else if (httpCode == 422 || httpCode == 404 || httpCode == 401) {
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
                     Logger.e("上传失败:" + resultBean.toString());
-                    ToastUtil.show("上传失败: " + resultBean.getMessage());
+                    ToastUtil.show(getString(R.string.upload_fail) + resultBean.getMessage());
                 } else {
                     Logger.e("httpCode == " + httpCode + " 其它处理");
                     Logger.e("上传失败---");
-                    ToastUtil.show("上传失败: httpcode = " + httpCode);
+                    ToastUtil.show(getString(R.string.upload_fail_httpcode) + httpCode);
                 }
             }
         });

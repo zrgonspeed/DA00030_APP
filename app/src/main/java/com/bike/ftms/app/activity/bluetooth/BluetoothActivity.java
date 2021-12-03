@@ -259,7 +259,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(intent, 1);
             } else {
-                ToastUtil.show("该设备不支持位置服务", true);
+                ToastUtil.show(getString(R.string.not_support_location), true);
             }
         }
     }

@@ -220,7 +220,7 @@ public class RegisterActivity extends BaseActivity {
         if (!pass.equals("") && !pass2.equals("")) {
             if (!pass.equals(pass2)) {
                 Logger.e("密码不一致");
-                ToastUtil.show("密码不一致", ToastUtil.Mode.REPLACEABLE);
+                ToastUtil.show(getString(R.string.inconsistent_passwords), ToastUtil.Mode.REPLACEABLE);
                 return false;
             }
         }
@@ -254,12 +254,9 @@ public class RegisterActivity extends BaseActivity {
     private void showChoiceSex() {
         AlertDialog.Builder choiceSexDialog = new AlertDialog.Builder(this);
         choiceSexDialog.setTitle(getString(R.string.create_gender_title));
-        choiceSexDialog.setItems(sexItems, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                choiceSexInx = which;
-                edt_gender.setText(sexItems[choiceSexInx]);
-            }
+        choiceSexDialog.setItems(sexItems, (dialog, which) -> {
+            choiceSexInx = which;
+            edt_gender.setText(sexItems[choiceSexInx]);
         });
         choiceSexDialog.show();
     }
@@ -297,8 +294,8 @@ public class RegisterActivity extends BaseActivity {
                 // 响应失败
                 Logger.e("请求失败！");
                 Logger.e(e.toString());
-                ToastUtil.show("连接超时", true, ToastUtil.Mode.REPLACEABLE);
-                tv_send_code.setText("发送失败");
+                ToastUtil.show(R.string.timeout, true, ToastUtil.Mode.REPLACEABLE);
+                tv_send_code.setText(R.string.send_email_fail);
             }
 
             @Override
@@ -315,14 +312,14 @@ public class RegisterActivity extends BaseActivity {
                     // 正确响应，无响应体
                     // 显示注册成功界面
                     Logger.e("发送验证码成功");
-                    tv_send_code.setText("已发送");
+                    tv_send_code.setText(R.string.has_sent);
 //                    cl_register_success.setVisibility(View.VISIBLE);
                 } else if (httpCode == 422) {
                     // 错误响应，响应体包含错误信息
                     // 显示注册失败界面
                     Logger.e("发送验证码失败");
-                    ToastUtil.show("邮箱格式不对!");
-                    tv_send_code.setText("发送失败");
+                    ToastUtil.show(getString(R.string.email_format_error));
+                    tv_send_code.setText(R.string.email_send_fail);
 
                     // 封装响应体为bean
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
@@ -363,7 +360,7 @@ public class RegisterActivity extends BaseActivity {
 
                 // 网络没打开
                 // 请求超时
-                ToastUtil.show("连接超时", true, ToastUtil.Mode.REPLACEABLE);
+                ToastUtil.show(R.string.timeout, true, ToastUtil.Mode.REPLACEABLE);
             }
 
             @Override
@@ -385,7 +382,7 @@ public class RegisterActivity extends BaseActivity {
                         for (int i = 5; i >= 1; i--) {
                             int finalI = i;
                             runOnUiThread(() -> {
-                                tv_register_success_count.setText(finalI + "秒后返回登录界面");
+                                tv_register_success_count.setText(finalI + getString(R.string.text_1));
                             });
                             SystemClock.sleep(1000);
                         }

@@ -16,6 +16,7 @@ import android.os.Looper;
 import android.os.ParcelUuid;
 import android.os.SystemClock;
 
+import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.bean.bluetooth.MyScanResult;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
@@ -1789,7 +1790,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             new Thread(() -> {
                 Looper.prepare();
                 new Handler().post(() -> {
-                    ToastUtil.show("保存成功！", true, ToastUtil.Mode.REPLACEABLE);
+                    ToastUtil.show(R.string.save_success, true, ToastUtil.Mode.REPLACEABLE);
                 });
                 Looper.loop();
             }).start();
