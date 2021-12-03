@@ -27,4 +27,24 @@ public class SpManager {
     public static int getTreadmill_flag() {
         return StorageParam.getParam(SET_TREADMILL_FLAG, -1);
     }
+
+
+    private static final String SET_USERNAME = "set_username";
+    private static final String SET_PASSWORD = "set_password";
+
+    public static String getUsername() {
+        return StorageParam.getParam(SET_USERNAME, "");
+    }
+
+    public static void setUsername(String username) {
+        StorageParam.setParam(SET_USERNAME, username);
+    }
+
+    public static String getPassword() {
+        return StorageParam.getParam(SET_PASSWORD, "");
+    }
+
+    public static void setPassword(String password) {
+        StorageParam.setParam(SET_PASSWORD, password);
+    }
 }

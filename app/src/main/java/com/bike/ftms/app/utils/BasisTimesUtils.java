@@ -235,23 +235,16 @@ public class BasisTimesUtils {
      */
     public static BasisTimesUtils showDatePickerDialog(Context context, int themeId, String title, int year, int month, int day,
                                                        final OnDatePickerListener onDateTimePickerListener) {
-        mDatePickerDialog = new DatePickerDialog(context, themeId, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month + 1;//月份加一
-                if (onDateTimePickerListener != null) {
-                    onDateTimePickerListener.onConfirm(year, month, dayOfMonth);
-                }
+        mDatePickerDialog = new DatePickerDialog(context, themeId, (view, year1, month1, dayOfMonth) -> {
+            month1 = month1 + 1;//月份加一
+            if (onDateTimePickerListener != null) {
+                onDateTimePickerListener.onConfirm(year1, month1, dayOfMonth);
             }
-
         }, year, month - 1, day);//月份减一
 
-        mDatePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                if (onDateTimePickerListener != null) {
-                    onDateTimePickerListener.onCancel();
-                }
+        mDatePickerDialog.setOnCancelListener(dialog -> {
+            if (onDateTimePickerListener != null) {
+                onDateTimePickerListener.onCancel();
             }
         });
 
@@ -335,21 +328,15 @@ public class BasisTimesUtils {
      * 显示时间选择器
      */
     public static void showTimerPickerDialog(Context context, int themeId, String title, int hourOfDay, int minute, boolean is24HourView, final OnTimerPickerListener onTimerPickerListener) {
-        TimePickerDialog dialog = new TimePickerDialog(context, themeId, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                if (onTimerPickerListener != null) {
-                    onTimerPickerListener.onConfirm(hourOfDay, minute);
-                }
+        TimePickerDialog dialog = new TimePickerDialog(context, themeId, (view, hourOfDay1, minute1) -> {
+            if (onTimerPickerListener != null) {
+                onTimerPickerListener.onConfirm(hourOfDay1, minute1);
             }
         }, hourOfDay, minute, is24HourView);
 
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                if (onTimerPickerListener != null) {
-                    onTimerPickerListener.onCancel();
-                }
+        dialog.setOnCancelListener(dialog1 -> {
+            if (onTimerPickerListener != null) {
+                onTimerPickerListener.onCancel();
             }
         });
 

@@ -113,13 +113,6 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        sexItems = new String[]{getString(R.string.create_male), getString(R.string.create_female)};
-        countryItems = getResources().getStringArray(R.array.country_code_list_en);
-        edt_birth.setText(BasisTimesUtils.getDeviceTimeOfYMD());
-        edt_gender.setText(sexItems[choiceSexInx]);
-        edt_country.setText(countryItems[choiceCountryInx]);
-
-
         etArr[0] = edt_first_name;
         etArr[1] = edt_last_name;
         etArr[2] = edt_email_code;
@@ -138,7 +131,15 @@ public class RegisterActivity extends BaseActivity {
                     formEditText.testValidity();
                 }
             });
+
+            formEditText.getText().clear();
         }
+
+        sexItems = new String[]{getString(R.string.create_male), getString(R.string.create_female)};
+        countryItems = getResources().getStringArray(R.array.country_code_list_en);
+        edt_birth.setText(BasisTimesUtils.getDeviceTimeOfYMD());
+        edt_gender.setText(sexItems[choiceSexInx]);
+        edt_country.setText(countryItems[choiceCountryInx]);
 
 
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -232,13 +233,13 @@ public class RegisterActivity extends BaseActivity {
      * 年月日选择
      */
     private void showSelectBirthdayPicker() {
-        String[] strings = edt_birth.getText().toString().split("/");
+        String[] strings = edt_birth.getText().toString().split("-");
         BasisTimesUtils.showDatePickerDialog(this, true, "Please select birthday", Integer.valueOf(strings[0])
                 , Integer.valueOf(strings[1]), Integer.valueOf(strings[2]), new BasisTimesUtils.OnDatePickerListener() {
 
                     @Override
                     public void onConfirm(int year, int month, int dayOfMonth) {
-                        edt_birth.setText(year + "/" + month + "/" + dayOfMonth);
+                        edt_birth.setText(year + "-" + ((month < 10) ? "0" + month : month) + "-" + ((dayOfMonth < 10) ? "0" + dayOfMonth : dayOfMonth));
                     }
 
                     @Override

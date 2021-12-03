@@ -55,8 +55,8 @@ public class LauncherActivity extends BaseActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.i(TAG, "onTouchEvent: 点击启动界面马上进主页面:" + event.getAction());
-        startMainActivity();
+//        Log.i(TAG, "onTouchEvent: 点击启动界面马上进主页面:" + event.getAction());
+//        startMainActivity();
         return super.onTouchEvent(event);
     }
 

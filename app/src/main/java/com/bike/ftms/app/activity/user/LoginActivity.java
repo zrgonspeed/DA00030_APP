@@ -3,6 +3,7 @@ package com.bike.ftms.app.activity.user;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
 import com.bike.ftms.app.R;
@@ -14,6 +15,7 @@ import com.bike.ftms.app.bean.user.ResultBean;
 import com.bike.ftms.app.common.HttpParam;
 import com.bike.ftms.app.http.OkHttpCallBack;
 import com.bike.ftms.app.http.OkHttpHelper;
+import com.bike.ftms.app.storage.SpManager;
 import com.bike.ftms.app.utils.GsonUtil;
 import com.bike.ftms.app.utils.Logger;
 
@@ -32,6 +34,8 @@ public class LoginActivity extends BaseActivity {
     FormEditText edt_user_name;
     @BindView(R.id.edt_password)
     FormEditText edt_password;
+    @BindView(R.id.btn_login)
+    TextView btn_login;
 
     @Override
     protected String getTAG() {
@@ -41,6 +45,18 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!"".equals(SpManager.getUsername()) && !"".equals(SpManager.getPassword())) {
+            // 自动登录
+            edt_user_name.setText(SpManager.getUsername());
+            edt_password.setText(SpManager.getPassword());
+            btn_login.callOnClick();
+        }
     }
 
     @Override
@@ -55,7 +71,8 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
+        edt_user_name.getText().clear();
+        edt_password.getText().clear();
     }
 
     @OnClick({R.id.btn_login, R.id.tv_forget, R.id.tv_register, R.id.tv_skip})
@@ -160,6 +177,9 @@ public class LoginActivity extends BaseActivity {
                       "token": "38e203a2****************"
                     }
                      */
+                    SpManager.setUsername(edt_user_name.getText().toString());
+                    SpManager.setPassword(edt_password.getText().toString());
+
                     LoginSuccessBean loginSuccessBean = GsonUtil.GsonToBean(response, LoginSuccessBean.class);
                     loginSuccess(loginSuccessBean);
                 } else if (httpCode == 422 || httpCode == 404 || httpCode == 401) {

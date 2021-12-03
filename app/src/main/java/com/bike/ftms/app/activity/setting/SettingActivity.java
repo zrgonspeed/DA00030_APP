@@ -11,10 +11,12 @@ import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
 import com.bike.ftms.app.activity.bluetooth.HeartRateMonitorActivity;
 import com.bike.ftms.app.activity.user.LoginActivity;
 import com.bike.ftms.app.activity.user.RegisterActivity;
+import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.common.ParamData;
 
 import butterknife.OnClick;
+import tech.gujin.toast.ToastUtil;
 
 public class SettingActivity extends BaseActivity {
     private static final String TAG = SettingActivity.class.getSimpleName();
@@ -53,7 +55,11 @@ public class SettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.iv_setting_login:
-                startActivity(new Intent(this, LoginActivity.class));
+                if (UserManager.getInstance().getUser() == null) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                } else {
+                    ToastUtil.show("已登录", ToastUtil.Mode.REPLACEABLE);
+                }
                 break;
             case R.id.iv_setting_bluetooth:
                 startActivity(new Intent(this, BluetoothActivity.class));
