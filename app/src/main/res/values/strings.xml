@@ -107,8 +107,13 @@
     <string name="send_email_fail">email_send_fail</string>
     <string name="email_send_fail">email_send_fail</string>
     <string name="text_1">seconds return home</string>
-    <string name="dzb">digital watch</string>
+    <string name="dzb">DigitalWatch</string>
     <string name="sign_out">Sign out</string>
     <string name="user_name">UserName</string>
     <string name="has_sent">email_has_sent</string>
+    <string name="connect_now">Connect the device or not?</string>
+    <string name="warm_tip">Warm Tip</string>
+    <string name="ok">Yes</string>
+    <string name="cancel">NO</string>
+    <string name="name">name</string>
 </resources>

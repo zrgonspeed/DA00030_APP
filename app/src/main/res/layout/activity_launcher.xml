@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/iv_launcher"
-        android:layout_width="@dimen/dp_200"
-        android:layout_height="@dimen/dp_200"
+        android:layout_width="@dimen/dp_150"
+        android:layout_height="@dimen/dp_150"
         android:layout_centerInParent="true"
         android:src="@drawable/logo" />
 
@@ -21,8 +21,8 @@
         android:orientation="horizontal">
 
         <ProgressBar
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
 
         <TextView
             android:layout_width="wrap_content"

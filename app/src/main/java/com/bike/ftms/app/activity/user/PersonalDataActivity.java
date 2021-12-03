@@ -57,7 +57,11 @@ public class PersonalDataActivity extends BaseActivity {
             return;
         }
 
-        sb_person_data_name.setRightText(user.getFirstname() + user.getLastname());
+        if (user.getCountry().contains("China")) {
+            sb_person_data_name.setRightText(user.getFirstname() + user.getLastname());
+        } else {
+            sb_person_data_name.setRightText(user.getFirstname() + " " + user.getLastname());
+        }
         sb_person_data_username.setRightText(user.getUsername());
         sb_person_data_address.setRightText(user.getCountry());
         sb_person_data_birthday.setRightText(user.getBirthday());

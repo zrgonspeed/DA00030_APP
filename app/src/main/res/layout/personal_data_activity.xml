@@ -104,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
-                    app:bar_leftText="姓名"
+                    app:bar_leftText="@string/name"
                     app:bar_rightText="张日光"
                     tools:bar_rightText="880634" />
 

@@ -255,21 +255,13 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     private void showConnectHintDialog() {
         if (yesOrNoDialog == null) {
             yesOrNoDialog = new YesOrNoDialog(MainActivity.this);
-            yesOrNoDialog.setTitle("Warm Tip");
-            yesOrNoDialog.setMessage("Connect the device or not?");
-            yesOrNoDialog.setYesOnclickListener("Yes", new YesOrNoDialog.onYesOnclickListener() {
-                @Override
-                public void onYesClick() {
-                    startActivity(new Intent(MainActivity.this, BluetoothActivity.class));
-                    yesOrNoDialog.dismiss();
-                }
+            yesOrNoDialog.setTitle(getString(R.string.warm_tip));
+            yesOrNoDialog.setMessage(getString(R.string.connect_now));
+            yesOrNoDialog.setYesOnclickListener(getString(R.string.ok), () -> {
+                startActivity(new Intent(MainActivity.this, BluetoothActivity.class));
+                yesOrNoDialog.dismiss();
             });
-            yesOrNoDialog.setNoOnclickListener("NO", new YesOrNoDialog.onNoOnclickListener() {
-                @Override
-                public void onNoClick() {
-                    yesOrNoDialog.dismiss();
-                }
-            });
+            yesOrNoDialog.setNoOnclickListener(getString(R.string.cancel), () -> yesOrNoDialog.dismiss());
         }
 
         yesOrNoDialog.show();

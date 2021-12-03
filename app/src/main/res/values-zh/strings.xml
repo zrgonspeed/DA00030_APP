@@ -26,8 +26,8 @@
     <string name="create_country">国家：</string>
     <string name="create_birth">出生日期：</string>
     <string name="create_gender">性别：</string>
-    <string name="create_last_name">姓：</string>
-    <string name="create_first_name">名：</string>
+    <string name="create_last_name">名：</string>
+    <string name="create_first_name">姓：</string>
     <string name="create_title">建立新帐户</string>
     <string name="login_hint">删除表格数据同时会删除在线数据</string>
     <string name="login_create">建立新帐户</string>
@@ -48,7 +48,7 @@
     <string name="bluetooth_switch_disable">关闭蓝牙</string>
     <string name="bluetooth_scanning">扫描设备</string>
     <string name="heart_rate_switch">HRM蓝牙</string>
-    <string name="heart_rate_scanning">心率监测器 - 点击选择/断开连接</string>
+    <string name="heart_rate_scanning">心率监测器 - 点击开关-断开或连接</string>
     <string name="workouts_upload">上传</string>
     <string name="workouts_edit">修改</string>
     <string name="workouts_done">完成</string>
@@ -78,4 +78,9 @@
     <string name="dzb">电子表</string>
     <string name="sign_out">退出登录</string>
     <string name="user_name">用户名</string>
+    <string name="connect_now">现在连接设备?</string>
+    <string name="warm_tip">提示</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="name">姓名</string>
 </resources>
