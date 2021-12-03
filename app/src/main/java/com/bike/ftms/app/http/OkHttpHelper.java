@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -94,20 +96,28 @@ public class OkHttpHelper {
      * @param callBack
      */
     public static void post(String url, String json, Object tag, OkHttpCallBack callBack) {
-        commonPost(getRequestForPost(url, json, tag), callBack);
+        commonPost(getRequestForPost(url, json, tag, null), callBack);
     }
 
-    private static Request getRequestForPost(String url, String json, Object tag) {
+    public static void post(String url, String json, Object tag, Map<String, String> headerMap, OkHttpCallBack callBack) {
+        commonPost(getRequestForPost(url, json, tag, headerMap), callBack);
+    }
+
+    private static Request getRequestForPost(String url, String json, Object tag, Map<String, String> headerMap) {
         Logger.d("getRequestForPost---> " + url);
         if (url.isEmpty()) {
             return null;
+        }
+        Request.Builder builder = new Request.Builder();
+        if (headerMap != null) {
+            for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+                builder.addHeader(entry.getKey(), entry.getValue());
+            }
         }
 
         try {
             Logger.d("post json >>> " + json);
             RequestBody body = RequestBody.Companion.create(json, MEDIA_TYPE_JSON_3);
-
-            Request.Builder builder = new Request.Builder();
             builder.url(url)
                     .post(body);
 

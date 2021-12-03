@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.rundata.RunDataResultDTO;
+import com.bike.ftms.app.bean.rundata.get.RunDataResultDTO;
 
 import java.util.List;
 

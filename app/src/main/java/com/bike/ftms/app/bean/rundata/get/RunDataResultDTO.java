@@ -1,6 +1,6 @@
-package com.bike.ftms.app.bean.rundata;
+package com.bike.ftms.app.bean.rundata.get;
 
-import com.bike.ftms.app.common.MyConstant;
+import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import java.util.ArrayList;

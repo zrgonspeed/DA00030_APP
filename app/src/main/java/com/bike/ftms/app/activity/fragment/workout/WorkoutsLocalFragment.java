@@ -16,11 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter2;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.bean.rundata.RowerDataBean2;
-import com.bike.ftms.app.bean.rundata.RunDataResultDTO;
+import com.bike.ftms.app.bean.rundata.get.RunDataResultDTO;
+import com.bike.ftms.app.bean.rundata.put.RunDataBO;
+import com.bike.ftms.app.bean.rundata.put.UploadResult;
 import com.bike.ftms.app.bean.user.LoginSuccessBean;
 import com.bike.ftms.app.bean.user.ResultBean;
 import com.bike.ftms.app.common.HttpParam;
@@ -37,7 +40,9 @@ import org.litepal.crud.callback.FindMultiCallback;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -104,19 +109,14 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        workoutsLocalAdapter = new WorkoutsLocalAdapter(rowerDataBean1List);
-        rv_workouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        rv_workouts.setAdapter(workoutsLocalAdapter);
-        workoutsLocalAdapter.addItemClickListener(this);
-        workoutsLocalAdapter.addItemDeleteClickListener(this);
-        rl_delete.setOnTouchListener((v, event) -> true);
-        rl_online.setOnTouchListener((v, event) -> true);
+        setWorkouts1();
     }
 
     @Override
     protected void initData() {
 
     }
+
 
     @Override
     protected String getTAG() {
@@ -142,7 +142,8 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 }
                 break;
             case R.id.tv_upload:
-                uploadRunData();
+                ToastUtil.show("暂未开放上传", true, ToastUtil.Mode.REPLACEABLE);
+//                uploadRunData();
                 break;
             case R.id.tv_edit:
                 isEdit = !isEdit;
@@ -229,6 +230,19 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         ll_workouts.setVisibility(View.GONE);
     }
 
+    private void setWorkouts1() {
+        workoutsLocalAdapter = new WorkoutsLocalAdapter(rowerDataBean1List);
+        rv_workouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rv_workouts.setAdapter(workoutsLocalAdapter);
+        workoutsLocalAdapter.addItemClickListener(this);
+        workoutsLocalAdapter.addItemDeleteClickListener(this);
+        rl_delete.setOnTouchListener((v, event) -> true);
+        rl_online.setOnTouchListener((v, event) -> true);
+    }
+
+    /**
+     * 详细页面刷新
+     */
     private void notifyInfoData() {
         RowerDataBean1 bean = rowerDataBean1List.get(clickPosition);
 
@@ -249,6 +263,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             list.add(rowerDataBean2);
         }
 
+        // 不同模式的总结item设置
         switch (bean.getRunMode()) {
             case MyConstant.GOAL_TIME: {
                 RowerDataBean2 bb = new RowerDataBean2();
@@ -485,38 +500,40 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             Logger.e("oo == " + oo);
         }
 
-        workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(list);
-        rv_workouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        rv_workouts2.setAdapter(workoutsLocalAdapter2);
+        // 详细页面设置
+        {
+            workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(list);
+            rv_workouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+            rv_workouts2.setAdapter(workoutsLocalAdapter2);
 
-        tv_info_title.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
+            tv_info_title.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
 
-        switch (bean.getRunMode()) {
-            case MyConstant.NORMAL:
-                tv_title_time.setText(bean.getDistance() + "M");
-                break;
-            case MyConstant.GOAL_TIME:
-                tv_title_time.setText(TimeStringUtil.getSToMinSecValue(bean.getSetGoalTime()));
-                break;
-            case MyConstant.GOAL_DISTANCE:
-                tv_title_time.setText(bean.getSetGoalDistance() + "M");
-                break;
-            case MyConstant.GOAL_CALORIES:
-                tv_title_time.setText(bean.getSetGoalCalorie() + "C");
-                break;
-            case MyConstant.INTERVAL_TIME:
-                tv_title_time.setText((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
-                break;
-            case MyConstant.INTERVAL_DISTANCE:
-                tv_title_time.setText((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
-                break;
-            case MyConstant.INTERVAL_CALORIES:
-                tv_title_time.setText((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
-                break;
-            default:
-                break;
+            switch (bean.getRunMode()) {
+                case MyConstant.NORMAL:
+                    tv_title_time.setText(bean.getDistance() + "M");
+                    break;
+                case MyConstant.GOAL_TIME:
+                    tv_title_time.setText(TimeStringUtil.getSToMinSecValue(bean.getSetGoalTime()));
+                    break;
+                case MyConstant.GOAL_DISTANCE:
+                    tv_title_time.setText(bean.getSetGoalDistance() + "M");
+                    break;
+                case MyConstant.GOAL_CALORIES:
+                    tv_title_time.setText(bean.getSetGoalCalorie() + "C");
+                    break;
+                case MyConstant.INTERVAL_TIME:
+                    tv_title_time.setText((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
+                    break;
+                case MyConstant.INTERVAL_DISTANCE:
+                    tv_title_time.setText((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
+                    break;
+                case MyConstant.INTERVAL_CALORIES:
+                    tv_title_time.setText((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
+                    break;
+                default:
+                    break;
+            }
         }
-
         edt_info_note.setText(bean.getNote() == null ? "" : bean.getNote());
     }
 
@@ -536,15 +553,28 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         return false;
     }
 
+    /**
+     * 上传运动数据，每次上传1条
+     */
     private void uploadRunData() {
-        // DO -> DTO
-        for (RowerDataBean1 bean1 : rowerDataBean1List) {
-            RunDataResultDTO resultDTO = new RunDataResultDTO(bean1);
+
+        if (UserManager.getInstance().getUser() == null) {
+
+            return;
         }
+        // DO -> DTO
+//        for (RowerDataBean1 bean1 : rowerDataBean1List) {
+//            RunDataResultDTO resultDTO = new RunDataResultDTO(bean1);
+//        }
 
-        String jsonStr = GsonUtil.GsonString("loginBean");
+        RowerDataBean1 bean1 = rowerDataBean1List.get(0);
+        RunDataBO runDataBO = new RunDataBO(bean1);
+        String jsonStr = GsonUtil.GsonString(runDataBO);
 
-        OkHttpHelper.post(HttpParam.USER_LOGIN_URL, jsonStr, null, new OkHttpCallBack() {
+        // 设置header，加入token
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", UserManager.getInstance().getUser().getToken());
+        OkHttpHelper.post(HttpParam.RUN_DATA_UPLOAD_URL, jsonStr, null, map, new OkHttpCallBack() {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 响应失败
@@ -562,24 +592,18 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 Logger.e("请求成功 ->> response.body().string() == " + response);
 
                 if (httpCode == 200) {
-                    /*
-                    HTTP/1.1 200 OK
-                    {
-                      "user_id": "111",
-                      "username": "test",
-                      "token": "38e203a2****************"
-                    }
-                     */
-                    LoginSuccessBean loginSuccessBean = GsonUtil.GsonToBean(response, LoginSuccessBean.class);
-//                    loginSuccess(loginSuccessBean);
+                    UploadResult resultBean = GsonUtil.GsonToBean(response, UploadResult.class);
+
+                    Logger.e("上传成功: workout_id == " + resultBean.getWorkout_id());
+                    ToastUtil.show("上传成功");
                 } else if (httpCode == 422 || httpCode == 404 || httpCode == 401) {
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
-                    Logger.e("登录失败:" + resultBean.toString());
-                    ToastUtil.show("登录失败: " + resultBean.getMessage());
+                    Logger.e("上传失败:" + resultBean.toString());
+                    ToastUtil.show("上传失败: " + resultBean.getMessage());
                 } else {
                     Logger.e("httpCode == " + httpCode + " 其它处理");
-                    Logger.e("登录失败---");
-                    ToastUtil.show("登录失败: httpcode = " + httpCode);
+                    Logger.e("上传失败---");
+                    ToastUtil.show("上传失败: httpcode = " + httpCode);
                 }
             }
         });
