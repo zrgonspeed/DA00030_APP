@@ -9,7 +9,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0.3 beta4 2021-11-29"
+        versionName "1.0.3 beta4 2021-12-03"
 
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
@@ -34,11 +34,18 @@ android {
             storeFile file('./BikeFtms.jks')
             storePassword 'android'
         }
-        relase {
-            keyAlias 'com.bike.ftms.app'
+        release {
+            keyAlias 'com.anplus.sm'
             keyPassword 'android'
-            storeFile file('./BikeFtms.jks')
+            storeFile file('./Anplus.keystore')
             storePassword 'android'
+        }
+    }
+
+    //自动生成指定名称的release发布版的 apk文件
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = "DA00030_1.0.3_beat4" + ".apk"
         }
     }
 }
