@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
@@ -31,6 +33,7 @@ import com.bike.ftms.app.utils.Logger;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import tech.gujin.toast.ToastUtil;
 
 public class BluetoothActivity extends BaseActivity implements OnScanConnectListener, BleAdapter.OnItemClickListener,
         BleManager.BleOpenCallBack, BleManager.BleClosedCallBack {
@@ -116,7 +119,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             // 代码设置的不会执行下去
             if (isChecked) {
                 Logger.e("打开蓝牙?");
-
+                checkLocation();
                 scanDevice();
             } else {
                 Logger.e("断开蓝牙?");
@@ -208,6 +211,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                     Manifest.permission.BLUETOOTH,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
             }, PERMISSION_STATE_CODE);
+
+
         } else {
             Logger.e("有权限");
             BleManager.getInstance().openBLE(this);
@@ -230,7 +235,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                     // 获取到权限，作相应处理（调用定位SDK应当确保相关权限均被授权，否则可能引起定位失败）
                     llLoading.setVisibility(View.VISIBLE);
                     rvBle.setVisibility(View.VISIBLE);
-                    BleManager.getInstance().scanDevice();
+//                    BleManager.getInstance().scanDevice();
+                    BleManager.getInstance().openBLE(this);
                 } else {
                     // 没有获取到权限，做特殊处理
                     Logger.e("" + "没有获取到权限");
@@ -238,6 +244,23 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 break;
             default:
                 break;
+        }
+    }
+
+    private void checkLocation() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            //如果用户已经打开定位服务逻辑
+//                Toast.makeText(this, "已打开定位服务", Toast.LENGTH_SHORT).show();
+//            ToastUtil.show("已打开定位服务", true);
+        } else {
+            //如果用户没有打开定位服务引导用户打开定位
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(intent, 1);
+            } else {
+                ToastUtil.show("该设备不支持位置服务", true);
+            }
         }
     }
 

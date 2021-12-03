@@ -73,7 +73,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_50">
 
             <TextView
                 android:id="@+id/tv_user_name"
@@ -90,14 +91,14 @@
 
             <com.andreabaccega.widget.FormEditText
                 android:id="@+id/edt_user_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
                 android:background="@null"
-                android:minWidth="300dp"
                 android:text="ZRGdddddd"
                 app:emptyErrorString=""
                 app:layout_constraintBottom_toBottomOf="@id/tv_user_name"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_user_name"
                 app:layout_constraintTop_toTopOf="@id/tv_user_name"
                 app:testErrorString="用户名格式不对" />
@@ -110,6 +111,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@color/color_B5B3B3"
+                android:visibility="visible"
                 app:layout_constraintTop_toBottomOf="@id/edt_user_name" />
 
             <TextView
@@ -127,16 +129,16 @@
 
             <com.andreabaccega.widget.FormEditText
                 android:id="@+id/edt_password"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="10dp"
                 android:background="@null"
                 android:inputType="numberPassword"
-                android:minWidth="300dp"
                 android:text="1234"
                 android:windowSoftInputMode="adjustUnspecified|stateHidden"
                 app:emptyErrorString=""
                 app:layout_constraintBottom_toBottomOf="@id/tv_password"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_password"
                 app:layout_constraintTop_toTopOf="@id/tv_password" />
 
@@ -176,6 +178,7 @@
                 android:text="@string/login_forget"
                 android:textColor="@color/color_1A91F9"
                 android:textSize="14sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/tv_register"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_register" />
@@ -212,6 +215,7 @@
                 android:text="@string/login_hint"
                 android:textColor="@color/color_707070"
                 android:textSize="14sp"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_forget" />
 

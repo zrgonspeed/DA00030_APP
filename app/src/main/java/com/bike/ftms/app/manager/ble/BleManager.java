@@ -67,7 +67,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
     private OnScanConnectListener onScanConnectListener;      //扫描回调
     private BluetoothAdapter mBluetoothAdapter; //系统蓝牙适配器
-    private List<MyScanResult> mScanResults;      //扫描到的蓝牙设备
+    private List<MyScanResult> mScanResults = new ArrayList<>();      //扫描到的蓝牙设备
     private BluetoothGatt mBluetoothGatt;       //连接蓝牙、及操作
     private BluetoothGatt mBluetoothHrGatt;       //连接蓝牙、及操作
     private List<BluetoothGattService> mBluetoothGattServices;//服务，Characteristic(特征) 的集合。
