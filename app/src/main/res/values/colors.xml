@@ -13,7 +13,7 @@
     <color name="color_707070">#707070</color>
     <color name="color_B5B3B3">#B5B3B3</color>
     <color name="color_1A91F9">#1A91F9</color>
-    <color name="color_black_40">#66000000</color>
+    <color name="color_black_40">#AA000000</color>
 
     <!-- 透明色 -->
     <color name="transparent">#00000000</color>
@@ -104,4 +104,6 @@
     <color name="common_confirm_text_color">#007AFF</color>
     <!-- 对话框取消按钮的文本颜色 -->
     <color name="common_cancel_text_color">#F44336</color>
+
+    <color name="workouts_item_uploaded">#D4BFD4D7</color>
 </resources>

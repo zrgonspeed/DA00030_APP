@@ -259,4 +259,19 @@ public class TimeStringUtil {
         return format.format(date);
     }
 
+
+    /**
+     * 将字符串时间转为Long时间
+     *
+     * @param time yyyy-MM-dd HH:mm:ss
+     */
+    public static Long getLongTime(String time) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = sdf.parse(time);
+            return date.getTime();
+        } catch (Exception e) {
+        }
+        return 0L;
+    }
 }

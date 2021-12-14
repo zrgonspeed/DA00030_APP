@@ -339,7 +339,7 @@ public class RowerDataBean1 extends LitePalSupport {
     private String result;
     private String type;
 
-    private void setType(String type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -351,7 +351,7 @@ public class RowerDataBean1 extends LitePalSupport {
         return result;
     }
 
-    private void setResult(String result) {
+    public void setResult(String result) {
         this.result = result;
     }
 

@@ -1,7 +1,10 @@
 package com.bike.ftms.app.activity.fragment.workout;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.activity.MainActivity;
 import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter2;
+import com.bike.ftms.app.bean.rundata.HttpRowerDataBean1;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.bean.rundata.RowerDataBean2;
 import com.bike.ftms.app.bean.rundata.get.RunDataResultDTO;
+import com.bike.ftms.app.bean.rundata.get.RunDataResultListDTO;
 import com.bike.ftms.app.bean.rundata.put.RunDataBO;
 import com.bike.ftms.app.bean.rundata.put.UploadResult;
 import com.bike.ftms.app.bean.user.LoginSuccessBean;
@@ -40,9 +46,14 @@ import org.litepal.crud.callback.FindMultiCallback;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,6 +106,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     private WorkoutsLocalAdapter2 workoutsLocalAdapter2;
     private boolean isEdit = false;
     private final List<RowerDataBean1> rowerDataBean1List = new ArrayList<>();
+    private final Vector<Boolean> vector = new Vector<>();
     private int clickPosition;
     private int deletePosition;
 
@@ -142,8 +154,8 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 }
                 break;
             case R.id.tv_upload:
-                ToastUtil.show(getString(R.string.cannot_upload), true, ToastUtil.Mode.REPLACEABLE);
-//                uploadRunData();
+//                ToastUtil.show(getString(R.string.cannot_upload), true, ToastUtil.Mode.REPLACEABLE);
+                uploadRunData();
                 break;
             case R.id.tv_edit:
                 isEdit = !isEdit;
@@ -172,18 +184,94 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 break;
             case R.id.tv_ok:
                 tv_edit.performClick();
-                int j = LitePal.deleteAll(RowerDataBean1.class, "date=?", String.valueOf(rowerDataBean1List.get(deletePosition).getDate()));
-                if (j > 0) {
-                    rowerDataBean1List.remove(deletePosition);
-                    workoutsLocalAdapter.notifyDataSetChanged();
-                    ToastUtil.show(getString(R.string.delete_success), true, ToastUtil.Mode.REPLACEABLE);
-                } else {
-                    ToastUtil.show(getString(R.string.delete_fail), true, ToastUtil.Mode.REPLACEABLE);
-                }
 
-                rl_delete.setVisibility(View.GONE);
-                break;
+                // 删除服务器的数据
+                HttpRowerDataBean1 bean1 = (HttpRowerDataBean1) rowerDataBean1List.get(deletePosition);
+                if (bean1.getStatus() == 1) {
+                    // 删除服务器的
+                    String workout_id = ((HttpRowerDataBean1) bean1).getWorkout_id();
+
+                    // 设置header，加入token
+                    Map<String, String> map = new HashMap<>();
+                    map.put("Authorization", UserManager.getInstance().getUser().getToken());
+                    OkHttpHelper.delete(HttpParam.RUN_DATA_DELETE_URL + "/" + workout_id, null, map, new OkHttpCallBack() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            // 响应失败
+                            Logger.e("请求失败！");
+                            Logger.e(e.toString());
+
+                            // 网络没打开
+                            // 请求超时
+                            ToastUtil.show(R.string.timeout, true, ToastUtil.Mode.REPLACEABLE);
+
+                            rl_delete.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onSuccess(Call call, int httpCode, String response) {
+                            Logger.e("请求成功 ->> response.body().string() == " + response);
+
+                            if (httpCode == 204) {
+                                Logger.e("删除 " + workout_id + " 成功");
+                                rowerDataBean1List.remove(deletePosition);
+                                workoutsLocalAdapter.notifyDataSetChanged();
+
+                                deleteDBrowbean1(bean1);
+
+                                rl_delete.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                } else {
+                    boolean deleteResultOk = deleteDBrowbean1(bean1);
+                    if (deleteResultOk) {
+                        rowerDataBean1List.remove(deletePosition);
+                        workoutsLocalAdapter.notifyDataSetChanged();
+                        ToastUtil.show(getString(R.string.delete_success), true, ToastUtil.Mode.REPLACEABLE);
+
+                    } else {
+                        ToastUtil.show(getString(R.string.delete_fail), true, ToastUtil.Mode.REPLACEABLE);
+
+                    }
+                    rl_delete.setVisibility(View.GONE);
+                    break;
+                }
         }
+    }
+
+    /**
+     * 删除本地数据库中的对应数据
+     *
+     * @param bean1
+     * @return
+     */
+    private boolean deleteDBrowbean1(RowerDataBean1 bean1) {
+
+        Cursor cursor = LitePal.findBySQL("select id, date from rowerdatabean1");
+        Set<RowerDataBean1> sets = new HashSet<>();
+        while (cursor.moveToNext()) {
+            Logger.e("id == " + cursor.getInt(0) + "        date == " + cursor.getLong(1));
+            RowerDataBean1 t = new RowerDataBean1();
+            t.setId(cursor.getInt(0));
+            t.setDate(cursor.getLong(1));
+            sets.add(t);
+        }
+        int count = 0;
+        int deleteCount = 0;
+        for (RowerDataBean1 t1 : sets) {
+            if (t1.getDate() / 1000 == bean1.getDate() / 1000) {
+                count++;
+
+                // 删除记录
+                int r = LitePal.deleteAll(RowerDataBean1.class, "id=?", String.valueOf(t1.getId()));
+                if (r > 0) {
+                    deleteCount++;
+                }
+            }
+        }
+
+        return count == deleteCount;
     }
 
     private void refreshList1() {
@@ -192,17 +280,108 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             public <T> void onFinish(List<T> list) {
                 Logger.i("数据库查找成功");
                 rowerDataBean1List.clear();
-                rowerDataBean1List.addAll((Collection<? extends RowerDataBean1>) list);
+//                rowerDataBean1List.addAll((Collection<? extends RowerDataBean1>) list);
+                for (T t : list) {
+                    rowerDataBean1List.add(new HttpRowerDataBean1((RowerDataBean1) t));
+                }
+
                 workoutsLocalAdapter.notifyDataSetChanged();
+                if (UserManager.getInstance().getUser() != null) {
+                    getRunDataFromServer();
+                }
             }
         });
+    }
 
-//        rowerDataBean1List.addAll(LitePal.order("date desc").find(RowerDataBean1.class, true));
+    private void getRunDataFromServer() {
+        // 设置header，加入token
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", UserManager.getInstance().getUser().getToken());
+        // 从服务器获取数据
+        OkHttpHelper.get(HttpParam.RUN_DATA_LIST_URL + "?offset=0&limit=500", null, map, new OkHttpCallBack() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 响应失败
+                Logger.e("请求失败！");
+                Logger.e(e.toString());
+
+                // 网络没打开
+                // 请求超时
+                ToastUtil.show(R.string.timeout, true, ToastUtil.Mode.REPLACEABLE);
+            }
+
+            @Override
+            public void onSuccess(Call call, int httpCode, String response) {
+                // 响应成功，响应码不一定是200
+                Logger.e("请求成功 ->> response.body().string() == " + response);
+
+                if (httpCode == 200) {
+                    RunDataResultListDTO runDataResultListDTO = GsonUtil.GsonToBean(response, RunDataResultListDTO.class);
+                    Logger.e("运动数据列表: " + runDataResultListDTO);
+
+                    // DTO 转 DO httprowbean1
+                    List<RunDataResultDTO> items = runDataResultListDTO.getItems();
+                    List<HttpRowerDataBean1> httpRowerDataBean1List = new ArrayList<>();
+                    for (RunDataResultDTO dto : items) {
+                        HttpRowerDataBean1 httpRowerDataBean1 = new HttpRowerDataBean1();
+                        httpRowerDataBean1.setDate(TimeStringUtil.getLongTime(dto.getDate()));
+                        httpRowerDataBean1.setWorkout_id(dto.getWorkout_id());
+                        httpRowerDataBean1.setType(dto.getType());
+                        httpRowerDataBean1.setResult(dto.getResult());
+                        httpRowerDataBean1.setNote(dto.getRemarks());
+
+                        httpRowerDataBean1.setStatus(1);
+
+                        httpRowerDataBean1List.add(httpRowerDataBean1);
+                    }
+                    // 日期降序
+                    Collections.sort(httpRowerDataBean1List, (o1, o2) -> Long.compare(o2.getDate(), o1.getDate()));
+
+                    // 加在前面
+//                    rowerDataBean1List.addAll(0, httpRowerDataBean1List);
+
+                    List<HttpRowerDataBean1> newList = new ArrayList<>();
+                    // 本地已经上传的就不显示
+                    for (int i = 0; i < rowerDataBean1List.size(); i++) {
+                        RowerDataBean1 bean1 = rowerDataBean1List.get(i);
+                        boolean isSameDate = false;
+                        for (int j = 0; j < httpRowerDataBean1List.size(); j++) {
+                            HttpRowerDataBean1 httpbean1 = httpRowerDataBean1List.get(j);
+//                            Logger.e("bean1.getDate()  == " + bean1.getDate() + "    httpbean1.getDate() " + httpbean1.getDate());
+                            if (bean1.getDate() / 1000 == httpbean1.getDate() / 1000) {
+                                isSameDate = true;
+                            }
+                        }
+
+                        if (!isSameDate) {
+                            newList.add((HttpRowerDataBean1) bean1);
+                        }
+                    }
+
+                    Logger.e("newList == " + newList);
+                    newList.addAll(0, httpRowerDataBean1List);
+
+                    rowerDataBean1List.clear();
+                    rowerDataBean1List.addAll(newList);
+                    workoutsLocalAdapter.notifyDataSetChanged();
+//                    workoutsLocalAdapter = new WorkoutsLocalAdapter(httpRowerDataBean1List, vector);
+//                    rv_workouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+//                    rv_workouts.setAdapter(workoutsLocalAdapter);
+//                    workoutsLocalAdapter.addItemClickListener(WorkoutsLocalFragment.this);
+//                    workoutsLocalAdapter.addItemDeleteClickListener(WorkoutsLocalFragment.this);
+                } else {
+
+                }
+
+            }
+        });
     }
 
     private void setEditView() {
         workoutsLocalAdapter.setShowDelete(isEdit);
-        refreshList1();
+
+        workoutsLocalAdapter.notifyDataSetChanged();
+
         if (isEdit) {
 //            tv_upload.setText(getString(R.string.workouts));
 //            tv_upload.setTextColor(getResources().getColor(R.color.color_black));
@@ -219,6 +398,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             iv_back.setVisibility(View.GONE);
             tv_title.setText(getString(R.string.workouts));
             tv_edit.setText(getString(R.string.workouts_edit));
+            refreshList1();
         }
     }
 
@@ -231,7 +411,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     }
 
     private void setWorkouts1() {
-        workoutsLocalAdapter = new WorkoutsLocalAdapter(rowerDataBean1List);
+        workoutsLocalAdapter = new WorkoutsLocalAdapter(rowerDataBean1List, vector);
         rv_workouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rv_workouts.setAdapter(workoutsLocalAdapter);
         workoutsLocalAdapter.addItemClickListener(this);
@@ -554,26 +734,61 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     }
 
     /**
-     * 上传运动数据，每次上传1条
+     * 上传运动数据，每次上传n条
      */
     private void uploadRunData() {
-
+        // 没登录不能上传
         if (UserManager.getInstance().getUser() == null) {
-
+            ToastUtil.show(R.string.please_logged);
             return;
         }
+
+
         // DO -> DTO
 //        for (RowerDataBean1 bean1 : rowerDataBean1List) {
 //            RunDataResultDTO resultDTO = new RunDataResultDTO(bean1);
 //        }
 
-        RowerDataBean1 bean1 = rowerDataBean1List.get(0);
+
+        // 计算没有上传的数量
+
+        for (int i = 0; i < rowerDataBean1List.size(); i++) {
+            HttpRowerDataBean1 bean1 = (HttpRowerDataBean1) rowerDataBean1List.get(i);
+            if (bean1.getStatus() == 0) {
+                noUploadCount++;
+            }
+        }
+
+        if (noUploadCount != 0) {
+            // 显示上传中
+            ((MainActivity) (getActivity())).showUploading();
+
+            new Thread(() -> {
+                for (int i = 0; i < rowerDataBean1List.size(); i++) {
+                    HttpRowerDataBean1 bean1 = (HttpRowerDataBean1) rowerDataBean1List.get(i);
+                    if (bean1.getStatus() == 0) {
+                        uploadOneData(bean1);
+                    }
+                }
+            }).start();
+        } else {
+            ToastUtil.show("已全部上传完");
+        }
+    }
+
+    private int noUploadCount = 0;
+    private int uploadSuccessCount = 0;
+
+    private void uploadOneData(RowerDataBean1 bean1) {
+        Logger.d(TAG, "准备上传 bean1 == " + bean1);
+
         RunDataBO runDataBO = new RunDataBO(bean1);
         String jsonStr = GsonUtil.GsonString(runDataBO);
 
         // 设置header，加入token
         Map<String, String> map = new HashMap<>();
         map.put("Authorization", UserManager.getInstance().getUser().getToken());
+
         OkHttpHelper.post(HttpParam.RUN_DATA_UPLOAD_URL, jsonStr, null, map, new OkHttpCallBack() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -584,6 +799,8 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 // 网络没打开
                 // 请求超时
                 ToastUtil.show(R.string.timeout, true, ToastUtil.Mode.REPLACEABLE);
+
+                ((MainActivity) (getActivity())).showUploadFailed();
             }
 
             @Override
@@ -593,17 +810,47 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
                 if (httpCode == 200) {
                     UploadResult resultBean = GsonUtil.GsonToBean(response, UploadResult.class);
-
                     Logger.e("上传成功: workout_id == " + resultBean.getWorkout_id());
-                    ToastUtil.show(getString(R.string.upload_success));
+
+                    int index = rowerDataBean1List.indexOf(bean1);
+                    Logger.d("upload success index == " + index);
+                    uploadSuccessCount++;
+
+                    // 0 没上传， 1 已上传
+                    ((HttpRowerDataBean1) bean1).setStatus(1);
+
+                    // 列表上传完
+                    if (uploadSuccessCount == noUploadCount) {
+                        // 故意延迟2秒再显示上传成功
+                        uploadSuccessCount = 0;
+                        new Thread(() -> {
+                            SystemClock.sleep(5000);
+                            ((MainActivity) (getActivity())).runOnUiThread(() -> {
+                                ((MainActivity) (getActivity())).showUploadSuccess();
+
+                                // 3秒后消失
+                                new Handler(((MainActivity) (getActivity())).getMainLooper()).postDelayed(() -> {
+                                    ((MainActivity) (getActivity())).hideUpload();
+
+                                    refreshList1();
+//                                    workoutsLocalAdapter.notifyDataSetChanged();
+                                }, 3000);
+                            });
+                        }).start();
+                    }
+
                 } else if (httpCode == 422 || httpCode == 404 || httpCode == 401) {
                     ResultBean resultBean = GsonUtil.GsonToBean(response, ResultBean.class);
                     Logger.e("上传失败:" + resultBean.toString());
                     ToastUtil.show(getString(R.string.upload_fail) + resultBean.getMessage());
+
+                    ((MainActivity) (getActivity())).showUploadFailed();
                 } else {
                     Logger.e("httpCode == " + httpCode + " 其它处理");
                     Logger.e("上传失败---");
                     ToastUtil.show(getString(R.string.upload_fail_httpcode) + httpCode);
+
+                    ((MainActivity) (getActivity())).showUploadFailed();
                 }
             }
         });

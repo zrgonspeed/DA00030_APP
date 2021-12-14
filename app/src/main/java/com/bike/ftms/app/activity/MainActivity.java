@@ -8,6 +8,7 @@ import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,8 @@ import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.HorizontalViewPager;
 import com.bike.ftms.app.widget.YesOrNoDialog;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,6 +232,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
                 break;
             case R.id.btn_setting:
                 startActivity(new Intent(this, SettingActivity.class));
+
+                // 删点数据
+//                int j = LitePal.deleteAll(RowerDataBean1.class, "id < 168");
+
                 break;
         }
     }
@@ -312,5 +319,41 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onRestoreInstanceState(savedInstanceState, persistentState);
+    }
+
+    @BindView(R.id.rl_uploading)
+    RelativeLayout rl_uploading;
+
+    @BindView(R.id.rl_upload_success)
+    RelativeLayout rl_upload_success;
+
+    @BindView(R.id.rl_upload_fail)
+    RelativeLayout rl_upload_fail;
+
+    public void showUploading() {
+        rl_uploading.setVisibility(View.VISIBLE);
+
+        rl_upload_success.setVisibility(View.GONE);
+        rl_upload_fail.setVisibility(View.GONE);
+    }
+
+    public void showUploadSuccess() {
+        rl_upload_success.setVisibility(View.VISIBLE);
+
+        rl_uploading.setVisibility(View.GONE);
+        rl_upload_fail.setVisibility(View.GONE);
+    }
+
+    public void showUploadFailed() {
+        rl_upload_fail.setVisibility(View.VISIBLE);
+
+        rl_uploading.setVisibility(View.GONE);
+        rl_upload_success.setVisibility(View.GONE);
+    }
+
+    public void hideUpload() {
+        rl_uploading.setVisibility(View.GONE);
+        rl_upload_success.setVisibility(View.GONE);
+        rl_upload_fail.setVisibility(View.GONE);
     }
 }

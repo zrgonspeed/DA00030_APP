@@ -144,7 +144,7 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
                     RunDataResultListDTO runDataResultListDTO = GsonUtil.GsonToBean(response, RunDataResultListDTO.class);
 
                     String next = runDataResultListDTO.getNext();
-                    List<RunDataResultDTO> runDataResultDTOS = runDataResultListDTO.getRunDataResultDTOS();
+                    List<RunDataResultDTO> runDataResultDTOS = runDataResultListDTO.getItems();
 //                    Logger.i(runDataResultDTOS.toString());
 
                     //

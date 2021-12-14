@@ -16,7 +16,7 @@ import java.util.List;
 public class RunDataResultListDTO {
     private String next;
 
-    private List<RunDataResultDTO> runDataResultDTOS;
+    private List<RunDataResultDTO> items;
 
     public String getNext() {
         return next;
@@ -26,19 +26,19 @@ public class RunDataResultListDTO {
         this.next = next;
     }
 
-    public List<RunDataResultDTO> getRunDataResultDTOS() {
-        return runDataResultDTOS;
+    public List<RunDataResultDTO> getItems() {
+        return items;
     }
 
-    public void setRunDataResultDTOS(List<RunDataResultDTO> runDataResultDTOS) {
-        this.runDataResultDTOS = runDataResultDTOS;
+    public void setItems(List<RunDataResultDTO> items) {
+        this.items = items;
     }
 
     @Override
     public String toString() {
         return "RunDataResultListDTO{" +
                 "next='" + next + '\'' +
-                ", runDataResultDTOS=" + runDataResultDTOS +
+                ", runDataResultDTOS=" + items +
                 '}';
     }
 }

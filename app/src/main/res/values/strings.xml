@@ -89,6 +89,7 @@
     <string name="personal_data_phone_hint">Bind now</string>
     <string name="personal_data_title">Personal information</string>
     <string name="logged">Already logged</string>
+    <string name="please_logged">Please Login</string>
     <string name="timeout">Connection timed out</string>
     <string name="cannot_upload">Not yet open to upload</string>
     <string name="not_support_location">The device does not support location services</string>

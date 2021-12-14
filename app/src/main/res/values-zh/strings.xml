@@ -56,6 +56,7 @@
     <string name="workouts_cancel">取消</string>
     <string name="workouts_ok">确定</string>
     <string name="logged">已登录</string>
+    <string name="please_logged">请登录</string>
     <string name="timeout">连接超时</string>
     <string name="cannot_upload">暂未开放上传</string>
     <string name="not_support_location">该设备不支持位置服务</string>

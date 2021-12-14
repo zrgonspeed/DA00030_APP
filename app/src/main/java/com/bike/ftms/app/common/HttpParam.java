@@ -14,13 +14,17 @@ public class HttpParam {
     // 运动数据列表  ?offset=0&limit=10
     private final static String RUN_DATA_LIST_REST = "/restapi/workouts";
     private final static String RUN_DATA_UPLOAD = "/restapi/workouts";
+    // workouts/1422
+    private final static String RUN_DATA_DELETE = "/restapi/workouts";
 
     // URL
     public static String MAIL_CODE_URL = DOMAIN + MAIL_CODE_REST;
     public static String USER_REGISTER_URL = DOMAIN + USER_REGISTER_REST;
     public static String USER_LOGIN_URL = DOMAIN + USER_LOGIN_REST;
+
     public static String RUN_DATA_LIST_URL = DOMAIN + RUN_DATA_LIST_REST;
     public static String RUN_DATA_UPLOAD_URL = DOMAIN + RUN_DATA_UPLOAD;
+    public static String RUN_DATA_DELETE_URL = DOMAIN + RUN_DATA_DELETE;
 
 
 }

@@ -96,4 +96,74 @@
             android:src="@mipmap/page1" />
     </RelativeLayout>
 
+    <!-- 上传运动数据中 -->
+    <RelativeLayout
+        android:id="@+id/rl_uploading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_black_40"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/pb_uploading"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_50"
+            android:text="上传中"
+            android:textColor="@color/white"
+            android:textSize="30sp" />
+
+        <ProgressBar
+            android:id="@+id/pb_uploading"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <!-- 完成运动数据上传 -->
+    <RelativeLayout
+        android:id="@+id/rl_upload_success"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_black_40"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/dp_50"
+            android:text="已上传"
+            android:textColor="@color/white"
+            android:textSize="30sp" />
+    </RelativeLayout>
+
+    <!-- 运动数据上传失败 -->
+    <RelativeLayout
+        android:id="@+id/rl_upload_fail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_black_40"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/dp_50"
+            android:text="上传失败"
+            android:textColor="@color/white"
+            android:textSize="30sp" />
+    </RelativeLayout>
 </RelativeLayout>
