@@ -1548,7 +1548,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
         } else {
             rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
         }
-        rowerDataBean1.setDate(System.currentTimeMillis());
+        // 只精确到秒，毫秒域为 000
+        rowerDataBean1.setDate(System.currentTimeMillis() / 1000 * 1000);
         if (onRunDataListener != null) {
             onRunDataListener.onRunData(rowerDataBean1);
         }

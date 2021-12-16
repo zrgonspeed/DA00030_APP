@@ -16,6 +16,9 @@ public class HttpParam {
     private final static String RUN_DATA_UPLOAD = "/restapi/workouts";
     // workouts/1422
     private final static String RUN_DATA_DELETE = "/restapi/workouts";
+    // workouts/1494/info
+    private final static String RUN_DATA_GET_INFO = "/restapi/workouts";
+    private final static String RUN_DATA_UPLOAD_REMARKS = "/restapi/workouts";
 
     // URL
     public static String MAIL_CODE_URL = DOMAIN + MAIL_CODE_REST;
@@ -25,6 +28,8 @@ public class HttpParam {
     public static String RUN_DATA_LIST_URL = DOMAIN + RUN_DATA_LIST_REST;
     public static String RUN_DATA_UPLOAD_URL = DOMAIN + RUN_DATA_UPLOAD;
     public static String RUN_DATA_DELETE_URL = DOMAIN + RUN_DATA_DELETE;
+    public static String RUN_DATA_GET_INFO_URL = DOMAIN + RUN_DATA_GET_INFO;
+    public static String RUN_DATA_UPLOAD_REMARKS_URL = DOMAIN + RUN_DATA_UPLOAD_REMARKS;
 
 
 }

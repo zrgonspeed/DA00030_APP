@@ -13,7 +13,7 @@ import java.util.List;
      },...]
  }
  */
-public class RunDataResultListDTO {
+public class RunDataResultListBO {
     private String next;
 
     private List<RunDataResultDTO> items;
@@ -36,7 +36,7 @@ public class RunDataResultListDTO {
 
     @Override
     public String toString() {
-        return "RunDataResultListDTO{" +
+        return "RunDataResultListBO{" +
                 "next='" + next + '\'' +
                 ", runDataResultDTOS=" + items +
                 '}';

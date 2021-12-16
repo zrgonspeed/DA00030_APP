@@ -31,7 +31,7 @@ public class TimeStringUtil {
     }
 
     /**
-     * 将秒转换为00:00(分钟:秒);
+     * 将秒转换为00:00(分钟:秒);[文件：Spotify.apk]
      * 分钟数会突破99
      *
      * @param value 毫秒
@@ -273,5 +273,25 @@ public class TimeStringUtil {
         } catch (Exception e) {
         }
         return 0L;
+    }
+
+    /**
+     * 将字符串时间转为Long时间，单位 秒
+     * 10:01:35  ->  36095
+     */
+    public static Long getLongTimeHHMMSS(String time) {
+        String[] split = time.split(":");
+        long longtime = Integer.parseInt(split[0]) * 3600 + Integer.parseInt(split[1]) * 60 + Integer.parseInt(split[2]);
+        return longtime;
+    }
+
+    /**
+     * 将字符串时间转为Long时间，单位 秒
+     * 01:35  ->  95
+     */
+    public static Long getLongTimeMMSS(String time) {
+        String[] split = time.split(":");
+        long longtime = Integer.parseInt(split[0]) * 60 + Integer.parseInt(split[1]);
+        return longtime;
     }
 }

@@ -22,7 +22,7 @@ import com.bike.ftms.app.adapter.WorkoutsNetAdapter2;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.bean.rundata.get.RunDataInfoDTO;
 import com.bike.ftms.app.bean.rundata.get.RunDataResultDTO;
-import com.bike.ftms.app.bean.rundata.get.RunDataResultListDTO;
+import com.bike.ftms.app.bean.rundata.get.RunDataResultListBO;
 import com.bike.ftms.app.common.HttpParam;
 import com.bike.ftms.app.http.OkHttpCallBack;
 import com.bike.ftms.app.http.OkHttpHelper;
@@ -141,10 +141,10 @@ public class WorkoutsNetFragment extends WorkoutsFragment implements WorkoutsNet
                 Logger.e("请求成功 ->> response.body().string() == " + response);
 
                 if (httpCode == 200) {
-                    RunDataResultListDTO runDataResultListDTO = GsonUtil.GsonToBean(response, RunDataResultListDTO.class);
+                    RunDataResultListBO runDataResultListBO = GsonUtil.GsonToBean(response, RunDataResultListBO.class);
 
-                    String next = runDataResultListDTO.getNext();
-                    List<RunDataResultDTO> runDataResultDTOS = runDataResultListDTO.getItems();
+                    String next = runDataResultListBO.getNext();
+                    List<RunDataResultDTO> runDataResultDTOS = runDataResultListBO.getItems();
 //                    Logger.i(runDataResultDTOS.toString());
 
                     //

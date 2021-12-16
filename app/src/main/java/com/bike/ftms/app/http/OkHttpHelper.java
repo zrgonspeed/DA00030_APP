@@ -171,6 +171,10 @@ public class OkHttpHelper {
         commonPost(getRequestForPost(url, json, tag, headerMap), callBack);
     }
 
+    public static void put(String url, String json, Object tag, Map<String, String> headerMap, OkHttpCallBack callBack) {
+        commonPut(getRequestForPut(url, json, tag, headerMap), callBack);
+    }
+
 
     private static void commonGet(Request request, OkHttpCallBack callBack) {
         if (request == null) {
@@ -287,6 +291,42 @@ public class OkHttpHelper {
                 });
     }
 
+    private static void commonPut(Request request, OkHttpCallBack callBack) {
+        if (request == null) {
+            return;
+        }
+        getInstance().okHttpClient
+                .newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        if (call.isCanceled()) {
+                            return;
+                        }
+                        mHandler.post(() -> {
+                            if (callBack != null) {
+                                callBack.onFailure(call, e);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if (call.isCanceled()) {
+                            return;
+                        }
+                        mHandler.post(() -> {
+                            try {
+                                callBack.onSuccess(call, response.code(), response.body().string());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                callBack.onFailure(call, new IOException());
+                            }
+                        });
+                    }
+                });
+    }
+
     private static Request getRequestForGet(String url, Object tag, Map<String, String> headerMap) {
         Logger.d("getRequestForGet---> " + url);
         if (url.isEmpty()) {
@@ -368,6 +408,34 @@ public class OkHttpHelper {
         return builder.build();
     }
 
+    private static Request getRequestForPut(String url, String json, Object tag, Map<String, String> headerMap) {
+        Logger.d("getRequestForPut---> " + url);
+        if (url.isEmpty()) {
+            return null;
+        }
+        Request.Builder builder = new Request.Builder();
+        if (headerMap != null) {
+            for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+                builder.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+
+        try {
+            Logger.d("put json >>> " + json);
+            RequestBody body = RequestBody.Companion.create(json, MEDIA_TYPE_JSON_3);
+            builder.url(url)
+                    .put(body);
+
+            if (tag != null) {
+                builder.tag(tag);
+            }
+
+            return builder.build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * 取消某个tag的网络请求
