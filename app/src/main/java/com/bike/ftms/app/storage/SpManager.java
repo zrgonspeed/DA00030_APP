@@ -31,6 +31,7 @@ public class SpManager {
 
     private static final String SET_USERNAME = "set_username";
     private static final String SET_PASSWORD = "set_password";
+    private static final String SET_SKIP_HINT = "set_skip_hint";
 
     public static String getUsername() {
         return StorageParam.getParam(SET_USERNAME, "");
@@ -46,5 +47,13 @@ public class SpManager {
 
     public static void setPassword(String password) {
         StorageParam.setParam(SET_PASSWORD, password);
+    }
+
+    public static void setSkipHint(boolean skip) {
+        StorageParam.setParam(SET_SKIP_HINT, skip);
+    }
+
+    public static boolean getSkipHint() {
+        return StorageParam.getParam(SET_SKIP_HINT, false);
     }
 }

@@ -7,6 +7,7 @@ import android.os.PersistableBundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.bike.ftms.app.activity.fragment.workout.WorkoutsNetFragment;
 import com.bike.ftms.app.manager.VersionManager;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
+import com.bike.ftms.app.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.HorizontalViewPager;
 import com.bike.ftms.app.widget.YesOrNoDialog;
@@ -87,7 +89,39 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!SpManager.getSkipHint()) {
+            // 安装后启动要提示事项，谷歌商店需要
+            showSomeHintDialog();
+        }
     }
+
+    private YesOrNoDialog someHintDialog;
+
+    private void showSomeHintDialog() {
+        if (someHintDialog == null) {
+            someHintDialog = new YesOrNoDialog(MainActivity.this, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+            someHintDialog.setTitle(getString(R.string.warm_tip));
+            someHintDialog.setMessage(getString(R.string.some_hint));
+            someHintDialog.setYesOnclickListener(getString(R.string.no_hint), () -> {
+                someHintDialog.dismiss();
+                SpManager.setSkipHint(true);
+            });
+            someHintDialog.setNoOnclickListener(getString(R.string.skip), () -> {
+                someHintDialog.dismiss();
+            });
+        }
+
+        someHintDialog.show();
+
+        WindowManager.LayoutParams params = someHintDialog.getWindow().getAttributes();
+        params.width = 1800;
+        params.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        someHintDialog.getWindow().setAttributes(params);
+
+        someHintDialog.setContentWidthHeight(1600, 900);
+    }
+
 
     @Override
     protected void onStart() {
@@ -260,7 +294,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
 
     private void showConnectHintDialog() {
-        if (yesOrNoDialog == null) {
+        return;
+        /*if (yesOrNoDialog == null) {
             yesOrNoDialog = new YesOrNoDialog(MainActivity.this);
             yesOrNoDialog.setTitle(getString(R.string.warm_tip));
             yesOrNoDialog.setMessage(getString(R.string.connect_now));
@@ -271,7 +306,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             yesOrNoDialog.setNoOnclickListener(getString(R.string.cancel), () -> yesOrNoDialog.dismiss());
         }
 
-        yesOrNoDialog.show();
+        yesOrNoDialog.show();*/
     }
 
     @Override

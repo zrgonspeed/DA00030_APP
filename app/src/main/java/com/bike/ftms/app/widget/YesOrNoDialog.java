@@ -4,12 +4,17 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.activity.MainActivity;
 
 /**
  * @Description
@@ -28,6 +33,19 @@ public class YesOrNoDialog extends Dialog {
 
     private onNoOnclickListener noOnclickListener;//取消按钮被点击了的监听器
     private onYesOnclickListener yesOnclickListener;//确定按钮被点击了的监听器
+    private int w = WindowManager.LayoutParams.MATCH_PARENT;
+    private int h = WindowManager.LayoutParams.MATCH_PARENT;
+    private LinearLayout ll_content;
+
+    public YesOrNoDialog(Context context) {
+        super(context, R.style.MyDialog);
+    }
+
+    public YesOrNoDialog(MainActivity mainActivity, int w, int h) {
+        super(mainActivity);
+        this.w = w;
+        this.h = h;
+    }
 
     /**
      * 设置取消按钮的显示内容和监听
@@ -55,10 +73,6 @@ public class YesOrNoDialog extends Dialog {
         this.yesOnclickListener = onYesOnclickListener;
     }
 
-    public YesOrNoDialog(Context context) {
-        super(context, R.style.MyDialog);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +87,10 @@ public class YesOrNoDialog extends Dialog {
         //初始化界面控件的事件
         initEvent();
 
+//        WindowManager.LayoutParams params = getWindow().getAttributes();
+//        params.width = w;
+//        params.height = h;
+//        getWindow().setAttributes(params);
     }
 
     /**
@@ -127,6 +145,8 @@ public class YesOrNoDialog extends Dialog {
         no = (Button) findViewById(R.id.no);
         titleTv = (TextView) findViewById(R.id.title);
         messageTv = (TextView) findViewById(R.id.message);
+        ll_content = (LinearLayout) findViewById(R.id.ll_content);
+
     }
 
     /**
@@ -145,6 +165,14 @@ public class YesOrNoDialog extends Dialog {
      */
     public void setMessage(String message) {
         messageStr = message;
+    }
+
+    public void setContentWidthHeight(int w, int h) {
+        ViewGroup.LayoutParams layoutParams = ll_content.getLayoutParams();
+        layoutParams.width= w;
+        layoutParams.height = h;
+        ll_content.setLayoutParams(layoutParams);
+        ll_content.invalidate();
     }
 
     /**

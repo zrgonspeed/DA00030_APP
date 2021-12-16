@@ -117,4 +117,15 @@
     <string name="ok">Yes</string>
     <string name="cancel">NO</string>
     <string name="name">name</string>
+    <string name="some_hint">
+When you use the APP, D-Fit will always collect and use your location, personal information (name, email, phone number), fitness information, photos, files and documents, calendars, devices or other IDs in order to use them in the application. When it is closed or not in use, it can also support various functions until you stop using the APP. \n
+The usage is explained below \n
+Location: Used to connect Bluetooth devices to support data transfer between APP and sports equipment. \n
+Personal Information: Provide user registration and login functions. \n
+Fitness information: store, analyze, and upload the user\'s exercise data. \n
+Photos, files and documents: After the exercise, the exercise data will be automatically saved in the device. \n
+Calendar: Support users to select the date of birth when registering. \n
+Device or other ID: Identifies the user\'s mobile phone model to support developers to adapt to multiple mobile phones.</string>
+    <string name="skip">Skip</string>
+    <string name="no_hint">Don\'t show again</string>
 </resources>
