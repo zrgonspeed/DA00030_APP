@@ -128,4 +128,7 @@ Calendar: Support users to select the date of birth when registering. \n
 Device or other ID: Identifies the user\'s mobile phone model to support developers to adapt to multiple mobile phones.</string>
     <string name="skip">Skip</string>
     <string name="no_hint">Don\'t show again</string>
+    <string name="accept">Accept</string>
+    <string name="no_accept">Disagree</string>
+    <string name="skip2">skip</string>
 </resources>

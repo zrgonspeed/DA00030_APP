@@ -1,20 +1,27 @@
 package com.bike.ftms.app.widget;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.MainActivity;
+import com.bike.ftms.app.utils.Logger;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * @Description
@@ -33,16 +40,18 @@ public class YesOrNoDialog extends Dialog {
 
     private onNoOnclickListener noOnclickListener;//取消按钮被点击了的监听器
     private onYesOnclickListener yesOnclickListener;//确定按钮被点击了的监听器
-    private int w = WindowManager.LayoutParams.MATCH_PARENT;
-    private int h = WindowManager.LayoutParams.MATCH_PARENT;
+    private int w = MATCH_PARENT;
+    private int h = MATCH_PARENT;
     private LinearLayout ll_content;
+    private Activity context;
 
-    public YesOrNoDialog(Context context) {
-        super(context, R.style.MyDialog);
+    public YesOrNoDialog(MainActivity context) { //R.style.MyDialog
+        this(context, MATCH_PARENT, MATCH_PARENT);
     }
 
     public YesOrNoDialog(MainActivity mainActivity, int w, int h) {
         super(mainActivity);
+        this.context = mainActivity;
         this.w = w;
         this.h = h;
     }
@@ -169,10 +178,31 @@ public class YesOrNoDialog extends Dialog {
 
     public void setContentWidthHeight(int w, int h) {
         ViewGroup.LayoutParams layoutParams = ll_content.getLayoutParams();
-        layoutParams.width= w;
+        layoutParams.width = w;
         layoutParams.height = h;
         ll_content.setLayoutParams(layoutParams);
         ll_content.invalidate();
+    }
+
+    public void setType(int type) {
+        ScrollView sv_tv = findViewById(R.id.sv_tv);
+        ViewGroup.LayoutParams params = sv_tv.getLayoutParams();
+
+        DisplayMetrics metric = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getRealMetrics(metric);
+        int width = metric.widthPixels; // 宽度（PX）
+        int height = metric.heightPixels; // 高度（PX）
+
+        Logger.e("width == " + width + "     height == " + height);
+
+        if (type == 1) {
+            params.height = WRAP_CONTENT;
+            sv_tv.setLayoutParams(params);
+
+        } else if (type == 2) {
+            params.height = (int) (height * 0.6);
+            sv_tv.setLayoutParams(params);
+        }
     }
 
     /**

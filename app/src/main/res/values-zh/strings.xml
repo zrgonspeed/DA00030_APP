@@ -96,4 +96,7 @@ D-Fit將在您使用APP時，一律收集並使用您的位置、個人資訊(�
     </string>
     <string name="skip">略过</string>
     <string name="no_hint">不再提示</string>
+    <string name="accept">同意</string>
+    <string name="no_accept">暂时不要</string>
+    <string name="skip2">跳过</string>
 </resources>

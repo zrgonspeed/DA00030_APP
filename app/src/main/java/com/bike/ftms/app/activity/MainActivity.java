@@ -103,12 +103,13 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             someHintDialog = new YesOrNoDialog(MainActivity.this, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
             someHintDialog.setTitle(getString(R.string.warm_tip));
             someHintDialog.setMessage(getString(R.string.some_hint));
-            someHintDialog.setYesOnclickListener(getString(R.string.no_hint), () -> {
+            someHintDialog.setYesOnclickListener(getString(R.string.accept), () -> {
                 someHintDialog.dismiss();
                 SpManager.setSkipHint(true);
             });
-            someHintDialog.setNoOnclickListener(getString(R.string.skip), () -> {
+            someHintDialog.setNoOnclickListener(getString(R.string.no_accept), () -> {
                 someHintDialog.dismiss();
+                System.exit(0);
             });
         }
 
@@ -119,9 +120,29 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         params.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
         someHintDialog.getWindow().setAttributes(params);
 
-        someHintDialog.setContentWidthHeight(1600, 900);
+        someHintDialog.setContentWidthHeight(1600, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        someHintDialog.setType(2);
     }
 
+    private void showConnectHintDialog() {
+        if (someHintDialog != null && someHintDialog.isShowing()) {
+            return;
+        }
+
+        if (yesOrNoDialog == null) {
+            yesOrNoDialog = new YesOrNoDialog(MainActivity.this, 600, 800);
+            yesOrNoDialog.setTitle(getString(R.string.warm_tip));
+            yesOrNoDialog.setMessage(getString(R.string.connect_now));
+            yesOrNoDialog.setYesOnclickListener(getString(R.string.ok), () -> {
+                startActivity(new Intent(MainActivity.this, BluetoothActivity.class));
+                yesOrNoDialog.dismiss();
+            });
+            yesOrNoDialog.setNoOnclickListener(getString(R.string.cancel), () -> yesOrNoDialog.dismiss());
+        }
+
+        yesOrNoDialog.show();
+        yesOrNoDialog.setType(1);
+    }
 
     @Override
     protected void onStart() {
@@ -292,22 +313,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         runOnUiThread(() -> showConnectHintDialog());
     }
 
-
-    private void showConnectHintDialog() {
-        return;
-        /*if (yesOrNoDialog == null) {
-            yesOrNoDialog = new YesOrNoDialog(MainActivity.this);
-            yesOrNoDialog.setTitle(getString(R.string.warm_tip));
-            yesOrNoDialog.setMessage(getString(R.string.connect_now));
-            yesOrNoDialog.setYesOnclickListener(getString(R.string.ok), () -> {
-                startActivity(new Intent(MainActivity.this, BluetoothActivity.class));
-                yesOrNoDialog.dismiss();
-            });
-            yesOrNoDialog.setNoOnclickListener(getString(R.string.cancel), () -> yesOrNoDialog.dismiss());
-        }
-
-        yesOrNoDialog.show();*/
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
