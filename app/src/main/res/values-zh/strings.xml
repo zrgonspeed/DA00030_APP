@@ -99,4 +99,6 @@ D-Fit將在您使用APP時，一律收集並使用您的位置、個人資訊(�
     <string name="accept">同意</string>
     <string name="no_accept">暂时不要</string>
     <string name="skip2">跳过</string>
+    <string name="send_email_code">发送验证码</string>
+    <string name="hint_enter_code">输入验证码</string>
 </resources>

@@ -294,7 +294,7 @@
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp"
-                    android:text="发送验证码"
+                    android:text="@string/send_email_code"
                     android:textColor="@color/color_white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -306,7 +306,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_send_code"
                     android:background="@null"
-                    android:hint="输入验证码"
+                    android:hint="@string/hint_enter_code"
                     android:imeOptions="actionDone"
                     android:inputType="number"
                     android:maxLength="6"

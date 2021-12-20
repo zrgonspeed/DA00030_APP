@@ -131,4 +131,6 @@ Device or other ID: Identifies the user\'s mobile phone model to support develop
     <string name="accept">Accept</string>
     <string name="no_accept">Disagree</string>
     <string name="skip2">skip</string>
+    <string name="send_email_code">send code</string>
+    <string name="hint_enter_code">enter code</string>
 </resources>
