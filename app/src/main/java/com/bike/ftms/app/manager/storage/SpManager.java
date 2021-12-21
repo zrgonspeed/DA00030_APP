@@ -1,7 +1,6 @@
-package com.bike.ftms.app.storage;
+package com.bike.ftms.app.manager.storage;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 

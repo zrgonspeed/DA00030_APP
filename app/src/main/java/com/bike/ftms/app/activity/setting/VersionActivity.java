@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.manager.VersionManager;
-import com.bike.ftms.app.storage.SpManager;
+import com.bike.ftms.app.manager.storage.SpManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;

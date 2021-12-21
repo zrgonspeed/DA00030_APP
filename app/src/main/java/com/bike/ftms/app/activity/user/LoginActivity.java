@@ -15,7 +15,7 @@ import com.bike.ftms.app.bean.user.ResultBean;
 import com.bike.ftms.app.common.HttpParam;
 import com.bike.ftms.app.http.OkHttpCallBack;
 import com.bike.ftms.app.http.OkHttpHelper;
-import com.bike.ftms.app.storage.SpManager;
+import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.GsonUtil;
 import com.bike.ftms.app.utils.Logger;
 
@@ -75,7 +75,7 @@ public class LoginActivity extends BaseActivity {
         edt_password.getText().clear();
     }
 
-    @OnClick({R.id.btn_login, R.id.tv_forget, R.id.tv_register, R.id.tv_skip})
+    @OnClick({R.id.btn_login, R.id.iv_back, R.id.tv_forget, R.id.tv_register, R.id.tv_skip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_skip:
@@ -84,7 +84,7 @@ public class LoginActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.iv_back:
-//                finish();
+                finish();
                 break;
             case R.id.btn_login:
                 // 1.校验

@@ -2,7 +2,7 @@ package com.bike.ftms.app.base;
 
 import android.content.Context;
 
-import com.bike.ftms.app.storage.SpManager;
+import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
 import com.squareup.leakcanary.LeakCanary;
 

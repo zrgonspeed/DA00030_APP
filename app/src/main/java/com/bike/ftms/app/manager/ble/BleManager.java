@@ -25,7 +25,7 @@ import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.common.RowerDataParam;
 import com.bike.ftms.app.serial.SerialCommand;
 import com.bike.ftms.app.serial.SerialData;
-import com.bike.ftms.app.storage.SpManager;
+import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.CustomTimer;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.ConvertData;

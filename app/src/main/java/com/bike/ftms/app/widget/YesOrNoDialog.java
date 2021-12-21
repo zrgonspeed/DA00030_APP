@@ -200,7 +200,7 @@ public class YesOrNoDialog extends Dialog {
             sv_tv.setLayoutParams(params);
 
         } else if (type == 2) {
-            params.height = (int) (height * 0.6);
+            params.height = (int) (height * 0.5);
             sv_tv.setLayoutParams(params);
         }
     }

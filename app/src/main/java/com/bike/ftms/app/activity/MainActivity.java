@@ -33,12 +33,10 @@ import com.bike.ftms.app.activity.fragment.workout.WorkoutsNetFragment;
 import com.bike.ftms.app.manager.VersionManager;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
-import com.bike.ftms.app.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.HorizontalViewPager;
 import com.bike.ftms.app.widget.YesOrNoDialog;
-
-import org.litepal.LitePal;
+import com.bike.ftms.app.manager.storage.SpManager;
 
 import java.util.ArrayList;
 import java.util.List;
