@@ -133,4 +133,5 @@ The usage is explained below \n
     <string name="skip2">skip</string>
     <string name="send_email_code">send code</string>
     <string name="hint_enter_code">enter code</string>
+    <string name="get_rundata_info_fail">从服务器获取数据失败</string>
 </resources>

@@ -672,4 +672,5 @@ public class RowerDataBean1 extends LitePalSupport {
         }
         setTotalsItem(bb);
     }
+
 }

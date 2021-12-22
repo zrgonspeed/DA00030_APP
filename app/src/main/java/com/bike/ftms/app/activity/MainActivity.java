@@ -29,7 +29,6 @@ import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.activity.fragment.HomeFragment;
 import com.bike.ftms.app.activity.fragment.workout.WorkoutsFragment;
 import com.bike.ftms.app.activity.fragment.workout.WorkoutsLocalFragment;
-import com.bike.ftms.app.activity.fragment.workout.WorkoutsNetFragment;
 import com.bike.ftms.app.manager.VersionManager;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
@@ -243,11 +242,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         homeFragment = new HomeFragment();
         homeFragments.add(homeFragment);
 
-        if (isLogin) {
-            workoutsFragment = new WorkoutsNetFragment();
-        } else {
-            workoutsFragment = new WorkoutsLocalFragment();
-        }
+        workoutsFragment = new WorkoutsLocalFragment();
         homeFragments.add(workoutsFragment);
 
         TabFragmentPagerAdapter adapter1 = new TabFragmentPagerAdapter(getSupportFragmentManager(), homeFragments);
