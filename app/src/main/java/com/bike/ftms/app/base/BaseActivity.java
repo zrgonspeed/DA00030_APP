@@ -1,5 +1,7 @@
 package com.bike.ftms.app.base;
 
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -92,6 +94,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * onStop() 和  onDestroy()之间
+     *
      * @param outState
      */
     @Override
@@ -102,11 +105,32 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * onStart() 和 onResume()之间
+     *
      * @param savedInstanceState
      */
     @Override
     protected void onRestoreInstanceState(@Nullable Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Logger.i(getTAG() + " - " + "onRestoreInstanceState()");
+    }
+
+
+    //字体适配解决方案
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if (newConfig.fontScale != 1)//非默认值
+            getResources();
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        if (res.getConfiguration().fontScale != 1) {//非默认值
+            Configuration newConfig = new Configuration();
+            newConfig.setToDefaults();//设置默认
+            res.updateConfiguration(newConfig, res.getDisplayMetrics());
+        }
+        return res;
     }
 }

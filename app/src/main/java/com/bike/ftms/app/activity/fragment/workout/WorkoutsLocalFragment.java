@@ -553,13 +553,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
                     // 总和
                     if (list.indexOf(bean2) == list.size() - 1) {
-//                    if (bean2.getSetIntervalCalorie() == bean2.getCalorie()) {
-//                        bb.setSetIntervalCalorie(bean2.getSetIntervalCalorie() + bb.getSetIntervalCalorie());
-//                    } else {
-//                        bb.setSetIntervalCalorie((bean2.getSetIntervalCalorie() - bean2.getCalorie()) + bb.getSetIntervalCalorie());
-//                    }
-                        bb.setCalorie(bean2.getCalorie() + bb.getCalorie());
-
+                        bb.setCalorie((bean2.getSetIntervalCalorie() - bean2.getCalorie()) + bb.getCalorie());
                     } else {
 //                    bb.setSetIntervalCalorie(bean2.getSetIntervalCalorie() + bb.getSetIntervalCalorie());
                         bb.setCalorie(bean2.getCalorie() + bb.getCalorie());

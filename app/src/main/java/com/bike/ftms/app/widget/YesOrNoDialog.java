@@ -5,10 +5,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -19,6 +21,7 @@ import androidx.annotation.NonNull;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.MainActivity;
 import com.bike.ftms.app.utils.Logger;
+import com.bike.ftms.app.utils.UIUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -43,6 +46,10 @@ public class YesOrNoDialog extends Dialog {
     private int w = MATCH_PARENT;
     private int h = MATCH_PARENT;
     private LinearLayout ll_content;
+    private LinearLayout ll_sv_tv;
+    private LinearLayout ll_bottom_button;
+    private ScrollView sv_tv;
+
     private Activity context;
 
     public YesOrNoDialog(MainActivity context) { //R.style.MyDialog
@@ -155,7 +162,21 @@ public class YesOrNoDialog extends Dialog {
         titleTv = (TextView) findViewById(R.id.title);
         messageTv = (TextView) findViewById(R.id.message);
         ll_content = (LinearLayout) findViewById(R.id.ll_content);
+        ll_sv_tv = (LinearLayout) findViewById(R.id.ll_sv_tv);
+        sv_tv = (ScrollView) findViewById(R.id.sv_tv);
+        ll_bottom_button = (LinearLayout) findViewById(R.id.ll_bottom_button);
 
+        boolean debug = false;
+        if (debug) {
+
+        } else {
+            titleTv.setBackgroundResource(R.color.transparent);
+            messageTv.setBackgroundResource(R.color.transparent);
+            ll_content.setBackgroundResource(R.color.transparent);
+            ll_sv_tv.setBackgroundResource(R.color.transparent);
+            ll_bottom_button.setBackgroundResource(R.color.transparent);
+            sv_tv.setBackgroundResource(R.color.transparent);
+        }
     }
 
     /**
@@ -185,23 +206,55 @@ public class YesOrNoDialog extends Dialog {
     }
 
     public void setType(int type) {
+        ViewGroup.LayoutParams llParams = ll_content.getLayoutParams();
+        ViewGroup.LayoutParams llParams_bottom = ll_bottom_button.getLayoutParams();
+        ViewGroup.LayoutParams ll_sv_tv_Params = ll_sv_tv.getLayoutParams();
+
         ScrollView sv_tv = findViewById(R.id.sv_tv);
-        ViewGroup.LayoutParams params = sv_tv.getLayoutParams();
+        ViewGroup.LayoutParams sv_params = sv_tv.getLayoutParams();
 
-        DisplayMetrics metric = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getRealMetrics(metric);
-        int width = metric.widthPixels; // 宽度（PX）
-        int height = metric.heightPixels; // 高度（PX）
+        int rootHeight = UIUtils.getHeight(context);
+        int rootWidth = UIUtils.getWidth(context);
 
-        Logger.e("width == " + width + "     height == " + height);
+        Logger.e("rootWidth == " + rootWidth + "     rootHeight == " + rootHeight);
 
         if (type == 1) {
-            params.height = WRAP_CONTENT;
-            sv_tv.setLayoutParams(params);
+            titleTv.setMinHeight((int) (llParams.height * 0.30));
+            titleTv.setMaxHeight((int) (llParams.height * 0.30));
 
+            llParams_bottom.height = (int) (llParams.height * 0.30);
+            ll_bottom_button.setLayoutParams(llParams_bottom);
+
+            ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
+            ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
+
+            // 设置文字居中
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            lp.gravity = Gravity.CENTER;
+            messageTv.setLayoutParams(lp);
+            // 设置文字大小
+            float v = UIUtils.getDensity(context) * UIUtils.getDPI(context);
+            if (v > 1000) {
+                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (v / 1000.0)));
+            } else {
+                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (1000.0 / v)));
+            }
         } else if (type == 2) {
-            params.height = (int) (height * 0.5);
-            sv_tv.setLayoutParams(params);
+            titleTv.setMinHeight((int) (llParams.height * 0.15));
+            titleTv.setMaxHeight((int) (llParams.height * 0.15));
+
+            llParams_bottom.height = (int) (llParams.height * 0.15);
+            ll_bottom_button.setLayoutParams(llParams_bottom);
+
+            ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
+            ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
+
+            float v = UIUtils.getDensity(context) * UIUtils.getDPI(context);
+            if (v > 1000) {
+                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (v / 1000.0)));
+            } else {
+                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (1000.0 / v)));
+            }
         }
     }
 

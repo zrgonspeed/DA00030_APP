@@ -34,6 +34,7 @@ import com.bike.ftms.app.manager.VersionManager;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.utils.Logger;
+import com.bike.ftms.app.utils.UIUtils;
 import com.bike.ftms.app.widget.HorizontalViewPager;
 import com.bike.ftms.app.widget.YesOrNoDialog;
 import com.bike.ftms.app.manager.storage.SpManager;
@@ -98,12 +99,14 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     private void showSomeHintDialog() {
         if (someHintDialog == null) {
-            someHintDialog = new YesOrNoDialog(MainActivity.this, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+            someHintDialog = new YesOrNoDialog(MainActivity.this);
             someHintDialog.setTitle(getString(R.string.warm_tip));
             someHintDialog.setMessage(getString(R.string.some_hint));
             someHintDialog.setYesOnclickListener(getString(R.string.accept), () -> {
                 someHintDialog.dismiss();
                 SpManager.setSkipHint(true);
+
+                showConnectHintDialog();
             });
             someHintDialog.setNoOnclickListener(getString(R.string.no_accept), () -> {
                 someHintDialog.dismiss();
@@ -113,12 +116,16 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
         someHintDialog.show();
 
-        WindowManager.LayoutParams params = someHintDialog.getWindow().getAttributes();
-        params.width = 1800;
-        params.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
-        someHintDialog.getWindow().setAttributes(params);
+        int rootHeight = UIUtils.getHeight(this);
+        int rootWidth = UIUtils.getWidth(this);
+        WindowManager.LayoutParams attributes = someHintDialog.getWindow().getAttributes();
+        attributes.width = (int) (rootWidth * 0.8);
+//        attributes.height = (int) (rootHeight * 0.9);
+        someHintDialog.getWindow().setAttributes(attributes);
+        Logger.e("attributes.w " + attributes.width);
+        Logger.e("attributes.h " + attributes.height);
 
-        someHintDialog.setContentWidthHeight(1600, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        someHintDialog.setContentWidthHeight((int) (rootWidth * 0.8), (int) (rootHeight * 0.8));
         someHintDialog.setType(2);
     }
 
@@ -128,7 +135,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         }
 
         if (yesOrNoDialog == null) {
-            yesOrNoDialog = new YesOrNoDialog(MainActivity.this, 600, 800);
+            yesOrNoDialog = new YesOrNoDialog(MainActivity.this);
             yesOrNoDialog.setTitle(getString(R.string.warm_tip));
             yesOrNoDialog.setMessage(getString(R.string.connect_now));
             yesOrNoDialog.setYesOnclickListener(getString(R.string.ok), () -> {
@@ -139,6 +146,17 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         }
 
         yesOrNoDialog.show();
+
+        int rootHeight = UIUtils.getHeight(this);
+        int rootWidth = UIUtils.getWidth(this);
+        WindowManager.LayoutParams attributes = yesOrNoDialog.getWindow().getAttributes();
+        attributes.width = (int) (rootWidth * 0.4);
+//        attributes.height = (int) (rootHeight * 0.9);
+        yesOrNoDialog.getWindow().setAttributes(attributes);
+        Logger.e("attributes.w " + attributes.width);
+        Logger.e("attributes.h " + attributes.height);
+
+        yesOrNoDialog.setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
         yesOrNoDialog.setType(1);
     }
 

@@ -85,16 +85,17 @@ public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAda
                     holder.tvInfoInterval.setText(String.valueOf(bean.getRunInterval() + 1));
                     break;
                 case MyConstant.INTERVAL_TIME:
-//                    if (position == rowerDataBean2List.size() - 1) {
-//                        if (bean.getSetIntervalTime() == bean.getTime()) {
-//                            holder.tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetIntervalTime()));
-//                        } else {
-//                            holder.tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetIntervalTime() - bean.getTime()));
-//                        }
-//                    } else {
-//                        holder.tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetIntervalTime()));
-//                    }
-                    holder.tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
+                    if (position == rowerDataBean2List.size() - 1) {
+                        if (bean.getSetIntervalTime() == bean.getTime()) {
+                            holder.tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetIntervalTime()));
+                        } else {
+                            holder.tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetIntervalTime() - bean.getTime()));
+                        }
+                    } else {
+                        holder.tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetIntervalTime()));
+                    }
+
+
                     holder.tvInfoMeters.setText(bean.getDistance() + "M");
                     holder.tvInfoCals.setText(String.valueOf(bean.getCalorie()));
                     holder.tvInfoInterval.setText(String.valueOf(bean.getInterval()));
@@ -117,16 +118,11 @@ public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAda
                     holder.tvInfoInterval.setText(String.valueOf(bean.getInterval()));
                     break;
                 case MyConstant.INTERVAL_CALORIES:
-//                if (position == rowerDataBean2List.size() - 1) {
-//                    if (bean.getSetIntervalDistance() == bean.getDistance()) {
-//                        holder.tvInfoCals.setText(String.valueOf(bean.getSetIntervalCalorie()));
-//                    } else {
-//                        holder.tvInfoCals.setText(String.valueOf(bean.getSetIntervalCalorie() - bean.getCalorie()));
-//                    }
-//                } else {
-//                    holder.tvInfoCals.setText(String.valueOf(bean.getSetIntervalCalorie()));
-//                }
-                    holder.tvInfoCals.setText(String.valueOf(bean.getCalorie()));
+                    if (position == rowerDataBean2List.size() - 1) {
+                        holder.tvInfoCals.setText(String.valueOf(bean.getSetIntervalCalorie() - bean.getCalorie()));
+                    } else {
+                        holder.tvInfoCals.setText(String.valueOf(bean.getCalorie()));
+                    }
 
                     holder.tvInfoMeters.setText(bean.getDistance() + "M");
                     holder.tvInfoTime.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));

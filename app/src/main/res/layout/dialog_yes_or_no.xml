@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/ll_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:background="@color/blue"
         android:orientation="vertical">
 
         <TextView
@@ -16,42 +16,66 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="15dp"
+            android:background="@color/green"
             android:gravity="center"
+            android:text="提示"
             android:textColor="#38ADFF"
             android:textSize="18sp" />
-
-        <ScrollView
-            android:id="@+id/sv_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_230">
-
-            <TextView
-                android:id="@+id/message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_15" />
-        </ScrollView>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginTop="15dp"
-            android:background="#E4E4E4" />
+            android:background="#8B8B8B" />
 
         <LinearLayout
+            android:id="@+id/ll_sv_tv"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_height="wrap_content"
+            android:background="@color/gray"
+            android:orientation="horizontal">
+
+            <ScrollView
+                android:id="@+id/sv_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:fadeScrollbars="false"
+                android:scrollbarSize="@dimen/dp_10"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbarThumbHorizontal="@drawable/thumb01"
+                android:scrollbarThumbVertical="@drawable/thumb01">
+
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/red"
+                    android:text="sdasdsaddddddddddddd"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_15" />
+            </ScrollView>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#8B8B8B" />
+
+        <LinearLayout
+            android:id="@+id/ll_bottom_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/no"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:background="@null"
@@ -64,12 +88,12 @@
             <View
                 android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:background="#E4E4E4" />
+                android:background="#8B8B8B" />
 
             <Button
                 android:id="@+id/yes"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@null"
