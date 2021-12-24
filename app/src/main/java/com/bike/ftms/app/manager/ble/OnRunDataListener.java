@@ -11,6 +11,4 @@ public interface OnRunDataListener {
     void onRunData(RowerDataBean1 rowerDataBean1);
 
     void disConnect();
-
-    void onExit();
 }

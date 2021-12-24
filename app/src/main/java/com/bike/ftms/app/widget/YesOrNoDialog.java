@@ -3,6 +3,7 @@ package com.bike.ftms.app.widget;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -20,6 +21,8 @@ import androidx.annotation.NonNull;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.MainActivity;
+import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
+import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.UIUtils;
 
@@ -52,11 +55,11 @@ public class YesOrNoDialog extends Dialog {
 
     private Activity context;
 
-    public YesOrNoDialog(MainActivity context) { //R.style.MyDialog
+    public YesOrNoDialog(Activity context) { //R.style.MyDialog
         this(context, MATCH_PARENT, MATCH_PARENT);
     }
 
-    public YesOrNoDialog(MainActivity mainActivity, int w, int h) {
+    public YesOrNoDialog(Activity mainActivity, int w, int h) {
         super(mainActivity);
         this.context = mainActivity;
         this.w = w;
@@ -267,5 +270,66 @@ public class YesOrNoDialog extends Dialog {
 
     public interface onNoOnclickListener {
         public void onNoClick();
+    }
+
+    public static void showSomeHintDialog(Activity activity, YesOrNoDialog someHintDialog, YesOrNoDialog thenShowDialog) {
+        if (someHintDialog == null) {
+            someHintDialog = new YesOrNoDialog(activity);
+            someHintDialog.setTitle(activity.getString(R.string.warm_tip));
+            someHintDialog.setMessage(activity.getString(R.string.some_hint));
+            YesOrNoDialog finalSomeHintDialog = someHintDialog;
+            someHintDialog.setYesOnclickListener(activity.getString(R.string.accept), () -> {
+                finalSomeHintDialog.dismiss();
+                SpManager.setSkipHint(true);
+
+                showConnectHintDialog(activity, thenShowDialog);
+            });
+            someHintDialog.setNoOnclickListener(activity.getString(R.string.no_accept), () -> {
+                finalSomeHintDialog.dismiss();
+                System.exit(0);
+            });
+        }
+
+        someHintDialog.show();
+
+        int rootHeight = UIUtils.getHeight(activity);
+        int rootWidth = UIUtils.getWidth(activity);
+        WindowManager.LayoutParams attributes = someHintDialog.getWindow().getAttributes();
+        attributes.width = (int) (rootWidth * 0.8);
+//        attributes.height = (int) (rootHeight * 0.9);
+        someHintDialog.getWindow().setAttributes(attributes);
+        Logger.e("attributes.w " + attributes.width);
+        Logger.e("attributes.h " + attributes.height);
+
+        someHintDialog.setContentWidthHeight((int) (rootWidth * 0.8), (int) (rootHeight * 0.8));
+        someHintDialog.setType(2);
+    }
+
+    public static void showConnectHintDialog(Activity activity, YesOrNoDialog connectHintDialog) {
+        if (connectHintDialog == null) {
+            connectHintDialog = new YesOrNoDialog(activity);
+            connectHintDialog.setTitle(activity.getString(R.string.warm_tip));
+            connectHintDialog.setMessage(activity.getString(R.string.connect_now));
+            YesOrNoDialog finalConnectHintDialog = connectHintDialog;
+            connectHintDialog.setYesOnclickListener(activity.getString(R.string.ok), () -> {
+                activity.startActivity(new Intent(activity, BluetoothActivity.class));
+                finalConnectHintDialog.dismiss();
+            });
+            connectHintDialog.setNoOnclickListener(activity.getString(R.string.cancel), () -> finalConnectHintDialog.dismiss());
+        }
+
+        connectHintDialog.show();
+
+        int rootHeight = UIUtils.getHeight(activity);
+        int rootWidth = UIUtils.getWidth(activity);
+        WindowManager.LayoutParams attributes = connectHintDialog.getWindow().getAttributes();
+        attributes.width = (int) (rootWidth * 0.4);
+//        attributes.height = (int) (rootHeight * 0.9);
+        connectHintDialog.getWindow().setAttributes(attributes);
+        Logger.e("attributes.w " + attributes.width);
+        Logger.e("attributes.h " + attributes.height);
+
+        connectHintDialog.setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
+        connectHintDialog.setType(1);
     }
 }

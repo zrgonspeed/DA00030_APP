@@ -427,30 +427,6 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
     public boolean deleteDBrowbean1(RowerDataBean1 bean1) {
         int j = LitePal.deleteAll(RowerDataBean1.class, "date=?", String.valueOf(bean1.getDate()));
         return j > 0;
-        /*Cursor cursor = LitePal.findBySQL("select id, date from rowerdatabean1");
-        Set<RowerDataBean1> sets = new HashSet<>();
-        while (cursor.moveToNext()) {
-            Logger.e("id == " + cursor.getInt(0) + "        date == " + cursor.getLong(1));
-            RowerDataBean1 t = new RowerDataBean1();
-            t.setId(cursor.getInt(0));
-            t.setDate(cursor.getLong(1));
-            sets.add(t);
-        }
-        int count = 0;
-        int deleteCount = 0;
-        for (RowerDataBean1 t1 : sets) {
-            if (t1.getDate() / 1000 == bean1.getDate() / 1000) {
-                count++;
-
-                // 删除记录
-                int r = LitePal.deleteAll(RowerDataBean1.class, "id=?", String.valueOf(t1.getId()));
-                if (r > 0) {
-                    deleteCount++;
-                }
-            }
-        }
-
-        return count == deleteCount;*/
     }
 
     public void updateLocalNote(RowerDataBean1 rowerDataBean1, String s) {

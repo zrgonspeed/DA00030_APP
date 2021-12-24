@@ -7,7 +7,6 @@ import android.os.PersistableBundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,7 +32,6 @@ import com.bike.ftms.app.manager.VersionManager;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.utils.Logger;
-import com.bike.ftms.app.utils.UIUtils;
 import com.bike.ftms.app.widget.HorizontalViewPager;
 import com.bike.ftms.app.widget.YesOrNoDialog;
 import com.bike.ftms.app.manager.storage.SpManager;
@@ -69,9 +67,11 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     private HomeFragment homeFragment;
     private WorkoutsFragment workoutsFragment;
     private long exitTime = 0;
-    private YesOrNoDialog yesOrNoDialog;
-    private boolean isOnPause = false;
 
+    private YesOrNoDialog connectHintDialog;
+    private YesOrNoDialog someHintDialog;
+
+    private boolean isOnPause = false;
     private boolean isLogin = false;
 
     @Override
@@ -90,74 +90,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
         if (!SpManager.getSkipHint()) {
             // 安装后启动要提示事项，谷歌商店需要
-            showSomeHintDialog();
+            YesOrNoDialog.showSomeHintDialog(this, someHintDialog, connectHintDialog);
         }
     }
 
-    private YesOrNoDialog someHintDialog;
-
-    private void showSomeHintDialog() {
-        if (someHintDialog == null) {
-            someHintDialog = new YesOrNoDialog(MainActivity.this);
-            someHintDialog.setTitle(getString(R.string.warm_tip));
-            someHintDialog.setMessage(getString(R.string.some_hint));
-            someHintDialog.setYesOnclickListener(getString(R.string.accept), () -> {
-                someHintDialog.dismiss();
-                SpManager.setSkipHint(true);
-
-                showConnectHintDialog();
-            });
-            someHintDialog.setNoOnclickListener(getString(R.string.no_accept), () -> {
-                someHintDialog.dismiss();
-                System.exit(0);
-            });
-        }
-
-        someHintDialog.show();
-
-        int rootHeight = UIUtils.getHeight(this);
-        int rootWidth = UIUtils.getWidth(this);
-        WindowManager.LayoutParams attributes = someHintDialog.getWindow().getAttributes();
-        attributes.width = (int) (rootWidth * 0.8);
-//        attributes.height = (int) (rootHeight * 0.9);
-        someHintDialog.getWindow().setAttributes(attributes);
-        Logger.e("attributes.w " + attributes.width);
-        Logger.e("attributes.h " + attributes.height);
-
-        someHintDialog.setContentWidthHeight((int) (rootWidth * 0.8), (int) (rootHeight * 0.8));
-        someHintDialog.setType(2);
-    }
-
-    private void showConnectHintDialog() {
-        if (someHintDialog != null && someHintDialog.isShowing()) {
-            return;
-        }
-
-        if (yesOrNoDialog == null) {
-            yesOrNoDialog = new YesOrNoDialog(MainActivity.this);
-            yesOrNoDialog.setTitle(getString(R.string.warm_tip));
-            yesOrNoDialog.setMessage(getString(R.string.connect_now));
-            yesOrNoDialog.setYesOnclickListener(getString(R.string.ok), () -> {
-                startActivity(new Intent(MainActivity.this, BluetoothActivity.class));
-                yesOrNoDialog.dismiss();
-            });
-            yesOrNoDialog.setNoOnclickListener(getString(R.string.cancel), () -> yesOrNoDialog.dismiss());
-        }
-
-        yesOrNoDialog.show();
-
-        int rootHeight = UIUtils.getHeight(this);
-        int rootWidth = UIUtils.getWidth(this);
-        WindowManager.LayoutParams attributes = yesOrNoDialog.getWindow().getAttributes();
-        attributes.width = (int) (rootWidth * 0.4);
-//        attributes.height = (int) (rootHeight * 0.9);
-        yesOrNoDialog.getWindow().setAttributes(attributes);
-        Logger.e("attributes.w " + attributes.width);
-        Logger.e("attributes.h " + attributes.height);
-
-        yesOrNoDialog.setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
-        yesOrNoDialog.setType(1);
-    }
 
     @Override
     protected void onStart() {
@@ -174,15 +110,14 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         BleManager.getInstance().setOnRunDataListener(this);
         if (!BleManager.isConnect && !BleManager.isHrConnect) {
             if (vp.getCurrentItem() == 0) {
-                showConnectHintDialog();
+                YesOrNoDialog.showConnectHintDialog(this, connectHintDialog);
             }
             homeFragment.onRunData(new RowerDataBean1());
         } else {
-            if (yesOrNoDialog != null && yesOrNoDialog.isShowing()) {
-                yesOrNoDialog.dismiss();
+            if (connectHintDialog != null && connectHintDialog.isShowing()) {
+                connectHintDialog.dismiss();
             }
         }
-
 
         // 判断是否登录，去显示下方用户名头像
         if (UserManager.getInstance().getUser() != null) {
@@ -207,9 +142,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         m_wklk.release();//解除保持唤醒
         //BleManager.getInstance().setonRunDataListener(null);
 
-        if (yesOrNoDialog != null) {
-            yesOrNoDialog.cancel();
-            yesOrNoDialog = null;
+        if (connectHintDialog != null) {
+            connectHintDialog.cancel();
+            connectHintDialog = null;
         }
     }
 
@@ -226,15 +161,19 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             m_wklk.release(); //解除保持唤醒
         }
 
-        if (yesOrNoDialog != null) {
-            yesOrNoDialog.cancel();
-            yesOrNoDialog = null;
+        if (connectHintDialog != null) {
+            connectHintDialog.cancel();
+            connectHintDialog = null;
+        }
+
+        if (someHintDialog != null) {
+            someHintDialog.cancel();
+            someHintDialog = null;
         }
 
         BleManager.getInstance().disConnectDevice();
         BleManager.getInstance().destroy();
     }
-
 
     @Override
     protected void initView() {
@@ -245,8 +184,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         workoutsFragment = new WorkoutsLocalFragment();
         homeFragments.add(workoutsFragment);
 
-        TabFragmentPagerAdapter adapter1 = new TabFragmentPagerAdapter(getSupportFragmentManager(), homeFragments);
-        vp.setAdapter(adapter1);    // 此时开始回调fragment生命周期
+        TabFragmentPagerAdapter adapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), homeFragments);
+        vp.setAdapter(adapter);    // 此时开始回调fragment生命周期
         vp.setOffscreenPageLimit(2);
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -281,6 +220,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "cn");
         m_wklk.acquire(); //设置保持唤醒
 
+        // gone
         tv_version_apk_name.setText(VersionManager.getAppVersionName(this));
     }
 
@@ -298,10 +238,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
                 break;
             case R.id.btn_setting:
                 startActivity(new Intent(this, SettingActivity.class));
-
-                // 删点数据
-//                int j = LitePal.deleteAll(RowerDataBean1.class, "id < 168");
-
                 break;
         }
     }
@@ -321,9 +257,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         if (isOnPause) {
             return;
         }
-        runOnUiThread(() -> showConnectHintDialog());
+        runOnUiThread(() -> YesOrNoDialog.showConnectHintDialog(this, connectHintDialog));
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -341,15 +276,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public void onExit() {
-//        finish();
-//        System.exit(0);
-        BleManager.getInstance().disConnectDevice();
-        BleManager.getInstance().destroy();
-        finish();
-    }
-
     public void exit() {
         Logger.i("exit()");
 
@@ -357,8 +283,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             ToastUtil.show(getString(R.string.home_exit), false);
             exitTime = System.currentTimeMillis();
         } else {
-            onExit();
-//            System.exit(0);
+            BleManager.getInstance().disConnectDevice();
+            BleManager.getInstance().destroy();
+            finish();
         }
     }
 
