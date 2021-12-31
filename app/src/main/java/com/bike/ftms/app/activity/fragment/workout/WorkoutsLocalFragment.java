@@ -18,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.MainActivity;
 import com.bike.ftms.app.activity.user.UserManager;
@@ -156,7 +157,9 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 }
                 break;
             case R.id.tv_upload:
-                presenter.uploadRunData();
+                if (Debug.canLogin) {
+                    presenter.uploadRunData();
+                }
                 break;
             case R.id.tv_edit:
                 isEdit = !isEdit;

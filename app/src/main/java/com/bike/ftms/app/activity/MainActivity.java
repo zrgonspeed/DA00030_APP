@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
 import com.bike.ftms.app.activity.setting.SettingActivity;
@@ -228,7 +229,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_workout_login:
-                startActivity(new Intent(this, LoginActivity.class));
+                if (Debug.canLogin) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                }
                 break;
             case R.id.btn_workout_user_info:
                 startActivity(new Intent(this, PersonalDataActivity.class));

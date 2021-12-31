@@ -3,9 +3,11 @@ package com.bike.ftms.app.activity.setting;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
+import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
 import com.bike.ftms.app.activity.bluetooth.HeartRateMonitorActivity;
@@ -15,6 +17,7 @@ import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.common.ParamData;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 import tech.gujin.toast.ToastUtil;
 
@@ -22,6 +25,9 @@ public class SettingActivity extends BaseActivity {
     private static final String TAG = SettingActivity.class.getSimpleName();
 
     private final int HR_REQUEST_CODE = 100;
+
+    @BindView(R.id.iv_setting_login)
+    ImageView iv_setting_login;
 
     @Override
     protected String getTAG() {
@@ -45,7 +51,9 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
+        if (!Debug.canLogin) {
+            iv_setting_login.setEnabled(false);
+        }
     }
 
     @OnClick({R.id.iv_back, R.id.iv_setting_login, R.id.iv_setting_bluetooth, R.id.iv_setting_hr, R.id.iv_setting_version})
