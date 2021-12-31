@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
         if (!SpManager.getSkipHint()) {
             // 安装后启动要提示事项，谷歌商店需要
-            YesOrNoDialog.showSomeHintDialog(this, someHintDialog, connectHintDialog);
+            someHintDialog = YesOrNoDialog.showSomeHintDialog(this, someHintDialog, connectHintDialog);
         }
     }
 
@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         Logger.e("BleManager == " + BleManager.getInstance());
         BleManager.getInstance().setOnRunDataListener(this);
         if (!BleManager.isConnect && !BleManager.isHrConnect) {
-            if (vp.getCurrentItem() == 0) {
+            if (vp.getCurrentItem() == 0 && (someHintDialog == null || !someHintDialog.isShowing())) {
                 YesOrNoDialog.showConnectHintDialog(this, connectHintDialog);
             }
             homeFragment.onRunData(new RowerDataBean1());
@@ -147,6 +147,11 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             connectHintDialog.cancel();
             connectHintDialog = null;
         }
+
+        if (someHintDialog != null) {
+            someHintDialog.cancel();
+            someHintDialog = null;
+        }
     }
 
     @Override
@@ -162,18 +167,12 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             m_wklk.release(); //解除保持唤醒
         }
 
-        if (connectHintDialog != null) {
-            connectHintDialog.cancel();
-            connectHintDialog = null;
-        }
-
         if (someHintDialog != null) {
             someHintDialog.cancel();
             someHintDialog = null;
         }
 
-        BleManager.getInstance().disConnectDevice();
-        BleManager.getInstance().destroy();
+        release();
     }
 
     @Override
@@ -264,6 +263,12 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Logger.i("onBackPressed()");
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Logger.d("onKeyDown");
         if (workoutsFragment.onKeyDown(keyCode, event)) {
@@ -286,10 +291,14 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             ToastUtil.show(getString(R.string.home_exit), false);
             exitTime = System.currentTimeMillis();
         } else {
-            BleManager.getInstance().disConnectDevice();
-            BleManager.getInstance().destroy();
+            release();
             finish();
         }
+    }
+
+    public void release() {
+        BleManager.getInstance().disConnectDevice();
+        BleManager.getInstance().destroy();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.bike.ftms.app.widget;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -272,7 +273,7 @@ public class YesOrNoDialog extends Dialog {
         public void onNoClick();
     }
 
-    public static void showSomeHintDialog(Activity activity, YesOrNoDialog someHintDialog, YesOrNoDialog thenShowDialog) {
+    public static YesOrNoDialog showSomeHintDialog(Activity activity, YesOrNoDialog someHintDialog, YesOrNoDialog thenShowDialog) {
         if (someHintDialog == null) {
             someHintDialog = new YesOrNoDialog(activity);
             someHintDialog.setTitle(activity.getString(R.string.warm_tip));
@@ -286,7 +287,14 @@ public class YesOrNoDialog extends Dialog {
             });
             someHintDialog.setNoOnclickListener(activity.getString(R.string.no_accept), () -> {
                 finalSomeHintDialog.dismiss();
-                System.exit(0);
+                activity.finish();
+            });
+
+            someHintDialog.setOnDismissListener(dialog -> {
+                Logger.i("someHintDialog dismiss");
+                if (!SpManager.getSkipHint()) {
+                    activity.finish();
+                }
             });
         }
 
@@ -303,6 +311,8 @@ public class YesOrNoDialog extends Dialog {
 
         someHintDialog.setContentWidthHeight((int) (rootWidth * 0.8), (int) (rootHeight * 0.8));
         someHintDialog.setType(2);
+
+        return someHintDialog;
     }
 
     public static void showConnectHintDialog(Activity activity, YesOrNoDialog connectHintDialog) {
