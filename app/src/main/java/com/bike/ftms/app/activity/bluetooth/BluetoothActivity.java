@@ -11,25 +11,40 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.activity.fragment.workout.MyHeader;
 import com.bike.ftms.app.adapter.BleAdapter;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnScanConnectListener;
 import com.bike.ftms.app.utils.Logger;
+
+import com.scwang.smartrefresh.header.MaterialHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.RefreshState;
+import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
+
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -92,11 +107,61 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     }
 
+    private boolean refreshing = false;
+
+    private void setRefreshLayout() {
+        rl_status_refresh.setEnableRefresh(true);
+        rl_status_refresh.setRefreshHeader(new MyHeader(getApplicationContext()).setSpinnerStyle(SpinnerStyle.FixedBehind).setPrimaryColorId(R.color.colorPrimary).setAccentColorId(android.R.color.white).setEnableLastTime(false));
+
+        rl_status_refresh.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
+            @Override
+            public void onStateChanged(@NonNull RefreshLayout refreshLayout, @NonNull RefreshState oldState, @NonNull RefreshState newState) {
+                super.onStateChanged(refreshLayout, oldState, newState);
+                Logger.i("oldState == " + oldState + "   newState == " + newState);
+                // oldState == RefreshFinish   newState == None  这时才刷新动画完成
+                if (oldState == RefreshState.RefreshFinish && newState == RefreshState.None) {
+                    rl_status_refresh.setEnableRefresh(false);
+
+                    rvBle.setVisibility(View.VISIBLE);
+                    llLoading.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        rl_status_refresh.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+            }
+
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                // 正在刷新中不能再下拉刷新
+                if (refreshing) {
+                    rl_status_refresh.finishRefresh();
+                    return;
+                }
+
+                bleAdapter.clear();
+                scanDevice();
+                rvBle.setVisibility(View.GONE);
+                llLoading.setVisibility(View.GONE);
+
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    rl_status_refresh.finishRefresh(true);
+                }, 1500);
+            }
+        });
+    }
+
     @Override
     protected void initView() {
         Logger.i("initView()");
         BleManager.getInstance().getBluetoothAdapter();
-        rvBle.setNestedScrollingEnabled(false);
+
+        rvBle.setNestedScrollingEnabled(true);
+        rl_status_refresh.setNestedScrollingEnabled(true);
+        rl_status_refresh.setEnableLoadMore(false);
+        rl_status_refresh.setEnableRefresh(false);
+
 
         // 每点一次就拦住check事件等待蓝牙打开或关闭之后返回的状态
         cbSwitch.setOnClickListener((e) -> {
@@ -180,8 +245,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         if (Build.VERSION.SDK_INT >= 23) {
             requestPermissionAndOpenLBE();
         } else {
-            llLoading.setVisibility(View.VISIBLE);
-            rvBle.setVisibility(View.VISIBLE);
+            startRefresh();
             BleManager.getInstance().scanDevice();
         }
     }
@@ -233,8 +297,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             case PERMISSION_STATE_CODE:
                 if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // 获取到权限，作相应处理（调用定位SDK应当确保相关权限均被授权，否则可能引起定位失败）
-                    llLoading.setVisibility(View.VISIBLE);
-                    rvBle.setVisibility(View.VISIBLE);
+                    startRefresh();
 //                    BleManager.getInstance().scanDevice();
                     BleManager.getInstance().openBLE(this);
                 } else {
@@ -284,6 +347,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Override
     public void onStopScan() {
         llLoading.setVisibility(View.GONE);
+        refreshing = false;
+        setRefreshLayout();
     }
 
     @Override
@@ -351,17 +416,15 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
         isCalled = true;
         if (open) {
-            llLoading.setVisibility(View.VISIBLE);
             if (bleAdapter != null) {
                 bleAdapter.notifyDataSetChanged();
             }
-            rvBle.setVisibility(View.VISIBLE);
+            startRefresh();
             if (tv_switch != null) {
                 tv_switch.setText(getResources().getString(R.string.bluetooth_switch_enable));
             }
         } else {
-            llLoading.setVisibility(View.GONE);
-            rvBle.setVisibility(View.GONE);
+            stopRefresh();
             cbSwitch.setChecked(false);
             if (tv_switch != null) {
                 tv_switch.setText(getResources().getString(R.string.bluetooth_switch_disable));
@@ -381,8 +444,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             if (bleAdapter != null) {
                 bleAdapter.notifyDataSetChanged();
             }
-            llLoading.setVisibility(View.GONE);
-            rvBle.setVisibility(View.GONE);
+            stopRefresh();
 
             if (tv_switch != null) {
                 tv_switch.setText(getResources().getString(R.string.bluetooth_switch_disable));
@@ -395,6 +457,9 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             }
         }
     }
+
+    @BindView(R.id.rl_status_refresh)
+    public SmartRefreshLayout rl_status_refresh;
 
     /**
      * 蓝牙广播接收器
@@ -442,5 +507,21 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 }
             }
         }
+    }
+
+    private void startRefresh() {
+        refreshing = true;
+        if (!(rl_status_refresh.getRefreshHeader() instanceof MyHeader) || ((MyHeader) (rl_status_refresh.getRefreshHeader())).isFinish()) {
+            llLoading.setVisibility(View.VISIBLE);
+            rvBle.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private void stopRefresh() {
+        refreshing = false;
+        llLoading.setVisibility(View.GONE);
+        rvBle.setVisibility(View.GONE);
+        setRefreshLayout();
     }
 }

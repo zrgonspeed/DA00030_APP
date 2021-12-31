@@ -2,6 +2,8 @@ package com.bike.ftms.app.bean.bluetooth;
 
 import android.bluetooth.le.ScanResult;
 
+import androidx.annotation.NonNull;
+
 /**
  * @Description
  * @Author YYH
@@ -39,4 +41,5 @@ public class MyScanResult {
                 ", connectState=" + connectState +
                 '}';
     }
+
 }

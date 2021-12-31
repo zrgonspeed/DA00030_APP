@@ -9,8 +9,8 @@ android {
         applicationId "com.bike.ftms.app"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 3
-        versionName "1.0.3 beta5 2021-12-20 " + ver
+        versionCode 4
+        versionName "1.0.3 beta6 2021-12-31 " + ver
 
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
@@ -55,6 +55,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     testImplementation 'junit:junit:4.12'
     implementation 'org.litepal.android:core:2.0.0'
 
@@ -63,7 +64,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'org.litepal.android:core:2.0.0'
 
     implementation 'tech.gujin:toast-util:1.1.1'
@@ -73,6 +74,15 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+
+    // 下拉刷新框架
+//    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.3'
+//    implementation 'com.scwang.smart:refresh-header-material:2.0.3'
+
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-x'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-x'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+//    implementation  'io.github.scwang90:refresh-footer-classics:2.0.3'    //经典加载
 
     // 日志打印框架：https://github.com/JakeWharton/timber
 //    implementation 'com.jakewharton.timber:timber:4.7.1'

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
@@ -28,6 +29,23 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
 
     public BleAdapter(List<MyScanResult> list) {
         this.list = list;
+    }
+
+    public void clear() {
+        if (list == null || list.size() == 0) {
+            return;
+        }
+
+        list.clear();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 设置新的数据
+     */
+    public void setData(@Nullable List<MyScanResult> data) {
+        list = data;
+        notifyDataSetChanged();
     }
 
     @NonNull

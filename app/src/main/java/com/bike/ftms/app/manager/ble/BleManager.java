@@ -206,6 +206,16 @@ public class BleManager implements CustomTimer.TimerCallBack {
             mScanResults.clear();
             if (connectScanResult != null && !isScanHrDevice && connectScanResult.getConnectState() == 1) {
                 mScanResults.add(connectScanResult);
+                /*Logger.e("sssssssssssssss");
+                try {
+                    mScanResults.add((MyScanResult) connectScanResult.clone());
+                    mScanResults.add((MyScanResult) connectScanResult.clone());
+                    mScanResults.add((MyScanResult) connectScanResult.clone());
+                    mScanResults.add((MyScanResult) connectScanResult.clone());
+                    mScanResults.add((MyScanResult) connectScanResult.clone());
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }*/
             }
             if (connectHrScanResult != null && isScanHrDevice && connectHrScanResult.getConnectState() == 1) {
                 mScanResults.add(connectHrScanResult);
