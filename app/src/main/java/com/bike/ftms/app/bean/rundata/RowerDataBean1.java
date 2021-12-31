@@ -313,7 +313,7 @@ public class RowerDataBean1 extends LitePalSupport {
                 ", calories_hr=" + calories_hr +
                 ", note='" + note + '\'' +
                 ", date=" + date +
-                ", list=" + list +
+                ", list.size =" + list.size() +
                 '}';
     }
 

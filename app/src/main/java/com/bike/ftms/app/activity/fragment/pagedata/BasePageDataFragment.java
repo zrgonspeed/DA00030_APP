@@ -60,29 +60,52 @@ public abstract class BasePageDataFragment extends BaseFragment {
     public void onRunData(RowerDataBean1 rowerDataBean1) {
         tvStrokes.setText(String.valueOf(rowerDataBean1.getStrokes()));
 
-        if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_NO) {
-            tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval()));
-        } else if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
-            if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
-                tvInterval.setText(String.valueOf(rowerDataBean1.getInterval()));
-            } else {
-                tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval() + 1));
+        {
+            if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_NO) {
+                tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval()));
+            } else if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
+                if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
+                    tvInterval.setText(String.valueOf(rowerDataBean1.getInterval()));
+                } else {
+                    tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval() + 1));
+                }
+            }
+
+            // 直接运动模式，段数都是1，没有分段
+            if (rowerDataBean1.getRunMode() == MyConstant.NORMAL && rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
+                tvInterval.setText("1");
+            }
+
+            if (BleManager.status == BleManager.STATUS_POST) {
+                tvInterval.setText("0");
             }
         }
 
-        // 直接运动模式，段数都是1，没有分段
-        if (rowerDataBean1.getRunMode() == MyConstant.NORMAL && rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
-            tvInterval.setText("1");
+        {
+            if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
+                long showDistance = rowerDataBean1.getSetIntervalDistance() - rowerDataBean1.getDistance();
+                if (showDistance <= 0) {
+                    showDistance = rowerDataBean1.getSetIntervalDistance();
+                }
+                tvDistance.setText(String.valueOf(showDistance));
+            } else {
+                tvDistance.setText(String.valueOf(rowerDataBean1.getDistance()));
+            }
+
+            if (BleManager.status == BleManager.STATUS_POST) {
+                tvDistance.setText("0");
+            }
         }
 
-        if (BleManager.status == BleManager.STATUS_POST) {
-            tvInterval.setText("0");
+        {
+            tvTime.setText(TimeStringUtil.getSToHourMinSecValue(rowerDataBean1.getTime()));
+            if (BleManager.status == BleManager.STATUS_POST) {
+                tvTime.setText(TimeStringUtil.getSToHourMinSecValue(0));
+            }
         }
 
-        tvDistance.setText(String.valueOf(rowerDataBean1.getDistance()));
         tvDrag.setText(String.valueOf(rowerDataBean1.getDrag()));
         tvSm.setText(String.valueOf(rowerDataBean1.getSm()));
         tvHeartRate.setText(String.valueOf(rowerDataBean1.getHeart_rate()));
-        tvTime.setText(TimeStringUtil.getSToHourMinSecValue(rowerDataBean1.getTime()));
     }
 }
