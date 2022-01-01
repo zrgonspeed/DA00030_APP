@@ -41,13 +41,25 @@ public class MyHeader extends ClassicsHeader {
         }
         progressView.setVisibility(VISIBLE);
         finish = true;
+        moving = false;
         return 0;//延迟500毫秒之后再弹回
     }
 
+    @Override
+    public void onMoving(boolean isDragging, float percent, int offset, int height, int maxDragHeight) {
+        super.onMoving(isDragging, percent, offset, height, maxDragHeight);
+        moving = true;
+        finish = false;
+    }
+
     private boolean finish = false;
+    private boolean moving = false;
 
     public boolean isFinish() {
         return finish;
     }
 
+    public boolean isMoving() {
+        return moving;
+    }
 }

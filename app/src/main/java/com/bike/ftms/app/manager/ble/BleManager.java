@@ -11,6 +11,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
@@ -40,8 +41,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import androidx.annotation.RequiresApi;
+import dev.xesam.android.toolbox.timer.CountDownTimer;
 import tech.gujin.toast.ToastUtil;
-
 
 public class BleManager implements CustomTimer.TimerCallBack {
     private String TAG = "BleManager";
@@ -60,7 +62,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
     public static int status = STATUS_IDLE;
 
-
     public static boolean isConnect;  //是否连接
     public static boolean isHrConnect;//是否连接蓝牙腰带
     public static boolean isCanning;  //是否正在扫描
@@ -77,6 +78,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
     private final long SCAN_MAX_COUNT = 20;     //扫描的设备个数限制（停止扫描）
     private final long SCAN_PERIOD = 60 * 1000;     //扫描设备时间限制
+    private final long SCAN_PERIOD_INTERVAL = 1000;     //隔多久回调1次
     private static final long SEND_VERIFY_TIME = 2000; // 发送校验码延迟时间
     private static final long START_SCAN_DELAY_TIME = 2000; // 扫描设备延迟时间
 
@@ -111,6 +113,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
     private BleOpenCallBack bleOpenCallBack;
     private BleClosedCallBack bleClosedCallBack;
+    private CountDownTime countDownTime;
+    private CountDownTimer countDownTimer;
 
     public void setBleOpenCallBack(BleOpenCallBack bleOpenCallBack) {
         this.bleOpenCallBack = bleOpenCallBack;
@@ -118,6 +122,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
     public void setBleClosedCallBack(BleClosedCallBack bleClosedCallBack) {
         this.bleClosedCallBack = bleClosedCallBack;
+    }
+
+    public void setCountDownTime(CountDownTime countDownTime) {
+        this.countDownTime = countDownTime;
     }
 
     public interface BleOpenCallBack {
@@ -182,6 +190,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
         return mBluetoothAdapter;
     }
 
+    public interface CountDownTime {
+        void onTick(long time);
+
+        void onFinish();
+
+        void onStart();
+    }
+
     /**
      * 扫描蓝牙设备
      */
@@ -195,13 +211,17 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 Logger.e("2_1 enable == " + enable);
                 return;
             }
-            mHandler.postDelayed(() -> {
+
+/*            mHandler.postDelayed(() -> {
                 Logger.e("扫描时间到了，停止扫描");
                 stopScan();
                 if (mScanResults.size() == 0) {//没有搜索到设备
                     Logger.e("No devices were found");
                 }
-            }, SCAN_PERIOD);
+            }, SCAN_PERIOD);*/
+
+            startSearchCountDownTimer();
+
             isCanning = true;
             mScanResults.clear();
             if (connectScanResult != null && !isScanHrDevice && connectScanResult.getConnectState() == 1) {
@@ -258,6 +278,54 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
     }
 
+    private void startSearchCountDownTimer() {
+        if (countDownTimer == null) {
+            // + 200 毫秒是应该的
+            countDownTimer = new CountDownTimer(SCAN_PERIOD + 200, SCAN_PERIOD_INTERVAL) {
+                @Override
+                protected void onStart(long millisUntilFinished) {
+                    Logger.e("开始扫描");
+                    if (countDownTime != null) {
+                        countDownTime.onStart();
+                    }
+                }
+
+                @Override
+                protected void onTick(long millisUntilFinished) {
+                    long seconds = Math.round((double) millisUntilFinished / 1000);
+                    if (countDownTime != null) {
+                        countDownTime.onTick(seconds);
+                    }
+                }
+
+                @Override
+                public void onFinish() {
+                    Logger.e("扫描时间到了，停止扫描");
+                    stopScan();
+                    if (mScanResults.size() == 0) {//没有搜索到设备
+                        Logger.e("No devices were found");
+                    }
+                }
+
+                @Override
+                protected void onCancel(long millisUntilFinished) {
+                    Logger.e("扫描取消");
+                }
+            };
+
+        }
+
+        countDownTimer.cancel();
+        countDownTimer.start();
+    }
+
+    private void stopSearchCountDownTimer() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
+    }
+
     /**
      * 停止扫描
      */
@@ -275,6 +343,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     onScanConnectListener.onStopScan();
                 });
             }
+
+            stopSearchCountDownTimer();
 
             Logger.i("停止扫描设备");
         }
@@ -299,7 +369,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
             Logger.i("onScanResult" + result.toString());
             //设备广播（ScanRecord）
             //result.getScanRecord().getServiceUuids()   mServiceUuids=[0000ab00-0000-1000-8000-00805f9b34fb]*/
-
 
             String deviceAddress = result.getDevice().getAddress();
             String deviceName = result.getDevice().getName();
@@ -607,7 +676,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
 //                        Logger.e("c = " + c.getUuid());
                     }
                 }
-
 
                 // 指定一个发送相关的service
                 BluetoothGattService localGattService1 = mBluetoothGatt.getService(UUID.fromString(uuidSendData));
@@ -1035,7 +1103,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
 //                        Logger.i("注册通知::" + enabled);
                     }
 
-
                     if (gattCharacteristic.getUuid().toString().contains("2ad6")) {
                         boolean enabled = mBluetoothGatt.readCharacteristic(gattCharacteristic);
                         Logger.i("2ad6 读::" + enabled);
@@ -1068,7 +1135,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
         return r;
     }
-
 
     /**
      * 释放资源
@@ -1172,7 +1238,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
             Logger.e("mBluetoothAdapter == null");
         }
     }
-
 
     /**
      * 获取data 数据中第offSet 长度为len  的结果
@@ -1402,11 +1467,11 @@ public class BleManager implements CustomTimer.TimerCallBack {
         sendDescriptorByte(respondByte, len);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public String getCurDate() {
         SimpleDateFormat sDateFormat = new SimpleDateFormat("YY-MM-dd");
         return sDateFormat.format(new java.util.Date());
     }
-
 
     public void setIsScanHrDevice(boolean isScanHrDevice) {
         this.isScanHrDevice = isScanHrDevice;
@@ -1475,7 +1540,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
     }
 
-
     private void rxDataPackage(byte[] data, String uuid) {
         if (!isSendVerifyData) {
             isSendVerifyData = true;
@@ -1492,14 +1556,12 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 saveRowDataBean1();
             }
 
-
 //            if (data[1] == STATUS_IDLE && runStatus != RUN_STATUS_STOP) {//停止运动
 //                rowerDataBean.save();
 //                rowerDataBean = new RowerDataBean();
 //            }
 //            runStatus = data[1];
         }
-
 
         if (uuid.contains("2ad1") && isToExamine) {
             setBleDataInx(new byte[]{data[0], data[1]});
@@ -1749,7 +1811,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private void saveRowDataBean1() {
         // TODO: 2021/11/12 应该判断是否符合保存  如 运动不足5秒，等
 
-
         if (rowerDataBean1.getRunMode() == MyConstant.GOAL_TIME) {
             // 时间是倒数的，用距离判断
             if (rowerDataBean1.getDistance() >= 10) {
@@ -1772,7 +1833,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 canSave = true;
             }
         }
-
 
         Logger.e("saveRowDataBean1() -- canSave " + canSave + "       getCanSave() --- " + rowerDataBean1.getCanSave());
         if (canSave && rowerDataBean1.getCanSave()) {

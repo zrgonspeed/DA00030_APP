@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.bluetooth.BluetoothActivity">
 
+    <!--顶部-->
     <RelativeLayout
         android:id="@+id/rl"
         android:layout_width="match_parent"
@@ -30,25 +31,7 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/rl_status_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/rl2"
-        app:layout_constraintTop_toBottomOf="@id/rl">
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_ble"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </androidx.core.widget.NestedScrollView>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-
+    <!--底部-->
     <RelativeLayout
         android:id="@+id/rl2"
         android:layout_width="match_parent"
@@ -59,6 +42,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1">
 
+        <!--蓝牙开关-->
+        <CheckBox
+            android:id="@+id/cb_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="15dp"
+            android:background="@null"
+            android:button="@drawable/btn_bluetooth_switch" />
+
+        <!--登录头像-->
         <LinearLayout
             android:id="@+id/ll_loading"
             android:layout_width="wrap_content"
@@ -82,15 +76,6 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/cb_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="15dp"
-            android:background="@null"
-            android:button="@drawable/btn_bluetooth_switch" />
-
         <TextView
             android:id="@+id/tv_switch"
             android:layout_width="wrap_content"
@@ -101,5 +86,36 @@
             android:text="@string/bluetooth_switch_enable"
             android:textColor="@color/color_707070"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_search_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:text="16"
+            android:textColor="@color/color_707070"
+            android:textSize="16sp"
+            android:visibility="gone" />
     </RelativeLayout>
+
+    <!--下拉刷新-->
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/rl_status_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/rl2"
+        app:layout_constraintTop_toBottomOf="@id/rl">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_ble"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </androidx.core.widget.NestedScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

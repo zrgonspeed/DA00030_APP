@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.fragment.workout.MyHeader;
 import com.bike.ftms.app.adapter.BleAdapter;
@@ -45,9 +46,9 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
 
-
 import butterknife.BindView;
 import butterknife.OnClick;
+import dev.xesam.android.toolbox.timer.CountDownTimer;
 import tech.gujin.toast.ToastUtil;
 
 public class BluetoothActivity extends BaseActivity implements OnScanConnectListener, BleAdapter.OnItemClickListener,
@@ -57,6 +58,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Nullable
     @BindView(R.id.tv_switch)
     TextView tv_switch;
+    @BindView(R.id.tv_search_time)
+    TextView tv_search_time;
     @BindView(R.id.cb_switch)
     CheckBox cbSwitch;
     @BindView(R.id.ll_loading)
@@ -110,7 +113,19 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     private boolean refreshing = false;
 
     private void setRefreshLayout() {
-        rl_status_refresh.setEnableRefresh(true);
+        if (refreshing) {
+            rl_status_refresh.setEnableRefresh(false);
+            Logger.e("setEnableRefresh(false);");
+        } else {
+            if (BleManager.isOpen) {
+                rl_status_refresh.setEnableRefresh(true);
+                Logger.e("setEnableRefresh(true);");
+
+            } else {
+                rl_status_refresh.setEnableRefresh(false);
+                Logger.e("setEnableRefresh(false);");
+            }
+        }
         rl_status_refresh.setRefreshHeader(new MyHeader(getApplicationContext()).setSpinnerStyle(SpinnerStyle.FixedBehind).setPrimaryColorId(R.color.colorPrimary).setAccentColorId(android.R.color.white).setEnableLastTime(false));
 
         rl_status_refresh.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
@@ -157,11 +172,32 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         Logger.i("initView()");
         BleManager.getInstance().getBluetoothAdapter();
 
+        BleManager.getInstance().setCountDownTime(new BleManager.CountDownTime() {
+            @Override
+            public void onTick(long time) {
+                tv_search_time.setText("" + time);
+            }
+
+            @Override
+            public void onFinish() {
+                tv_search_time.setText("?");
+            }
+
+            @Override
+            public void onStart() {
+//                tv_search_time.setText("开始扫描");
+            }
+        });
+        tv_search_time.setText("?");
+        tv_search_time.setVisibility(View.GONE);
+        if (Debug.canShowSearchTime) {
+            tv_search_time.setVisibility(View.VISIBLE);
+        }
+
         rvBle.setNestedScrollingEnabled(true);
         rl_status_refresh.setNestedScrollingEnabled(true);
         rl_status_refresh.setEnableLoadMore(false);
         rl_status_refresh.setEnableRefresh(false);
-
 
         // 每点一次就拦住check事件等待蓝牙打开或关闭之后返回的状态
         cbSwitch.setOnClickListener((e) -> {
@@ -201,7 +237,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         //注册广播
         initBLEBroadcastReceiver();
     }
-
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -275,7 +310,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                     Manifest.permission.BLUETOOTH,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
             }, PERMISSION_STATE_CODE);
-
 
         } else {
             Logger.e("有权限");
@@ -374,6 +408,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         BleManager.getInstance().stopScan();
         BleManager.getInstance().setBleOpenCallBack(null);
         BleManager.getInstance().setBleClosedCallBack(null);
+        BleManager.getInstance().setCountDownTime(null);
 
         //注销广播接收
         unregisterReceiver(bleBroadcastReceiver);
@@ -488,7 +523,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 //                    mHandler.sendMessage(message);
                     Logger.e("蓝牙广播接收：蓝牙关闭");
 
-
                     BleManager.getInstance().closed();
                     isClosed(true);
                     isPre = false;
@@ -511,7 +545,9 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     private void startRefresh() {
         refreshing = true;
-        if (!(rl_status_refresh.getRefreshHeader() instanceof MyHeader) || ((MyHeader) (rl_status_refresh.getRefreshHeader())).isFinish()) {
+        if (!(rl_status_refresh.getRefreshHeader() instanceof MyHeader) || ((MyHeader) (rl_status_refresh.getRefreshHeader())).isFinish() ||
+                !((MyHeader) (rl_status_refresh.getRefreshHeader())).isMoving()
+        ) {
             llLoading.setVisibility(View.VISIBLE);
             rvBle.setVisibility(View.VISIBLE);
         }
