@@ -84,7 +84,7 @@
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="name">姓名</string>
-    <string name="some_hint">
+    <string name="some_hint_2">
 \t\t\t\t D-Fit將在您使用APP時，一律收集並使用您的位置、個人資訊(名稱、電子郵件、電話號碼)、健身資訊、相片、檔案和文件、日曆、裝置或其他 ID，以便在應用程式關閉或未使用時，也可支援各項功能直至您停止使用本APP。\n
 使用方式於以下說明\n
 \t\t\t\t 1.位置：用於連接藍牙設備以支持APP與運動器材進行資料傳輸。\n
@@ -94,10 +94,20 @@
 \t\t\t\t 5.日曆：支援用戶註冊時選擇出生日期。\n
 \t\t\t\t 6.裝置或其他 ID：識別使用者手機型號以支援開發者適配多種手機。\n
     </string>
+
+    <string name="some_hint">
+\t\t\t\t D-Fit需要使用蓝牙和GPS定位权限：\n
+\t\t\t\t 用於連接藍牙設備以支持APP與運動器材進行資料傳輸。\n
+\t\t\t\t 什么时候使用您的定位信息：\n
+\t\t\t\t 当您开启APP时启用\n
+\t\t\t\t 当您关闭APP时禁用\n
+    </string>
     <string name="skip">略过</string>
     <string name="no_hint">不再提示</string>
     <string name="accept">同意</string>
     <string name="no_accept">暂时不要</string>
+    <string name="previous">上一页</string>
+    <string name="next">下一页</string>
     <string name="skip2">跳过</string>
     <string name="send_email_code">发送验证码</string>
     <string name="hint_enter_code">输入验证码</string>

@@ -2,40 +2,29 @@ package com.bike.ftms.app.widget;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.activity.MainActivity;
-import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.UIUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * @Description
  * @Author YYH
  * @Date 2021/4/26
  */
-public class YesOrNoDialog extends Dialog {
+public class SomeHintDialog extends Dialog {
     private Button yes;//确定按钮
     private Button no;//取消按钮
     private TextView titleTv;//消息标题文本
@@ -45,8 +34,6 @@ public class YesOrNoDialog extends Dialog {
     //确定文本和取消文本的显示内容
     private String yesStr, noStr;
 
-    private onNoOnclickListener noOnclickListener;//取消按钮被点击了的监听器
-    private onYesOnclickListener yesOnclickListener;//确定按钮被点击了的监听器
     private int w = MATCH_PARENT;
     private int h = MATCH_PARENT;
     private LinearLayout ll_content;
@@ -56,41 +43,22 @@ public class YesOrNoDialog extends Dialog {
 
     private Activity context;
 
-    public YesOrNoDialog(Activity context) { //R.style.MyDialog
+    public SomeHintDialog(Activity context) { //R.style.MyDialog
         this(context, MATCH_PARENT, MATCH_PARENT);
     }
 
-    public YesOrNoDialog(Activity mainActivity, int w, int h) {
+    public SomeHintDialog(Activity mainActivity, int w, int h) {
         super(mainActivity);
         this.context = mainActivity;
         this.w = w;
         this.h = h;
     }
 
-    /**
-     * 设置取消按钮的显示内容和监听
-     *
-     * @param str
-     * @param onNoOnclickListener
-     */
-    public void setNoOnclickListener(String str, onNoOnclickListener onNoOnclickListener) {
-        if (str != null) {
-            noStr = str;
-        }
-        this.noOnclickListener = onNoOnclickListener;
-    }
 
-    /**
-     * 设置确定按钮的显示内容和监听
-     *
-     * @param str
-     * @param onYesOnclickListener
-     */
-    public void setYesOnclickListener(String str, onYesOnclickListener onYesOnclickListener) {
-        if (str != null) {
-            yesStr = str;
-        }
-        this.yesOnclickListener = onYesOnclickListener;
+    private BTOnclickListener btOnclickListener;
+
+    public void setBtOnclickListener(BTOnclickListener btOnclickListener) {
+        this.btOnclickListener = btOnclickListener;
     }
 
     @Override
@@ -118,23 +86,28 @@ public class YesOrNoDialog extends Dialog {
      */
     private void initEvent() {
         //设置确定按钮被点击后，向外界提供监听
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (yesOnclickListener != null) {
-                    yesOnclickListener.onYesClick();
-                }
+        yes.setOnClickListener(v -> {
+            if (btOnclickListener != null) {
+                btOnclickListener.onYesClick();
             }
         });
         //设置取消按钮被点击后，向外界提供监听
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (noOnclickListener != null) {
-                    noOnclickListener.onNoClick();
-                }
+        no.setOnClickListener(v -> {
+            if (btOnclickListener != null) {
+                btOnclickListener.onNoClick();
             }
         });
+
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (btOnclickListener != null) {
+            btOnclickListener.onDismiss();
+        }
     }
 
     /**
@@ -253,58 +226,103 @@ public class YesOrNoDialog extends Dialog {
             ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
             ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
 
-            float v = UIUtils.getDensity(context) * UIUtils.getDPI(context);
-            if (v > 1000) {
-                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (v / 1000.0)));
-            } else {
-                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (1000.0 / v)));
-            }
+            messageTv.setTextSize(getPage1TextSize());
         }
     }
 
-    /**
-     * 设置确定按钮和取消被点击的接口
-     */
-    public interface onYesOnclickListener {
-        public void onYesClick();
+    private float getPage2TextSize() {
+        float v = UIUtils.getDensity(context) * UIUtils.getDPI(context);
+        if (v > 1000) {
+            return (float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (v / 1000.0));
+        } else {
+            return (float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (1000.0 / v));
+        }
     }
 
-    public interface onNoOnclickListener {
+    private float getPage1TextSize() {
+        return getPage2TextSize();
+    }
+
+    public interface BTOnclickListener {
         public void onNoClick();
+
+        public void onYesClick();
+
+        public void onNext();
+
+        public void onDismiss();
     }
 
-    public static YesOrNoDialog showSomeHintDialog(Activity activity, YesOrNoDialog someHintDialog, YesOrNoDialog thenShowDialog) {
+    private int page = 1;
+    private float page1TextSize;
+    private float page2TextSize;
+
+    public static SomeHintDialog showSomeHintDialog(Activity activity, SomeHintDialog someHintDialog) {
         if (someHintDialog == null) {
-            someHintDialog = new YesOrNoDialog(activity);
+            someHintDialog = new SomeHintDialog(activity);
             someHintDialog.setTitle(activity.getString(R.string.warm_tip));
             someHintDialog.setMessage(activity.getString(R.string.some_hint));
-            YesOrNoDialog finalSomeHintDialog = someHintDialog;
-            someHintDialog.setYesOnclickListener(activity.getString(R.string.accept), () -> {
-                finalSomeHintDialog.dismiss();
-                SpManager.setSkipHint(true);
+            SomeHintDialog finalSomeHintDialog = someHintDialog;
 
-                showConnectHintDialog(activity, thenShowDialog);
-            });
-            someHintDialog.setNoOnclickListener(activity.getString(R.string.no_accept), () -> {
-                finalSomeHintDialog.dismiss();
-                activity.finish();
-            });
+            someHintDialog.setBtOnclickListener(new BTOnclickListener() {
+                @Override
+                public void onNoClick() {
+                    if (finalSomeHintDialog.page == 1) {
+                        finalSomeHintDialog.dismiss();
+                        activity.finish();
+                        return;
+                    }
+                    if (finalSomeHintDialog.page == 2) {
+                        finalSomeHintDialog.messageTv.setText(R.string.some_hint);
+                        finalSomeHintDialog.messageTv.setTextSize(finalSomeHintDialog.getPage1TextSize());
 
-            someHintDialog.setOnDismissListener(dialog -> {
-                Logger.i("someHintDialog dismiss");
-                if (!SpManager.getSkipHint()) {
-                    activity.finish();
+                        finalSomeHintDialog.page = 1;
+                        finalSomeHintDialog.yes.setText(R.string.next);
+                        finalSomeHintDialog.no.setText(R.string.no_accept);
+                    }
+                }
+
+                @Override
+                public void onYesClick() {
+                    if (finalSomeHintDialog.page == 1) {
+                        onNext();
+                        finalSomeHintDialog.page = 2;
+                        return;
+                    }
+
+                    if (finalSomeHintDialog.page == 2) {
+                        SpManager.setSkipHint(true);
+                        finalSomeHintDialog.dismiss();
+                        return;
+                    }
+                }
+
+                @Override
+                public void onNext() {
+                    finalSomeHintDialog.messageTv.setText(R.string.some_hint_2);
+                    finalSomeHintDialog.messageTv.setTextSize(finalSomeHintDialog.getPage2TextSize());
+                    finalSomeHintDialog.yes.setText(R.string.accept);
+                    finalSomeHintDialog.no.setText(R.string.previous);
+                }
+
+                @Override
+                public void onDismiss() {
+                    Logger.i("someHintDialog dismiss");
+                    if (!SpManager.getSkipHint()) {
+                        activity.finish();
+                    }
                 }
             });
         }
 
         someHintDialog.show();
+        someHintDialog.yes.setText(R.string.next);
+        someHintDialog.no.setText(R.string.no_accept);
 
         int rootHeight = UIUtils.getHeight(activity);
         int rootWidth = UIUtils.getWidth(activity);
         WindowManager.LayoutParams attributes = someHintDialog.getWindow().getAttributes();
         attributes.width = (int) (rootWidth * 0.8);
-//        attributes.height = (int) (rootHeight * 0.9);
         someHintDialog.getWindow().setAttributes(attributes);
         Logger.e("attributes.w " + attributes.width);
         Logger.e("attributes.h " + attributes.height);
@@ -315,31 +333,4 @@ public class YesOrNoDialog extends Dialog {
         return someHintDialog;
     }
 
-    public static void showConnectHintDialog(Activity activity, YesOrNoDialog connectHintDialog) {
-        if (connectHintDialog == null) {
-            connectHintDialog = new YesOrNoDialog(activity);
-            connectHintDialog.setTitle(activity.getString(R.string.warm_tip));
-            connectHintDialog.setMessage(activity.getString(R.string.connect_now));
-            YesOrNoDialog finalConnectHintDialog = connectHintDialog;
-            connectHintDialog.setYesOnclickListener(activity.getString(R.string.ok), () -> {
-                activity.startActivity(new Intent(activity, BluetoothActivity.class));
-                finalConnectHintDialog.dismiss();
-            });
-            connectHintDialog.setNoOnclickListener(activity.getString(R.string.cancel), () -> finalConnectHintDialog.dismiss());
-        }
-
-        connectHintDialog.show();
-
-        int rootHeight = UIUtils.getHeight(activity);
-        int rootWidth = UIUtils.getWidth(activity);
-        WindowManager.LayoutParams attributes = connectHintDialog.getWindow().getAttributes();
-        attributes.width = (int) (rootWidth * 0.4);
-//        attributes.height = (int) (rootHeight * 0.9);
-        connectHintDialog.getWindow().setAttributes(attributes);
-        Logger.e("attributes.w " + attributes.width);
-        Logger.e("attributes.h " + attributes.height);
-
-        connectHintDialog.setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
-        connectHintDialog.setType(1);
-    }
 }

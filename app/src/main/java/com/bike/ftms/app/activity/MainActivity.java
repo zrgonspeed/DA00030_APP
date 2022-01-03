@@ -34,8 +34,9 @@ import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.widget.HorizontalViewPager;
-import com.bike.ftms.app.widget.YesOrNoDialog;
+import com.bike.ftms.app.widget.ConnectHintDialog;
 import com.bike.ftms.app.manager.storage.SpManager;
+import com.bike.ftms.app.widget.SomeHintDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +70,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     private WorkoutsFragment workoutsFragment;
     private long exitTime = 0;
 
-    private YesOrNoDialog connectHintDialog;
-    private YesOrNoDialog someHintDialog;
+    private ConnectHintDialog connectHintDialog;
+    private SomeHintDialog someHintDialog;
 
     private boolean isOnPause = false;
     private boolean isLogin = false;
@@ -91,7 +92,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
         if (!SpManager.getSkipHint()) {
             // 安装后启动要提示事项，谷歌商店需要
-            someHintDialog = YesOrNoDialog.showSomeHintDialog(this, someHintDialog, connectHintDialog);
+            someHintDialog = SomeHintDialog.showSomeHintDialog(this, someHintDialog);
         }
     }
 
@@ -111,7 +112,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         BleManager.getInstance().setOnRunDataListener(this);
         if (!BleManager.isConnect && !BleManager.isHrConnect) {
             if (vp.getCurrentItem() == 0 && (someHintDialog == null || !someHintDialog.isShowing())) {
-                YesOrNoDialog.showConnectHintDialog(this, connectHintDialog);
+                ConnectHintDialog.showConnectHintDialog(this, connectHintDialog);
             }
             homeFragment.onRunData(new RowerDataBean1());
         } else {
@@ -259,7 +260,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         if (isOnPause) {
             return;
         }
-        runOnUiThread(() -> YesOrNoDialog.showConnectHintDialog(this, connectHintDialog));
+        runOnUiThread(() -> ConnectHintDialog.showConnectHintDialog(this, connectHintDialog));
     }
 
     @Override

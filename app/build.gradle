@@ -10,7 +10,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 4
-        versionName "1.0.3 beta6 2021-12-31 " + ver
+        versionName "1.0.3 beta7 2022-01-03 " + ver
 
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
@@ -46,7 +46,7 @@ android {
     //自动生成指定名称的release发布版的 apk文件
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "DA00030_1.0.3_beat5_" + ver + ".apk"
+            outputFileName = "DA00030_1.0.3_beat7_" + ver + ".apk"
         }
     }
 }

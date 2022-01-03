@@ -117,7 +117,7 @@
     <string name="ok">Yes</string>
     <string name="cancel">NO</string>
     <string name="name">name</string>
-    <string name="some_hint">
+    <string name="some_hint_2">
     \t\t\t\t When you use the APP, D-Fit will always collect and use your location, personal information (name, email, phone number), fitness information, photos, files and documents, calendars, devices or other IDs in order to use them in the application. When it is closed or not in use, it can also support various functions until you stop using the APP.
 The usage is explained below \n
 \t\t\t\t 1. Location:  \t Used to connect Bluetooth devices to support data transfer between APP and sports equipment. \n
@@ -126,10 +126,22 @@ The usage is explained below \n
 \t\t\t\t 4. Photos, files and documents:  \t After the exercise, the exercise data will be automatically saved in the device. \n
 \t\t\t\t 5. Calendar:  \t Support users to select the date of birth when registering. \n
 \t\t\t\t 6. Device or other ID:  \t Identifies the user\'s mobile phone model to support developers to adapt to multiple mobile phones.</string>
+
+    <string name="some_hint">
+        \n
+\t\t\t\t ●D-Fit needs a few permissions to do its job: \n
+\t\t\t\t\t\t\t\t —Used to connect Bluetooth devices to support data transfer between APP and sports equipment.\n
+        \n
+\t\t\t\t ●When is your location used：\n
+\t\t\t\t\t\t\t\t —Starts when you enable the app. \n
+\t\t\t\t\t\t\t\t —Stops when you disable the app. \n
+    </string>
     <string name="skip">Skip</string>
     <string name="no_hint">Don\'t show again</string>
     <string name="accept">Accept</string>
     <string name="no_accept">Disagree</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
     <string name="skip2">skip</string>
     <string name="send_email_code">send code</string>
     <string name="hint_enter_code">enter code</string>

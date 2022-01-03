@@ -2,6 +2,8 @@ package com.bike.ftms.app.utils;
 
 import android.util.Log;
 
+import com.bike.ftms.app.Debug;
+
 /**
  * @Description Log统一管理类
  * @Author GaleLiu
@@ -9,11 +11,13 @@ import android.util.Log;
  */
 public class Logger {
 
-    /**
-     * 是否需要打印bug，可以在application的onCreate函数里面初始化
-     */
     public static boolean isDebug = true;
-    private static final String TAG = "tag";
+
+    static {
+        isDebug = Debug.canShowLog;
+    }
+
+    private static final String TAG = "Logger";
 
     private Logger() {
         throw new UnsupportedOperationException("不可以被实例！");
