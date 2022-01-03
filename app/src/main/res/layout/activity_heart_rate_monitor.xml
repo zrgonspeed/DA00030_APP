@@ -99,5 +99,17 @@
             android:text="@string/heart_rate_switch"
             android:textColor="@color/color_707070"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_search_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:text="16"
+            android:textColor="@color/color_707070"
+            android:textSize="16sp"
+            android:visibility="gone" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
