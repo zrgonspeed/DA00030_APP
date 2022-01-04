@@ -277,7 +277,7 @@ public class SomeHintDialog extends Dialog {
                         finalSomeHintDialog.messageTv.setTextSize(finalSomeHintDialog.getPage1TextSize());
 
                         finalSomeHintDialog.page = 1;
-                        finalSomeHintDialog.yes.setText(R.string.next);
+                        finalSomeHintDialog.yes.setText(R.string.accept);
                         finalSomeHintDialog.no.setText(R.string.no_accept);
                     }
                 }
@@ -316,7 +316,7 @@ public class SomeHintDialog extends Dialog {
         }
 
         someHintDialog.show();
-        someHintDialog.yes.setText(R.string.next);
+        someHintDialog.yes.setText(R.string.accept);
         someHintDialog.no.setText(R.string.no_accept);
 
         int rootHeight = UIUtils.getHeight(activity);

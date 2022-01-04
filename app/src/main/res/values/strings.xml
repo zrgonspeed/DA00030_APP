@@ -128,13 +128,8 @@ The usage is explained below \n
 \t\t\t\t 6. Device or other ID:  \t Identifies the user\'s mobile phone model to support developers to adapt to multiple mobile phones.</string>
 
     <string name="some_hint">
-        \n
-\t\t\t\t ●D-Fit needs location permissions to complete its job: \n
-\t\t\t\t\t\t\t\t —D-Fit collects location data to enable Bluetooth connection to transfer data between APP and fitness equipment even when the app is closed or not in use.\n
-        \n
-\t\t\t\t ●When is your location used：\n
-\t\t\t\t\t\t\t\t —Starts when you enable the app. \n
-\t\t\t\t\t\t\t\t —Stops when you disable the app. \n
+        \n\n\n
+\t\t\t\t\t\t\t\t D-Fit collects location data to enable Bluetooth connection to transfer data between APP and fitness equipment even when the app is closed or not in use.\n
     </string>
     <string name="skip">Skip</string>
     <string name="no_hint">Don\'t show again</string>

@@ -1,6 +1,7 @@
 package com.bike.ftms.app.manager.storage;
 
 import android.content.Context;
+import android.os.storage.StorageManager;
 
 import androidx.annotation.NonNull;
 
@@ -31,6 +32,7 @@ public class SpManager {
     private static final String SET_USERNAME = "set_username";
     private static final String SET_PASSWORD = "set_password";
     private static final String SET_SKIP_HINT = "set_skip_hint";
+    private static final String SET_VERSION_CODE = "set_version_code";
 
     public static String getUsername() {
         return StorageParam.getParam(SET_USERNAME, "");
@@ -54,5 +56,13 @@ public class SpManager {
 
     public static boolean getSkipHint() {
         return StorageParam.getParam(SET_SKIP_HINT, false);
+    }
+
+    public static void setVersionCode(int versionCode) {
+        StorageParam.setParam(SET_VERSION_CODE, versionCode);
+    }
+
+    public static int getVersionCode() {
+        return StorageParam.getParam(SET_VERSION_CODE, 0);
     }
 }

@@ -2,6 +2,7 @@ package com.bike.ftms.app.base;
 
 import android.content.Context;
 
+import com.bike.ftms.app.BuildConfig;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
 import com.squareup.leakcanary.LeakCanary;
@@ -31,6 +32,13 @@ public class MyApplication extends LitePalApplication {
         Logger.e("onCreate()--------------------------------------------------");
         mContext = MyApplication.this;
         SpManager.init(mContext);
+
+        // 每次安装新的版本，都要弹出注意事项
+        int nowVersionCode = BuildConfig.VERSION_CODE;
+        if (SpManager.getVersionCode() != nowVersionCode) {
+            SpManager.setVersionCode(nowVersionCode);
+            SpManager.setSkipHint(false);
+        }
 
         ToastUtil.initialize(mContext);
         LeakCanary.install(this);
