@@ -129,8 +129,8 @@ The usage is explained below \n
 
     <string name="some_hint">
         \n
-\t\t\t\t ●D-Fit needs a few permissions to do its job: \n
-\t\t\t\t\t\t\t\t —Used to connect Bluetooth devices to support data transfer between APP and sports equipment.\n
+\t\t\t\t ●D-Fit needs location permissions to complete its job: \n
+\t\t\t\t\t\t\t\t —D-Fit collects location data to enable Bluetooth connection to transfer data between APP and fitness equipment even when the app is closed or not in use.\n
         \n
 \t\t\t\t ●When is your location used：\n
 \t\t\t\t\t\t\t\t —Starts when you enable the app. \n

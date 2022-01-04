@@ -96,11 +96,11 @@
     </string>
 
     <string name="some_hint">
-\t\t\t\t D-Fit需要使用蓝牙和GPS定位权限：\n
-\t\t\t\t 用於連接藍牙設備以支持APP與運動器材進行資料傳輸。\n
-\t\t\t\t 什么时候使用您的定位信息：\n
-\t\t\t\t 当您开启APP时启用\n
-\t\t\t\t 当您关闭APP时禁用\n
+\t\t\t\t D-Fit需要位置權限才能完成它的工作：\n
+\t\t\t\t D-Fit 收集位置數據，啟用藍牙連接，即使在應用程序關閉或未使用的情況下，也能在 APP 和健身設備之間傳輸數據。 \n
+\t\t\t\t 什麼時候使用您的定位信息：\n
+\t\t\t\t 當您開啟APP時啟用\n
+\t\t\t\t 當您關閉APP時禁用\n
     </string>
     <string name="skip">略过</string>
     <string name="no_hint">不再提示</string>

@@ -9,8 +9,8 @@ android {
         applicationId "com.bike.ftms.app"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 5
-        versionName "1.0.3 beta7 2022-01-03 " + ver
+        versionCode 6
+        versionName "1.0.3 beta8 2022-01-04 " + ver
 
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
@@ -46,7 +46,7 @@ android {
     //自动生成指定名称的release发布版的 apk文件
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "DA00030_1.0.3_beat7_" + ver + ".apk"
+            outputFileName = "DA00030_1.0.3_beat8_" + ver + ".apk"
         }
     }
 }
