@@ -42,6 +42,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import androidx.annotation.RequiresApi;
+
 import dev.xesam.android.toolbox.timer.CountDownTimer;
 import tech.gujin.toast.ToastUtil;
 
@@ -77,7 +78,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private OnRunDataListener onRunDataListener;//运动数据回调
 
     private final long SCAN_MAX_COUNT = 20;     //扫描的设备个数限制（停止扫描）
-    private final long SCAN_PERIOD = 60 * 1000;     //扫描设备时间限制
+    public static long SCAN_PERIOD = 60 * 1000;     //扫描设备时间限制
     private final long SCAN_PERIOD_INTERVAL = 1000;     //隔多久回调1次
     private static final long SEND_VERIFY_TIME = 2000; // 发送校验码延迟时间
     private static final long START_SCAN_DELAY_TIME = 2000; // 扫描设备延迟时间

@@ -3,6 +3,7 @@ package com.bike.ftms.app.base;
 import android.content.Context;
 
 import com.bike.ftms.app.BuildConfig;
+import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
 import com.squareup.leakcanary.LeakCanary;
@@ -42,5 +43,7 @@ public class MyApplication extends LitePalApplication {
 
         ToastUtil.initialize(mContext);
         LeakCanary.install(this);
+
+        Debug.initDebug();
     }
 }

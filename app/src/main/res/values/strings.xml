@@ -2,7 +2,7 @@
     <string name="app_name">D-Fit</string>
     <string name="home_strokes" translatable="false">STROKES</string>
     <string name="home_drag" translatable="false">DRAG</string>
-    <string name="home_interval" translatable="false">INTERVAL</string>
+    <string name="home_interval" translatable="false">CYCLE</string>
     <string name="home_ave_500" translatable="false">AVE/500M</string>
     <string name="home_500" translatable="false">/500M</string>
     <string name="home_sm" translatable="false">S/M</string>

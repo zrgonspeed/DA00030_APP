@@ -15,7 +15,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -36,19 +35,15 @@ import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnScanConnectListener;
 import com.bike.ftms.app.utils.Logger;
 
-import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.RefreshState;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import dev.xesam.android.toolbox.timer.CountDownTimer;
 import tech.gujin.toast.ToastUtil;
 
 public class BluetoothActivity extends BaseActivity implements OnScanConnectListener, BleAdapter.OnItemClickListener,
@@ -61,11 +56,11 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @BindView(R.id.tv_search_time)
     TextView tv_search_time;
     @BindView(R.id.cb_switch)
-    CheckBox cbSwitch;
+    CheckBox cb_switch;
     @BindView(R.id.ll_loading)
-    LinearLayout llLoading;
+    LinearLayout ll_loading;
     @BindView(R.id.rv_ble)
-    RecyclerView rvBle;
+    RecyclerView rv_ble;
     private BleAdapter bleAdapter;
 
     boolean first = true;
@@ -137,8 +132,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 if (oldState == RefreshState.RefreshFinish && newState == RefreshState.None) {
                     rl_status_refresh.setEnableRefresh(false);
 
-                    rvBle.setVisibility(View.VISIBLE);
-                    llLoading.setVisibility(View.VISIBLE);
+                    rv_ble.setVisibility(View.VISIBLE);
+                    ll_loading.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -157,8 +152,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
                 bleAdapter.clear();
                 scanDevice();
-                rvBle.setVisibility(View.GONE);
-                llLoading.setVisibility(View.GONE);
+                rv_ble.setVisibility(View.GONE);
+                ll_loading.setVisibility(View.GONE);
 
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     rl_status_refresh.finishRefresh(true);
@@ -190,29 +185,30 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         });
         tv_search_time.setText("?");
         tv_search_time.setVisibility(View.GONE);
+        ll_loading.setVisibility(View.GONE);
         if (Debug.canShowSearchTime) {
             tv_search_time.setVisibility(View.VISIBLE);
         }
 
-        rvBle.setNestedScrollingEnabled(true);
+        rv_ble.setNestedScrollingEnabled(true);
         rl_status_refresh.setNestedScrollingEnabled(true);
         rl_status_refresh.setEnableLoadMore(false);
         rl_status_refresh.setEnableRefresh(false);
 
         // 每点一次就拦住check事件等待蓝牙打开或关闭之后返回的状态
-        cbSwitch.setOnClickListener((e) -> {
+        cb_switch.setOnClickListener((e) -> {
             isCalled = false;
         });
 
-        cbSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Logger.e("OnCheckedChange--------------cbSwitch.isChecked() == " + cbSwitch.isChecked() + " isChecked == " + isChecked);
+        cb_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Logger.e("OnCheckedChange--------------cbSwitch.isChecked() == " + cb_switch.isChecked() + " isChecked == " + isChecked);
             Logger.e("buttonView.isPressed() == " + buttonView.isPressed());
 
             if (!buttonView.isPressed()) {
                 isPre = isChecked;
                 return;
             }
-            cbSwitch.setChecked(isPre);
+            cb_switch.setChecked(isPre);
 
             if (!isCalled) {
                 return;
@@ -242,33 +238,33 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         Logger.e("onWindowFocusChanged " + hasFocus + " first " + first);
-        Logger.e("cbSwitch.isChecked() " + cbSwitch.isChecked());
+        Logger.e("cbSwitch.isChecked() " + cb_switch.isChecked());
 
-        if (hasFocus && !first && BleManager.getInstance().isOpen && !cbSwitch.isChecked()) {
+        if (hasFocus && !first && BleManager.getInstance().isOpen && !cb_switch.isChecked()) {
 //            if (BleManager.getInstance().getBluetoothAdapter().isEnabled()) {
-            cbSwitch.setChecked(true);
+            cb_switch.setChecked(true);
 //            }
         }
 
-        if (hasFocus && !first && !BleManager.getInstance().isOpen && cbSwitch.isChecked()) {
+        if (hasFocus && !first && !BleManager.getInstance().isOpen && cb_switch.isChecked()) {
 //            if (!BleManager.getInstance().getBluetoothAdapter().isEnabled()) {
-            cbSwitch.setChecked(false);
+            cb_switch.setChecked(false);
 //            }
         }
 
         if (first && hasFocus) {
             boolean enabled = BleManager.getInstance().getBluetoothAdapter().isEnabled();
-            if (!enabled || !cbSwitch.isChecked()) {
+            if (!enabled || !cb_switch.isChecked()) {
             }
             // cb为false时，再check false，不会触发回调
             if (tv_switch != null) {
-                tv_switch.setText(cbSwitch.isChecked() ? getResources().getString(R.string.bluetooth_switch_enable) : getResources().getString(R.string.bluetooth_switch_disable));
+                tv_switch.setText(cb_switch.isChecked() ? getResources().getString(R.string.bluetooth_switch_enable) : getResources().getString(R.string.bluetooth_switch_disable));
             }
 
-            if (BleManager.getInstance().getBluetoothAdapter().isEnabled() && !cbSwitch.isChecked()) {
+            if (BleManager.getInstance().getBluetoothAdapter().isEnabled() && !cb_switch.isChecked()) {
                 isPre = true;
-                cbSwitch.setPressed(true);
-                cbSwitch.setChecked(true);
+                cb_switch.setPressed(true);
+                cb_switch.setChecked(true);
             }
 
             first = false;
@@ -373,14 +369,14 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         } else {
             bleAdapter = new BleAdapter(BleManager.getInstance().getScanResults());
             bleAdapter.addItemClickListener(this);
-            rvBle.setAdapter(bleAdapter);
-            rvBle.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            rv_ble.setAdapter(bleAdapter);
+            rv_ble.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }
     }
 
     @Override
     public void onStopScan() {
-        llLoading.setVisibility(View.GONE);
+        ll_loading.setVisibility(View.GONE);
         refreshing = false;
         setRefreshLayout();
     }
@@ -460,7 +456,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             }
         } else {
             stopRefresh();
-            cbSwitch.setChecked(false);
+            cb_switch.setChecked(false);
             if (tv_switch != null) {
                 tv_switch.setText(getResources().getString(R.string.bluetooth_switch_disable));
             }
@@ -485,8 +481,8 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 tv_switch.setText(getResources().getString(R.string.bluetooth_switch_disable));
             }
         } else {
-            rvBle.setVisibility(View.VISIBLE);
-            cbSwitch.setChecked(true);
+            rv_ble.setVisibility(View.VISIBLE);
+            cb_switch.setChecked(true);
             if (tv_switch != null) {
                 tv_switch.setText(getResources().getString(R.string.bluetooth_switch_enable));
             }
@@ -548,16 +544,16 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         if (!(rl_status_refresh.getRefreshHeader() instanceof MyHeader) || ((MyHeader) (rl_status_refresh.getRefreshHeader())).isFinish() ||
                 !((MyHeader) (rl_status_refresh.getRefreshHeader())).isMoving()
         ) {
-            llLoading.setVisibility(View.VISIBLE);
-            rvBle.setVisibility(View.VISIBLE);
+            ll_loading.setVisibility(View.VISIBLE);
+            rv_ble.setVisibility(View.VISIBLE);
         }
 
     }
 
     private void stopRefresh() {
         refreshing = false;
-        llLoading.setVisibility(View.GONE);
-        rvBle.setVisibility(View.GONE);
+        ll_loading.setVisibility(View.GONE);
+        rv_ble.setVisibility(View.GONE);
         setRefreshLayout();
     }
 }

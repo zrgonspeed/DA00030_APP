@@ -52,30 +52,6 @@
             android:background="@null"
             android:button="@drawable/btn_bluetooth_switch" />
 
-        <!--登录头像-->
-        <LinearLayout
-            android:id="@+id/ll_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dp_20"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0">
-
-            <ProgressBar
-                android:layout_width="30dp"
-                android:layout_height="30dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/bluetooth_scanning"
-                android:textSize="16sp" />
-        </LinearLayout>
-
         <TextView
             android:id="@+id/tv_switch"
             android:layout_width="wrap_content"
@@ -100,22 +76,54 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <!--下拉刷新-->
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/rl_status_refresh"
+    <!--中部-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/rl2"
         app:layout_constraintTop_toBottomOf="@id/rl">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/ll_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0"
+            tools:ignore="MissingConstraints">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_ble"
+            <ProgressBar
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bluetooth_scanning"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!--下拉刷新-->
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/rl_status_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </androidx.core.widget.NestedScrollView>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_ble"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </androidx.core.widget.NestedScrollView>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
