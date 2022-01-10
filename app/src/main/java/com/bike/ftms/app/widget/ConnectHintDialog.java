@@ -229,28 +229,8 @@ public class ConnectHintDialog extends Dialog {
             lp.gravity = Gravity.CENTER;
             messageTv.setLayoutParams(lp);
             // 设置文字大小
-            float v = UIUtils.getDensity(context) * UIUtils.getDPI(context);
-            if (v > 1000) {
-                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (v / 1000.0)));
-            } else {
-                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (1000.0 / v)));
-            }
-        } else if (type == 2) {
-            titleTv.setMinHeight((int) (llParams.height * 0.15));
-            titleTv.setMaxHeight((int) (llParams.height * 0.15));
-
-            llParams_bottom.height = (int) (llParams.height * 0.15);
-            ll_bottom_button.setLayoutParams(llParams_bottom);
-
-            ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
-            ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
-
-            float v = UIUtils.getDensity(context) * UIUtils.getDPI(context);
-            if (v > 1000) {
-                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (v / 1000.0)));
-            } else {
-                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.f_dp_6) * (1000.0 / v)));
-            }
+            messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.sp_7)));
+            Logger.e("fontSize == " + messageTv.getTextSize());
         }
     }
 
