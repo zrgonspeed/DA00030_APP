@@ -17,6 +17,8 @@ import android.os.Looper;
 import android.os.ParcelUuid;
 import android.os.SystemClock;
 
+import androidx.annotation.RequiresApi;
+
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.bean.bluetooth.MyScanResult;
@@ -24,13 +26,13 @@ import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.bean.rundata.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.common.RowerDataParam;
+import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.serial.SerialCommand;
 import com.bike.ftms.app.serial.SerialData;
-import com.bike.ftms.app.manager.storage.SpManager;
-import com.bike.ftms.app.utils.CustomTimer;
-import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.ConvertData;
+import com.bike.ftms.app.utils.CustomTimer;
 import com.bike.ftms.app.utils.DataTypeConversion;
+import com.bike.ftms.app.utils.Logger;
 
 import org.litepal.crud.LitePalSupport;
 
@@ -40,8 +42,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import androidx.annotation.RequiresApi;
 
 import dev.xesam.android.toolbox.timer.CountDownTimer;
 import tech.gujin.toast.ToastUtil;
@@ -266,16 +266,18 @@ public class BleManager implements CustomTimer.TimerCallBack {
             List<ScanFilter> scanFilters = new ArrayList<>();
             ScanFilter scanFilter;
             if (isScanHrDevice) {
-                scanFilter = new ScanFilter.Builder().setServiceUuid(
-                        new ParcelUuid(UUID.fromString(uuidHeartbeat))).build();
+                scanFilter = new ScanFilter.Builder().setServiceUuid(new ParcelUuid(UUID.fromString(uuidHeartbeat))).build();
                 scanFilters.add(scanFilter);
                 mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
             } else {
                /* scanFilter = new ScanFilter.Builder().setServiceUuid(
                         new ParcelUuid(UUID.fromString(uuid))).build();*/
-                mBluetoothAdapter.getBluetoothLeScanner().startScan(mScanCallback);
+
+                scanFilter = new ScanFilter.Builder().setServiceUuid(new ParcelUuid(UUID.fromString(uuid))).build();
+                scanFilters.add(scanFilter);
+                mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
             }
-            Logger.i("1------开始扫描设备");
+            Logger.i("1------开始扫描设备 isHr == " + isScanHrDevice);
         }
     }
 
@@ -1597,10 +1599,11 @@ public class BleManager implements CustomTimer.TimerCallBack {
             return;
         }
 
-        if (rowerDataBean1.getCanSave()) {
-//            return;
+        if (onRunDataListener == null) {
+            return;
         }
-        if (onRunDataListener == null || runStatus == RUN_STATUS_STOP) {
+
+        if (runStatus == RUN_STATUS_STOP) {
             return;
         }
 

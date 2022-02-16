@@ -233,8 +233,6 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             presenter.getRunDataInfoFromServer(bean);
         } else {
             notifyInfoData();
-            ll_info.setVisibility(View.VISIBLE);
-            ll_workouts.setVisibility(View.GONE);
         }
     }
 
@@ -288,7 +286,11 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                     break;
             }
         }
+        // 备注设置
         edt_info_note.setText(bean.getNote() == null ? "" : bean.getNote());
+
+        ll_info.setVisibility(View.VISIBLE);
+        ll_workouts.setVisibility(View.GONE);
     }
 
     @Override

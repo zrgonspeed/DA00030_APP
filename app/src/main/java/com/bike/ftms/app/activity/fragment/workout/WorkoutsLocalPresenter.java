@@ -89,7 +89,7 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
 
     interface UploadRunDataCB {
         /**
-         * @param flag 是之前已经上传完了就为false，是这次才上传完为true
+         * @param nowUploaded 是之前已经上传完了就为false，是这次才上传完为true
          */
         void uploadRunDataSuccess(boolean nowUploaded);
 
@@ -547,13 +547,24 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             list.add(rowerDataBean2);
         }
 
+        RowerDataBean2 bb = new RowerDataBean2();
+
+        if (bean.getRunMode() != MyConstant.NORMAL) {
+            // 计算分段平均
+            for (RowerDataBean2 bean2 : list) {
+                bb.setWatts(bean2.getWatts() + bb.getWatts());
+                bb.setCalories_hr(bean2.getCalories_hr() + bb.getCalories_hr());
+            }
+            bb.setWatts(Math.round(bb.getWatts() * 1.0f / list.size()));
+            bb.setCalories_hr(Math.round(bb.getCalories_hr() * 1.0f / list.size()));
+        }
+
         // 不同模式的总结item设置
         switch (bean.getRunMode()) {
             case MyConstant.GOAL_TIME: {
-                RowerDataBean2 bb = new RowerDataBean2();
                 bb.setRunMode(bean.getRunMode());
-                bb.setCalories_hr(bean.getCalories_hr());
-                bb.setWatts(bean.getWatts());
+                // bb.setCalories_hr(bean.getCalories_hr());
+                // bb.setWatts(bean.getWatts());
 
                 long initDistance = 0;
                 long initTime = bean.getSetGoalTime();
@@ -586,10 +597,9 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             }
             break;
             case MyConstant.GOAL_DISTANCE: {
-                RowerDataBean2 bb = new RowerDataBean2();
                 bb.setRunMode(bean.getRunMode());
-                bb.setCalories_hr(bean.getCalories_hr());
-                bb.setWatts(bean.getWatts());
+                // bb.setCalories_hr(bean.getCalories_hr());
+                // bb.setWatts(bean.getWatts());
 
                 long initDistance = bean.getSetGoalDistance();
                 long initTime = 0;
@@ -635,10 +645,9 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             }
             break;
             case MyConstant.GOAL_CALORIES: {
-                RowerDataBean2 bb = new RowerDataBean2();
                 bb.setRunMode(bean.getRunMode());
-                bb.setCalories_hr(bean.getCalories_hr());
-                bb.setWatts(bean.getWatts());
+                // bb.setCalories_hr(bean.getCalories_hr());
+                // bb.setWatts(bean.getWatts());
 
                 long initDistance = 0;
                 long initTime = 0;
@@ -671,10 +680,9 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             }
             break;
             case MyConstant.INTERVAL_TIME: {
-                RowerDataBean2 bb = new RowerDataBean2();
                 bb.setRunMode(bean.getRunMode());
-                bb.setCalories_hr(bean.getCalories_hr());
-                bb.setWatts(bean.getWatts() + bb.getWatts());
+                // bb.setCalories_hr(bean.getCalories_hr());
+                // bb.setWatts(bean.getWatts() + bb.getWatts());
 
                 for (RowerDataBean2 bean2 : list) {
                     // 平均
@@ -693,7 +701,6 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
                     }
                     bb.setCalorie(bean2.getCalorie() + bb.getCalorie());
                     bb.setDistance(bean2.getDistance() + bb.getDistance());
-
                 }
                 bb.setAve_five_hundred(bb.getAve_five_hundred() / list.size());
                 bb.setSm(bb.getSm() / list.size());
@@ -703,10 +710,9 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             }
             break;
             case MyConstant.INTERVAL_DISTANCE: {
-                RowerDataBean2 bb = new RowerDataBean2();
                 bb.setRunMode(bean.getRunMode());
-                bb.setCalories_hr(bean.getCalories_hr());
-                bb.setWatts(bean.getWatts() + bb.getWatts());
+                // bb.setCalories_hr(bean.getCalories_hr());
+                // bb.setWatts(bean.getWatts() + bb.getWatts());
 
                 for (RowerDataBean2 bean2 : list) {
                     // 平均
@@ -731,8 +737,8 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
                     }
                     bb.setTime(bean2.getTime() + bb.getTime());
                     bb.setCalorie(bean2.getCalorie() + bb.getCalorie());
-
                 }
+
                 bb.setAve_five_hundred(bb.getAve_five_hundred() / list.size());
                 bb.setSm(bb.getSm() / list.size());
 
@@ -741,10 +747,9 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             }
             break;
             case MyConstant.INTERVAL_CALORIES: {
-                RowerDataBean2 bb = new RowerDataBean2();
                 bb.setRunMode(bean.getRunMode());
-                bb.setCalories_hr(bean.getCalories_hr());
-                bb.setWatts(bean.getWatts() + bb.getWatts());
+                // bb.setCalories_hr(bean.getCalories_hr());
+                // bb.setWatts(bean.getWatts() + bb.getWatts());
 
                 for (RowerDataBean2 bean2 : list) {
                     // 平均
@@ -760,7 +765,6 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
                     }
                     bb.setTime(bean2.getTime() + bb.getTime());
                     bb.setDistance(bean2.getDistance() + bb.getDistance());
-
                 }
                 bb.setAve_five_hundred(bb.getAve_five_hundred() / list.size());
                 bb.setSm(bb.getSm() / list.size());
