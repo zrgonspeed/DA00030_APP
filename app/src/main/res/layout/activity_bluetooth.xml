@@ -47,7 +47,7 @@
             android:id="@+id/cb_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="15dp"
             android:background="@null"
             android:button="@drawable/btn_bluetooth_switch" />
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
-            android:layout_toLeftOf="@id/cb_switch"
+            android:layout_toStartOf="@id/cb_switch"
             android:text="@string/bluetooth_switch_enable"
             android:textColor="@color/color_707070"
             android:textSize="16sp" />

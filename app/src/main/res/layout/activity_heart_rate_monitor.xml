@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.bluetooth.BluetoothActivity">
 
+    <!--顶部-->
     <RelativeLayout
         android:id="@+id/rl"
         android:layout_width="match_parent"
@@ -30,45 +31,26 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/rl_status_refresh"
+    <!--中部-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/rl2"
         app:layout_constraintTop_toBottomOf="@id/rl">
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_ble"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </androidx.core.widget.NestedScrollView>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/color_F5F5F5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1">
 
         <LinearLayout
             android:id="@+id/ll_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0">
+            app:layout_constraintVertical_bias="0"
+            tools:ignore="MissingConstraints">
 
             <ProgressBar
                 android:layout_width="30dp"
@@ -81,11 +63,40 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
+        <!--下拉刷新-->
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/rl_status_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_ble"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </androidx.core.widget.NestedScrollView>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </LinearLayout>
+
+    <!--底部-->
+    <RelativeLayout
+        android:id="@+id/rl2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_F5F5F5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1">
+
         <CheckBox
             android:id="@+id/cb_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="15dp"
             android:background="@null"
             android:button="@drawable/btn_bluetooth_switch" />
@@ -95,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
-            android:layout_toLeftOf="@id/cb_switch"
+            android:layout_toStartOf="@id/cb_switch"
             android:text="@string/heart_rate_switch"
             android:textColor="@color/color_707070"
             android:textSize="16sp" />

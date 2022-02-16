@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.bike.ftms.app.R;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
@@ -24,8 +25,8 @@ public class MyHeader extends ClassicsHeader {
 
     private void init() {
         mProgressView.setVisibility(GONE);
-        mTextFinish = "开始扫描...";
-        mTextRefreshing = "开始扫描...";
+        mTextFinish = getResources().getString(R.string.start_scan);
+        mTextRefreshing = getResources().getString(R.string.start_scan);
     }
 
     @Override

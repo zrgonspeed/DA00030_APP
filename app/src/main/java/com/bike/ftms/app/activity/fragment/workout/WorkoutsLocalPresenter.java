@@ -143,15 +143,15 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
      * 上传所有运动数据
      */
     public void uploadRunData() {
-        if (uploadRunDataCB == null) {
-            return;
-        }
         // 没登录不能上传
         if (UserManager.getInstance().getUser() == null) {
             ToastUtil.show(R.string.please_logged);
             return;
         }
 
+        if (uploadRunDataCB == null) {
+            return;
+        }
 
         // DO -> DTO
 //        for (RowerDataBean1 bean1 : rowerDataBean1List) {
@@ -186,6 +186,10 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
     上传一条运动数据
      */
     public void uploadOneData(RowerDataBean1 bean1) {
+        if (UserManager.getInstance().getUser() == null) {
+            return;
+        }
+
         Logger.d("准备上传 bean1 == " + bean1);
 
         RunDataBO runDataBO = new RunDataBO(bean1);
@@ -251,6 +255,10 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
      * @param note
      */
     public void uploadNote(RowerDataBean1 bean1, String note) {
+        if (UserManager.getInstance().getUser() == null) {
+            return;
+        }
+
         if (uploadNoteCB == null) {
             return;
         }
@@ -286,6 +294,10 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
      * 从服务器获取运动数据
      */
     public void getRunDataFromServer() {
+        if (UserManager.getInstance().getUser() == null) {
+            return;
+        }
+
         if (getRunDataFromServerCB == null) {
             return;
         }
@@ -367,6 +379,10 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
     }
 
     public void deleteRunDataFromServer(HttpRowerDataBean1 bean1, int deletePosition) {
+        if (UserManager.getInstance().getUser() == null) {
+            return;
+        }
+
         // 删除服务器的
         String workout_id = ((HttpRowerDataBean1) bean1).getWorkout_id();
         OkHttpHelper.delete(HttpParam.RUN_DATA_DELETE_URL + "/" + workout_id, null, buildHeaderMap(), new OkHttpCallBack() {
@@ -453,8 +469,11 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
     }
 
     public void getRunDataInfoFromServer(HttpRowerDataBean1 bean) {
-        List<RowerDataBean2> rowerDataBean2s = new ArrayList<>();
+        if (UserManager.getInstance().getUser() == null) {
+            return;
+        }
 
+        List<RowerDataBean2> rowerDataBean2s = new ArrayList<>();
         String workout_id = bean.getWorkout_id();
         OkHttpHelper.get(HttpParam.RUN_DATA_GET_INFO_URL + "/" + workout_id + "/info", null, buildHeaderMap(), new OkHttpCallBack() {
             @Override

@@ -260,10 +260,6 @@
                     android:textSize="16sp" />
             </LinearLayout>
         </RelativeLayout>
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- 页面2 具体记录-->
@@ -274,255 +270,184 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/iv_info_back"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:src="@drawable/btn_back" />
-
-            <TextView
-                android:id="@+id/tv_workouts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/iv_info_back"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/workouts"
-                android:textColor="@color/color_black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_info_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Date：2021-02-19"
-                android:textColor="@color/color_black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_type"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:layout_centerInParent="true"
-                android:layout_toLeftOf="@id/iv_type"
-                android:gravity="center"
-                android:text="TYPE："
-                android:textColor="@color/color_black"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/iv_type"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="50dp"
-                android:layout_toLeftOf="@id/tv_title_time"
-                android:background="@mipmap/boat2" />
-
-            <TextView
-                android:id="@+id/tv_title_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:paddingRight="10dp"
-                android:text="1:08"
-                android:textColor="@color/color_black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
+        <!--包裹一层，用于将备注输入布局置底-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/color_387E2F"
-            android:paddingLeft="10dp"
-            android:paddingTop="6dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="6dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/workouts_time"
-                android:textColor="@color/color_white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/workouts_meters"
-                android:textColor="@color/color_white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_weight="0.8"
-                android:gravity="center"
-                android:text="@string/workouts_clas"
-                android:textColor="@color/color_white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/workouts_500"
-                android:textColor="@color/color_white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:text="@string/workouts_sm"
-                android:textColor="@color/color_white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/workouts_cal_hr"
-                android:textColor="@color/color_white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/workouts_watts"
-                android:textColor="@color/color_white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="10dp">
-
-            <!-- 历史记录的详细列表 -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_workouts2"
+            <!--顶部栏-->
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-            <!--  <TextView
-                  android:id="@+id/tv_info_time"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="00:00:00"
-                  android:textColor="@color/color_0B4531"
-                  android:textSize="16sp"
-                  android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-              <TextView
-                  android:id="@+id/tv_info_meters"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_centerInParent="true"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="0M"
-                  android:textColor="@color/color_0B4531"
-                  android:textSize="16sp"
-                  android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/iv_info_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:src="@drawable/btn_back" />
 
-              <TextView
-                  android:id="@+id/tv_info_five_hundred"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_centerInParent="true"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="00:00:00"
-                  android:textColor="@color/color_0B4531"
-                  android:textSize="16sp"
-                  android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_workouts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/iv_info_back"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/workouts"
+                    android:textColor="@color/color_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-              <TextView
-                  android:id="@+id/tv_info_cals"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_centerInParent="true"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="0"
-                  android:textColor="@color/color_0B4531"
-                  android:textSize="16sp"
-                  android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_info_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Date：2021-02-19"
+                    android:textColor="@color/color_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-              <TextView
-                  android:id="@+id/tv_info_watts"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_centerInParent="true"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="0"
-                  android:textColor="@color/color_0B4531"
-                  android:textSize="16sp"
-                  android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@id/iv_type"
+                    android:gravity="center"
+                    android:text="TYPE："
+                    android:textColor="@color/color_black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-              <TextView
-                  android:id="@+id/tv_info_cal_hr"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_centerInParent="true"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="0"
-                  android:textColor="@color/color_0B4531"
-                  android:textSize="16sp"
-                  android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/iv_type"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="50dp"
+                    android:layout_toLeftOf="@id/tv_title_time"
+                    android:background="@mipmap/boat2" />
 
-              <TextView
-                  android:id="@+id/tv_info_sm"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_centerInParent="true"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="0"
-                  android:textColor="@color/color_0B4531"
-                  android:textSize="16sp"
-                  android:textStyle="bold" />-->
+                <TextView
+                    android:id="@+id/tv_title_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:paddingRight="10dp"
+                    android:text="1:08"
+                    android:textColor="@color/color_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <!--标题栏-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_387E2F"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="6dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/workouts_time"
+                    android:textColor="@color/color_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/workouts_meters"
+                    android:textColor="@color/color_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:text="@string/workouts_clas"
+                    android:textColor="@color/color_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/workouts_500"
+                    android:textColor="@color/color_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text="@string/workouts_sm"
+                    android:textColor="@color/color_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/workouts_cal_hr"
+                    android:textColor="@color/color_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/workouts_watts"
+                    android:textColor="@color/color_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!--数据列表-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- 历史记录的详细列表 -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_workouts2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="@dimen/dp_5" />
+            </LinearLayout>
         </LinearLayout>
 
+        <!--分割线-->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -530,35 +455,36 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />
 
+        <!-- 备注输入 -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@drawable/note_edit_bg"
-            android:minHeight="150dp"
+            android:layout_height="@dimen/dp_50"
+            android:minHeight="@dimen/dp_50"
             android:padding="5dp">
 
             <EditText
                 android:id="@+id/edt_info_note"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:layout_toStartOf="@id/tv_done"
                 android:background="@null"
                 android:gravity="left|top"
                 android:hint="Note..."
+                android:text=""
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv_done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
                 android:text="@string/workouts_done"
                 android:textColor="@color/color_0B4531"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </RelativeLayout>
-
-
     </LinearLayout>
-
 </RelativeLayout>
