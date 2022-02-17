@@ -4,14 +4,12 @@ android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
-    def ver = "V10"
     defaultConfig {
         applicationId "com.bike.ftms.app"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 9
-        versionName "1.0.3 beta10 2022-02-16 " + ver
-
+        versionName "1.0.4_beta1_2022-02-17"
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -46,7 +44,7 @@ android {
     //自动生成指定名称的release发布版的 apk文件
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "DA00030_1.0.3_beat10_" + ver + ".apk"
+            outputFileName = "D-Fit" + "_" + versionName + ".apk"
         }
     }
 }
