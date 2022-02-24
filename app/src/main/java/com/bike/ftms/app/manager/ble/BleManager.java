@@ -123,8 +123,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private final String isVerifyConnectTag = "isVerifyConnect";
     private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper()));
 
-    private RowerDataBean1 rowerDataBean1;
-    private RowerDataBean2 rowerDataBean2;
+    private RowerDataBean1 rowerDataBean1 = new RowerDataBean1();
+    private RowerDataBean2 rowerDataBean2 = new RowerDataBean2();
     private int tempInterval1 = 0;
     private int tempInterval2 = 0;
     private boolean canSave = false;
@@ -359,7 +359,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (mBluetoothAdapter != null && isCanning) {
             isCanning = false;
             //mHandler.removeCallbacksAndMessages(null);
-            if (mBluetoothAdapter.getBluetoothLeScanner() != null) {
+            if (mBluetoothAdapter.getBluetoothLeScanner() != null && mBluetoothAdapter.isEnabled()) {
                 mBluetoothAdapter.getBluetoothLeScanner().stopScan(mScanCallback);
             }
 

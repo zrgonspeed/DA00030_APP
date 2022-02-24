@@ -8,8 +8,8 @@ android {
         applicationId "com.bike.ftms.app"
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 11
-        versionName "1.0.4_beta2_2022-02-18"
+        versionCode 12
+        versionName "1.0.4_beta3_2022-02-24"
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
     compileOptions {

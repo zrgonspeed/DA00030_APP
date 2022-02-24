@@ -99,7 +99,7 @@ public class Logger {
                 }
                 String className = st.getClassName();
                 int i = className.lastIndexOf(".");
-                return "(" + st.getFileName() + ":" + st.getLineNumber() + ")";
+                return "D-Fit(" + st.getFileName() + ":" + st.getLineNumber() + ")";
             }
         }
         return null;

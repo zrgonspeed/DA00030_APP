@@ -514,6 +514,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             }
             stopRefresh();
 
+            cb_switch.setChecked(false);
             if (tv_switch != null) {
                 tv_switch.setText(getResources().getString(R.string.bluetooth_switch_disable));
             }
@@ -565,8 +566,9 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 //                    mHandler.sendMessage(message);
                     Logger.e("蓝牙广播接收：蓝牙开启");
 
-//                    BleManager.getInstance().isOpen = true;
-//                    isOpen(true);
+                   // BleManager.getInstance().isOpen = true;
+                   // isOpen(true);
+                    cb_switch.setChecked(true);
                 } else if (state == BluetoothAdapter.STATE_TURNING_OFF) {
                     Logger.e("蓝牙广播接收：蓝牙关闭中");
                 } else if (state == BluetoothAdapter.STATE_TURNING_ON) {
