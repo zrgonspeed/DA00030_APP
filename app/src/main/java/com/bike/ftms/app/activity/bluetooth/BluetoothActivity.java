@@ -34,7 +34,6 @@ import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnScanConnectListener;
 import com.bike.ftms.app.utils.Logger;
-
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.RefreshState;
@@ -282,39 +281,77 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     }
 
     public void requestPermissionAndOpenLBE() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
-                != PackageManager.PERMISSION_GRANTED
-        ) {
-            Logger.e("没有权限，请求权限");
-            // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
-            ActivityCompat.requestPermissions(BluetoothActivity.this, new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
-                    Manifest.permission.BLUETOOTH_ADMIN,
-                    Manifest.permission.BLUETOOTH,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-            }, PERMISSION_STATE_CODE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE)
+                    != PackageManager.PERMISSION_GRANTED
+            ) {
+                Logger.e("没有权限，请求权限");
+                ActivityCompat.requestPermissions(BluetoothActivity.this, new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
+                        Manifest.permission.BLUETOOTH_CONNECT,
+                        Manifest.permission.BLUETOOTH_SCAN,
+                        Manifest.permission.BLUETOOTH_ADVERTISE,
+                }, PERMISSION_STATE_CODE);
 
-        } else {
-            Logger.e("有权限");
-            BleManager.getInstance().openBLE(this);
-
-            // 另一种打开蓝牙的方式
+            } else {
+                Logger.e("有权限");
+                BleManager.getInstance().openBLE(this);
+                // 另一种打开蓝牙的方式
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivity(enableBtIntent);
+            }
+        } else {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN)
+                    != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
+                    != PackageManager.PERMISSION_GRANTED
+            ) {
+                Logger.e("没有权限，请求权限");
+                // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
+                ActivityCompat.requestPermissions(BluetoothActivity.this, new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
+                        Manifest.permission.BLUETOOTH_ADMIN,
+                        Manifest.permission.BLUETOOTH,
+                }, PERMISSION_STATE_CODE);
+
+            } else {
+                Logger.e("有权限");
+                BleManager.getInstance().openBLE(this);
+
+                // 另一种打开蓝牙的方式
+//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivity(enableBtIntent);
+            }
         }
+
+
     }
 
     //Android6.0申请权限的回调方法

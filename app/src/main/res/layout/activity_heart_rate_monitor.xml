@@ -60,6 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/heart_rate_scanning"
+                android:textColor="@color/gray"
                 android:textSize="16sp" />
         </LinearLayout>
 
