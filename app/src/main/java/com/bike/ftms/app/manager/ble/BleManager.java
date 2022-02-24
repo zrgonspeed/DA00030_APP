@@ -38,6 +38,7 @@ import org.litepal.crud.LitePalSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -47,37 +48,67 @@ import dev.xesam.android.toolbox.timer.CountDownTimer;
 import tech.gujin.toast.ToastUtil;
 
 public class BleManager implements CustomTimer.TimerCallBack {
-    private String TAG = "BleManager";
-    private final byte IDLE_BEGIN = 0;
-
+    private String TAG = BleManager.class.getSimpleName();
     private static BleManager instance;
-    public final String uuid = "00001826-0000-1000-8000-00805f9b34fb";
-    public final String uuidHeartbeat = "0000180d-0000-1000-8000-00805f9b34fb";
-    public final String uuidSendData = "0000ffe5-0000-1000-8000-00805f9b34fb";
-    private final byte RUN_STATUS_RUNNING = 0x01;
-    private final byte RUN_STATUS_STOP = 0x00;
 
+    public final String uuid = "00001826-0000-1000-8000-00805f9b34fb";      //  标准服务：   Fitness Machine	    健康设备     1826
+    public final String uuidHeartbeat = "0000180d-0000-1000-8000-00805f9b34fb"; // 标准服务： Heart Rate	        心率         180d
+    public final String uuidSendData = "0000ffe5-0000-1000-8000-00805f9b34fb";  // 自定义服务uuid
+
+    /**
+     * 这些uuid用于收发运动数据
+     * 2ada   2ad1   2ad3   ffe0    ffe9
+     * 2ad1     Rower Data    桨手数据
+     * 2ada     Fitness Machine Status 	健身设备状态
+     * 2ad3     Training Status	    训练状况
+     *
+     * ffe0     自定义特征,  中心设备发
+     * ffe9     自定义特征, 手机发
+     */
+
+    /**
+     * 2a37    Heart Rate Measurement	心率测量
+     */
+
+    // 2ada 用
+    private static final byte RUN_STATUS_RUNNING = 0x01;
+    private static final byte RUN_STATUS_STOP = 0x00;
+
+    // 2ad3 用
     public static final byte STATUS_IDLE = 0x01;
     public static final byte STATUS_RUNNING = 0x0D;
     public static final byte STATUS_POST = 0x0F;
-
     public static int status = STATUS_IDLE;
+
+    private byte runStatus = RUN_STATUS_STOP;
 
     public static boolean isConnect;  //是否连接
     public static boolean isHrConnect;//是否连接蓝牙腰带
     public static boolean isCanning;  //是否正在扫描
     public static boolean isOpen;     //是否打开定位及蓝牙
 
-    private OnScanConnectListener onScanConnectListener;      //扫描回调
     private BluetoothAdapter mBluetoothAdapter; //系统蓝牙适配器
+    private OnScanConnectListener onScanConnectListener;      //扫描回调
     private List<MyScanResult> mScanResults = new ArrayList<>();      //扫描到的蓝牙设备
-    private BluetoothGatt mBluetoothGatt;       //连接蓝牙、及操作
-    private BluetoothGatt mBluetoothHrGatt;       //连接蓝牙、及操作
     private List<BluetoothGattService> mBluetoothGattServices;//服务，Characteristic(特征) 的集合。
     private BluetoothGattCharacteristic mBluetoothGattCharacteristic;//特征值(用于收发数据)
     private OnRunDataListener onRunDataListener;//运动数据回调
 
-    private final long SCAN_MAX_COUNT = 20;     //扫描的设备个数限制（停止扫描）
+    // 电子表
+    private BluetoothGatt mBluetoothGatt;       //连接蓝牙、及操作
+    private MyScanResult connectScanResult;
+    private CustomTimer isConnectTimer;
+    private final String isConnectTag = "isConnect";
+
+    // 心率设备
+    private BluetoothGatt mBluetoothHrGatt;       //连接蓝牙、及操作
+    private MyScanResult connectHrScanResult;
+    private CustomTimer isHrConnectTimer;
+    private final String isHrConnectTag = "isHrConnect";
+    private short heart_rate = 0;   // 腰带心跳值，需要传给电子表
+    private boolean isScanHrDevice = false;
+
+    private static final long SCAN_MAX_COUNT = 20;     //扫描的设备个数限制（停止扫描）
     public static long SCAN_PERIOD = 60 * 1000;     //扫描设备时间限制
     private final long SCAN_PERIOD_INTERVAL = 1000;     //隔多久回调1次
     private static final long SEND_VERIFY_TIME = 2000; // 发送校验码延迟时间
@@ -86,36 +117,42 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private boolean setBleDataInx = false;
     private boolean isToExamine = false;
     private boolean isSendVerifyData = false;
-    private boolean isScanHrDevice = false;//是否扫描腰带设备
     private boolean onlyHr = false;
 
-    private MyScanResult connectScanResult;
-    private MyScanResult connectHrScanResult;
-    /**
-     * 判断是否断开连接
-     */
-    private CustomTimer isConnectTimer;
-    private final String isConnectTag = "isConnect";
-    private CustomTimer isHrConnectTimer;
-    private final String isHrConnectTag = "isHrConnect";
     private CustomTimer isVerifyConnectTimer;
     private final String isVerifyConnectTag = "isVerifyConnect";
-    private byte runStatus = RUN_STATUS_STOP;
-
     private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper()));
-    private int tempInterval1 = 0;
-    private int tempInterval2 = 0;
 
     private RowerDataBean1 rowerDataBean1;
     private RowerDataBean2 rowerDataBean2;
+    private int tempInterval1 = 0;
+    private int tempInterval2 = 0;
     private boolean canSave = false;
 
-    private short heart_rate = 0;   // 腰带心跳值，需要传给电子表
+    /**
+     * 搜索设备时间计时
+     */
+    private CountDownTimer countDownTimer;
 
     private BleOpenCallBack bleOpenCallBack;
     private BleClosedCallBack bleClosedCallBack;
     private CountDownTime countDownTime;
-    private CountDownTimer countDownTimer;
+
+    public interface BleOpenCallBack {
+        void isOpen(boolean open);
+    }
+
+    public interface BleClosedCallBack {
+        void isClosed(boolean disable);
+    }
+
+    public interface CountDownTime {
+        void onTick(long time);
+
+        void onFinish();
+
+        void onStart();
+    }
 
     public void setBleOpenCallBack(BleOpenCallBack bleOpenCallBack) {
         this.bleOpenCallBack = bleOpenCallBack;
@@ -129,27 +166,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
         this.countDownTime = countDownTime;
     }
 
-    public interface BleOpenCallBack {
-        void isOpen(boolean open);
-    }
-
-    public interface BleClosedCallBack {
-        void isClosed(boolean disable);
-    }
-
-    private BleManager() {
-    }
-
-    public static BleManager getInstance() {
-        if (instance == null) {
-            synchronized (BleManager.class) {
-                if (instance == null) {
-                    instance = new BleManager();
-                }
-            }
-        }
-        return instance;
-    }
 
     /**
      * 扫描回调
@@ -167,6 +183,20 @@ public class BleManager implements CustomTimer.TimerCallBack {
      */
     public void setOnRunDataListener(OnRunDataListener onRunDataListener) {
         this.onRunDataListener = onRunDataListener;
+    }
+
+    private BleManager() {
+    }
+
+    public static BleManager getInstance() {
+        if (instance == null) {
+            synchronized (BleManager.class) {
+                if (instance == null) {
+                    instance = new BleManager();
+                }
+            }
+        }
+        return instance;
     }
 
     /**
@@ -191,13 +221,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
         return mBluetoothAdapter;
     }
 
-    public interface CountDownTime {
-        void onTick(long time);
-
-        void onFinish();
-
-        void onStart();
-    }
 
     /**
      * 扫描蓝牙设备
@@ -665,7 +688,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 // 这个蓝牙设备的所有service
                 mBluetoothGattServices = mBluetoothGatt.getServices();
                 for (BluetoothGattService service : mBluetoothGattServices) {
-//                    Logger.e("service uuid = " + service.getUuid());
+                    Logger.e("service uuid = " + service.getUuid());
                 }
 
                 // 指定一个service
@@ -676,7 +699,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     list = localGattService.getCharacteristics();
                     Logger.d("localGattService = " + localGattService.getUuid());
                     for (BluetoothGattCharacteristic c : list) {
-//                        Logger.e("c = " + c.getUuid());
+                        Logger.e("c = " + c.getUuid());
                     }
                 }
 
@@ -688,13 +711,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
                     Logger.d("localGattService1 = " + localGattService1.getUuid());
                     for (BluetoothGattCharacteristic c : characteristics) {
-//                        Logger.e("c = " + c.getUuid());
+                        Logger.e("c = " + c.getUuid());
                     }
                 }
 
 //                Logger.i("c列表 = ");
                 for (int i = 0; i < list.size(); i++) {
-//                    Logger.e("c = " + list.get(i).getUuid().toString());
+                    Logger.e("c = " + list.get(i).getUuid().toString());
 
                     if (list.get(i).getUuid().toString().contains("2ad1")) {
                         List<BluetoothGattDescriptor> bluetoothGattDescriptors = list.get(i).getDescriptors();
@@ -768,8 +791,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
             isConnectTimer.setmAllTime(0L);
             String uuid = characteristic.getUuid().toString().substring(0, 8);
             if (uuid.contains("ffe0")) {
-                Logger.w(uuid + ",::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
+                Logger.i(uuid + ",::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
             } else {
+                // Logger.i(Arrays.toString(characteristic.getValue()) + "");
                 Logger.i(uuid + ",::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
             }
 
@@ -1257,7 +1281,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         } else if (len == 3) {
             result = DataTypeConversion.Byte2Int(data, offSet);
         } else if (len == 2) {
-            result = DataTypeConversion.bytesToShortLiterEnd(data, offSet);
+            result = DataTypeConversion.doubleBytesToIntLiterEnd(data, offSet);
         } else if (len == 1) {
             result = DataTypeConversion.byteToInt(data[offSet]);
         } else {
@@ -1757,6 +1781,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             date[1] = (byte) Integer.parseInt(dates[1], 16);
             date[2] = (byte) Integer.parseInt(dates[2], 16);
             byte[] calCRCBytes = ConvertData.shortToBytes(SerialData.calCRCByTable(ConvertData.subBytes(date, 0, date.length), date.length));
+            Logger.i("calCRCBytes[0] == " + ConvertData.toHexString(calCRCBytes[0]) + " calCRCBytes[1] == " + ConvertData.toHexString(calCRCBytes[1]));
             if (calCRCBytes[0] == data[3] && calCRCBytes[1] == data[4]) {
                 isToExamine = true;
                 isVerifyConnectTimer.closeTimer();

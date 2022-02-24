@@ -98,6 +98,7 @@ public abstract class BasePageDataFragment extends BaseFragment {
         }
 
         {
+            // Logger.i("1111-rowerDataBean1.getTime() == " + rowerDataBean1.getTime());
             tvTime.setText(TimeStringUtil.getSToHourMinSecValue(rowerDataBean1.getTime()));
             if (BleManager.status == BleManager.STATUS_POST) {
                 tvTime.setText(TimeStringUtil.getSToHourMinSecValue(0));

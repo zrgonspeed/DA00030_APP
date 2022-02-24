@@ -313,8 +313,7 @@ public class DataTypeConversion {
     public static int doubleBytesToIntLiterEnd(byte[] ary, int offset) {
         int value;
         value = (int) ((ary[offset] & 0xFF)
-                | ((ary[offset + 1] << 8) & 0xFF00)
-                | 0x00000000);
+                | ((ary[offset + 1] << 8) & 0xFF00));
         return value;
     }
 

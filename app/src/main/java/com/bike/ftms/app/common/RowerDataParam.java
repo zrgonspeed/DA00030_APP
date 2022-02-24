@@ -6,6 +6,19 @@ package com.bike.ftms.app.common;
  * @Date 2021/4/2
  */
 public class RowerDataParam {
+    /*
+    01111100,00001011
+    setBleDataInx  STROKE_RATE_INX=2
+    setBleDataInx  TOTAL_DISTANCE_INX=5
+    setBleDataInx  INSTANTANEOUS_PACE_INX=8
+    setBleDataInx  AVERAGE_PACE_INX=10
+    setBleDataInx  INSTANTANEOUS_POWER_INX=12
+    setBleDataInx  AVERAGE_POWER_INX=14
+    setBleDataInx  TOTAL_ENERGY_INX=16
+    setBleDataInx  HEART_RATE_INX=21
+    setBleDataInx  ELAPSED_TIME_INX=22
+     */
+
     /**
      * FTMS协议
      **/
