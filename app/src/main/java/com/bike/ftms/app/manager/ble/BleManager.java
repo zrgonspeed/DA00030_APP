@@ -38,7 +38,6 @@ import org.litepal.crud.LitePalSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -67,7 +66,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
      */
 
     /**
+     * https://www.bluetooth.com/zh-cn/specifications/assigned-numbers/   GATT Specification Supplement
+     * <p>
      * 2a37    Heart Rate Measurement	心率测量
+     * 0x16 0x6c 0xda 0x03
+     * 0x16 0x63 0x8d 0x03 0xeb 0x01
+     * 0x16 0x72 0x3f 0x01 0xb7 0x01 0xc3 0x01
+     * 0x16 0x75 0x33 0x01 0x0b 0x01
+     * heart_rate=117	(0x75)
      */
 
     // 2ada 用
@@ -226,10 +232,12 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 扫描蓝牙设备
      */
     public void scanDevice() {
+        Logger.i("scanDevice()");
+
         Logger.e("mBluetoothAdapter == " + mBluetoothAdapter + "    isCanning == " + isCanning);
         if (mBluetoothAdapter != null && !isCanning) {
             boolean enabled = mBluetoothAdapter.isEnabled();
-            Logger.e("2 enabled == " + enabled);
+            Logger.i("2 enabled == " + enabled);
             if (!enabled) {
                 boolean enable = mBluetoothAdapter.enable();
                 Logger.e("2_1 enable == " + enable);
@@ -310,7 +318,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             countDownTimer = new CountDownTimer(SCAN_PERIOD + 200, SCAN_PERIOD_INTERVAL) {
                 @Override
                 protected void onStart(long millisUntilFinished) {
-                    Logger.e("开始扫描");
+                    Logger.i("开始扫描");
                     if (countDownTime != null) {
                         countDownTime.onStart();
                     }
@@ -372,7 +380,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
             stopSearchCountDownTimer();
 
-            Logger.i("停止扫描设备");
+            Logger.e("停止扫描设备");
         }
     }
 
@@ -484,7 +492,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     }
 
     public void disableCharacterNotifiy() {
-        Logger.i("disableCharacterNotifiy()");
+        Logger.e("disableCharacterNotifiy()");
         if (mBluetoothGattServices == null || mBluetoothGatt == null) {
             return;
         }
@@ -505,7 +513,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 断开蓝牙设备
      */
     public void disConnectDevice() {
-        Logger.i("disConnectDevice");
+        Logger.e("disConnectDevice()");
         isConnect = false;
         if (mBluetoothGatt != null && !isScanHrDevice) {
             Logger.e("断开设备");
@@ -1200,7 +1208,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     public void openBLE(BleOpenCallBack bleOpenCallBack) {
         this.bleOpenCallBack = bleOpenCallBack;
         boolean enabled = mBluetoothAdapter.isEnabled();
-        Logger.e("enable == " + enabled);
+        Logger.i("enable == " + enabled);
         if (enabled) {
             isOpen = enabled;
             mHandler.post(() -> bleOpenCallBack.isOpen(isOpen));
@@ -1214,12 +1222,12 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
             new Thread(() -> {
                 isOpen = mBluetoothAdapter.enable();
-                Logger.e("isOpen == " + isOpen);
+                Logger.i("isOpen == " + isOpen);
 
                 if (!isOpen) {
                     isOpen = mBluetoothAdapter.isEnabled();
                 }
-                Logger.e("isOpen == " + isOpen);
+                Logger.i("isOpen == " + isOpen);
 
                 if (isOpen) {
                     mHandler.postDelayed(() -> {
@@ -1242,19 +1250,19 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
         if (mBluetoothAdapter != null) {
             new Thread(() -> {
+
+                BleManager.getInstance().stopScan();
+                BleManager.getInstance().disableCharacterNotifiy();
+                BleManager.getInstance().disConnectDevice();
+                mHandler.removeCallbacksAndMessages(null);
+
                 // true 表示适配器关闭已开始，或 false 表示立即错误
                 boolean disable = mBluetoothAdapter.disable();
                 Logger.e("mBluetoothAdapter.disable() == " + disable);
 
                 if (disable) {
                     isOpen = false;
-
-                    Logger.e("断开蓝牙");
-                    BleManager.getInstance().disableCharacterNotifiy();
-                    BleManager.getInstance().disConnectDevice();
-                    BleManager.getInstance().stopScan();
-
-                    mHandler.removeCallbacksAndMessages(null);
+                    Logger.e("断开蓝牙成功");
                 } else {
                     Logger.e("断开蓝牙失败");
                 }
@@ -1424,7 +1432,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
     }
 
     /**
-     * 心跳数据
+     * 心跳数据  0x16 -> 0001 0110  从右往左
+     * 0心跳值是1字节 还是2字节       0
+     * 1检测到传感器接触            1
+     * 2支持传感器触点             1
+     * 3目前消耗的能量：            0
+     * 4存在的 RR 间隔：              1
+     * 5–7 保留供将来使用          000
      *
      * @param data
      */
@@ -1439,7 +1453,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
         String s = ConvertData.byteArrToBinStr(data);
         // 0x16 == 22   0001 0110
-        if ("0".equals(s.subSequence(7, 8))) {
+        if ("0".contentEquals(s.subSequence(7, 8))) {
             rowerDataBean1.setHeart_rate(ConvertData.byteToInt(data[1]));
         } else {
             rowerDataBean1.setHeart_rate(resolveData(data, 1, 2));

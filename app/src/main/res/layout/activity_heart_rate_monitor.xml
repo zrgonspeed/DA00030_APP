@@ -103,12 +103,13 @@
             android:button="@drawable/btn_bluetooth_switch" />
 
         <TextView
+            android:id="@+id/tv_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
             android:layout_toStartOf="@id/cb_switch"
-            android:text="@string/heart_rate_switch"
+            android:text="@string/bluetooth_switch_disable"
             android:textColor="@color/color_707070"
             android:textSize="16sp" />
 
