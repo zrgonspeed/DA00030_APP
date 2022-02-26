@@ -13,6 +13,7 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.BleAdapter.BleViewHolder;
 import com.bike.ftms.app.bean.bluetooth.MyScanResult;
 import com.bike.ftms.app.manager.ble.BleManager;
+import com.bike.ftms.app.utils.Logger;
 
 import java.util.List;
 
@@ -57,19 +58,22 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BleViewHolder holder, int position) {
+        MyScanResult myScanResult = list.get(position);
+        // Logger.e("ConnectState  == " + myScanResult.getConnectState() + "  name == " + myScanResult.getScanResult().getDevice().getName());
+
         holder.tvState.setOnClickListener(v -> {
 //            Logger.e("list.get(position).getConnectState()  == " + list.get(position).getConnectState());
-            if (list.get(position).getConnectState() == 2) {
+            if (myScanResult.getConnectState() == 2) {
                 return;
             }
-            onItemClickListener.onItemClickListener(position, v, list.get(position).getConnectState());
+            onItemClickListener.onItemClickListener(position, v, myScanResult.getConnectState());
         });
-        holder.tvName.setText(list.get(position).getScanResult().getDevice().getName());
-        holder.tvAddress.setText(list.get(position).getScanResult().getDevice().getAddress());
-        if (list.get(position).getConnectState() == 1) {
+        holder.tvName.setText(myScanResult.getScanResult().getDevice().getName());
+        holder.tvAddress.setText(myScanResult.getScanResult().getDevice().getAddress());
+        if (myScanResult.getConnectState() == 1) {
             BleManager.getInstance().mPosition = position;
             holder.tvState.setText("Disconnect");
-        } else if (list.get(position).getConnectState() == 2) {
+        } else if (myScanResult.getConnectState() == 2) {
             holder.tvState.setText("Connecting");
         } else {
             holder.tvState.setText("Connect");

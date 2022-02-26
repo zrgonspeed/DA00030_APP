@@ -11,13 +11,10 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
 import android.os.SystemClock;
-
-import androidx.annotation.RequiresApi;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.MyApplication;
@@ -29,6 +26,7 @@ import com.bike.ftms.app.common.RowerDataParam;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.serial.SerialCommand;
 import com.bike.ftms.app.serial.SerialData;
+import com.bike.ftms.app.utils.BasisTimesUtils;
 import com.bike.ftms.app.utils.ConvertData;
 import com.bike.ftms.app.utils.CustomTimer;
 import com.bike.ftms.app.utils.DataTypeConversion;
@@ -36,8 +34,8 @@ import com.bike.ftms.app.utils.Logger;
 
 import org.litepal.crud.LitePalSupport;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -1469,7 +1467,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 校验命令
      */
     private void sendVerifyData() {
-        String[] dates = getCurDate().split("-");
+        String[] dates = BasisTimesUtils.getCurDate().split("-");    //22-02-26
+        Logger.i("年月日" + Arrays.toString(dates));
+
         byte[] date = new byte[9];
         date[0] = (byte) SerialCommand.PACK_FRAME_HEADER;
         date[1] = (byte) 0x40;
@@ -1508,11 +1508,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
         sendDescriptorByte(respondByte, len);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public String getCurDate() {
-        SimpleDateFormat sDateFormat = new SimpleDateFormat("YY-MM-dd");
-        return sDateFormat.format(new java.util.Date());
-    }
 
     public void setIsScanHrDevice(boolean isScanHrDevice) {
         this.isScanHrDevice = isScanHrDevice;
@@ -1789,7 +1784,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         // ffe9   0xfe 0x40 0x01 0x21 0x11 0x25 0x10 0x4e 0xff
         // ffe0   0xfe 0x40 0x01 0x32 0x9a 0x01 0xa3 0x2b 0xff
         if (data.length > 8 && data[1] == 0x40 && data[2] == 0x01) {
-            String[] dates = getCurDate().split("-");
+            String[] dates = BasisTimesUtils.getCurDate().split("-");
             byte[] date = new byte[3];
             date[0] = (byte) Integer.parseInt(dates[0], 16);
             date[1] = (byte) Integer.parseInt(dates[1], 16);
@@ -1803,6 +1798,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
             // 机种标识 当前是 0x01
             byte flag = data[5];
+            Logger.i("当前机型: " + flag);
             SpManager.setTreadmill_flag(flag);
             return;
         }

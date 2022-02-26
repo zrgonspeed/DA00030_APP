@@ -15,6 +15,7 @@ import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @Description
@@ -362,5 +363,10 @@ public class BasisTimesUtils {
         void onConfirm(int hourOfDay, int minute);
 
         void onCancel();
+    }
+
+    public static String getCurDate() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yy-MM-dd", Locale.getDefault());
+        return sDateFormat.format(new java.util.Date());
     }
 }

@@ -94,6 +94,11 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             // 安装后启动要提示事项，谷歌商店需要
             someHintDialog = SomeHintDialog.showSomeHintDialog(this, someHintDialog);
         }
+
+        // 判空， Fragment同理
+        // if(findFragmentByTag(RootFragment) == null){
+        //     // 这里replace或add 根Fragment
+        // }
     }
 
 
