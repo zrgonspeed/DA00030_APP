@@ -606,7 +606,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
                 Logger.e("蓝牙广播接收：state == " + state);
                 if (state == BluetoothAdapter.STATE_OFF) {
                     Logger.e("蓝牙广播接收：蓝牙关闭");
-                    BleManager.getInstance().closed();
+                    BleManager.getInstance().whenBTClosed();
                     isClosed(true);
                     // isPre = false;
                 } else if (state == BluetoothAdapter.STATE_ON) {
