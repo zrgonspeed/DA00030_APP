@@ -5,17 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.annotation.Nullable;
-
 import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
 import com.bike.ftms.app.activity.bluetooth.HeartRateMonitorActivity;
 import com.bike.ftms.app.activity.user.LoginActivity;
-import com.bike.ftms.app.activity.user.RegisterActivity;
 import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.base.BaseActivity;
-import com.bike.ftms.app.common.ParamData;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -80,14 +76,6 @@ public class SettingActivity extends BaseActivity {
             case R.id.iv_setting_version:
                 startActivity(new Intent(this, VersionActivity.class));
                 break;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == ParamData.REQUEST_IS_FINISH_CODE && HR_REQUEST_CODE == requestCode) {
-            finish();
         }
     }
 }

@@ -8,8 +8,8 @@ android {
         applicationId "com.bike.ftms.app"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 13
-        versionName "1.0.4_beta4_2022-02-25"
+        versionCode getMyAppVersionCode()
+        versionName "2.0-220228-01"
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -90,4 +90,35 @@ dependencies {
     // 日志调试框架：https://github.com/getActivity/Logcat
     // 可在手机上显示logcat
 //    debugImplementation 'com.github.getActivity:Logcat:9.9'
+}
+
+task updateVersionCode() {
+    doFirst {
+        // 获取 gradle.properties 文件
+        def gradleProperties = file('../app/version.properties')
+        // 读取里面的键值对
+        def properties = new Properties()
+        properties.load(new FileInputStream(gradleProperties))
+        // 获取里面的 APP_VERSION_CODE 进行 +1
+        def codeBumped = properties['APP_VERSION_CODE'].toInteger() + 1
+        // 重新赋值
+        properties['APP_VERSION_CODE'] = codeBumped.toString()
+        // 写入
+        properties.store(gradleProperties.newWriter(), null)
+    }
+}
+
+project.tasks.whenTaskAdded { Task theTask ->
+    if (theTask.name == 'assembleRelease') {
+        theTask.dependsOn(updateVersionCode)
+        theTask.mustRunAfter(updateVersionCode)
+    }
+}
+
+def getMyAppVersionCode() {  //获取APP版本号
+    def gradleProperties = file('../app/version.properties')
+    def properties = new Properties()
+    properties.load(new FileInputStream(gradleProperties))
+    def codeBumped = properties['APP_VERSION_CODE'].toInteger() + 1
+    return codeBumped as int
 }
