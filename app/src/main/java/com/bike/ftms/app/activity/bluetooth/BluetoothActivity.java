@@ -477,6 +477,7 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
 
     @Override
     public void onConnectEvent(boolean isconnect, String name) {
+        Logger.i("isconnect==" + isconnect + "  bt name==" + name);
         /*if (isconnect) {
             finish();
         }*/

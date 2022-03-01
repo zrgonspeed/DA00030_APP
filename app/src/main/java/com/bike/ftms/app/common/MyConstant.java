@@ -1,12 +1,19 @@
 package com.bike.ftms.app.common;
 
+import android.graphics.drawable.Drawable;
+
 import androidx.annotation.IntDef;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.bike.ftms.app.R;
+import com.bike.ftms.app.base.MyApplication;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class MyConstant {
     // 支持的机型
+    public static final int DEVICE_UNKNOW = 0;
     public static final int DEVICE_AA02020R = 1;
     public static final int DEVICE_AA01990 = 2;
     public static final int DEVICE_AA02020_00F_01 = 3;
@@ -22,12 +29,79 @@ public class MyConstant {
     }
 
     public static final String[] deviceNames = {
-            "", "AA02020R", "AA01990", "AA02020-00F-01", "AA02020-00F-02"
+            "DEVICE_UNKNOW", "AA02020R", "AA01990", "AA02020-00F-01", "AA02020-00F-02"
     };
 
-    // 默认是划船器
-    public static final int deviceType = DEVICE_AA02020R;
+    // 大类机型 ---------------------------------------------------------------------------------
+    public final static int CATEGORY_BOAT = 1000;
+    public final static int CATEGORY_BIKE = 1001;
+    public final static int CATEGORY_SKI = 1002;
+    public final static int CATEGORY_STEP = 1003;
 
+    @IntDef({CATEGORY_BOAT,
+            CATEGORY_BIKE,
+            CATEGORY_SKI,
+            CATEGORY_STEP
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface CategoryType {
+    }
+
+    private static final int[] boat_arr = {
+            DEVICE_AA02020R, DEVICE_AA01990
+    };
+    private static final int[] bike_arr = {
+            DEVICE_AA02020_00F_01, DEVICE_AA02020_00F_02
+    };
+    private static final int[] ski_arr = {
+    };
+    private static final int[] step_arr = {
+    };
+
+    @CategoryType
+    public static int getCategory(@DeviceType int deviceType) {
+        for (int device : boat_arr) {
+            if (device == deviceType) {
+                return CATEGORY_BOAT;
+            }
+        }
+
+        for (int device : bike_arr) {
+            if (device == deviceType) {
+                return CATEGORY_BIKE;
+            }
+        }
+
+        for (int device : ski_arr) {
+            if (device == deviceType) {
+                return CATEGORY_SKI;
+            }
+        }
+
+        for (int device : step_arr) {
+            if (device == deviceType) {
+                return CATEGORY_STEP;
+            }
+        }
+
+        return CATEGORY_BOAT;
+    }
+
+    public static Drawable getCategoryImg(@CategoryType int category) {
+        if (category == CATEGORY_BOAT) {
+            return ResourcesCompat.getDrawable(MyApplication.getContext().getResources(), R.drawable.boat, null);
+        }
+        if (category == CATEGORY_BIKE) {
+            return ResourcesCompat.getDrawable(MyApplication.getContext().getResources(), R.drawable.bike, null);
+        }
+        if (category == CATEGORY_SKI) {
+            return ResourcesCompat.getDrawable(MyApplication.getContext().getResources(), R.drawable.ski, null);
+        }
+        if (category == CATEGORY_STEP) {
+            // return ResourcesCompat.getDrawable(MyApplication.getContext().getResources(), R.drawable.step, null);
+        }
+        return ResourcesCompat.getDrawable(MyApplication.getContext().getResources(), R.drawable.unknow, null);
+    }
 
     /********************** 运动模式 ************************/
     public static final int NORMAL = 0;

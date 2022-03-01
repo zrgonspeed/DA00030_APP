@@ -5,6 +5,8 @@ import android.os.storage.StorageManager;
 
 import androidx.annotation.NonNull;
 
+import com.bike.ftms.app.common.MyConstant;
+
 /**
  * sharedpreferences管理类
  *
@@ -20,7 +22,7 @@ public class SpManager {
         StorageParam.setSpName(SETTINGS_TREADMILL_DA00030);
     }
 
-    public static void setTreadmill_flag(int flag) {
+    public static void setTreadmill_flag(@MyConstant.DeviceType int flag) {
         StorageParam.setParam(SET_TREADMILL_FLAG, flag);
     }
 

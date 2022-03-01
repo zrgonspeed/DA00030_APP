@@ -19,6 +19,9 @@ import androidx.viewpager.widget.ViewPager;
 import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
+import com.bike.ftms.app.activity.fragment.HomeFragment;
+import com.bike.ftms.app.activity.fragment.workout.WorkoutsFragment;
+import com.bike.ftms.app.activity.fragment.workout.WorkoutsLocalFragment;
 import com.bike.ftms.app.activity.setting.SettingActivity;
 import com.bike.ftms.app.activity.user.LoginActivity;
 import com.bike.ftms.app.activity.user.PersonalDataActivity;
@@ -26,16 +29,13 @@ import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
-import com.bike.ftms.app.activity.fragment.HomeFragment;
-import com.bike.ftms.app.activity.fragment.workout.WorkoutsFragment;
-import com.bike.ftms.app.activity.fragment.workout.WorkoutsLocalFragment;
-import com.bike.ftms.app.manager.VersionManager;
+import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
-import com.bike.ftms.app.utils.Logger;
-import com.bike.ftms.app.widget.HorizontalViewPager;
-import com.bike.ftms.app.widget.ConnectHintDialog;
 import com.bike.ftms.app.manager.storage.SpManager;
+import com.bike.ftms.app.utils.Logger;
+import com.bike.ftms.app.widget.ConnectHintDialog;
+import com.bike.ftms.app.widget.HorizontalViewPager;
 import com.bike.ftms.app.widget.SomeHintDialog;
 
 import java.util.ArrayList;
@@ -51,8 +51,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @BindView(R.id.vp)
     HorizontalViewPager vp;
-    @BindView(R.id.tv_version_apk_name)
-    TextView tv_version_apk_name;
+    @BindView(R.id.tv_device)
+    TextView tv_device;
+    @BindView(R.id.iv_device)
+    ImageView iv_device;
     @BindView(R.id.btn_workout_login)
     ImageView btn_workout_login;
     @BindView(R.id.btn_workout_user_info)
@@ -140,6 +142,21 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             btn_workout_user_info.setVisibility(View.GONE);
             tv_username.setVisibility(View.GONE);
         }
+
+        onConnectStatus(BleManager.isConnect, BleManager.deviceType);
+    }
+
+    // 显示连接上的机型和图片
+    public void onConnectStatus(boolean connect, int deviceType) {
+        if (connect && deviceType != -1) {
+            tv_device.setText(MyConstant.deviceNames[BleManager.deviceType]);
+            iv_device.setImageDrawable(MyConstant.getCategoryImg(MyConstant.getCategory(BleManager.deviceType)));
+            tv_device.setVisibility(View.VISIBLE);
+            iv_device.setVisibility(View.VISIBLE);
+        } else {
+            tv_device.setVisibility(View.GONE);
+            iv_device.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -226,8 +243,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "cn");
         m_wklk.acquire(); //设置保持唤醒
 
-        // gone
-        tv_version_apk_name.setText(VersionManager.getAppVersionName(this));
     }
 
     @OnClick({R.id.btn_workout_user_info, R.id.btn_bluetooth, R.id.btn_setting, R.id.btn_workout_login})
