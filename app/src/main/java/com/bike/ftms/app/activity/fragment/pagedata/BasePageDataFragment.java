@@ -25,20 +25,27 @@ import butterknife.Unbinder;
 public abstract class BasePageDataFragment extends BaseFragment {
     private static final String TAG = BasePageDataFragment.class.getSimpleName();
     Unbinder unbinder;
-    @BindView(R.id.tv_strokes)
-    TextView tvStrokes;
+    @BindView(R.id.tv_optional_4)
+    TextView tv_optional_4;
+    @BindView(R.id.tv_optional_4_unit)
+    TextView tv_optional_4_unit;
     @BindView(R.id.tv_drag)
     TextView tvDrag;
     @BindView(R.id.tv_interval)
     TextView tvInterval;
     @BindView(R.id.tv_distance)
     TextView tvDistance;
-    @BindView(R.id.tv_sm)
-    TextView tvSm;
+    @BindView(R.id.tv_optional_3)
+    TextView tv_optional_3;
+    @BindView(R.id.tv_optional_3_unit)
+    TextView tv_optional_3_unit;
     @BindView(R.id.tv_heart_rate)
     TextView tvHeartRate;
     @BindView(R.id.tv_time)
     TextView tvTime;
+
+    @BindView(R.id.rl3)
+    TextView rl3;
 
     @Override
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +65,6 @@ public abstract class BasePageDataFragment extends BaseFragment {
     }
 
     public void onRunData(RowerDataBean1 rowerDataBean1) {
-        tvStrokes.setText(String.valueOf(rowerDataBean1.getStrokes()));
 
         {
             if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_NO) {
@@ -106,7 +112,25 @@ public abstract class BasePageDataFragment extends BaseFragment {
         }
 
         tvDrag.setText(String.valueOf(rowerDataBean1.getDrag()));
-        tvSm.setText(String.valueOf(rowerDataBean1.getSm()));
         tvHeartRate.setText(String.valueOf(rowerDataBean1.getHeart_rate()));
+
+        switch (BleManager.categoryType) {
+            case MyConstant.CATEGORY_BIKE: {
+                tv_optional_3.setText(String.valueOf(rowerDataBean1.getInstRpm()));
+                tv_optional_3_unit.setText(getResources().getString(R.string.home_rpm));
+
+                tv_optional_4.setText(String.valueOf(rowerDataBean1.getLevel()));
+                tv_optional_4_unit.setText(getResources().getString(R.string.home_level));
+            }
+            break;
+            case MyConstant.CATEGORY_BOAT: {
+                tv_optional_3.setText(String.valueOf(rowerDataBean1.getSm()));
+                tv_optional_3_unit.setText(getResources().getString(R.string.home_sm));
+
+                tv_optional_4.setText(String.valueOf(rowerDataBean1.getStrokes()));
+                tv_optional_4_unit.setText(getResources().getString(R.string.home_strokes));
+            }
+            break;
+        }
     }
 }

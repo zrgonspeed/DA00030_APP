@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.common.MyConstant;
+import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import butterknife.BindView;
@@ -20,10 +22,12 @@ import butterknife.BindView;
 public class OnePageDataFragment extends BasePageDataFragment {
     private static final String TAG = OnePageDataFragment.class.getSimpleName();
 
-    @BindView(R.id.tv_five_hundred)
-    TextView tvFiveHundred;
-    @BindView(R.id.tv_ave_five_hundred)
-    TextView tvAveFiveHundred;
+    @BindView(R.id.tv_optional_1)
+    TextView tv_optional_1;
+    @BindView(R.id.tv_optional_1_unit)
+    TextView tv_optional_1_unit;
+    @BindView(R.id.tv_optional_2)
+    TextView tv_optional_2;
 
     public OnePageDataFragment() {
     }
@@ -51,7 +55,22 @@ public class OnePageDataFragment extends BasePageDataFragment {
     @Override
     public void onRunData(RowerDataBean1 rowerDataBean1) {
         super.onRunData(rowerDataBean1);
-        tvFiveHundred.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getFive_hundred()));
-        tvAveFiveHundred.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAve_five_hundred()));
+
+        switch (BleManager.categoryType) {
+            case MyConstant.CATEGORY_BIKE: {
+                tv_optional_1.setText(String.valueOf(rowerDataBean1.getInstSpeed()));
+                tv_optional_1_unit.setText(getResources().getString(R.string.home_km_30min));
+
+                tv_optional_2.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAve_five_hundred()));
+            }
+            break;
+            case MyConstant.CATEGORY_BOAT: {
+                tv_optional_1.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getFive_hundred()));
+                tv_optional_1_unit.setText(getResources().getString(R.string.home_500));
+
+                tv_optional_2.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAve_five_hundred()));
+            }
+            break;
+        }
     }
 }

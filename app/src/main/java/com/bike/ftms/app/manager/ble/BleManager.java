@@ -86,6 +86,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private byte runStatus = RUN_STATUS_STOP;
 
     public static int deviceType = -1;
+    public static int categoryType = -1;
 
     public static boolean isConnect;  //是否连接
     public static boolean isHrConnect;//是否连接蓝牙腰带
@@ -512,8 +513,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
      */
     public void disConnectDevice() {
         Logger.e("disConnectDevice()");
-        isConnect = false;
-        deviceType = -1;
+        resetDeviceType();
         if (mBluetoothGatt != null && !isScanHrDevice) {
             Logger.e("断开设备");
             mBluetoothGatt.disconnect();
@@ -526,6 +526,12 @@ public class BleManager implements CustomTimer.TimerCallBack {
             mBluetoothHrGatt.disconnect();
 //            mBluetoothHrGatt = null;
         }
+    }
+
+    private void resetDeviceType() {
+        isConnect = false;
+        deviceType = -1;
+        categoryType = -1;
     }
 
     /**
@@ -599,8 +605,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         break;
                     }
                 }
-                isConnect = false;
-                deviceType = -1;
+                resetDeviceType();
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
                 }
@@ -660,8 +665,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         break;
                     }
                 }
-                isConnect = false;
-                deviceType = -1;
+                resetDeviceType();
 //                isOpen = false;
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
@@ -1110,10 +1114,11 @@ public class BleManager implements CustomTimer.TimerCallBack {
         // 蓝牙关闭后的操作
         isOpen = false;
         isCanning = false;
-        isConnect = false;
-        deviceType = -1;
+        resetDeviceType();
         isHrConnect = false;
 
+
+        reset();
 //        if (mBluetoothHrGatt != null) {
 //            mBluetoothHrGatt.disconnect();
 //        }
@@ -1231,12 +1236,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         return result;
     }
 
-    /**
-     * 设置运动数据下标  ftms协议
-     *
-     * @param data
-     */
-    private void setBleDataInx(byte[] data) {
+    private void setBleDataInxOfRower(byte[] data) {
         if (setBleDataInx) {
             return;
         }
@@ -1244,7 +1244,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         int inxLen = 2;
         String s = ConvertData.byteArrToBinStr(data);
 
-        Logger.d("FTMS协议------------s == " + s);
+        Logger.d("FTMS协议--ROWER---低位在前高位在后-------s == " + s);
 
         String[] strings = s.split(",");
         StringBuffer stringBuffer = new StringBuffer();
@@ -1255,6 +1255,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
         s = stringBuffer.toString();
         for (int i = 0; i < s.length(); i++) {
+            // Logger.i(s.subSequence(i, i + 1) + "");
             if (i != 0 && !"1".equals(s.subSequence(i, i + 1))) {
                 continue;
             }
@@ -1266,6 +1267,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         RowerDataParam.STROKE_COUNT_INX = inxLen;
                         inxLen = inxLen + RowerDataParam.STROKE_COUNT_LEN;
                         Logger.d("setBleDataInx  STROKE_RATE_INX=" + RowerDataParam.STROKE_RATE_INX);
+                        Logger.d("setBleDataInx  STROKE_COUNT_INX=" + RowerDataParam.STROKE_COUNT_INX);
                     }
                     break;
                 case 1:
@@ -1312,6 +1314,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     RowerDataParam.ENERGY_PER_MINUTE_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.ENERGY_PER_MINUTE_LEN;
                     Logger.d("setBleDataInx  TOTAL_ENERGY_INX=" + RowerDataParam.TOTAL_ENERGY_INX);
+                    Logger.d("setBleDataInx  ENERGY_PER_HOUR_INX=" + RowerDataParam.ENERGY_PER_HOUR_INX);
+                    Logger.d("setBleDataInx  ENERGY_PER_MINUTE_INX=" + RowerDataParam.ENERGY_PER_MINUTE_INX);
                     break;
                 case 9:
                     RowerDataParam.HEART_RATE_INX = inxLen;
@@ -1332,6 +1336,134 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     RowerDataParam.REMAINING_TIME_INX = inxLen;
                     inxLen = inxLen + RowerDataParam.REMAINING_TIME_LEN;
                     Logger.d("setBleDataInx  REMAINING_TIME_INX=" + RowerDataParam.REMAINING_TIME_INX);
+                    break;
+            }
+
+        }
+    }
+
+    private void setBleDataInxOfBike(byte[] data) {
+        if (setBleDataInx) {
+            return;
+        }
+        setBleDataInx = true;
+        int inxLen = 2;
+        String s = ConvertData.byteArrToBinStr(data);
+
+        Logger.d("FTMS协议---BIKE--低位在前高位在后-------s == " + s);
+
+        String[] strings = s.split(",");
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String string : strings) {
+            for (int i = string.length() - 1; i >= 0; i--) {
+                stringBuffer.append(string.subSequence(i, i + 1));
+            }
+        }
+        s = stringBuffer.toString();
+        for (int i = 0; i < s.length(); i++) {
+            // Logger.i(s.subSequence(i, i + 1) + "");
+            boolean isOne = "1".equals(s.subSequence(i, i + 1));
+            if (i != 0 && !isOne) {
+                continue;
+            }
+            switch (i) {
+                case 0:
+                    if ("0".equals(s.subSequence(i, i + 1))) {
+                        RowerDataParam.INSTANTANEOUS_SPEED_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.INSTANTANEOUS_SPEED_LEN;
+                        Logger.d("setBleDataInx  INSTANTANEOUS_SPEED_INX=" + RowerDataParam.INSTANTANEOUS_SPEED_INX);
+                    }
+                    break;
+                case 1:
+                    if (isOne) {
+                        RowerDataParam.AVERAGE_SPEED_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.AVERAGE_SPEED_LEN;
+                        Logger.d("setBleDataInx  AVERAGE_SPEED_INX=" + RowerDataParam.AVERAGE_SPEED_INX);
+                    }
+                    break;
+                case 2:
+                    if (isOne) {
+                        RowerDataParam.INSTANTANEOUS_RPM_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.INSTANTANEOUS_RPM_LEN;
+                        Logger.d("setBleDataInx  INSTANTANEOUS_RPM_INX=" + RowerDataParam.INSTANTANEOUS_RPM_INX);
+                    }
+                    break;
+                case 3:
+                    if (isOne) {
+                        RowerDataParam.AVERAGE_RPM_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.AVERAGE_RPM_LEN;
+                        Logger.d("setBleDataInx  AVERAGE_RPM_INX=" + RowerDataParam.AVERAGE_RPM_INX);
+                    }
+                    break;
+
+                case 4:
+                    if (isOne) {
+                        RowerDataParam.TOTAL_DISTANCE_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.TOTAL_DISTANCE_LEN;
+                        Logger.d("setBleDataInx  TOTAL_DISTANCE_INX=" + RowerDataParam.TOTAL_DISTANCE_INX);
+                    }
+                    break;
+                case 5:
+                    if (isOne) {
+                        RowerDataParam.RESISTANCE_LEVEL_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.RESISTANCE_LEVEL_LEN;
+                        Logger.d("setBleDataInx  RESISTANCE_LEVEL_INX=" + RowerDataParam.RESISTANCE_LEVEL_INX);
+                    }
+                    break;
+                case 6:
+                    if (isOne) {
+                        RowerDataParam.INSTANTANEOUS_POWER_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.INSTANTANEOUS_POWER_LEN;
+                        Logger.d("setBleDataInx  INSTANTANEOUS_POWER_INX=" + RowerDataParam.INSTANTANEOUS_POWER_INX);
+                    }
+                    break;
+                case 7:
+                    if (isOne) {
+                        RowerDataParam.AVERAGE_POWER_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.AVERAGE_POWER_LEN;
+                        Logger.d("setBleDataInx  AVERAGE_POWER_INX=" + RowerDataParam.AVERAGE_POWER_INX);
+                    }
+                    break;
+                case 8:
+                    if (isOne) {
+                        RowerDataParam.TOTAL_ENERGY_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.TOTAL_ENERGY_LEN;
+                        RowerDataParam.ENERGY_PER_HOUR_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.ENERGY_PER_HOUR_LEN;
+                        RowerDataParam.ENERGY_PER_MINUTE_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.ENERGY_PER_MINUTE_LEN;
+                        Logger.d("setBleDataInx  TOTAL_ENERGY_INX=" + RowerDataParam.TOTAL_ENERGY_INX);
+                        Logger.d("setBleDataInx  ENERGY_PER_HOUR_INX=" + RowerDataParam.ENERGY_PER_HOUR_INX);
+                        Logger.d("setBleDataInx  ENERGY_PER_MINUTE_INX=" + RowerDataParam.ENERGY_PER_MINUTE_INX);
+                    }
+                    break;
+                case 9:
+                    if (isOne) {
+                        RowerDataParam.HEART_RATE_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.HEART_RATE_LEN;
+                        Logger.d("setBleDataInx  HEART_RATE_INX=" + RowerDataParam.HEART_RATE_INX);
+                    }
+                    break;
+                case 10:
+                    if (isOne) {
+                        RowerDataParam.METABOLIC_EQUIVALENT_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.METABOLIC_EQUIVALENT_LEN;
+                        Logger.d("setBleDataInx  METABOLIC_EQUIVALENT_INX=" + RowerDataParam.METABOLIC_EQUIVALENT_INX);
+                    }
+                    break;
+                case 11:
+                    if (isOne) {
+                        RowerDataParam.ELAPSED_TIME_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.ELAPSED_TIME_LEN;
+                        Logger.d("setBleDataInx  ELAPSED_TIME_INX=" + RowerDataParam.ELAPSED_TIME_INX);
+                    }
+                    break;
+                case 12:
+                    if (isOne) {
+                        RowerDataParam.REMAINING_TIME_INX = inxLen;
+                        inxLen = inxLen + RowerDataParam.REMAINING_TIME_LEN;
+                        Logger.d("setBleDataInx  REMAINING_TIME_INX=" + RowerDataParam.REMAINING_TIME_INX);
+                    }
                     break;
             }
 
@@ -1563,13 +1695,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
         //-------------------------------------------------------------------------------
 
         if (uuid.contains("2ad1") && isToExamine) {
-            setBleDataInx(new byte[]{data[0], data[1]});
+            setBleDataInxOfRower(new byte[]{data[0], data[1]});
             setRunData_2AD1(data);
             return;
         }
 
         if (uuid.contains("2ad2") && isToExamine) {
-            setBleDataInx(new byte[]{data[0], data[1]});
+            setBleDataInxOfBike(new byte[]{data[0], data[1]});
             setRunData_2AD2(data);
             return;
         }
@@ -1586,9 +1718,17 @@ public class BleManager implements CustomTimer.TimerCallBack {
             return;
         }
 
-        rowerDataBean1.setStrokes(RowerDataParam.STROKE_COUNT_INX == -1 ? 0 : resolveData(data, RowerDataParam.STROKE_COUNT_INX, RowerDataParam.STROKE_COUNT_LEN));
-        rowerDataBean1.setDistance(RowerDataParam.TOTAL_DISTANCE_INX == -1 ? 0 : resolveData(data, RowerDataParam.TOTAL_DISTANCE_INX, RowerDataParam.TOTAL_DISTANCE_LEN));
+        // bike
+        rowerDataBean1.setInstSpeed(RowerDataParam.INSTANTANEOUS_SPEED_INX == -1 ? 0 : resolveData(data, RowerDataParam.INSTANTANEOUS_SPEED_INX, RowerDataParam.INSTANTANEOUS_SPEED_LEN) / 2);
+        rowerDataBean1.setInstRpm(RowerDataParam.INSTANTANEOUS_RPM_INX == -1 ? 0 : resolveData(data, RowerDataParam.INSTANTANEOUS_RPM_INX, RowerDataParam.INSTANTANEOUS_RPM_LEN) / 2);
+        rowerDataBean1.setLevel(RowerDataParam.RESISTANCE_LEVEL_INX == -1 ? 0 : resolveData(data, RowerDataParam.RESISTANCE_LEVEL_INX, RowerDataParam.RESISTANCE_LEVEL_LEN));
+
+        // boat
         rowerDataBean1.setSm(RowerDataParam.STROKE_RATE_INX == -1 ? 0 : resolveData(data, RowerDataParam.STROKE_RATE_INX, RowerDataParam.STROKE_RATE_LEN) / 2);
+        rowerDataBean1.setStrokes(RowerDataParam.STROKE_COUNT_INX == -1 ? 0 : resolveData(data, RowerDataParam.STROKE_COUNT_INX, RowerDataParam.STROKE_COUNT_LEN));
+
+        // ftms通用
+        rowerDataBean1.setDistance(RowerDataParam.TOTAL_DISTANCE_INX == -1 ? 0 : resolveData(data, RowerDataParam.TOTAL_DISTANCE_INX, RowerDataParam.TOTAL_DISTANCE_LEN));
         rowerDataBean1.setFive_hundred(RowerDataParam.INSTANTANEOUS_PACE_INX == -1 ? 0 : resolveData(data, RowerDataParam.INSTANTANEOUS_PACE_INX, RowerDataParam.INSTANTANEOUS_PACE_LEN));
         rowerDataBean1.setCalorie(RowerDataParam.TOTAL_ENERGY_INX == -1 ? 0 : resolveData(data, RowerDataParam.TOTAL_ENERGY_INX, RowerDataParam.TOTAL_ENERGY_LEN));
         rowerDataBean1.setCalories_hr(RowerDataParam.ENERGY_PER_HOUR_INX == -1 ? 0 : resolveData(data, RowerDataParam.ENERGY_PER_HOUR_INX, RowerDataParam.ENERGY_PER_HOUR_LEN));
@@ -1805,6 +1945,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         deviceType = data[5];
                         Logger.i("1个字节机型");
                     }
+
+                    categoryType = MyConstant.getCategory(deviceType);
                 }
 
                 // 注册特征值

@@ -22,6 +22,20 @@ public class RowerDataParam {
     /**
      * FTMS协议
      **/
+    public static int INSTANTANEOUS_SPEED_INX = -1;
+    public static int INSTANTANEOUS_SPEED_LEN = 2;
+
+    public static int AVERAGE_SPEED_INX = -1;
+    public static int AVERAGE_SPEED_LEN = 2;
+
+    public static int INSTANTANEOUS_RPM_INX = -1;
+    public static int INSTANTANEOUS_RPM_LEN = 2;
+
+    public static int AVERAGE_RPM_INX = -1;
+    public static int AVERAGE_RPM_LEN = 2;
+
+
+
     public static int STROKE_RATE_INX = -1;
     public static int STROKE_RATE_LEN = 1;
 
@@ -55,18 +69,18 @@ public class RowerDataParam {
     public static int METABOLIC_EQUIVALENT_INX = -1;
     public static int METABOLIC_EQUIVALENT_LEN = 1;
 
+    // 消耗时间
     public static int ELAPSED_TIME_INX = -1;
     public static int ELAPSED_TIME_LEN = 2;
-
+    // 剩余时间
     public static int REMAINING_TIME_INX = -1;
     public static int REMAINING_TIME_LEN = 2;
 
-    public static int ENERGY_PER_HOUR_INX = -1;
-    public static int ENERGY_PER_HOUR_LEN = 2;
-
+    //
     public static int TOTAL_ENERGY_INX = -1;
     public static int TOTAL_ENERGY_LEN = 2;
-
+    public static int ENERGY_PER_HOUR_INX = -1;
+    public static int ENERGY_PER_HOUR_LEN = 2;
     public static int ENERGY_PER_MINUTE_INX = -1;
     public static int ENERGY_PER_MINUTE_LEN = 1;
 

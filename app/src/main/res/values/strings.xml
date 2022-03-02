@@ -5,7 +5,10 @@
     <string name="home_interval" translatable="false">CYCLE</string>
     <string name="home_ave_500" translatable="false">AVE/500M</string>
     <string name="home_500" translatable="false">/500M</string>
+    <string name="home_km_30min" translatable="false">KM/30MIN</string>
     <string name="home_sm" translatable="false">S/M</string>
+    <string name="home_rpm" translatable="false">RPM</string>
+    <string name="home_level" translatable="false">LEVEL</string>
     <string name="home_watts" translatable="false">WATTS</string>
     <string name="home_ave_watts" translatable="false">AVE WATTS</string>
     <string name="home_calories" translatable="false">CALORIES</string>

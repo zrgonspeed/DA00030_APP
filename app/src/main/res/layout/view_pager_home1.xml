@@ -21,6 +21,7 @@
         app:layout_constraintVertical_weight="1">
 
         <TextView
+            android:id="@+id/tv_optional_4_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/home_strokes"
@@ -28,7 +29,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/tv_strokes"
+            android:id="@+id/tv_optional_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
@@ -108,7 +109,7 @@
         android:layout_marginBottom="5dp"
         android:background="@color/color_CCD8AE"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/rl3"
+        app:layout_constraintBottom_toTopOf="@id/rl3"
         app:layout_constraintEnd_toStartOf="@id/rl2"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@+id/ll1"
@@ -143,7 +144,7 @@
         android:layout_height="0dp"
         android:background="@color/color_CCD8AE"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/rl3"
+        app:layout_constraintBottom_toTopOf="@id/rl3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@id/rl1"
@@ -151,7 +152,7 @@
         app:layout_constraintVertical_weight="1">
 
         <TextView
-            android:id="@+id/tv_sm"
+            android:id="@+id/tv_optional_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
@@ -160,11 +161,12 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tv_optional_3_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_sm"
+            android:layout_alignBottom="@id/tv_optional_3"
             android:layout_marginStart="10dp"
-            android:layout_toRightOf="@id/tv_sm"
+            android:layout_toRightOf="@id/tv_optional_3"
             android:paddingBottom="6dp"
             android:text="@string/home_sm"
             android:textColor="@color/color_0B4531"
@@ -187,7 +189,7 @@
         app:layout_constraintVertical_weight="1">
 
         <TextView
-            android:id="@+id/tv_five_hundred"
+            android:id="@+id/tv_optional_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00:00"
@@ -196,11 +198,12 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tv_optional_1_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_five_hundred"
+            android:layout_alignBottom="@id/tv_optional_1"
             android:layout_marginStart="20dp"
-            android:layout_toRightOf="@id/tv_five_hundred"
+            android:layout_toRightOf="@id/tv_optional_1"
             android:paddingBottom="6dp"
             android:text="@string/home_500"
             android:textColor="@color/color_0B4531"
@@ -278,7 +281,7 @@
         app:layout_constraintVertical_weight="1">
 
         <TextView
-            android:id="@+id/tv_ave_five_hundred"
+            android:id="@+id/tv_optional_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00:00"
@@ -289,9 +292,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_ave_five_hundred"
+            android:layout_alignBottom="@id/tv_optional_2"
             android:layout_marginStart="20dp"
-            android:layout_toRightOf="@id/tv_ave_five_hundred"
+            android:layout_toRightOf="@id/tv_optional_2"
             android:paddingBottom="6dp"
             android:text="@string/home_ave_500"
             android:textColor="@color/color_0B4531"

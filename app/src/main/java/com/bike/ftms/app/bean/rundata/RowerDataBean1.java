@@ -1,9 +1,7 @@
 package com.bike.ftms.app.bean.rundata;
 
 
-import com.bike.ftms.app.bean.rundata.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import org.litepal.annotation.Column;
@@ -41,6 +39,36 @@ public class RowerDataBean1 extends LitePalSupport {
     private long setGoalTime = 0;//目标模式设定时间
     private long setGoalDistance = 0;//目标模式设定距离
     private long setGoalCalorie = 0;//目标模式设定卡路里
+
+
+    private int instSpeed;
+    private int instRpm;
+    private int level;
+
+    public int getInstSpeed() {
+        return instSpeed;
+    }
+
+    public void setInstSpeed(int instSpeed) {
+        this.instSpeed = instSpeed;
+    }
+
+    public int getInstRpm() {
+        return instRpm;
+    }
+
+    public void setInstRpm(int instRpm) {
+        this.instRpm = instRpm;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
 
     @MyConstant.RunMode
     private int runMode = MyConstant.NORMAL;
