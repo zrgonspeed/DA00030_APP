@@ -179,8 +179,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="5dp"
-        android:background="@color/color_CCD8AE"
+        android:background="@drawable/shape_option"
         android:gravity="center"
+        android:outlineProvider="bounds"
         app:layout_constraintBottom_toTopOf="@id/rl4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
@@ -209,6 +210,56 @@
             android:textColor="@color/color_0B4531"
             android:textSize="14sp"
             android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/tv_optional_11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/color_0B4531"
+            android:textSize="42sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_optional_11_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_optional_11"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@id/tv_optional_11"
+            android:paddingBottom="6dp"
+            android:text="@string/home_watts"
+            android:textColor="@color/color_0B4531"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/tv_optional_111"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/color_0B4531"
+            android:textSize="42sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_optional_111_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_optional_111"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@id/tv_optional_111"
+            android:paddingBottom="6dp"
+            android:text="@string/home_calories"
+            android:textColor="@color/color_0B4531"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -271,7 +322,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="5dp"
-        android:background="@color/color_CCD8AE"
+        android:background="@drawable/shape_option"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -290,6 +341,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tv_optional_2_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_optional_2"
@@ -300,6 +352,56 @@
             android:textColor="@color/color_0B4531"
             android:textSize="14sp"
             android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/tv_optional_22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/color_0B4531"
+            android:textSize="42sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_optional_22_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_optional_22"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@id/tv_optional_22"
+            android:paddingBottom="6dp"
+            android:text="@string/home_ave_watts"
+            android:textColor="@color/color_0B4531"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/tv_optional_222"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/color_0B4531"
+            android:textSize="42sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_optional_222_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_optional_222"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@id/tv_optional_222"
+            android:paddingBottom="6dp"
+            android:text="@string/home_calories_hr"
+            android:textColor="@color/color_0B4531"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
