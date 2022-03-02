@@ -762,11 +762,12 @@ public class BleManager implements CustomTimer.TimerCallBack {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
             isConnectTimer.setmAllTime(0L);
-            String uuid = characteristic.getUuid().toString().substring(0, 8);
-            Logger.i(uuid + ",::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
-            // Logger.i(Arrays.toString(data));
-
             byte[] data = characteristic.getValue();
+
+            String uuid = characteristic.getUuid().toString().substring(0, 8);
+            Logger.i(uuid + ",::" + ConvertData.byteArrayToHexString(data, data.length));
+            Logger.i(Arrays.toString(data));
+
             rxDataPackage(data, characteristic.getUuid().toString());
         }
 
@@ -1999,13 +2000,18 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (data[1] == 0x41 && data[2] == 0x02 && isToExamine) {
             sendRespondData(data);
 
-            if (runStatus == RUN_STATUS_STOP || rowerDataBean1.getCanSave()) {
+/*            if (runStatus == RUN_STATUS_STOP || rowerDataBean1.getCanSave()) {
 //                saveRowDataBean1();
-            }
+            }*/
 
             if (runStatus == RUN_STATUS_RUNNING) {
                 rowerDataBean1.setDrag(resolveData(data, RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
                 rowerDataBean1.setInterval(resolveData(data, RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
+
+                rowerDataBean1.setOneKmTime(resolveData(data, RowerDataParam.ONE_KM_TIME_INX, RowerDataParam.ONE_KM_TIME_LEN));
+                rowerDataBean1.setAveOneKmTime(resolveData(data, RowerDataParam.AVERAGE_ONE_KM_TIME_INX, RowerDataParam.AVERAGE_ONE_KM_TIME_LEN));
+                rowerDataBean1.setSplitOneKmTime(resolveData(data, RowerDataParam.SPLIT_ONE_KM_TIME_INX, RowerDataParam.SPLIT_ONE_KM_TIME_LEN));
+                rowerDataBean1.setSplitCal(resolveData(data, RowerDataParam.SPLIT_CAL_INX, RowerDataParam.SPLIT_CAL_LEN));
 
                 if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
                     // 跳段时保存

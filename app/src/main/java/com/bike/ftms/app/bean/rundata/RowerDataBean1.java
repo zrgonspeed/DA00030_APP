@@ -40,10 +40,13 @@ public class RowerDataBean1 extends LitePalSupport {
     private long setGoalDistance = 0;//目标模式设定距离
     private long setGoalCalorie = 0;//目标模式设定卡路里
 
-
     private int instSpeed;
     private int instRpm;
     private int level;
+    private int oneKmTime;
+    private int aveOneKmTime;
+    private int splitOneKmTime;
+    private int splitCal;
 
     public int getInstSpeed() {
         return instSpeed;
@@ -69,6 +72,37 @@ public class RowerDataBean1 extends LitePalSupport {
         this.level = level;
     }
 
+    public int getOneKmTime() {
+        return oneKmTime;
+    }
+
+    public void setOneKmTime(int oneKmTime) {
+        this.oneKmTime = oneKmTime;
+    }
+
+    public int getAveOneKmTime() {
+        return aveOneKmTime;
+    }
+
+    public void setAveOneKmTime(int aveOneKmTime) {
+        this.aveOneKmTime = aveOneKmTime;
+    }
+
+    public int getSplitOneKmTime() {
+        return splitOneKmTime;
+    }
+
+    public void setSplitOneKmTime(int splitOneKmTime) {
+        this.splitOneKmTime = splitOneKmTime;
+    }
+
+    public int getSplitCal() {
+        return splitCal;
+    }
+
+    public void setSplitCal(int splitCal) {
+        this.splitCal = splitCal;
+    }
 
     @MyConstant.RunMode
     private int runMode = MyConstant.NORMAL;
@@ -700,5 +734,6 @@ public class RowerDataBean1 extends LitePalSupport {
         }
         setTotalsItem(bb);
     }
+
 
 }

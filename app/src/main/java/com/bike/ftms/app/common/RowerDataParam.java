@@ -35,7 +35,6 @@ public class RowerDataParam {
     public static int AVERAGE_RPM_LEN = 2;
 
 
-
     public static int STROKE_RATE_INX = -1;
     public static int STROKE_RATE_LEN = 1;
 
@@ -141,4 +140,21 @@ public class RowerDataParam {
 
     public static int REST_TIME_INX = 15;
     public static int REST_TIME_LEN = 2;
+
+    public static int RUN_REST_TIME_INX = 15;
+    public static int RUN_REST_TIME_LEN = 2;
+
+
+    // bike
+    public static int ONE_KM_TIME_INX = 19;
+    public static int ONE_KM_TIME_LEN = 2;
+
+    public static int AVERAGE_ONE_KM_TIME_INX = 21;
+    public static int AVERAGE_ONE_KM_TIME_LEN = 2;
+
+    public static int SPLIT_ONE_KM_TIME_INX = 23;
+    public static int SPLIT_ONE_KM_TIME_LEN = 2;
+
+    public static int SPLIT_CAL_INX = 25;
+    public static int SPLIT_CAL_LEN = 2;
 }
