@@ -116,26 +116,56 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="1">
 
+        <!--distance-->
         <TextView
-            android:id="@+id/tv_distance"
+            android:id="@+id/tv_home_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_0B4531"
             android:textSize="35sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="visible" />
 
         <TextView
+            android:id="@+id/tv_home_distance_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_distance"
+            android:layout_alignBottom="@id/tv_home_distance"
             android:layout_marginStart="10dp"
-            android:layout_toRightOf="@id/tv_distance"
+            android:layout_toRightOf="@id/tv_home_distance"
             android:paddingBottom="6dp"
-            android:text="M"
+            android:text="@string/home_distance"
             android:textColor="@color/color_0B4531"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+        <!--speed-->
+        <TextView
+            android:id="@+id/tv_home_30min_km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_150"
+            android:text="0"
+            android:textColor="@color/color_0B4531"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_home_30min_km_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_home_30min_km"
+            android:layout_marginStart="10dp"
+            android:layout_toRightOf="@id/tv_home_30min_km"
+            android:paddingBottom="6dp"
+            android:text="@string/home_km_30min"
+            android:textColor="@color/color_0B4531"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -151,8 +181,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="1">
 
+        <!--sm-->
         <TextView
-            android:id="@+id/tv_optional_3"
+            android:id="@+id/tv_home_sm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
@@ -161,17 +192,42 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_optional_3_unit"
+            android:id="@+id/tv_home_sm_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_optional_3"
+            android:layout_alignBottom="@id/tv_home_sm"
             android:layout_marginStart="10dp"
-            android:layout_toRightOf="@id/tv_optional_3"
+            android:layout_toRightOf="@id/tv_home_sm"
             android:paddingBottom="6dp"
             android:text="@string/home_sm"
             android:textColor="@color/color_0B4531"
             android:textSize="14sp"
             android:textStyle="bold" />
+
+        <!--rpm-->
+        <TextView
+            android:id="@+id/tv_home_rpm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/color_0B4531"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_home_rpm_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_home_rpm"
+            android:layout_marginStart="10dp"
+            android:layout_toRightOf="@id/tv_home_rpm"
+            android:paddingBottom="6dp"
+            android:text="@string/home_rpm"
+            android:textColor="@color/color_0B4531"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -196,7 +252,8 @@
             android:text="00:00"
             android:textColor="@color/color_0B4531"
             android:textSize="35sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_optional_1_unit"
@@ -209,36 +266,66 @@
             android:text="@string/home_500"
             android:textColor="@color/color_0B4531"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
 
+        <!--watt-->
         <TextView
-            android:id="@+id/tv_optional_11"
+            android:id="@+id/tv_home_watt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_0B4531"
             android:textSize="35sp"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <TextView
-            android:id="@+id/tv_optional_11_unit"
+            android:id="@+id/tv_home_watt_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_optional_11"
+            android:layout_alignBottom="@id/tv_home_watt"
             android:layout_marginStart="20dp"
-            android:layout_toRightOf="@id/tv_optional_11"
+            android:layout_toRightOf="@id/tv_home_watt"
             android:paddingBottom="6dp"
             android:text="@string/home_watts"
             android:textColor="@color/color_0B4531"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
+
+        <!--cal-->
+        <TextView
+            android:id="@+id/tv_home_cal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_200"
+            android:text="0"
+            android:textColor="@color/color_0B4531"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
 
         <TextView
-            android:id="@+id/tv_optional_111"
+            android:id="@+id/tv_home_cal_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_home_cal"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@id/tv_home_cal"
+            android:paddingBottom="6dp"
+            android:text="@string/home_calories"
+            android:textColor="@color/color_0B4531"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+
+        <!--ave watt-->
+        <TextView
+            android:id="@+id/tv_home_ave_watt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
@@ -248,18 +335,46 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/tv_optional_111_unit"
+            android:id="@+id/tv_home_ave_watt_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_optional_111"
+            android:layout_alignBottom="@id/tv_home_ave_watt"
             android:layout_marginStart="20dp"
-            android:layout_toRightOf="@id/tv_optional_111"
+            android:layout_toRightOf="@id/tv_home_ave_watt"
             android:paddingBottom="6dp"
-            android:text="@string/home_calories"
+            android:text="@string/home_ave_watts"
             android:textColor="@color/color_0B4531"
             android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
+
+
+        <!--cal/hr-->
+        <TextView
+            android:id="@+id/tv_home_cal_hr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_200"
+            android:text="0"
+            android:textColor="@color/color_0B4531"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_home_cal_hr_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_home_cal_hr"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@id/tv_home_cal_hr"
+            android:paddingBottom="6dp"
+            android:text="@string/home_calories_hr"
+            android:textColor="@color/color_0B4531"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -331,8 +446,9 @@
         app:layout_constraintTop_toTopOf="@id/rl5"
         app:layout_constraintVertical_weight="1">
 
+        <!--/500-->
         <TextView
-            android:id="@+id/tv_optional_2"
+            android:id="@+id/tv_home_500"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00:00"
@@ -341,46 +457,48 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_optional_2_unit"
+            android:id="@+id/tv_home_500_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_optional_2"
+            android:layout_alignBottom="@id/tv_home_500"
             android:layout_marginStart="20dp"
-            android:layout_toRightOf="@id/tv_optional_2"
+            android:layout_toRightOf="@id/tv_home_500"
             android:paddingBottom="6dp"
-            android:text="@string/home_ave_500"
+            android:text="@string/home_500"
             android:textColor="@color/color_0B4531"
             android:textSize="14sp"
             android:textStyle="bold" />
 
 
+        <!--ave/500-->
         <TextView
-            android:id="@+id/tv_optional_22"
+            android:id="@+id/tv_home_ave_500"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="00:00"
             android:textColor="@color/color_0B4531"
             android:textSize="35sp"
             android:textStyle="bold"
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/tv_optional_22_unit"
+            android:id="@+id/tv_home_ave_500_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_optional_22"
+            android:layout_alignBottom="@id/tv_home_ave_500"
             android:layout_marginStart="20dp"
-            android:layout_toRightOf="@id/tv_optional_22"
+            android:layout_toRightOf="@id/tv_home_ave_500"
             android:paddingBottom="6dp"
-            android:text="@string/home_ave_watts"
+            android:text="@string/home_ave_500"
             android:textColor="@color/color_0B4531"
             android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
 
 
+        <!--one_km-->
         <TextView
-            android:id="@+id/tv_optional_222"
+            android:id="@+id/tv_home_one_km"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
@@ -390,14 +508,39 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/tv_optional_222_unit"
+            android:id="@+id/tv_home_one_km_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_optional_222"
+            android:layout_alignBottom="@id/tv_home_one_km"
             android:layout_marginStart="20dp"
-            android:layout_toRightOf="@id/tv_optional_222"
+            android:layout_toRightOf="@id/tv_home_one_km"
             android:paddingBottom="6dp"
-            android:text="@string/home_calories_hr"
+            android:text="@string/home_one_km"
+            android:textColor="@color/color_0B4531"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!--ave_one_km-->
+        <TextView
+            android:id="@+id/tv_home_ave_one_km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/color_0B4531"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_home_ave_one_km_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_home_ave_one_km"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@id/tv_home_ave_one_km"
+            android:paddingBottom="6dp"
+            android:text="@string/home_ave_one_km"
             android:textColor="@color/color_0B4531"
             android:textSize="14sp"
             android:textStyle="bold"

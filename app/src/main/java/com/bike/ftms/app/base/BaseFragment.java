@@ -192,5 +192,6 @@ public abstract class BaseFragment extends Fragment {
         String s = super.toString();
         return s.substring(s.indexOf('{') + 1, s.indexOf('('));
     }
+
 }
 

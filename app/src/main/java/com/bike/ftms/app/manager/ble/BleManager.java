@@ -1681,6 +1681,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
 //                rowerDataBean = new RowerDataBean();
 //            }
 //            runStatus = data[1];
+
+            return;
         }
 
         if (onlyHr) {
@@ -1992,6 +1994,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
                 SpManager.setTreadmill_flag(deviceType);
                 Logger.i("当前机型: " + deviceType);
+
+                onRunDataListener.connected();
             }
             return;
         }

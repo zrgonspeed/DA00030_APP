@@ -284,6 +284,11 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     }
 
     @Override
+    public void connected() {
+        runOnUiThread(() -> homeFragment.connected());
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         Logger.i("onBackPressed()");

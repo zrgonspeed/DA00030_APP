@@ -351,6 +351,7 @@ public class RowerDataBean1 extends LitePalSupport {
                 ", time=" + time +
                 ", distance=" + distance +
                 ", calorie=" + calorie +
+                ", watts=" + watts +
 
                 ", interval=" + interval +
                 ", setIntervalTime=" + setIntervalTime +
@@ -364,13 +365,23 @@ public class RowerDataBean1 extends LitePalSupport {
                 ", setGoalDistance=" + setGoalDistance +
                 ", setGoalCalorie=" + setGoalCalorie +
 
+                ", heart_rate=" + heart_rate +
+
+
                 ", strokes=" + strokes +
                 ", drag=" + drag +
                 ", sm=" + sm +
                 ", five_hundred=" + five_hundred +
-                ", heart_rate=" + heart_rate +
                 ", ave_five_hundred=" + ave_five_hundred +
-                ", watts=" + watts +
+
+                ", level=" + level +
+                ", instRpm=" + instRpm +
+                ", instSpeed==" + instSpeed +
+                ", oneKmTime==" + oneKmTime +
+                ", aveOneKmTime==" + aveOneKmTime +
+                ", splitOneKmTime==" + splitOneKmTime +
+                ", splitCal==" + splitCal +
+
                 ", ave_watts=" + ave_watts +
                 ", calories_hr=" + calories_hr +
                 ", note='" + note + '\'' +

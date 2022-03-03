@@ -39,8 +39,8 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.iv_bar)
     ImageView ivBar;
     private OnePageDataFragment onePageHomeFragment;
-    private TwoPageDataFragment twoPageHomeFragment;
-    private ThreePageDataFragment threePageHomeFragment;
+    // private TwoPageDataFragment twoPageHomeFragment;
+    // private ThreePageDataFragment threePageHomeFragment;
 
     public HomeFragment() {
     }
@@ -55,26 +55,26 @@ public class HomeFragment extends BaseFragment {
         Logger.i("initView() " + this);
         ButterKnife.bind(this, view);
         onePageHomeFragment = new OnePageDataFragment();
-        twoPageHomeFragment = new TwoPageDataFragment();
-        threePageHomeFragment = new ThreePageDataFragment();
+        // twoPageHomeFragment = new TwoPageDataFragment();
+        // threePageHomeFragment = new ThreePageDataFragment();
 
 
         MyConstant.homeFragment = this.toString();
         MyConstant.oneObject = onePageHomeFragment.toString();
-        MyConstant.twoObject = twoPageHomeFragment.toString();
-        MyConstant.threeObject = threePageHomeFragment.toString();
+        // MyConstant.twoObject = twoPageHomeFragment.toString();
+        // MyConstant.threeObject = threePageHomeFragment.toString();
 
         Logger.e("HomeFragment == " + this);
         Logger.e("onePageHomeFragment == " + onePageHomeFragment);
-        Logger.e("twoPageHomeFragment == " + twoPageHomeFragment);
-        Logger.e("threePageHomeFragment == " + threePageHomeFragment);
+        // Logger.e("twoPageHomeFragment == " + twoPageHomeFragment);
+        // Logger.e("threePageHomeFragment == " + threePageHomeFragment);
 
 
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(onePageHomeFragment);
-        fragmentList.add(twoPageHomeFragment);
-        fragmentList.add(threePageHomeFragment);
-        verticalViewPager.setOffscreenPageLimit(3);
+        // fragmentList.add(twoPageHomeFragment);
+        // fragmentList.add(threePageHomeFragment);
+        verticalViewPager.setOffscreenPageLimit(1);
         TabFragmentPagerAdapter adapter = new TabFragmentPagerAdapter(getChildFragmentManager(), fragmentList);
         verticalViewPager.setAdapter(adapter);
         verticalViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -115,13 +115,13 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void onRunData(RowerDataBean1 rowerDataBean1) {
-        if (onePageHomeFragment == null || twoPageHomeFragment == null || threePageHomeFragment == null) {
+        if (onePageHomeFragment == null) {
             Logger.e("onRunData() --------------------------------------------------------------");
             Logger.e("HomeFragment == " + this + " old object == " + MyConstant.homeFragment);
 
             Logger.e("onePageHomeFragment == " + onePageHomeFragment + " old object == " + MyConstant.oneObject);
-            Logger.e("twoPageHomeFragment == " + twoPageHomeFragment + " old object == " + MyConstant.twoObject);
-            Logger.e("threePageHomeFragment == " + threePageHomeFragment + " old object == " + MyConstant.threeObject);
+            // Logger.e("twoPageHomeFragment == " + twoPageHomeFragment + " old object == " + MyConstant.twoObject);
+            // Logger.e("threePageHomeFragment == " + threePageHomeFragment + " old object == " + MyConstant.threeObject);
             return;
         }
 
@@ -133,7 +133,11 @@ public class HomeFragment extends BaseFragment {
 //        }
 
         onePageHomeFragment.onRunData(rowerDataBean1);
-        twoPageHomeFragment.onRunData(rowerDataBean1);
-        threePageHomeFragment.onRunData(rowerDataBean1);
+        // twoPageHomeFragment.onRunData(rowerDataBean1);
+        // threePageHomeFragment.onRunData(rowerDataBean1);
+    }
+
+    public void connected() {
+        onePageHomeFragment.connected();
     }
 }

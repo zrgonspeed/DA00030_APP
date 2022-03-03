@@ -10,7 +10,10 @@
     <string name="home_rpm" translatable="false">RPM</string>
     <string name="home_level" translatable="false">LEVEL</string>
     <string name="home_watts" translatable="false">WATTS</string>
+    <string name="home_distance" translatable="false">M</string>
     <string name="home_ave_watts" translatable="false">AVE WATTS</string>
+    <string name="home_ave_one_km" translatable="false">/1KM AVE</string>
+    <string name="home_one_km" translatable="false">/1KM</string>
     <string name="home_calories" translatable="false">CALORIES</string>
     <string name="home_calories_hr" translatable="false">CALORIES/HR</string>
     <string name="home_exit">Are you sure to exit ?</string>
