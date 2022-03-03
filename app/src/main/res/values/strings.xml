@@ -11,6 +11,7 @@
     <string name="home_level" translatable="false">LEVEL</string>
     <string name="home_watts" translatable="false">WATTS</string>
     <string name="home_distance" translatable="false">M</string>
+    <string name="home_distance_km" translatable="false">KM</string>
     <string name="home_ave_watts" translatable="false">AVE WATTS</string>
     <string name="home_ave_one_km" translatable="false">/1KM AVE</string>
     <string name="home_one_km" translatable="false">/1KM</string>

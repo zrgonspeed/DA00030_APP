@@ -147,10 +147,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     }
 
     // 显示连接上的机型和图片
-    public void onConnectStatus(boolean connect, int deviceType) {
-        if (connect && deviceType != -1) {
-            tv_device.setText(MyConstant.deviceNames[BleManager.deviceType]);
-            iv_device.setImageDrawable(MyConstant.getCategoryImg(MyConstant.getCategory(BleManager.deviceType)));
+    private synchronized void onConnectStatus(boolean connected, int deviceType) {
+        if (connected && deviceType != -1) {
+            tv_device.setText(MyConstant.deviceNames[deviceType]);
+            iv_device.setImageDrawable(MyConstant.getCategoryImg(MyConstant.getCategory(deviceType)));
             tv_device.setVisibility(View.VISIBLE);
             iv_device.setVisibility(View.VISIBLE);
         } else {
@@ -277,15 +277,21 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public void disConnect() {
-        if (isOnPause) {
-            return;
-        }
-        runOnUiThread(() -> ConnectHintDialog.showConnectHintDialog(this, connectHintDialog));
+        // if (isOnPause) {
+        //     return;
+        // }
+        runOnUiThread(() -> {
+            onConnectStatus(BleManager.isConnect, BleManager.deviceType);
+            ConnectHintDialog.showConnectHintDialog(this, connectHintDialog);
+        });
     }
 
     @Override
     public void connected() {
-        runOnUiThread(() -> homeFragment.connected());
+        runOnUiThread(() -> {
+            onConnectStatus(BleManager.isConnect, BleManager.deviceType);
+            homeFragment.connected();
+        });
     }
 
     @Override

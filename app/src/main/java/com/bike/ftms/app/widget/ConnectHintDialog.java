@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
-import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.UIUtils;
 
@@ -246,6 +245,10 @@ public class ConnectHintDialog extends Dialog {
     }
 
     public static void showConnectHintDialog(Activity activity, ConnectHintDialog connectHintDialog) {
+        if (connectHintDialog != null && connectHintDialog.isShowing()) {
+            return;
+        }
+
         if (connectHintDialog == null) {
             connectHintDialog = new ConnectHintDialog(activity);
             connectHintDialog.setTitle(activity.getString(R.string.warm_tip));
@@ -266,8 +269,8 @@ public class ConnectHintDialog extends Dialog {
         attributes.width = (int) (rootWidth * 0.4);
 //        attributes.height = (int) (rootHeight * 0.9);
         connectHintDialog.getWindow().setAttributes(attributes);
-        Logger.e("attributes.w " + attributes.width);
-        Logger.e("attributes.h " + attributes.height);
+        // Logger.d("attributes.w " + attributes.width);
+        // Logger.d("attributes.h " + attributes.height);
 
         connectHintDialog.setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
         connectHintDialog.setType(1);

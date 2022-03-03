@@ -3,6 +3,7 @@ package com.bike.ftms.app.activity.fragment.pagedata;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bike.ftms.app.R;
@@ -23,6 +24,30 @@ import butterknife.BindView;
  */
 public class OnePageDataFragment extends BasePageDataFragment {
     private static final String TAG = OnePageDataFragment.class.getSimpleName();
+    @BindView(R.id.rl3)
+    RelativeLayout rl3;
+    @BindView(R.id.rl6)
+    RelativeLayout rl6;
+
+    // distance
+    @BindView(R.id.tv_home_distance)
+    TextView tv_home_distance;
+    @BindView(R.id.tv_home_distance_unit)
+    TextView tv_home_distance_unit;
+
+    // time
+    @BindView(R.id.tv_time)
+    TextView tv_time;
+
+    // drag cycle
+    @BindView(R.id.tv_drag)
+    TextView tv_drag;
+    @BindView(R.id.tv_interval)
+    TextView tv_interval;
+
+    // hr
+    @BindView(R.id.tv_heart_rate)
+    TextView tv_heart_rate;
 
     // strokes
     @BindView(R.id.tv_home_strokes)
@@ -76,11 +101,6 @@ public class OnePageDataFragment extends BasePageDataFragment {
     @BindView(R.id.tv_home_ave_500_unit)
     TextView tv_home_ave_500_unit;
 
-    // distance
-    @BindView(R.id.tv_home_distance)
-    TextView tvDistance;
-    @BindView(R.id.tv_home_distance_unit)
-    TextView tv_home_distance_unit;
 
     // speed
     @BindView(R.id.tv_home_30min_km)
@@ -147,11 +167,14 @@ public class OnePageDataFragment extends BasePageDataFragment {
     private void toggleOption(View view) {
         view.setOnClickListener((v) -> {
             // 切换数据显示，3种
+
+            // watt cal  -> ave watt   cal/hr
             arr1[tv_optional_1_index][0].setVisibility(View.GONE);
             arr1[tv_optional_1_index][1].setVisibility(View.GONE);
             arr1[tv_optional_1_index][2].setVisibility(View.GONE);
             arr1[tv_optional_1_index][3].setVisibility(View.GONE);
 
+            // /500 -> ave/500      /1km -> /1km ave
             arr2[tv_optional_1_index][0].setVisibility(View.GONE);
             arr2[tv_optional_1_index][1].setVisibility(View.GONE);
 
@@ -167,41 +190,6 @@ public class OnePageDataFragment extends BasePageDataFragment {
         });
     }
 
-    private void selectBoat() {
-    }
-
-    private void selectBike() {
-        arr2 = bikeViewArr;
-
-        // boatViewArr 全部隐藏
-        for (View[] views : boatViewArr) {
-            for (View view : views) {
-                view.setVisibility(View.GONE);
-            }
-        }
-
-        // 右下角
-        arr2[0][0].setVisibility(View.VISIBLE);
-        arr2[0][1].setVisibility(View.VISIBLE);
-        arr2[1][0].setVisibility(View.GONE);
-        arr2[1][1].setVisibility(View.GONE);
-
-        // 加上速度
-        tv_home_30min_km.setVisibility(View.VISIBLE);
-        tv_home_30min_km_unit.setVisibility(View.VISIBLE);
-
-        // 显示RPM
-        tv_home_rpm.setVisibility(View.VISIBLE);
-        tv_home_rpm_unit.setVisibility(View.VISIBLE);
-        tv_home_sm.setVisibility(View.GONE);
-        tv_home_sm_unit.setVisibility(View.GONE);
-
-        // 显示LEVEL
-        tv_home_level.setVisibility(View.VISIBLE);
-        tv_home_level_unit.setVisibility(View.VISIBLE);
-        tv_home_strokes.setVisibility(View.GONE);
-        tv_home_strokes_unit.setVisibility(View.GONE);
-    }
 
     @Override
     protected void initData() {
@@ -215,49 +203,60 @@ public class OnePageDataFragment extends BasePageDataFragment {
         DecimalFormat df = new DecimalFormat("0.00");
         // 距离
         {
+            String showDistance = "0";
+            long tempDistance = rowerDataBean1.getDistance();
             if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
-                long showDistance = rowerDataBean1.getSetIntervalDistance() - rowerDataBean1.getDistance();
-                if (showDistance <= 0) {
-                    showDistance = rowerDataBean1.getSetIntervalDistance();
+                tempDistance = rowerDataBean1.getSetIntervalDistance() - rowerDataBean1.getDistance();
+                if (tempDistance <= 0) {
+                    tempDistance = rowerDataBean1.getSetIntervalDistance();
                 }
-                tvDistance.setText(showDistance == 0 ? "0" : String.valueOf(df.format(showDistance / 1000.0f)));
-            } else {
-                tvDistance.setText(rowerDataBean1.getDistance() == 0 ? "0" : String.valueOf(df.format(rowerDataBean1.getDistance() / 1000.0f)));
             }
 
+            switch (BleManager.categoryType) {
+                case MyConstant.CATEGORY_BOAT: {
+                    showDistance = tempDistance + "";
+                }
+                break;
+                case MyConstant.CATEGORY_BIKE: {
+                    showDistance = df.format(tempDistance / 1000.0f);
+                }
+                break;
+            }
+            tv_home_distance.setText(showDistance);
+
             if (BleManager.status == BleManager.STATUS_POST) {
-                tvDistance.setText("0");
+                tv_home_distance.setText("0");
             }
         }
 
         // 分段设置
         {
             if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_NO) {
-                tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval()));
+                tv_interval.setText(String.valueOf(rowerDataBean1.getRunInterval()));
             } else if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
                 if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
-                    tvInterval.setText(String.valueOf(rowerDataBean1.getInterval()));
+                    tv_interval.setText(String.valueOf(rowerDataBean1.getInterval()));
                 } else {
-                    tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval() + 1));
+                    tv_interval.setText(String.valueOf(rowerDataBean1.getRunInterval() + 1));
                 }
             }
 
             // 直接运动模式，段数都是1，没有分段
             if (rowerDataBean1.getRunMode() == MyConstant.NORMAL && rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
-                tvInterval.setText("1");
+                tv_interval.setText("1");
             }
 
             if (BleManager.status == BleManager.STATUS_POST) {
-                tvInterval.setText("0");
+                tv_interval.setText("0");
             }
         }
 
         // 时间设置
         {
             // Logger.i("1111-rowerDataBean1.getTime() == " + rowerDataBean1.getTime());
-            tvTime.setText(TimeStringUtil.getSToHourMinSecValue(rowerDataBean1.getTime()));
+            tv_time.setText(TimeStringUtil.getSToHourMinSecValue(rowerDataBean1.getTime()));
             if (BleManager.status == BleManager.STATUS_POST) {
-                tvTime.setText(TimeStringUtil.getSToHourMinSecValue(0));
+                tv_time.setText(TimeStringUtil.getSToHourMinSecValue(0));
             }
         }
 
@@ -266,8 +265,8 @@ public class OnePageDataFragment extends BasePageDataFragment {
         tv_home_cal.setText(String.valueOf(rowerDataBean1.getCalorie()));
         tv_home_ave_watt.setText(String.valueOf(rowerDataBean1.getAve_watts()));
         tv_home_cal_hr.setText(String.valueOf(rowerDataBean1.getCalories_hr()));
-        tvDrag.setText(String.valueOf(rowerDataBean1.getDrag()));
-        tvHeartRate.setText(String.valueOf(rowerDataBean1.getHeart_rate()));
+        tv_drag.setText(String.valueOf(rowerDataBean1.getDrag()));
+        tv_heart_rate.setText(String.valueOf(rowerDataBean1.getHeart_rate()));
 
         // boat
         tv_home_500.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getFive_hundred()));
@@ -285,17 +284,108 @@ public class OnePageDataFragment extends BasePageDataFragment {
         tv_home_level_unit.setText(getResources().getString(R.string.home_level));
     }
 
+    // TODO: 2022/3/3
     public void connected() {
         switch (BleManager.categoryType) {
             case MyConstant.CATEGORY_BIKE: {
-                selectBike();
+                initBikeUI();
             }
             break;
             case MyConstant.CATEGORY_BOAT: {
-                selectBoat();
+                initBoatUI();
+            }
+            break;
+            case MyConstant.CATEGORY_SKI: {
+                initSkiUI();
+            }
+            break;
+            case MyConstant.CATEGORY_STEP: {
+                initStepUI();
             }
             break;
         }
+    }
 
+    private void initStepUI() {
+
+    }
+
+    private void initSkiUI() {
+
+    }
+
+    private void initBoatUI() {
+        arr2 = boatViewArr;
+        // 其它隐藏
+        for (View[] views : bikeViewArr) {
+            for (View view : views) {
+                view.setVisibility(View.GONE);
+            }
+        }
+        // 其它隐藏
+        // TODO: 2022/3/3
+
+
+        // 距离单位 m
+        tv_home_distance_unit.setText(getResources().getString(R.string.home_distance));
+
+        // 右下角 参数先显示
+        arr2[0][0].setVisibility(View.VISIBLE);
+        arr2[0][1].setVisibility(View.VISIBLE);
+        arr2[1][0].setVisibility(View.GONE);
+        arr2[1][1].setVisibility(View.GONE);
+
+        // 显示S/M
+        tv_home_sm.setVisibility(View.VISIBLE);
+        tv_home_sm_unit.setVisibility(View.VISIBLE);
+        tv_home_rpm.setVisibility(View.GONE);
+        tv_home_rpm_unit.setVisibility(View.GONE);
+
+        // 显示STROKES
+        tv_home_strokes.setVisibility(View.VISIBLE);
+        tv_home_strokes_unit.setVisibility(View.VISIBLE);
+        tv_home_level.setVisibility(View.GONE);
+        tv_home_level_unit.setVisibility(View.GONE);
+
+        // 隐藏速度
+        tv_home_30min_km.setVisibility(View.GONE);
+        tv_home_30min_km_unit.setVisibility(View.GONE);
+    }
+
+    private void initBikeUI() {
+        arr2 = bikeViewArr;
+        // boatViewArr 全部隐藏
+        for (View[] views : boatViewArr) {
+            for (View view : views) {
+                view.setVisibility(View.GONE);
+            }
+        }
+        // 其它隐藏
+        // TODO: 2022/3/3
+
+        // 右下角 参数先显示
+        arr2[0][0].setVisibility(View.VISIBLE);
+        arr2[0][1].setVisibility(View.VISIBLE);
+        arr2[1][0].setVisibility(View.GONE);
+        arr2[1][1].setVisibility(View.GONE);
+
+        // 距离单位 km
+        tv_home_distance_unit.setText(getResources().getString(R.string.home_distance_km));
+
+        // 加上速度
+        tv_home_30min_km.setVisibility(View.VISIBLE);
+        tv_home_30min_km_unit.setVisibility(View.VISIBLE);
+
+        // 显示RPM
+        tv_home_rpm.setVisibility(View.VISIBLE);
+        tv_home_rpm_unit.setVisibility(View.VISIBLE);
+        tv_home_sm.setVisibility(View.GONE);
+        tv_home_sm_unit.setVisibility(View.GONE);
+
+        // 显示LEVEL
+        tv_home_level.setVisibility(View.VISIBLE);
+        tv_home_level_unit.setVisibility(View.VISIBLE);
+        tv_home_strokes.setVisibility(View.GONE);
+        tv_home_strokes_unit.setVisibility(View.GONE);
     }
 }

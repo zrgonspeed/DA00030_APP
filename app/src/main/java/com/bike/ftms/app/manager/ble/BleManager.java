@@ -460,6 +460,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
             disConnectDevice();
             Logger.e("2------disConnectDevice()");
             BleManager.getInstance().mPosition = -1;
+
+            if (onScanConnectListener != null) {
+                onScanConnectListener.onNotifyData();
+            }
             return;
         }
         if (getScanResults() != null && getScanResults().size() != 0) {
@@ -532,6 +536,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
         isConnect = false;
         deviceType = -1;
         categoryType = -1;
+
+        if (onRunDataListener != null) {
+            onRunDataListener.disConnect();
+        }
     }
 
     /**
@@ -605,6 +613,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         break;
                     }
                 }
+                disConnectDevice();
                 resetDeviceType();
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
@@ -665,8 +674,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         break;
                     }
                 }
+                disConnectDevice();
                 resetDeviceType();
-//                isOpen = false;
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
                 }
@@ -2012,10 +2021,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 rowerDataBean1.setDrag(resolveData(data, RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
                 rowerDataBean1.setInterval(resolveData(data, RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
 
-                rowerDataBean1.setOneKmTime(resolveData(data, RowerDataParam.ONE_KM_TIME_INX, RowerDataParam.ONE_KM_TIME_LEN));
-                rowerDataBean1.setAveOneKmTime(resolveData(data, RowerDataParam.AVERAGE_ONE_KM_TIME_INX, RowerDataParam.AVERAGE_ONE_KM_TIME_LEN));
-                rowerDataBean1.setSplitOneKmTime(resolveData(data, RowerDataParam.SPLIT_ONE_KM_TIME_INX, RowerDataParam.SPLIT_ONE_KM_TIME_LEN));
-                rowerDataBean1.setSplitCal(resolveData(data, RowerDataParam.SPLIT_CAL_INX, RowerDataParam.SPLIT_CAL_LEN));
+                switch (BleManager.categoryType) {
+                    case MyConstant.CATEGORY_BIKE: {
+                        rowerDataBean1.setOneKmTime(resolveData(data, RowerDataParam.ONE_KM_TIME_INX, RowerDataParam.ONE_KM_TIME_LEN));
+                        rowerDataBean1.setAveOneKmTime(resolveData(data, RowerDataParam.AVERAGE_ONE_KM_TIME_INX, RowerDataParam.AVERAGE_ONE_KM_TIME_LEN));
+                        rowerDataBean1.setSplitOneKmTime(resolveData(data, RowerDataParam.SPLIT_ONE_KM_TIME_INX, RowerDataParam.SPLIT_ONE_KM_TIME_LEN));
+                        rowerDataBean1.setSplitCal(resolveData(data, RowerDataParam.SPLIT_CAL_INX, RowerDataParam.SPLIT_CAL_LEN));
+                    }
+                    break;
+                }
 
                 if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
                     // 跳段时保存
