@@ -98,7 +98,7 @@ public class MyConstant {
             return ResourcesCompat.getDrawable(MyApplication.getContext().getResources(), R.drawable.ski, null);
         }
         if (category == CATEGORY_STEP) {
-            // return ResourcesCompat.getDrawable(MyApplication.getContext().getResources(), R.drawable.step, null);
+            return ResourcesCompat.getDrawable(MyApplication.getContext().getResources(), R.drawable.climb, null);
         }
         return ResourcesCompat.getDrawable(MyApplication.getContext().getResources(), R.drawable.unknow, null);
     }

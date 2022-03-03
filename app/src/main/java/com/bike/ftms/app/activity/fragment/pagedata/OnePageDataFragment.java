@@ -24,10 +24,17 @@ import butterknife.BindView;
 public class OnePageDataFragment extends BasePageDataFragment {
     private static final String TAG = OnePageDataFragment.class.getSimpleName();
 
-    @BindView(R.id.tv_optional_1)
-    TextView tv_optional_1;
-    @BindView(R.id.tv_optional_1_unit)
-    TextView tv_optional_1_unit;
+    // strokes
+    @BindView(R.id.tv_home_strokes)
+    TextView tv_home_strokes;
+    @BindView(R.id.tv_home_strokes_unit)
+    TextView tv_home_strokes_unit;
+
+    // level
+    @BindView(R.id.tv_home_level)
+    TextView tv_home_level;
+    @BindView(R.id.tv_home_level_unit)
+    TextView tv_home_level_unit;
 
     // watt  cal
     @BindView(R.id.tv_home_watt)
@@ -92,7 +99,6 @@ public class OnePageDataFragment extends BasePageDataFragment {
     TextView tv_home_sm;
     @BindView(R.id.tv_home_sm_unit)
     TextView tv_home_sm_unit;
-
 
     public OnePageDataFragment() {
     }
@@ -191,6 +197,10 @@ public class OnePageDataFragment extends BasePageDataFragment {
         tv_home_sm_unit.setVisibility(View.GONE);
 
         // 显示LEVEL
+        tv_home_level.setVisibility(View.VISIBLE);
+        tv_home_level_unit.setVisibility(View.VISIBLE);
+        tv_home_strokes.setVisibility(View.GONE);
+        tv_home_strokes_unit.setVisibility(View.GONE);
     }
 
     @Override
@@ -201,15 +211,8 @@ public class OnePageDataFragment extends BasePageDataFragment {
     @Override
     public void onRunData(RowerDataBean1 rowerDataBean1) {
         super.onRunData(rowerDataBean1);
-        // 机型通用参数
-        tv_home_watt.setText(String.valueOf(rowerDataBean1.getWatts()));
-        tv_home_cal.setText(String.valueOf(rowerDataBean1.getCalorie()));
-        tv_home_ave_watt.setText(String.valueOf(rowerDataBean1.getAve_watts()));
-        tv_home_cal_hr.setText(String.valueOf(rowerDataBean1.getCalories_hr()));
-
 
         DecimalFormat df = new DecimalFormat("0.00");
-
         // 距离
         {
             if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
@@ -227,19 +230,59 @@ public class OnePageDataFragment extends BasePageDataFragment {
             }
         }
 
+        // 分段设置
+        {
+            if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_NO) {
+                tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval()));
+            } else if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
+                if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
+                    tvInterval.setText(String.valueOf(rowerDataBean1.getInterval()));
+                } else {
+                    tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval() + 1));
+                }
+            }
+
+            // 直接运动模式，段数都是1，没有分段
+            if (rowerDataBean1.getRunMode() == MyConstant.NORMAL && rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
+                tvInterval.setText("1");
+            }
+
+            if (BleManager.status == BleManager.STATUS_POST) {
+                tvInterval.setText("0");
+            }
+        }
+
+        // 时间设置
+        {
+            // Logger.i("1111-rowerDataBean1.getTime() == " + rowerDataBean1.getTime());
+            tvTime.setText(TimeStringUtil.getSToHourMinSecValue(rowerDataBean1.getTime()));
+            if (BleManager.status == BleManager.STATUS_POST) {
+                tvTime.setText(TimeStringUtil.getSToHourMinSecValue(0));
+            }
+        }
+
+        // 机型通用参数
+        tv_home_watt.setText(String.valueOf(rowerDataBean1.getWatts()));
+        tv_home_cal.setText(String.valueOf(rowerDataBean1.getCalorie()));
+        tv_home_ave_watt.setText(String.valueOf(rowerDataBean1.getAve_watts()));
+        tv_home_cal_hr.setText(String.valueOf(rowerDataBean1.getCalories_hr()));
+        tvDrag.setText(String.valueOf(rowerDataBean1.getDrag()));
+        tvHeartRate.setText(String.valueOf(rowerDataBean1.getHeart_rate()));
 
         // boat
         tv_home_500.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getFive_hundred()));
         tv_home_ave_500.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAve_five_hundred()));
         tv_home_sm.setText(String.valueOf(rowerDataBean1.getSm()));
+        tv_home_strokes.setText(String.valueOf(rowerDataBean1.getStrokes()));
+        tv_home_strokes_unit.setText(getResources().getString(R.string.home_strokes));
 
         // bike
         tv_home_one_km.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getOneKmTime()));
         tv_home_ave_one_km.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAveOneKmTime()));
         tv_home_30min_km.setText(df.format(rowerDataBean1.getInstSpeed() / 100.0f));
         tv_home_rpm.setText(String.valueOf(rowerDataBean1.getInstRpm()));
-
-
+        tv_home_level.setText(String.valueOf(rowerDataBean1.getLevel()));
+        tv_home_level_unit.setText(getResources().getString(R.string.home_level));
     }
 
     public void connected() {
@@ -248,8 +291,11 @@ public class OnePageDataFragment extends BasePageDataFragment {
                 selectBike();
             }
             break;
+            case MyConstant.CATEGORY_BOAT: {
+                selectBoat();
+            }
+            break;
         }
-
 
     }
 }

@@ -85,11 +85,11 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    ivBar.setImageResource(R.mipmap.bar1);
+                    ivBar.setImageResource(R.drawable.bar1);
                 } else if (position == 1) {
-                    ivBar.setImageResource(R.mipmap.bar2);
+                    ivBar.setImageResource(R.drawable.bar2);
                 } else if (position == 2) {
-                    ivBar.setImageResource(R.mipmap.bar3);
+                    ivBar.setImageResource(R.drawable.bar3);
                 }
             }
 

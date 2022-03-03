@@ -330,7 +330,7 @@
                     android:layout_centerInParent="true"
                     android:layout_marginEnd="50dp"
                     android:layout_toLeftOf="@id/tv_title_time"
-                    android:background="@mipmap/boat2" />
+                    android:background="@drawable/boat2" />
 
                 <TextView
                     android:id="@+id/tv_title_time"

@@ -26,10 +26,7 @@ import butterknife.Unbinder;
 public abstract class BasePageDataFragment extends BaseFragment {
     private static final String TAG = BasePageDataFragment.class.getSimpleName();
     Unbinder unbinder;
-    @BindView(R.id.tv_optional_4)
-    TextView tv_optional_4;
-    @BindView(R.id.tv_optional_4_unit)
-    TextView tv_optional_4_unit;
+
     @BindView(R.id.tv_drag)
     TextView tvDrag;
     @BindView(R.id.tv_interval)
@@ -65,53 +62,5 @@ public abstract class BasePageDataFragment extends BaseFragment {
 
     public void onRunData(RowerDataBean1 rowerDataBean1) {
 
-        // 分段设置
-        {
-            if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_NO) {
-                tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval()));
-            } else if (rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
-                if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
-                    tvInterval.setText(String.valueOf(rowerDataBean1.getInterval()));
-                } else {
-                    tvInterval.setText(String.valueOf(rowerDataBean1.getRunInterval() + 1));
-                }
-            }
-
-            // 直接运动模式，段数都是1，没有分段
-            if (rowerDataBean1.getRunMode() == MyConstant.NORMAL && rowerDataBean1.getRunStatus() == MyConstant.RUN_STATUS_YES) {
-                tvInterval.setText("1");
-            }
-
-            if (BleManager.status == BleManager.STATUS_POST) {
-                tvInterval.setText("0");
-            }
-        }
-
-
-        // 时间设置
-        {
-            // Logger.i("1111-rowerDataBean1.getTime() == " + rowerDataBean1.getTime());
-            tvTime.setText(TimeStringUtil.getSToHourMinSecValue(rowerDataBean1.getTime()));
-            if (BleManager.status == BleManager.STATUS_POST) {
-                tvTime.setText(TimeStringUtil.getSToHourMinSecValue(0));
-            }
-        }
-
-        tvDrag.setText(String.valueOf(rowerDataBean1.getDrag()));
-        tvHeartRate.setText(String.valueOf(rowerDataBean1.getHeart_rate()));
-
-        switch (BleManager.categoryType) {
-            case MyConstant.CATEGORY_BIKE: {
-
-                tv_optional_4.setText(String.valueOf(rowerDataBean1.getLevel()));
-                tv_optional_4_unit.setText(getResources().getString(R.string.home_level));
-            }
-            break;
-            case MyConstant.CATEGORY_BOAT: {
-                tv_optional_4.setText(String.valueOf(rowerDataBean1.getStrokes()));
-                tv_optional_4_unit.setText(getResources().getString(R.string.home_strokes));
-            }
-            break;
-        }
     }
 }

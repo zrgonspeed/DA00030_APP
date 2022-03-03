@@ -102,7 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="10dp"
             android:layout_centerInParent="true"
-            android:src="@mipmap/page1" />
+            android:src="@drawable/page1" />
     </RelativeLayout>
 
     <!-- 上传运动数据中 -->

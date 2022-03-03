@@ -220,11 +220,11 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             public void onPageSelected(int position) {
                 if (position == 0) {
                     vp.setSetIntercept(true);
-                    ivPage.setImageResource(R.mipmap.page1);
+                    ivPage.setImageResource(R.drawable.page1);
                     m_wklk.acquire(); //设置保持唤醒
                 } else {
                     vp.setSetIntercept(false);
-                    ivPage.setImageResource(R.mipmap.page2);
+                    ivPage.setImageResource(R.drawable.page2);
                     m_wklk.release();//解除保持唤醒
                 }
             }
