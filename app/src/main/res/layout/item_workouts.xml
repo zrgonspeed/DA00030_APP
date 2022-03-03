@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/ll_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dp_40"
         android:layout_centerVertical="true"
         android:gravity="center"
         android:orientation="horizontal"
@@ -51,9 +51,9 @@
             android:paddingLeft="50dp">
 
             <ImageView
-                android:id="@+id/iv_boat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/iv_item_device"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/tv_date"
                 android:src="@drawable/boat"
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/iv_boat"
+                android:layout_toRightOf="@id/iv_item_device"
                 android:text="2x5c/:05r"
                 android:textColor="@color/color_0B4531"
                 android:textSize="16sp"

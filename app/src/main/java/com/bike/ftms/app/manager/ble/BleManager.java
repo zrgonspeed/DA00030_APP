@@ -2003,7 +2003,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
                 SpManager.setTreadmill_flag(deviceType);
                 Logger.i("当前机型: " + deviceType);
-
                 onRunDataListener.connected();
             }
             return;
@@ -2094,6 +2093,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
         Logger.e("saveRowDataBean1() -- canSave " + canSave + "       getCanSave() --- " + rowerDataBean1.getCanSave());
         if (canSave && rowerDataBean1.getCanSave()) {
+            rowerDataBean1.setDeviceType(deviceType);
+            rowerDataBean1.setCategoryType(MyConstant.getCategory(deviceType));
             Logger.e("1----RUN_STATUS_STOP----" + "bean1  save : " + rowerDataBean1);
             Logger.e("1----RUN_STATUS_STOP----" + "bean1.list: " + rowerDataBean1.getList());
             tempSave(rowerDataBean1);

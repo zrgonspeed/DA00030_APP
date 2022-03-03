@@ -81,6 +81,19 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     EditText edt_info_note;
     @BindView(R.id.tv_title_time)
     TextView tv_title_time;
+    @BindView(R.id.iv_info_device)
+    ImageView iv_info_device;
+
+    // 详细页面标题
+    @BindView(R.id.tv_info_title_500)
+    TextView tv_info_title_500;
+    @BindView(R.id.tv_info_title_sm)
+    TextView tv_info_title_sm;
+    @BindView(R.id.tv_info_title_ave_one_km)
+    TextView tv_info_title_ave_one_km;
+    @BindView(R.id.tv_info_title_level)
+    TextView tv_info_title_level;
+
     private WorkoutsLocalAdapter workoutsLocalAdapter;
     private WorkoutsLocalAdapter2 workoutsLocalAdapter2;
     private boolean isEdit = false;
@@ -227,9 +240,9 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     public void onItemClickListener(int position) {
         clickPosition = position;
 
-        // 从服务器获取详细运动数据，根据workout_id
         HttpRowerDataBean1 bean = (HttpRowerDataBean1) rowerDataBean1List.get(clickPosition);
         if (bean.getStatus() == 1) {
+            // 从服务器获取详细运动数据，根据workout_id
             presenter.getRunDataInfoFromServer(bean);
         } else {
             notifyInfoData();
@@ -260,6 +273,27 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             rv_workouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             rv_workouts2.setAdapter(workoutsLocalAdapter2);
             tv_info_title.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
+
+            iv_info_device.setImageDrawable(MyConstant.getCategoryImg(bean.getCategoryType()));
+
+            // 不同机型不同显示内容
+            switch (bean.getCategoryType()) {
+                case MyConstant.CATEGORY_BOAT: {
+                    tv_info_title_500.setVisibility(View.VISIBLE);
+                    tv_info_title_sm.setVisibility(View.VISIBLE);
+                    tv_info_title_ave_one_km.setVisibility(View.GONE);
+                    tv_info_title_level.setVisibility(View.GONE);
+                }
+                break;
+                case MyConstant.CATEGORY_BIKE: {
+                    tv_info_title_ave_one_km.setVisibility(View.VISIBLE);
+                    tv_info_title_level.setVisibility(View.VISIBLE);
+                    tv_info_title_500.setVisibility(View.GONE);
+                    tv_info_title_sm.setVisibility(View.GONE);
+                }
+                break;
+            }
+
             switch (bean.getRunMode()) {
                 case MyConstant.NORMAL:
                     tv_title_time.setText(bean.getDistance() + "M");

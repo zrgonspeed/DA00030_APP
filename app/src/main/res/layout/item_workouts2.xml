@@ -9,8 +9,8 @@
         android:id="@+id/tv_info_interval"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginEnd="10dp"
+        android:gravity="center"
         android:text="1"
         android:textColor="@color/color_0B4531"
         android:textSize="16sp"
@@ -46,8 +46,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_weight="0.8"
         android:layout_marginEnd="0dp"
+        android:layout_weight="0.8"
         android:gravity="center"
         android:text="666"
         android:textColor="@color/color_0B4531"
@@ -67,6 +67,19 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/tv_info_ave_one_km"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="00:00"
+        android:textColor="@color/color_0B4531"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/tv_info_sm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -77,6 +90,19 @@
         android:textColor="@color/color_0B4531"
         android:textSize="16sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_info_inst_level"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/color_0B4531"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_info_cal_hr"

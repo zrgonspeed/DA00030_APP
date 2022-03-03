@@ -211,7 +211,7 @@ public class ConnectHintDialog extends Dialog {
         int rootHeight = UIUtils.getHeight(context);
         int rootWidth = UIUtils.getWidth(context);
 
-        Logger.e("rootWidth == " + rootWidth + "     rootHeight == " + rootHeight);
+        Logger.d("rootWidth == " + rootWidth + "     rootHeight == " + rootHeight);
 
         if (type == 1) {
             titleTv.setMinHeight((int) (llParams.height * 0.30));
@@ -229,7 +229,7 @@ public class ConnectHintDialog extends Dialog {
             messageTv.setLayoutParams(lp);
             // 设置文字大小
             messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.sp_7)));
-            Logger.e("fontSize == " + messageTv.getTextSize());
+            Logger.d("fontSize == " + messageTv.getTextSize());
         }
     }
 
@@ -244,9 +244,14 @@ public class ConnectHintDialog extends Dialog {
         public void onNoClick();
     }
 
-    public static void showConnectHintDialog(Activity activity, ConnectHintDialog connectHintDialog) {
+    public synchronized static ConnectHintDialog showConnectHintDialog(Activity activity, ConnectHintDialog connectHintDialog) {
+        Logger.i("showConnectHintDialog()-----------------------------connectHintDialog== " + connectHintDialog);
+        if (connectHintDialog != null) {
+            Logger.i("connectHintDialog.isShowing() == " + connectHintDialog.isShowing());
+        }
+
         if (connectHintDialog != null && connectHintDialog.isShowing()) {
-            return;
+            return connectHintDialog;
         }
 
         if (connectHintDialog == null) {
@@ -261,6 +266,7 @@ public class ConnectHintDialog extends Dialog {
             connectHintDialog.setNoOnclickListener(activity.getString(R.string.cancel), () -> finalConnectHintDialog.dismiss());
         }
 
+        Logger.i("connectHintDialog == " + connectHintDialog);
         connectHintDialog.show();
 
         int rootHeight = UIUtils.getHeight(activity);
@@ -274,5 +280,7 @@ public class ConnectHintDialog extends Dialog {
 
         connectHintDialog.setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
         connectHintDialog.setType(1);
+
+        return connectHintDialog;
     }
 }

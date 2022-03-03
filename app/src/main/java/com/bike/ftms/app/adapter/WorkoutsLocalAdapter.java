@@ -84,6 +84,9 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
             bean.setTypeAndResult();
         }
 
+        // 机型图标
+        holder.iv_item_device.setImageDrawable(MyConstant.getCategoryImg(bean.getCategoryType()));
+
         holder.tvDistance.setText(bean.getType());
         holder.tvTime.setText(bean.getResult());
         /*switch (bean.getRunMode()) {
@@ -200,6 +203,7 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
         private ImageView ivDelete;
         private TextView tvDate;
         private TextView tvDistance;
+        private ImageView iv_item_device;
         private TextView tvTime;
         private ImageView ivNote;
         private LinearLayout ll_item;
@@ -210,6 +214,7 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
             ivDelete = itemView.findViewById(R.id.iv_delete);
             tvDate = itemView.findViewById(R.id.tv_date);
             tvDistance = itemView.findViewById(R.id.tv_distance);
+            iv_item_device = itemView.findViewById(R.id.iv_item_device);
             tvTime = itemView.findViewById(R.id.tv_time);
             ivNote = itemView.findViewById(R.id.iv_note);
             ll_item = itemView.findViewById(R.id.ll_item);

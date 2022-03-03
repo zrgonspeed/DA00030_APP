@@ -316,7 +316,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:layout_centerInParent="true"
-                    android:layout_toLeftOf="@id/iv_type"
+                    android:layout_toLeftOf="@id/iv_info_device"
                     android:gravity="center"
                     android:text="TYPE："
                     android:textColor="@color/color_black"
@@ -324,13 +324,13 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/iv_type"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:id="@+id/iv_info_device"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="@dimen/dp_40"
                     android:layout_centerInParent="true"
                     android:layout_marginEnd="50dp"
                     android:layout_toLeftOf="@id/tv_title_time"
-                    android:background="@drawable/boat2" />
+                    android:src="@drawable/boat2" />
 
                 <TextView
                     android:id="@+id/tv_title_time"
@@ -389,17 +389,32 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_info_title_500"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/workouts_500"
+                    android:text="@string/workouts_ave_500"
                     android:textColor="@color/color_white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_info_title_ave_one_km"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/workouts_ave_one_km"
+                    android:textColor="@color/color_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_info_title_sm"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -409,6 +424,19 @@
                     android:textColor="@color/color_white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_info_title_level"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text="@string/workouts_level"
+                    android:textColor="@color/color_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -427,7 +455,7 @@
                     android:layout_centerInParent="true"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/workouts_watts"
+                    android:text="@string/workouts_ave_watts"
                     android:textColor="@color/color_white"
                     android:textSize="16sp"
                     android:textStyle="bold" />

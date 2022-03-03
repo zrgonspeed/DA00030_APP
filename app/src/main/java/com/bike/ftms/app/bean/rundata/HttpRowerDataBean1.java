@@ -44,6 +44,15 @@ public class HttpRowerDataBean1 extends RowerDataBean1 {
         setInterval(bean1.getInterval());
         setNote(bean1.getNote());
 
+        setInstRpm(bean1.getInstRpm());
+        setLevel(bean1.getLevel());
+        setCategoryType(bean1.getCategoryType());
+        setDeviceType(bean1.getDeviceType());
+        setOneKmTime(bean1.getOneKmTime());
+        setAveOneKmTime(bean1.getAveOneKmTime());
+        setSplitCal(bean1.getSplitCal());
+        setSplitOneKmTime(bean1.getSplitOneKmTime());
+
         setList(bean1.getList());
     }
 

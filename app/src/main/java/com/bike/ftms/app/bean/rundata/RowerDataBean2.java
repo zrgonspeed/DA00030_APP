@@ -29,6 +29,89 @@ public class RowerDataBean2 extends LitePalSupport {
     private long setGoalDistance = 0;//目标模式设定距离
     private long setGoalCalorie = 0;//目标模式设定卡路里
 
+    private int instSpeed;
+    private int instRpm;
+    private int level;
+    private int oneKmTime;
+    private int aveOneKmTime;
+    private int splitOneKmTime;
+    private int splitCal;
+
+    private int deviceType = 0;
+    private int categoryType = 0;
+
+    public int getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(int deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public int getCategoryType() {
+        return categoryType;
+    }
+
+    public void setCategoryType(int categoryType) {
+        this.categoryType = categoryType;
+    }
+
+    public int getInstSpeed() {
+        return instSpeed;
+    }
+
+    public void setInstSpeed(int instSpeed) {
+        this.instSpeed = instSpeed;
+    }
+
+    public int getInstRpm() {
+        return instRpm;
+    }
+
+    public void setInstRpm(int instRpm) {
+        this.instRpm = instRpm;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getOneKmTime() {
+        return oneKmTime;
+    }
+
+    public void setOneKmTime(int oneKmTime) {
+        this.oneKmTime = oneKmTime;
+    }
+
+    public int getAveOneKmTime() {
+        return aveOneKmTime;
+    }
+
+    public void setAveOneKmTime(int aveOneKmTime) {
+        this.aveOneKmTime = aveOneKmTime;
+    }
+
+    public int getSplitOneKmTime() {
+        return splitOneKmTime;
+    }
+
+    public void setSplitOneKmTime(int splitOneKmTime) {
+        this.splitOneKmTime = splitOneKmTime;
+    }
+
+    public int getSplitCal() {
+        return splitCal;
+    }
+
+    public void setSplitCal(int splitCal) {
+        this.splitCal = splitCal;
+    }
+
     @MyConstant.RunMode
     private int runMode = MyConstant.NORMAL;
     private int reset_time;
@@ -61,12 +144,23 @@ public class RowerDataBean2 extends LitePalSupport {
         setIntervalStatus(bean1.getIntervalStatus());
         setReset_time(bean1.getReset_time());
 
+
+        setSm(bean1.getSm());
         setAve_five_hundred(bean1.getAve_five_hundred());
+
+        setInstRpm(bean1.getInstRpm());
+        setLevel(bean1.getLevel());
+        setCategoryType(bean1.getCategoryType());
+        setDeviceType(bean1.getDeviceType());
+        setOneKmTime(bean1.getOneKmTime());
+        setAveOneKmTime(bean1.getAveOneKmTime());
+        setSplitCal(bean1.getSplitCal());
+        setSplitOneKmTime(bean1.getSplitOneKmTime());
+
         setAve_watts(bean1.getAve_watts());
         setCalories_hr(bean1.getCalories_hr());
         setDate(bean1.getDate());
         setDrag(bean1.getDrag());
-        setSm(bean1.getSm());
         setFive_hundred(bean1.getFive_hundred());
         setStrokes(bean1.getStrokes());
         setWatts(bean1.getWatts());
@@ -323,6 +417,16 @@ public class RowerDataBean2 extends LitePalSupport {
         bean.setIntervalStatus(getIntervalStatus());
         bean.setReset_time(getReset_time());
 
+
+        bean.setInstRpm(getInstRpm());
+        bean.setLevel(getLevel());
+        bean.setCategoryType(getCategoryType());
+        bean.setDeviceType(getDeviceType());
+        bean.setOneKmTime(getOneKmTime());
+        bean.setAveOneKmTime(getAveOneKmTime());
+        bean.setSplitCal(getSplitCal());
+        bean.setSplitOneKmTime(getSplitOneKmTime());
+        
         bean.setAve_five_hundred(getAve_five_hundred());
         bean.setAve_watts(getAve_watts());
         bean.setCalories_hr(getCalories_hr());
@@ -363,6 +467,17 @@ public class RowerDataBean2 extends LitePalSupport {
                 ", setGoalTime=" + setGoalTime +
                 ", setGoalDistance=" + setGoalDistance +
                 ", setGoalCalorie=" + setGoalCalorie +
+
+                ", level=" + level +
+                ", instRpm=" + instRpm +
+                ", instSpeed==" + instSpeed +
+                ", oneKmTime==" + oneKmTime +
+                ", aveOneKmTime==" + aveOneKmTime +
+                ", splitOneKmTime==" + splitOneKmTime +
+                ", splitCal==" + splitCal +
+
+                ", deviceType==" + deviceType +
+                ", categoryType==" + categoryType +
 
                 ", strokes=" + strokes +
                 ", drag=" + drag +

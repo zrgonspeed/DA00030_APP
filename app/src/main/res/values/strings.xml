@@ -39,10 +39,15 @@
     <string name="workouts_time" translatable="false">TIME</string>
     <string name="workouts_meters" translatable="false">METERS</string>
     <string name="workouts_500" translatable="false">/500M</string>
+    <string name="workouts_ave_500" translatable="false">AVE /500M</string>
+    <string name="workouts_ave_one_km" translatable="false">/1KM AVE</string>
     <string name="workouts_clas" translatable="false">CALS</string>
     <string name="workouts_watts" translatable="false">WATTS</string>
+    <string name="workouts_ave_watts" translatable="false">AVE WATTS</string>
     <string name="workouts_cal_hr" translatable="false">CAL/HR</string>
     <string name="workouts_sm" translatable="false">S/M</string>
+    <string name="workouts_rpm" translatable="false">RPM</string>
+    <string name="workouts_level" translatable="false">LEVEL</string>
     <string name="workouts_info_delete">Delete</string>
     <string name="workouts_cancel">Cancel</string>
     <string name="workouts_ok">OK</string>

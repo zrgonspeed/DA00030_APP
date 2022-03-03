@@ -48,6 +48,25 @@ public class RowerDataBean1 extends LitePalSupport {
     private int splitOneKmTime;
     private int splitCal;
 
+    private int deviceType = 0;
+    private int categoryType = 0;
+
+    public int getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(int deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public int getCategoryType() {
+        return categoryType;
+    }
+
+    public void setCategoryType(int categoryType) {
+        this.categoryType = categoryType;
+    }
+
     public int getInstSpeed() {
         return instSpeed;
     }
@@ -381,6 +400,9 @@ public class RowerDataBean1 extends LitePalSupport {
                 ", aveOneKmTime==" + aveOneKmTime +
                 ", splitOneKmTime==" + splitOneKmTime +
                 ", splitCal==" + splitCal +
+
+                ", deviceType==" + deviceType +
+                ", categoryType==" + categoryType +
 
                 ", ave_watts=" + ave_watts +
                 ", calories_hr=" + calories_hr +

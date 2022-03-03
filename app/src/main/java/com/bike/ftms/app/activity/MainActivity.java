@@ -282,7 +282,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         // }
         runOnUiThread(() -> {
             onConnectStatus(BleManager.isConnect, BleManager.deviceType);
-            ConnectHintDialog.showConnectHintDialog(this, connectHintDialog);
+            if (connectHintDialog == null) {
+                connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog);
+            }
         });
     }
 
@@ -329,6 +331,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     }
 
     public void release() {
+        BleManager.getInstance().disableCharacterNotifiy();
         BleManager.getInstance().disConnectDevice();
         BleManager.getInstance().destroy();
     }
