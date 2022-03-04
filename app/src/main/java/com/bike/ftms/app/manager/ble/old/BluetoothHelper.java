@@ -1,4 +1,4 @@
-package com.bike.ftms.app.manager.ble;
+package com.bike.ftms.app.manager.ble.old;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

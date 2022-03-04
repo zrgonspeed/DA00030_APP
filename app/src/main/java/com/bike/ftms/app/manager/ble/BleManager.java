@@ -494,22 +494,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 禁用特征值通知
      */
     public void disableCharacterNotifiy() {
-        Logger.e("disableCharacterNotifiy()");
-        if (mBluetoothGattServices == null || mBluetoothGatt == null) {
-            return;
-        }
-        for (BluetoothGattService service : mBluetoothGattServices) {
-            for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
-                if (characteristic.getUuid().toString().contains("ffe0") ||
-                        characteristic.getUuid().toString().contains("2ada") ||
-                        characteristic.getUuid().toString().contains("2ad1") ||
-                        characteristic.getUuid().toString().contains("2ad2") ||
-                        characteristic.getUuid().toString().contains("2ad3")
-                ) {
-                    mBluetoothGatt.setCharacteristicNotification(characteristic, false);
-                }
-            }
-        }
+        UuidHelp.disableCharacterNotifiy(mBluetoothGatt, mBluetoothGattServices);
     }
 
     /**
@@ -740,9 +725,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         Logger.e("c = " + c.getUuid());
                     }
                 }
-                enableCharact(list, "2ad3");
-                enableCharact(list, "ffe0");
-                enableCharact(list, "2ada");
+                UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad3");
+                UuidHelp.enableCharacteristic(mBluetoothGatt, list, "ffe0");
+                UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ada");
                 registrationGattCharacteristic();//注册通知
             } else {
                 Logger.e("onServicesDiscovered received: " + status);
@@ -815,20 +800,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
             Logger.i("onMtuChanged");
         }
     };
-
-    private void enableCharact(List<BluetoothGattCharacteristic> list, String s) {
-        for (BluetoothGattCharacteristic gattCharacteristic : list) {
-            if (gattCharacteristic.getUuid().toString().contains(s)) {
-                List<BluetoothGattDescriptor> bluetoothGattDescriptors = gattCharacteristic.getDescriptors();
-                for (BluetoothGattDescriptor bluetoothGattDescriptor : bluetoothGattDescriptors) {
-                    boolean r = bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                    mBluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
-                    Logger.d("" + gattCharacteristic.getUuid().toString() + ",bluetoothGattDescriptor " + r);
-                }
-            }
-        }
-
-    }
 
     /**
      * 心率设备连接回调
@@ -1064,7 +1035,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                             Logger.i("ffe9 " + ",设置为发送::");
                         }
                     }
-                    setCharacterNotification(mBluetoothGatt.getService(UUID.fromString(uuidSendData)).getCharacteristics(), "ffe0");
+                    UuidHelp.setCharacterNotification(mBluetoothGatt, mBluetoothGatt.getService(UUID.fromString(uuidSendData)).getCharacteristics(), "ffe0");
                 }
                 mHandler.postDelayed(() -> {
                     if (!isSendVerifyData) {
@@ -1078,23 +1049,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
             }
 
             if (gattService != null) {
-                setCharacterNotification(gattService.getCharacteristics(), "2ad3");
-                setCharacterNotification(gattService.getCharacteristics(), "2ada");
-                setCharacterNotification(gattService.getCharacteristics(), "2a37");
-                setCharacterNotification(gattService.getCharacteristics(), "2a38");
+                List<BluetoothGattCharacteristic> list = gattService.getCharacteristics();
+                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad3");
+                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ada");
+                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2a37");
+                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2a38");
             }
 
         }
-    }
-
-    private void setCharacterNotification(List<BluetoothGattCharacteristic> list, String s) {
-        for (BluetoothGattCharacteristic gattCharacteristic : list) {
-            if (gattCharacteristic.getUuid().toString().contains(s)) {//接收通道
-                boolean enabled = mBluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-                Logger.i(s + ",注册通知::" + enabled);
-            }
-        }
-
     }
 
     /**
@@ -1126,28 +1088,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         isCanning = false;
         resetDeviceType();
         isHrConnect = false;
-
-
         reset();
-//        if (mBluetoothHrGatt != null) {
-//            mBluetoothHrGatt.disconnect();
-//        }
-//
-//        if (mBluetoothGatt != null) {
-//            mBluetoothGatt.close();
-//            mBluetoothGatt = null;
-//        }
-//        if (mBluetoothHrGatt != null) {
-//            mBluetoothHrGatt.close();
-//            mBluetoothHrGatt = null;
-//        }
-//        if (connectHrScanResult != null) {
-//            connectHrScanResult = null;
-//        }
-//        if (connectScanResult != null) {
-//            connectScanResult = null;
-//        }
-
     }
 
     /**
@@ -1566,14 +1507,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * @param data
      */
     private void sendRespondData(byte[] data) {
-//        byte[] bytes = new byte[data.length + 1];
-//        bytes[0] = (byte) SerialCommand.PACK_FRAME_HEADER;
-//        bytes[1] = (byte) 0x00;
-//        System.arraycopy(data, 1, bytes, 2, data.length - 4);
-//        byte[] respondByte = new byte[64];
-//        int len = SerialData.comPackage(bytes, respondByte, bytes.length - 3);
-//        sendDescriptorByte(respondByte, len);
-
         // 0xfe 0x00 0x41 0x02  0xb4 0x00 0xcf 0x26 0xff
         byte[] bytes = new byte[9];
         bytes[0] = (byte) SerialCommand.PACK_FRAME_HEADER;
@@ -1684,16 +1617,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 // 保存数据
                 saveRowDataBean1();
             }
-
-//            if (data[1] == STATUS_IDLE && runStatus != RUN_STATUS_STOP) {//停止运动
-//                rowerDataBean.save();
-//                rowerDataBean = new RowerDataBean();
-//            }
-//            runStatus = data[1];
-
             return;
         }
 
+        // 单独显示电子表的心跳
         if (onlyHr) {
             if (!isHrConnect) {
                 rowerDataBean1.setHeart_rate(RowerDataParam.HEART_RATE_INX == -1 ? 0 : resolveData(data, RowerDataParam.HEART_RATE_INX, RowerDataParam.HEART_RATE_LEN));
@@ -1911,10 +1838,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
     }
 
-    private short offset;
-    private int rawPackageLen;
-    private byte[] ResultBuf = new byte[SerialCommand.RECEIVE_PACK_LEN_MAX];
-
     private void setRunData_FFE0(byte[] data) {
         if (data.length < 6) {
             // 数据太少不管它
@@ -1926,213 +1849,210 @@ public class BleManager implements CustomTimer.TimerCallBack {
         // ffe0   0xfe 0x40 0x01 0x4a 0x11 0x01 0xdd 0x05 0xff                  机型1个字节
         // ffe0   0xfe 0x40 0x01 0x4a 0x11 0x01 0x00 0xdd 0x05 0xff             机型2个字节
         if (data.length > 8 && data[1] == 0x40 && data[2] == 0x01) {
-            String[] dates = BasisTimesUtils.getCurDate().split("-");
-            byte[] date = new byte[3];
-            date[0] = (byte) Integer.parseInt(dates[0], 16);
-            date[1] = (byte) Integer.parseInt(dates[1], 16);
-            date[2] = (byte) Integer.parseInt(dates[2], 16);
-            byte[] calCRCBytes = ConvertData.shortToBytes(SerialData.calCRCByTable(ConvertData.subBytes(date, 0, date.length), date.length));
-            Logger.i("calCRCBytes[0] == " + ConvertData.toHexString(calCRCBytes[0]) + " calCRCBytes[1] == " + ConvertData.toHexString(calCRCBytes[1]));
-            if (calCRCBytes[0] == data[3] && calCRCBytes[1] == data[4]) {
-                isToExamine = true;
-                isVerifyConnectTimer.closeTimer();
-            }
-
-            if (!isToExamine) {
-                return;
-            }
-
+            // 日期和机型校验
             {
+                String[] dates = BasisTimesUtils.getCurDate().split("-");
+                byte[] date = new byte[3];
+                date[0] = (byte) Integer.parseInt(dates[0], 16);
+                date[1] = (byte) Integer.parseInt(dates[1], 16);
+                date[2] = (byte) Integer.parseInt(dates[2], 16);
+                byte[] calCRCBytes = ConvertData.shortToBytes(SerialData.calCRCByTable(ConvertData.subBytes(date, 0, date.length), date.length));
+                Logger.i("calCRCBytes[0] == " + ConvertData.toHexString(calCRCBytes[0]) + " calCRCBytes[1] == " + ConvertData.toHexString(calCRCBytes[1]));
+
+                boolean dateOK = false;
+                boolean deviceTypeOK = false;
+                if (calCRCBytes[0] == data[3] && calCRCBytes[1] == data[4]) {
+                    dateOK = true;
+                    isVerifyConnectTimer.closeTimer();
+                }
+
+                if (!dateOK) {
+                    Logger.i("日期校验错误");
+                    return;
+                }
+
                 // 获取机型
-                {
-                    // int endFlagIndex = -1;
-                    // for (int i = 0; i < data.length; i++) {
-                    //     if (data[i] == -1) {
-                    //         endFlagIndex = i;
-                    //         break;
-                    //     }
-                    // }
-                    //
-                    // if (endFlagIndex == -1) {
-                    //     return;
-                    // }
-                    // if (endFlagIndex > 8) {
-                    //     // 2个字节机型   低位在前高位在后
-                    //     deviceType = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
-                    //     Logger.i("2个字节机型");
-                    // } else {
-                    //     // 1个字节机型
-                    //     deviceType = data[5];
-                    //     Logger.i("1个字节机型");
-                    // }
-
-                    if (data.length == 10) {
-                        boolean flag = false;
-                        for (byte b : data) {
-                            if (b == -3) {
-                                flag = true;
-                                break;
-                            }
-                        }
-                        if (flag) {
-                            // 包含0xfd
-                            // 1个字节机型
-                            deviceType = data[5];
-                            Logger.i("1个字节机型");
-                        } else {
-                            // 2个字节机型   低位在前高位在后
-                            deviceType = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
-                            Logger.i("2个字节机型");
-                        }
-                    } else {
-                        if (data.length == 9) {
-                            deviceType = data[5];
-                            Logger.i("1个字节机型");
-                        } else {
-                            deviceType = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
-                            Logger.i("2个字节机型");
-                        }
-                    }
-
-
-                    categoryType = MyConstant.getCategory(deviceType);
+                int tempDeviceType = initDeviceType(data);
+                if (tempDeviceType > 0 && tempDeviceType < MyConstant.deviceNames.length) {
+                    // 机型适配
+                    deviceTypeOK = true;
                 }
 
-                // 注册特征值
-                {
-                    // 指定一个service
-                    BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(uuid));
-                    // 获取这个service下的所有character
-                    List<BluetoothGattCharacteristic> list = new ArrayList<>();
-                    if (localGattService != null) {
-                        list = localGattService.getCharacteristics();
-                    }
-
-                    // 注册不同机型需要的特征值
-                    switch (deviceType) {
-                        case MyConstant.DEVICE_AA02020R: {
-                            // 2ad1  桨手数据
-                            enableCharact(list, "2ad1");
-                            setCharacterNotification(list, "2ad1");
-                        }
-                        break;
-
-                        case MyConstant.DEVICE_AA01990: {
-                            // 2ad1  桨手数据
-                            enableCharact(list, "2ad1");
-                            setCharacterNotification(list, "2ad1");
-                        }
-                        break;
-
-                        case MyConstant.DEVICE_AA02020_00F_01: {
-                            // 2ad2  室内自行车
-                            enableCharact(list, "2ad2");
-                            setCharacterNotification(list, "2ad2");
-                        }
-                        break;
-
-                        case MyConstant.DEVICE_AA02020_00F_02: {
-
-                        }
-                        break;
-
-                    }
-
+                if (!deviceTypeOK) {
+                    Logger.i("机型校验错误");
+                    return;
                 }
+
+                isToExamine = true;
+                deviceType = tempDeviceType;
+                categoryType = MyConstant.getCategory(deviceType);
 
                 SpManager.setTreadmill_flag(deviceType);
                 Logger.i("当前机型: " + deviceType);
-                onRunDataListener.connected();
             }
+
+            // 注册特征值
+            {
+                // 指定一个service
+                BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(uuid));
+                // 获取这个service下的所有character
+                List<BluetoothGattCharacteristic> list = new ArrayList<>();
+                if (localGattService != null) {
+                    list = localGattService.getCharacteristics();
+                }
+
+                // 注册不同机型需要的特征值
+                switch (deviceType) {
+                    case MyConstant.DEVICE_AA02020R: {
+                        // 2ad1  桨手数据
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad1");
+                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad1");
+                    }
+                    break;
+
+                    case MyConstant.DEVICE_AA01990: {
+                        // 2ad1  桨手数据
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad1");
+                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad1");
+                    }
+                    break;
+
+                    case MyConstant.DEVICE_AA02020_00F_01: {
+                        // 2ad2  室内自行车
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad2");
+                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad2");
+                    }
+                    break;
+
+                    case MyConstant.DEVICE_AA02020_00F_02: {
+
+                    }
+                    break;
+
+                }
+
+            }
+
+            onRunDataListener.connected();
             return;
         }
 
         // 运动数据
         if (data[1] == 0x41 && data[2] == 0x02 && isToExamine) {
-            sendRespondData(data);
+            {
+                sendRespondData(data);
+                if (runStatus == RUN_STATUS_RUNNING) {
+                    rowerDataBean1.setDrag(resolveData(data, RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
+                    rowerDataBean1.setInterval(resolveData(data, RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
 
-/*            if (runStatus == RUN_STATUS_STOP || rowerDataBean1.getCanSave()) {
-//                saveRowDataBean1();
-            }*/
+                    int runMode = rowerDataBean1.getRunMode();
 
-            if (runStatus == RUN_STATUS_RUNNING) {
-                rowerDataBean1.setDrag(resolveData(data, RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
-                rowerDataBean1.setInterval(resolveData(data, RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
+                    switch (BleManager.categoryType) {
+                        case MyConstant.CATEGORY_BOAT: {
+                            // 时间4字节
+                            if (BleManager.deviceType == MyConstant.DEVICE_AA01990) {
+                                rowerDataBean1.setReset_time(resolveData(data, 17, 2));
 
-                int runMode = rowerDataBean1.getRunMode();
+                                if (runMode == MyConstant.CUSTOM_INTERVAL_TIME) {
+                                    rowerDataBean1.setTime(resolveData(data, 19, 4));
+                                }
 
-                switch (BleManager.categoryType) {
-                    case MyConstant.CATEGORY_BOAT: {
-                        // 时间4字节
-                        if (BleManager.deviceType == MyConstant.DEVICE_AA01990) {
-                            rowerDataBean1.setReset_time(resolveData(data, 17, 2));
+                                if (MyConstant.isCustomIntervalMode(runMode)) {
+                                    // 自定义间歇模式
+                                    switch (runMode) {
+                                        case MyConstant.CUSTOM_INTERVAL_TIME:
+                                            rowerDataBean1.setSetIntervalTime(resolveData(data, 7, 4));
 
-                            if (runMode == MyConstant.CUSTOM_INTERVAL_TIME) {
-                                rowerDataBean1.setTime(resolveData(data, 19, 4));
-                            }
-
-                            if (MyConstant.isCustomIntervalMode(runMode)) {
-                                // 自定义间歇模式
-                                switch (runMode) {
-                                    case MyConstant.CUSTOM_INTERVAL_TIME:
-                                        rowerDataBean1.setSetIntervalTime(resolveData(data, 7, 4));
-
-                                        break;
-                                    case MyConstant.CUSTOM_INTERVAL_DISTANCE:
-                                        rowerDataBean1.setSetIntervalDistance(resolveData(data, 11, 4));
-                                        break;
-                                    case MyConstant.CUSTOM_INTERVAL_CALORIES:
-                                        rowerDataBean1.setSetIntervalCalorie(resolveData(data, 15, 2));
-                                        break;
+                                            break;
+                                        case MyConstant.CUSTOM_INTERVAL_DISTANCE:
+                                            rowerDataBean1.setSetIntervalDistance(resolveData(data, 11, 4));
+                                            break;
+                                        case MyConstant.CUSTOM_INTERVAL_CALORIES:
+                                            rowerDataBean1.setSetIntervalCalorie(resolveData(data, 15, 2));
+                                            break;
+                                    }
                                 }
                             }
                         }
-                    }
-                    break;
-                    case MyConstant.CATEGORY_BIKE: {
-                        rowerDataBean1.setOneKmTime(resolveData(data, RowerDataParam.ONE_KM_TIME_INX, RowerDataParam.ONE_KM_TIME_LEN));
-                        rowerDataBean1.setAveOneKmTime(resolveData(data, RowerDataParam.AVERAGE_ONE_KM_TIME_INX, RowerDataParam.AVERAGE_ONE_KM_TIME_LEN));
-                        rowerDataBean1.setSplitOneKmTime(resolveData(data, RowerDataParam.SPLIT_ONE_KM_TIME_INX, RowerDataParam.SPLIT_ONE_KM_TIME_LEN));
-                        rowerDataBean1.setSplitCal(resolveData(data, RowerDataParam.SPLIT_CAL_INX, RowerDataParam.SPLIT_CAL_LEN));
-                    }
-                    break;
-                }
-
-
-                if (MyConstant.isIntervalMode(runMode) || MyConstant.isCustomIntervalMode(runMode)) {
-                    // 跳段时保存
-                    if (rowerDataBean1.getInterval() <= tempInterval1) {
-                        rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
-                    } else {
-                        if (tempInterval1 >= 1) {
-                            tempSave(rowerDataBean2);
-                            Logger.e("间歇运动 " + rowerDataBean2.getInterval() + "   bean2.save " + rowerDataBean2);
+                        break;
+                        case MyConstant.CATEGORY_BIKE: {
+                            rowerDataBean1.setOneKmTime(resolveData(data, RowerDataParam.ONE_KM_TIME_INX, RowerDataParam.ONE_KM_TIME_LEN));
+                            rowerDataBean1.setAveOneKmTime(resolveData(data, RowerDataParam.AVERAGE_ONE_KM_TIME_INX, RowerDataParam.AVERAGE_ONE_KM_TIME_LEN));
+                            rowerDataBean1.setSplitOneKmTime(resolveData(data, RowerDataParam.SPLIT_ONE_KM_TIME_INX, RowerDataParam.SPLIT_ONE_KM_TIME_LEN));
+                            rowerDataBean1.setSplitCal(resolveData(data, RowerDataParam.SPLIT_CAL_INX, RowerDataParam.SPLIT_CAL_LEN));
                         }
+                        break;
                     }
-                    tempInterval1 = rowerDataBean1.getInterval();
-                } else if (MyConstant.isGoalMode(runMode)) {
-                    // 跳段时保存
-                    if (rowerDataBean1.getRunInterval() <= tempInterval2) {
-                        rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
-                    } else {
-                        // 防止跳段时保存错误 12345 -> 23455
-                        int runIntervalXXX = rowerDataBean2.getRunInterval();
-                        rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
-                        rowerDataBean2.setRunInterval(runIntervalXXX);
 
-                        tempSave(rowerDataBean2);
-                        Logger.e("目标运动 " + rowerDataBean2.getRunInterval() + "    bean2.save " + rowerDataBean2);
+
+                    if (MyConstant.isIntervalMode(runMode) || MyConstant.isCustomIntervalMode(runMode)) {
+                        // 跳段时保存
+                        if (rowerDataBean1.getInterval() <= tempInterval1) {
+                            rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
+                        } else {
+                            if (tempInterval1 >= 1) {
+                                tempSave(rowerDataBean2);
+                                Logger.e("间歇运动 " + rowerDataBean2.getInterval() + "   bean2.save " + rowerDataBean2);
+                            }
+                        }
+                        tempInterval1 = rowerDataBean1.getInterval();
+                    } else if (MyConstant.isGoalMode(runMode)) {
+                        // 跳段时保存
+                        if (rowerDataBean1.getRunInterval() <= tempInterval2) {
+                            rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
+                        } else {
+                            // 防止跳段时保存错误 12345 -> 23455
+                            int runIntervalXXX = rowerDataBean2.getRunInterval();
+                            rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
+                            rowerDataBean2.setRunInterval(runIntervalXXX);
+
+                            tempSave(rowerDataBean2);
+                            Logger.e("目标运动 " + rowerDataBean2.getRunInterval() + "    bean2.save " + rowerDataBean2);
+                        }
+                        tempInterval2 = rowerDataBean1.getRunInterval();
                     }
-                    tempInterval2 = rowerDataBean1.getRunInterval();
                 }
-            }
 
-            if (onRunDataListener != null) {
-                onRunDataListener.onRunData(rowerDataBean1);
+                if (onRunDataListener != null) {
+                    onRunDataListener.onRunData(rowerDataBean1);
+                }
             }
         }
+
     }
 
+    private static int initDeviceType(byte[] data) {
+        int temp = -1;
+        if (data.length == 10) {
+            boolean flag = false;
+            for (byte b : data) {
+                if (b == -3) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag) {
+                // 包含0xfd
+                // 1个字节机型
+                temp = data[5];
+                Logger.i("1个字节机型");
+            } else {
+                // 2个字节机型   低位在前高位在后
+                temp = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
+                Logger.i("2个字节机型");
+            }
+        } else {
+            if (data.length == 9) {
+                temp = data[5];
+                Logger.i("1个字节机型");
+            } else {
+                temp = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
+                Logger.i("2个字节机型");
+            }
+        }
+
+        return temp;
+    }
 
     private void saveRowDataBean1() {
         // TODO: 2021/11/12 应该判断是否符合保存  如 运动不足5秒，等
