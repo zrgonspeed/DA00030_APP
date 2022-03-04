@@ -49,10 +49,10 @@ public class MyConstant {
     }
 
     private static final int[] boat_arr = {
-            DEVICE_AA02020R, DEVICE_AA01990, DEVICE_AA02020_00F_02
+            DEVICE_AA02020R, DEVICE_AA01990
     };
     private static final int[] bike_arr = {
-            DEVICE_AA02020_00F_01
+            DEVICE_AA02020_00F_01, DEVICE_AA02020_00F_02
     };
     private static final int[] ski_arr = {
     };
