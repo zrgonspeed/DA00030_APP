@@ -385,4 +385,23 @@ public class DataTypeConversion {
             return s;
         }
     }
+
+    /**
+     * 获取data 数据中第offSet 长度为len  的结果
+     */
+    public static int resolveData(byte[] data, int offSet, int len) {
+        int result;
+        if (len == 4) {
+            result = DataTypeConversion.bytesToIntLitter(data, offSet);
+        } else if (len == 3) {
+            result = DataTypeConversion.Byte2Int(data, offSet);
+        } else if (len == 2) {
+            result = DataTypeConversion.doubleBytesToIntLiterEnd(data, offSet);
+        } else if (len == 1) {
+            result = DataTypeConversion.byteToInt(data[offSet]);
+        } else {
+            result = 0;
+        }
+        return result;
+    }
 }

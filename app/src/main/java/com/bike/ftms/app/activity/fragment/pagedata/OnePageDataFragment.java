@@ -261,27 +261,29 @@ public class OnePageDataFragment extends BasePageDataFragment {
         }
 
         // 机型通用参数
-        tv_home_watt.setText(String.valueOf(rowerDataBean1.getWatts()));
-        tv_home_cal.setText(String.valueOf(rowerDataBean1.getCalorie()));
-        tv_home_ave_watt.setText(String.valueOf(rowerDataBean1.getAve_watts()));
-        tv_home_cal_hr.setText(String.valueOf(rowerDataBean1.getCalories_hr()));
-        tv_drag.setText(String.valueOf(rowerDataBean1.getDrag()));
-        tv_heart_rate.setText(String.valueOf(rowerDataBean1.getHeart_rate()));
+        {
+            tv_home_watt.setText(String.valueOf(rowerDataBean1.getWatts()));
+            tv_home_cal.setText(String.valueOf(rowerDataBean1.getCalorie()));
+            tv_home_ave_watt.setText(String.valueOf(rowerDataBean1.getAve_watts()));
+            tv_home_cal_hr.setText(String.valueOf(rowerDataBean1.getCalories_hr()));
+            tv_drag.setText(String.valueOf(rowerDataBean1.getDrag()));
+            tv_heart_rate.setText(String.valueOf(rowerDataBean1.getHeart_rate()));
 
-        // boat
-        tv_home_500.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getFive_hundred()));
-        tv_home_ave_500.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAve_five_hundred()));
-        tv_home_sm.setText(String.valueOf(rowerDataBean1.getSm()));
-        tv_home_strokes.setText(String.valueOf(rowerDataBean1.getStrokes()));
-        tv_home_strokes_unit.setText(getResources().getString(R.string.home_strokes));
+            // boat
+            tv_home_500.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getFive_hundred()));
+            tv_home_ave_500.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAve_five_hundred()));
+            tv_home_sm.setText(String.valueOf(rowerDataBean1.getSm()));
+            tv_home_strokes.setText(String.valueOf(rowerDataBean1.getStrokes()));
+            tv_home_strokes_unit.setText(getResources().getString(R.string.home_strokes));
 
-        // bike
-        tv_home_one_km.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getOneKmTime()));
-        tv_home_ave_one_km.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAveOneKmTime()));
-        tv_home_30min_km.setText(df.format(rowerDataBean1.getInstSpeed() / 100.0f));
-        tv_home_rpm.setText(String.valueOf(rowerDataBean1.getInstRpm()));
-        tv_home_level.setText(String.valueOf(rowerDataBean1.getLevel()));
-        tv_home_level_unit.setText(getResources().getString(R.string.home_level));
+            // bike
+            tv_home_one_km.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getOneKmTime()));
+            tv_home_ave_one_km.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAveOneKmTime()));
+            tv_home_30min_km.setText(df.format(rowerDataBean1.getInstSpeed() / 100.0f));
+            tv_home_rpm.setText(String.valueOf(rowerDataBean1.getInstRpm()));
+            tv_home_level.setText(String.valueOf(rowerDataBean1.getLevel()));
+            tv_home_level_unit.setText(getResources().getString(R.string.home_level));
+        }
     }
 
     // TODO: 2022/3/3
