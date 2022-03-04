@@ -144,6 +144,13 @@ public class RowerDataParam {
     public static int RUN_REST_TIME_INX = 15;
     public static int RUN_REST_TIME_LEN = 2;
 
+    // 间歇模式在运行中的时间 AA01990特有
+    public static int RUN_INTERVAL_TIME_INX = 17;
+    public static int RUN_INTERVAL_TIME_LEN = 4;
+
+    // 间歇模式在运行中的休息时间 AA01990特有
+    public static int RUN_INTERVAL_REST_TIME_INX = 17;
+    public static int RUN_INTERVAL_REST_TIME_LEN = 2;
 
     // bike
     public static int ONE_KM_TIME_INX = 19;

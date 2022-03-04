@@ -19,7 +19,8 @@ public class MyConstant {
     public static final int DEVICE_AA02020_00F_01 = 3;
     public static final int DEVICE_AA02020_00F_02 = 4;
 
-    @IntDef({DEVICE_AA02020R,
+    @IntDef({
+            DEVICE_AA02020R,
             DEVICE_AA01990,
             DEVICE_AA02020_00F_01,
             DEVICE_AA02020_00F_02
@@ -29,7 +30,7 @@ public class MyConstant {
     }
 
     public static final String[] deviceNames = {
-            "DEVICE_UNKNOW", "AA02020R", "AA01990", "AA02020-00F-01", "AA02020-00F-02"
+            "DEVICE_UNKNOW", "AA02020-00R-01", "AA01990", "AA02020-00F-01", "AA02020-00F-02"
     };
 
     // 大类机型 ---------------------------------------------------------------------------------
@@ -130,6 +131,10 @@ public class MyConstant {
 
     public static boolean isIntervalMode(int mode) {
         return mode == INTERVAL_TIME || mode == INTERVAL_DISTANCE || mode == INTERVAL_CALORIES;
+    }
+
+    public static boolean isCustomIntervalMode(int mode) {
+        return mode == CUSTOM_INTERVAL_TIME || mode == CUSTOM_INTERVAL_DISTANCE || mode == CUSTOM_INTERVAL_CALORIES;
     }
 
     /********************** 运动状态 ************************/

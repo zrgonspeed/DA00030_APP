@@ -552,10 +552,10 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
         if (bean.getRunMode() != MyConstant.NORMAL) {
             // 计算分段平均
             for (RowerDataBean2 bean2 : list) {
-                bb.setWatts(bean2.getWatts() + bb.getWatts());
+                bb.setAve_watts(bean2.getAve_watts() + bb.getAve_watts());
                 bb.setCalories_hr(bean2.getCalories_hr() + bb.getCalories_hr());
             }
-            bb.setWatts(Math.round(bb.getWatts() * 1.0f / list.size()));
+            bb.setAve_watts(Math.round(bb.getAve_watts() * 1.0f / list.size()));
             bb.setCalories_hr(Math.round(bb.getCalories_hr() * 1.0f / list.size()));
         }
 

@@ -1784,11 +1784,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
         rowerDataBean1.setWatts(RowerDataParam.INSTANTANEOUS_POWER_INX == -1 ? 0 : resolveData(data, RowerDataParam.INSTANTANEOUS_POWER_INX, RowerDataParam.INSTANTANEOUS_POWER_LEN));
         rowerDataBean1.setAve_watts(RowerDataParam.AVERAGE_POWER_INX == -1 ? 0 : resolveData(data, RowerDataParam.AVERAGE_POWER_INX, RowerDataParam.AVERAGE_POWER_LEN));
         rowerDataBean1.setAve_five_hundred(RowerDataParam.AVERAGE_PACE_INX == -1 ? 0 : resolveData(data, RowerDataParam.AVERAGE_PACE_INX, RowerDataParam.AVERAGE_PACE_LEN));
-        if (RowerDataParam.REMAINING_TIME_INX == -1 || resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN) == 0) {
-            rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
-        } else {
-            rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
+
+        if (rowerDataBean1.getRunMode() != MyConstant.CUSTOM_INTERVAL_TIME) {
+            if (RowerDataParam.REMAINING_TIME_INX == -1 || resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN) == 0) {
+                rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
+            } else {
+                rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
+            }
         }
+
         // 只精确到秒，毫秒域为 000
         rowerDataBean1.setDate(System.currentTimeMillis() / 1000 * 1000);
         if (onRunDataListener != null) {
@@ -1814,15 +1818,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 if (rowerDataBean1.getDistance() >= 10) {
                     canSave = true;
                 }
-            } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME) {
+            } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME || rowerDataBean1.getRunMode() == MyConstant.CUSTOM_INTERVAL_TIME) {
                 if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getDistance() >= 10) {
                     canSave = true;
                 }
-            } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
+            } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE || rowerDataBean1.getRunMode() == MyConstant.CUSTOM_INTERVAL_DISTANCE) {
                 if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getTime() >= 5) {
                     canSave = true;
                 }
-            } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_CALORIES) {
+            } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_CALORIES || rowerDataBean1.getRunMode() == MyConstant.CUSTOM_INTERVAL_CALORIES) {
                 if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getTime() >= 5) {
                     canSave = true;
                 }
@@ -1907,6 +1911,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
     }
 
+    private short offset;
+    private int rawPackageLen;
+    private byte[] ResultBuf = new byte[SerialCommand.RECEIVE_PACK_LEN_MAX];
+
     private void setRunData_FFE0(byte[] data) {
         if (data.length < 6) {
             // 数据太少不管它
@@ -1937,26 +1945,55 @@ public class BleManager implements CustomTimer.TimerCallBack {
             {
                 // 获取机型
                 {
-                    int endFlagIndex = -1;
-                    for (int i = 0; i < data.length; i++) {
-                        if (data[i] == -1) {
-                            endFlagIndex = i;
-                            break;
+                    // int endFlagIndex = -1;
+                    // for (int i = 0; i < data.length; i++) {
+                    //     if (data[i] == -1) {
+                    //         endFlagIndex = i;
+                    //         break;
+                    //     }
+                    // }
+                    //
+                    // if (endFlagIndex == -1) {
+                    //     return;
+                    // }
+                    // if (endFlagIndex > 8) {
+                    //     // 2个字节机型   低位在前高位在后
+                    //     deviceType = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
+                    //     Logger.i("2个字节机型");
+                    // } else {
+                    //     // 1个字节机型
+                    //     deviceType = data[5];
+                    //     Logger.i("1个字节机型");
+                    // }
+
+                    if (data.length == 10) {
+                        boolean flag = false;
+                        for (byte b : data) {
+                            if (b == -3) {
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            // 包含0xfd
+                            // 1个字节机型
+                            deviceType = data[5];
+                            Logger.i("1个字节机型");
+                        } else {
+                            // 2个字节机型   低位在前高位在后
+                            deviceType = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
+                            Logger.i("2个字节机型");
+                        }
+                    } else {
+                        if (data.length == 9) {
+                            deviceType = data[5];
+                            Logger.i("1个字节机型");
+                        } else {
+                            deviceType = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
+                            Logger.i("2个字节机型");
                         }
                     }
 
-                    if (endFlagIndex == -1) {
-                        return;
-                    }
-                    if (endFlagIndex > 8) {
-                        // 2个字节机型   低位在前高位在后
-                        deviceType = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
-                        Logger.i("2个字节机型");
-                    } else {
-                        // 1个字节机型
-                        deviceType = data[5];
-                        Logger.i("1个字节机型");
-                    }
 
                     categoryType = MyConstant.getCategory(deviceType);
                 }
@@ -1981,7 +2018,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         break;
 
                         case MyConstant.DEVICE_AA01990: {
-
+                            // 2ad1  桨手数据
+                            enableCharact(list, "2ad1");
+                            setCharacterNotification(list, "2ad1");
                         }
                         break;
 
@@ -2020,7 +2059,36 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 rowerDataBean1.setDrag(resolveData(data, RowerDataParam.DRAG_INX, RowerDataParam.DRAG_LEN));
                 rowerDataBean1.setInterval(resolveData(data, RowerDataParam.INTERVAL_INX, RowerDataParam.INTERVAL_LEN));
 
+                int runMode = rowerDataBean1.getRunMode();
+
                 switch (BleManager.categoryType) {
+                    case MyConstant.CATEGORY_BOAT: {
+                        // 时间4字节
+                        if (BleManager.deviceType == MyConstant.DEVICE_AA01990) {
+                            rowerDataBean1.setReset_time(resolveData(data, 17, 2));
+
+                            if (runMode == MyConstant.CUSTOM_INTERVAL_TIME) {
+                                rowerDataBean1.setTime(resolveData(data, 19, 4));
+                            }
+
+                            if (MyConstant.isCustomIntervalMode(runMode)) {
+                                // 自定义间歇模式
+                                switch (runMode) {
+                                    case MyConstant.CUSTOM_INTERVAL_TIME:
+                                        rowerDataBean1.setSetIntervalTime(resolveData(data, 7, 4));
+
+                                        break;
+                                    case MyConstant.CUSTOM_INTERVAL_DISTANCE:
+                                        rowerDataBean1.setSetIntervalDistance(resolveData(data, 11, 4));
+                                        break;
+                                    case MyConstant.CUSTOM_INTERVAL_CALORIES:
+                                        rowerDataBean1.setSetIntervalCalorie(resolveData(data, 15, 2));
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    break;
                     case MyConstant.CATEGORY_BIKE: {
                         rowerDataBean1.setOneKmTime(resolveData(data, RowerDataParam.ONE_KM_TIME_INX, RowerDataParam.ONE_KM_TIME_LEN));
                         rowerDataBean1.setAveOneKmTime(resolveData(data, RowerDataParam.AVERAGE_ONE_KM_TIME_INX, RowerDataParam.AVERAGE_ONE_KM_TIME_LEN));
@@ -2030,7 +2098,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     break;
                 }
 
-                if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
+
+                if (MyConstant.isIntervalMode(runMode) || MyConstant.isCustomIntervalMode(runMode)) {
                     // 跳段时保存
                     if (rowerDataBean1.getInterval() <= tempInterval1) {
                         rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
@@ -2041,7 +2110,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
                         }
                     }
                     tempInterval1 = rowerDataBean1.getInterval();
-                } else if (MyConstant.isGoalMode(rowerDataBean1.getRunMode())) {
+                } else if (MyConstant.isGoalMode(runMode)) {
                     // 跳段时保存
                     if (rowerDataBean1.getRunInterval() <= tempInterval2) {
                         rowerDataBean2 = new RowerDataBean2(rowerDataBean1);
@@ -2073,15 +2142,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
             if (rowerDataBean1.getDistance() >= 10) {
                 canSave = true;
             }
-        } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME) {
+        } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME || rowerDataBean1.getRunMode() == MyConstant.CUSTOM_INTERVAL_TIME) {
             if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getDistance() >= 10) {
                 canSave = true;
             }
-        } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE) {
+        } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE || rowerDataBean1.getRunMode() == MyConstant.CUSTOM_INTERVAL_DISTANCE) {
             if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getTime() >= 5) {
                 canSave = true;
             }
-        } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_CALORIES) {
+        } else if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_CALORIES || rowerDataBean1.getRunMode() == MyConstant.CUSTOM_INTERVAL_CALORIES) {
             if (rowerDataBean1.getInterval() > 0 || rowerDataBean1.getTime() >= 5) {
                 canSave = true;
             }

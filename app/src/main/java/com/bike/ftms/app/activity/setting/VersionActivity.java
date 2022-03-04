@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.manager.VersionManager;
+import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.storage.SpManager;
 
 import butterknife.BindView;
@@ -38,7 +39,7 @@ public class VersionActivity extends BaseActivity {
     @Override
     protected void initData() {
         tv_version_apk_value.setText(VersionManager.getAppVersionName(this));
-        tv_version_dzb_value.setText(SpManager.getTreadmill_flag() + "");
+        tv_version_dzb_value.setText(BleManager.deviceType + "");
     }
 
     @Override
