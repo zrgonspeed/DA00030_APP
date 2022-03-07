@@ -130,7 +130,7 @@ public class RowerDataBean1 extends LitePalSupport {
     private int runStatus = MyConstant.RUN_STATUS_NO;
     @MyConstant.IntervalStatus
     private int intervalStatus = MyConstant.INTERVAL_STATUS_REST;
-    private int runInterval = 0;        // 各个模式的分段次数  0-255
+    private int runInterval = 0;        // 电子表实际分段 各个模式的分段次数  0-255
     private List<RowerDataBean2> list = new ArrayList<>();
 
     public RowerDataBean1() {

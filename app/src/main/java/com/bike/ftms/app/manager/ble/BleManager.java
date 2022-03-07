@@ -91,8 +91,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
         return runStatus;
     }
 
-    public static int deviceType = -1;
-    public static int categoryType = -1;
+    public static int deviceType = -1;  // 电子表机型
+    public static int categoryType = -1;    // 电子表分类
 
     public static boolean isConnect;  //是否连接
     public static boolean isHrConnect;//是否连接蓝牙腰带
@@ -133,7 +133,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     public boolean setBleDataInx = false;
     private boolean isToExamine = false;
     private boolean isSendVerifyData = false;
-    private boolean onlyHr = false;
+    private boolean onlyShowDzbHr = false;
 
     private CustomTimer isVerifyConnectTimer;
     private final String isVerifyConnectTag = "isVerifyConnect";
@@ -770,7 +770,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
             String uuid = characteristic.getUuid().toString().substring(0, 8);
             Logger.i(uuid + ",::" + ConvertData.byteArrayToHexString(data, data.length));
-            Logger.i(Arrays.toString(data));
+            Logger.d(Arrays.toString(data));
 
             rxDataPackage(data, characteristic.getUuid().toString());
         }
@@ -1379,7 +1379,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         }
 
         // 单独显示电子表的心跳
-        if (onlyHr) {
+        if (onlyShowDzbHr) {
             if (!isHrConnect) {
                 rowerDataBean1.setHeart_rate(RowerDataParam.HEART_RATE_INX == -1 ? 0 : resolveData(data, RowerDataParam.HEART_RATE_INX, RowerDataParam.HEART_RATE_LEN));
                 if (onRunDataListener != null) {
@@ -1420,9 +1420,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private void setRunData_2ADA(byte[] data) {
         // 单独显示心跳
         if (data[3] == 0 && data[4] == 1) {
-            onlyHr = true;
+            onlyShowDzbHr = true;
         } else {
-            onlyHr = false;
+            onlyShowDzbHr = false;
         }
 
         Logger.d("---↑------------------------2ada----------------------↑------------------");
@@ -1615,7 +1615,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     break;
 
                     case MyConstant.DEVICE_AA02020_00F_02: {
-
+                        // 2ad2  室内自行车
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad2");
+                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad2");
                     }
                     break;
 
@@ -1652,7 +1654,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
                                     switch (runMode) {
                                         case MyConstant.CUSTOM_INTERVAL_TIME:
                                             rowerDataBean1.setSetIntervalTime(resolveData(data, 7, 4));
-
                                             break;
                                         case MyConstant.CUSTOM_INTERVAL_DISTANCE:
                                             rowerDataBean1.setSetIntervalDistance(resolveData(data, 11, 4));

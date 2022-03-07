@@ -302,7 +302,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_info_title"
+                    android:id="@+id/tv_info_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -329,11 +329,11 @@
                     android:layout_height="@dimen/dp_40"
                     android:layout_centerInParent="true"
                     android:layout_marginEnd="50dp"
-                    android:layout_toLeftOf="@id/tv_title_time"
+                    android:layout_toLeftOf="@id/tv_info_mode"
                     android:src="@drawable/boat2" />
 
                 <TextView
-                    android:id="@+id/tv_title_time"
+                    android:id="@+id/tv_info_mode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

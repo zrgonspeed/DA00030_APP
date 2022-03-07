@@ -94,22 +94,11 @@ public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAda
                         holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetIntervalTime()));
                     }
 
-
                     holder.tv_info_meters.setText(bean.getDistance() + "M");
                     holder.tv_info_cals.setText(String.valueOf(bean.getCalorie()));
                     holder.tv_info_interval.setText(String.valueOf(bean.getInterval()));
                     break;
                 case MyConstant.INTERVAL_DISTANCE:
-//                if (position == rowerDataBean2List.size() - 1) {
-//                    if (bean.getSetIntervalDistance() == bean.getDistance()) {
-//                        holder.tvInfoMeters.setText(bean.getSetIntervalDistance() + "M");
-//                    } else {
-//                        holder.tvInfoMeters.setText(bean.getSetIntervalDistance() - bean.getDistance() + "M");
-//                    }
-//                } else {
-//                    holder.tvInfoMeters.setText(bean.getSetIntervalDistance() + "M");
-//                }
-
                     holder.tv_info_meters.setText(bean.getDistance() + "M");
 
                     holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));

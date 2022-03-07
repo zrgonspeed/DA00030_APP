@@ -1,4 +1,4 @@
-package com.bike.ftms.app.activity.fragment.workout;
+package com.bike.ftms.app.widget;
 
 import android.content.Context;
 import android.graphics.drawable.Animatable;

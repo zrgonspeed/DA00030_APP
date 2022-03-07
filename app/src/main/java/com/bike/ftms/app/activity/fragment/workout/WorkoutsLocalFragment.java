@@ -75,15 +75,14 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     @BindView(R.id.rl_online)
     RelativeLayout rl_online;
 
-    @BindView(R.id.tv_info_title)
-    TextView tv_info_title;
-    @BindView(R.id.edt_info_note)
-    EditText edt_info_note;
-    @BindView(R.id.tv_title_time)
-    TextView tv_title_time;
+    @BindView(R.id.tv_info_date)
+    TextView tv_info_date;
+    @BindView(R.id.tv_info_mode)
+    TextView tv_info_mode;
     @BindView(R.id.iv_info_device)
     ImageView iv_info_device;
-
+    @BindView(R.id.edt_info_note)
+    EditText edt_info_note;
     // 详细页面标题
     @BindView(R.id.tv_info_title_500)
     TextView tv_info_title_500;
@@ -215,7 +214,6 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     private void setEditView() {
         workoutsLocalAdapter.setShowDelete(isEdit);
         workoutsLocalAdapter.notifyDataSetChanged();
-
         if (isEdit) {
 //            tv_upload.setText(getString(R.string.workouts));
 //            tv_upload.setTextColor(getResources().getColor(R.color.color_black));
@@ -245,86 +243,8 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             // 从服务器获取详细运动数据，根据workout_id
             presenter.getRunDataInfoFromServer(bean);
         } else {
-            notifyInfoData();
+            setWorkouts2();
         }
-    }
-
-    private void setWorkouts1() {
-        Logger.e("rowerDataBean1List == " + rowerDataBean1List);
-        workoutsLocalAdapter = new WorkoutsLocalAdapter(rowerDataBean1List, vector);
-        rv_workouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        rv_workouts.setAdapter(workoutsLocalAdapter);
-        workoutsLocalAdapter.addItemClickListener(this);
-        workoutsLocalAdapter.addItemDeleteClickListener(this);
-        rl_delete.setOnTouchListener((v, event) -> true);
-        rl_online.setOnTouchListener((v, event) -> true);
-    }
-
-    /**
-     * 详细页面刷新
-     */
-    private void notifyInfoData() {
-        RowerDataBean1 bean = rowerDataBean1List.get(clickPosition);
-        List<RowerDataBean2> bean2List = presenter.setWorkouts2List(bean);
-
-        // 详细页面设置
-        {
-            workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(bean2List);
-            rv_workouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-            rv_workouts2.setAdapter(workoutsLocalAdapter2);
-            tv_info_title.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
-
-            iv_info_device.setImageDrawable(MyConstant.getCategoryImg(bean.getCategoryType()));
-
-            // 不同机型不同显示内容
-            switch (bean.getCategoryType()) {
-                case MyConstant.CATEGORY_BOAT: {
-                    tv_info_title_500.setVisibility(View.VISIBLE);
-                    tv_info_title_sm.setVisibility(View.VISIBLE);
-                    tv_info_title_ave_one_km.setVisibility(View.GONE);
-                    tv_info_title_level.setVisibility(View.GONE);
-                }
-                break;
-                case MyConstant.CATEGORY_BIKE: {
-                    tv_info_title_ave_one_km.setVisibility(View.VISIBLE);
-                    tv_info_title_level.setVisibility(View.VISIBLE);
-                    tv_info_title_500.setVisibility(View.GONE);
-                    tv_info_title_sm.setVisibility(View.GONE);
-                }
-                break;
-            }
-
-            switch (bean.getRunMode()) {
-                case MyConstant.NORMAL:
-                    tv_title_time.setText(bean.getDistance() + "M");
-                    break;
-                case MyConstant.GOAL_TIME:
-                    tv_title_time.setText(TimeStringUtil.getSToMinSecValue(bean.getSetGoalTime()));
-                    break;
-                case MyConstant.GOAL_DISTANCE:
-                    tv_title_time.setText(bean.getSetGoalDistance() + "M");
-                    break;
-                case MyConstant.GOAL_CALORIES:
-                    tv_title_time.setText(bean.getSetGoalCalorie() + "C");
-                    break;
-                case MyConstant.INTERVAL_TIME:
-                    tv_title_time.setText((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
-                    break;
-                case MyConstant.INTERVAL_DISTANCE:
-                    tv_title_time.setText((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
-                    break;
-                case MyConstant.INTERVAL_CALORIES:
-                    tv_title_time.setText((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
-                    break;
-                default:
-                    break;
-            }
-        }
-        // 备注设置
-        edt_info_note.setText(bean.getNote() == null ? "" : bean.getNote());
-
-        ll_info.setVisibility(View.VISIBLE);
-        ll_workouts.setVisibility(View.GONE);
     }
 
     @Override
@@ -453,8 +373,8 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         rv_workouts2.setAdapter(workoutsLocalAdapter2);
 
         // 页面其他设置
-        tv_info_title.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
-        tv_title_time.setText(bean.getType());
+        tv_info_date.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
+        tv_info_mode.setText(bean.getType());
         edt_info_note.setText(bean.getNote() == null ? "" : bean.getNote());
 
         ll_info.setVisibility(View.VISIBLE);
@@ -464,5 +384,81 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     @Override
     public void getRunDataInfoFromServerFail() {
         ToastUtil.show(R.string.get_rundata_info_fail);
+    }
+
+
+    private void setWorkouts1() {
+        Logger.e("rowerDataBean1List == " + rowerDataBean1List);
+        workoutsLocalAdapter = new WorkoutsLocalAdapter(rowerDataBean1List, vector);
+        rv_workouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rv_workouts.setAdapter(workoutsLocalAdapter);
+        workoutsLocalAdapter.addItemClickListener(this);
+        workoutsLocalAdapter.addItemDeleteClickListener(this);
+        rl_delete.setOnTouchListener((v, event) -> true);
+        rl_online.setOnTouchListener((v, event) -> true);
+    }
+
+    private void setWorkouts2() {
+        RowerDataBean1 bean = rowerDataBean1List.get(clickPosition);
+        List<RowerDataBean2> bean2List = presenter.setWorkouts2List(bean);
+
+        // 详细页面设置
+        {
+            workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(bean2List);
+            rv_workouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+            rv_workouts2.setAdapter(workoutsLocalAdapter2);
+
+            tv_info_date.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
+            iv_info_device.setImageDrawable(MyConstant.getCategoryImg(bean.getCategoryType()));
+            // 不同机型不同显示内容
+            switch (bean.getCategoryType()) {
+                case MyConstant.CATEGORY_BOAT: {
+                    tv_info_title_500.setVisibility(View.VISIBLE);
+                    tv_info_title_sm.setVisibility(View.VISIBLE);
+                    tv_info_title_ave_one_km.setVisibility(View.GONE);
+                    tv_info_title_level.setVisibility(View.GONE);
+                }
+                break;
+                case MyConstant.CATEGORY_BIKE: {
+                    tv_info_title_ave_one_km.setVisibility(View.VISIBLE);
+                    tv_info_title_level.setVisibility(View.VISIBLE);
+                    tv_info_title_500.setVisibility(View.GONE);
+                    tv_info_title_sm.setVisibility(View.GONE);
+                }
+                break;
+            }
+
+            switch (bean.getRunMode()) {
+                case MyConstant.NORMAL:
+                    tv_info_mode.setText(bean.getDistance() + "M");
+                    break;
+                case MyConstant.GOAL_TIME:
+                    tv_info_mode.setText(TimeStringUtil.getSToMinSecValue(bean.getSetGoalTime()));
+                    break;
+                case MyConstant.GOAL_DISTANCE:
+                    tv_info_mode.setText(bean.getSetGoalDistance() + "M");
+                    break;
+                case MyConstant.GOAL_CALORIES:
+                    tv_info_mode.setText(bean.getSetGoalCalorie() + "C");
+                    break;
+                case MyConstant.INTERVAL_TIME:
+                    tv_info_mode.setText((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
+                    break;
+                case MyConstant.INTERVAL_DISTANCE:
+                    tv_info_mode.setText((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
+                    break;
+                case MyConstant.INTERVAL_CALORIES:
+                    tv_info_mode.setText((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // 备注设置
+        edt_info_note.setText(bean.getNote() == null ? "" : bean.getNote());
+
+        ll_info.setVisibility(View.VISIBLE);
+        ll_workouts.setVisibility(View.GONE);
     }
 }

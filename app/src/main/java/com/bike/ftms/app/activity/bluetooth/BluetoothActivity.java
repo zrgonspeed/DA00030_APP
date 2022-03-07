@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.activity.fragment.workout.MyHeader;
+import com.bike.ftms.app.widget.MyHeader;
 import com.bike.ftms.app.adapter.BleAdapter;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.manager.ble.BleManager;
@@ -306,7 +306,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
         boolean locationOpen = checkLocation();
 
         if (locationOpen) {
-            //判断是否为android6.0系统版本，如果是，需要动态添加权限
             if (Build.VERSION.SDK_INT >= 23) {
                 requestPermissionAndOpenBLE();
             } else {
