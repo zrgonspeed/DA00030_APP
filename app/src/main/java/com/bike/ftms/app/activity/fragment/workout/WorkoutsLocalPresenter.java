@@ -594,7 +594,6 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             }
             break;
             case MyConstant.GOAL_DISTANCE: {
-
                 long initDistance = bean.getSetGoalDistance();
                 long initTime = 0;
                 long initCal = 0;
@@ -617,7 +616,6 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             }
             break;
             case MyConstant.GOAL_CALORIES: {
-
                 long initDistance = 0;
                 long initTime = 0;
                 long initCal = bean.getSetGoalCalorie();
@@ -640,7 +638,6 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             }
             break;
             case MyConstant.INTERVAL_TIME: {
-
                 for (RowerDataBean2 bean2 : bean2s) {
                     // 总和
                     if (bean2s.indexOf(bean2) == bean2s.size() - 1) {
@@ -661,7 +658,6 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             }
             break;
             case MyConstant.INTERVAL_DISTANCE: {
-
                 for (RowerDataBean2 bean2 : bean2s) {
                     // 平均
                     // 总和
