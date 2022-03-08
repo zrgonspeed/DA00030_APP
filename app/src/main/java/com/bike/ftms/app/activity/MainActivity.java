@@ -277,6 +277,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
 
     @Override
     public void disConnect() {
+        Logger.i("isFinishing() == " + isFinishing());
+        if (isFinishing()) {
+            return;
+        }
         // if (isOnPause) {
         //     return;
         // }

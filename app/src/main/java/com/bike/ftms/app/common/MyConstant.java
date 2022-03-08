@@ -125,6 +125,10 @@ public class MyConstant {
     public @interface RunMode {
     }
 
+    public static boolean isNormalMode(int mode) {
+        return mode == NORMAL;
+    }
+
     public static boolean isGoalMode(int mode) {
         return mode == GOAL_TIME || mode == GOAL_DISTANCE || mode == GOAL_CALORIES;
     }

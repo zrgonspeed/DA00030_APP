@@ -548,6 +548,7 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
 
         // 总结的item totalBean2
         RowerDataBean2 totalBean2 = new RowerDataBean2();
+        totalBean2.setRunMode(bean.getRunMode());
         
         if (bean.getRunMode() != MyConstant.NORMAL) {
             // 计算分段平均

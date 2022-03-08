@@ -1,6 +1,7 @@
 package com.bike.ftms.app.manager.ble;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -33,6 +34,7 @@ import com.bike.ftms.app.utils.Logger;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -479,25 +481,43 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (getScanResults() != null && getScanResults().size() != 0) {
             if (position >= 0 && position < getScanResults().size()) {
                 getScanResults().get(position).setConnectState(2);
+                BluetoothDevice device = getScanResults().get(position).getScanResult().getDevice();
                 if (!isScanHrDevice) {
                     rowerDataBean1 = new RowerDataBean1();
                     connectScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
                     reset();
                     //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
-                    mBluetoothGatt = getScanResults().get(position).getScanResult().getDevice()
-                            .connectGatt(MyApplication.getContext(), false, mGattCallback);
+                    mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
+                    boolean b = refreshDeviceCache(mBluetoothGatt);
+                    Logger.i("清除蓝牙内部缓存 " + b);
                 } else {
                     connectHrScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
-                    mBluetoothHrGatt = getScanResults().get(position).getScanResult().getDevice()
-                            .connectGatt(MyApplication.getContext(), false, mHrGattCallback);
+                    mBluetoothHrGatt = device.connectGatt(MyApplication.getContext(), false, mHrGattCallback);
                 }
 
-                Logger.i("connectDevice " + getScanResults().get(position).getScanResult().getDevice().getAddress());
+                Logger.i("connectDevice " + device.getAddress());
             }
         }
         if (onScanConnectListener != null) {
             onScanConnectListener.onNotifyData();
         }
+    }
+
+    /**
+     * 强制清除内部缓存
+     */
+    private boolean refreshDeviceCache(BluetoothGatt gatt) {
+        try {
+            BluetoothGatt localBluetoothGatt = gatt;
+            Method localMethod = localBluetoothGatt.getClass().getMethod("refresh", new Class[0]);
+            if (localMethod != null) {
+                boolean bool = ((Boolean) localMethod.invoke(localBluetoothGatt, new Object[0])).booleanValue();
+                return bool;
+            }
+        } catch (Exception localException) {
+            Logger.e("An exception occurred while refreshing device");
+        }
+        return false;
     }
 
     /**
@@ -1346,6 +1366,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 接收设备数据
      */
     private void rxDataPackage(byte[] data, String uuid) {
+        // 是否发送校正数据
         if (!isSendVerifyData) {
             isSendVerifyData = true;
             sendVerifyData();
@@ -1362,8 +1383,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
             return;
         }
 
-
-        // 已通过校正
         if (uuid.contains("2ada")) {
             setRunData_2ADA(data);
             return;
@@ -1401,19 +1420,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
             }
             break;
         }
-
-        // if (uuid.contains("2ad1")) {
-        //     setBleDataInxOfRower(new byte[]{data[0], data[1]});
-        //     setRunData_2AD1(data);
-        //     return;
-        // }
-
-        // if (uuid.contains("2ad2")) {
-        //     setBleDataInxOfBike(new byte[]{data[0], data[1]});
-        //     setRunData_2AD2(data);
-        //     return;
-        // }
-
     }
 
 
