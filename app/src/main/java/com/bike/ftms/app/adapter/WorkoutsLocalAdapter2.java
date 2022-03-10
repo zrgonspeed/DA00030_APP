@@ -109,7 +109,7 @@ public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAda
                     if (position == rowerDataBean2List.size() - 1) {
                         holder.tv_info_cals.setText(String.valueOf(bean.getSetIntervalCalorie() - bean.getCalorie()));
                     } else {
-                        holder.tv_info_cals.setText(String.valueOf(bean.getCalorie()));
+                        holder.tv_info_cals.setText(String.valueOf(bean.getSetIntervalCalorie()));
                     }
 
                     holder.tv_info_meters.setText(bean.getDistance() + "M");

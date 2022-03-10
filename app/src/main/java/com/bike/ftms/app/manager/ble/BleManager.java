@@ -1650,15 +1650,11 @@ public class BleManager implements CustomTimer.TimerCallBack {
                             // 时间4字节
                             if (BleManager.deviceType == MyConstant.DEVICE_AA01990) {
                                 rowerDataBean1.setReset_time(resolveData(data, 17, 2));
-
-                                if (runMode == MyConstant.CUSTOM_INTERVAL_TIME) {
-                                    rowerDataBean1.setTime(resolveData(data, 19, 4));
-                                }
-
                                 if (MyConstant.isCustomIntervalMode(runMode)) {
                                     // 自定义间歇模式
                                     switch (runMode) {
                                         case MyConstant.CUSTOM_INTERVAL_TIME:
+                                            rowerDataBean1.setTime(resolveData(data, 19, 4));
                                             rowerDataBean1.setSetIntervalTime(resolveData(data, 7, 4));
                                             break;
                                         case MyConstant.CUSTOM_INTERVAL_DISTANCE:

@@ -55,21 +55,35 @@ public class BoatManager extends CategoryType {
         rowerDataBean1.setAve_watts(RowerDataParam.AVERAGE_POWER_INX == -1 ? 0 : resolveData(data, RowerDataParam.AVERAGE_POWER_INX, RowerDataParam.AVERAGE_POWER_LEN));
         rowerDataBean1.setAve_five_hundred(RowerDataParam.AVERAGE_PACE_INX == -1 ? 0 : resolveData(data, RowerDataParam.AVERAGE_PACE_INX, RowerDataParam.AVERAGE_PACE_LEN));
 
-        if (rowerDataBean1.getRunMode() != MyConstant.CUSTOM_INTERVAL_TIME) {
-            if (MyConstant.isIntervalMode(rowerDataBean1.getRunMode())) {
+        if (!MyConstant.isCustomIntervalMode(rowerDataBean1.getRunMode())) {
+            // 时间下数
+            if (rowerDataBean1.getRunMode() == MyConstant.GOAL_TIME) {
+                rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
+            }
+            // 时间下数
+            if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME) {
                 rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
             }
 
-            if (MyConstant.isGoalMode(rowerDataBean1.getRunMode())) {
-                rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
-            }
-
-            if (MyConstant.isNormalMode(rowerDataBean1.getRunMode())) {
+            // 时间上数
+            if (rowerDataBean1.getRunMode() == MyConstant.GOAL_DISTANCE ||
+                    rowerDataBean1.getRunMode() == MyConstant.GOAL_CALORIES ||
+                    rowerDataBean1.getRunMode() == MyConstant.INTERVAL_DISTANCE ||
+                    rowerDataBean1.getRunMode() == MyConstant.INTERVAL_CALORIES ||
+                    rowerDataBean1.getRunMode() == MyConstant.NORMAL
+            ) {
                 rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
             }
         } else {
-            if (MyConstant.isCustomIntervalMode(rowerDataBean1.getRunMode())) {
-                rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
+            // 时间下数,使用ffe0中的4字节
+            // if (rowerDataBean1.getRunMode() == MyConstant.CUSTOM_INTERVAL_TIME) {
+            //     rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
+            // }
+            // 时间上数
+            if (rowerDataBean1.getRunMode() == MyConstant.CUSTOM_INTERVAL_DISTANCE ||
+                    rowerDataBean1.getRunMode() == MyConstant.CUSTOM_INTERVAL_CALORIES
+            ) {
+                rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
             }
         }
 

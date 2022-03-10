@@ -549,7 +549,7 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
         // 总结的item totalBean2
         RowerDataBean2 totalBean2 = new RowerDataBean2();
         totalBean2.setRunMode(bean.getRunMode());
-        
+
         if (bean.getRunMode() != MyConstant.NORMAL) {
             // 计算分段平均
             for (RowerDataBean2 bean2 : bean2s) {
@@ -659,7 +659,11 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             }
             break;
             case MyConstant.INTERVAL_DISTANCE: {
+                long a = 0;
                 for (RowerDataBean2 bean2 : bean2s) {
+                    // totalBean2.setTime(bean2.getTime() - a);
+                    // a = totalBean2.getTime();
+
                     // 平均
                     // 总和
                     if (bean2s.indexOf(bean2) == bean2s.size() - 1) {
@@ -667,6 +671,7 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
                     } else {
                         totalBean2.setDistance(bean2.getDistance() + totalBean2.getDistance());
                     }
+
                     totalBean2.setTime(bean2.getTime() + totalBean2.getTime());
                     totalBean2.setCalorie(bean2.getCalorie() + totalBean2.getCalorie());
                 }
@@ -678,9 +683,9 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
                 for (RowerDataBean2 bean2 : bean2s) {
                     // 总和
                     if (bean2s.indexOf(bean2) == bean2s.size() - 1) {
-                        totalBean2.setCalorie((bean2.getSetIntervalCalorie() - bean2.getCalorie()) + totalBean2.getCalorie());
+                        totalBean2.setSetIntervalCalorie((bean2.getSetIntervalCalorie() - bean2.getCalorie()) + totalBean2.getSetIntervalCalorie());
                     } else {
-                        totalBean2.setCalorie(bean2.getCalorie() + totalBean2.getCalorie());
+                        totalBean2.setSetIntervalCalorie(bean2.getSetIntervalCalorie() + totalBean2.getSetIntervalCalorie());
                     }
                     totalBean2.setTime(bean2.getTime() + totalBean2.getTime());
                     totalBean2.setDistance(bean2.getDistance() + totalBean2.getDistance());
