@@ -1017,9 +1017,16 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
                     cal = cal + temp_cal;
 
                     // 每段的时间
-                    temp_time = bean2.getTime();
-                    item.setTime(TimeStringUtil.getSToHourMinSecValue(temp_time));
-                    time = time + temp_time;
+                    if (runInfoVO.getDeviceType() == MyConstant.DEVICE_AA01990) {
+                        item.setTime(TimeStringUtil.getSToHourMinSecValue(bean2.getTime() - temp_time));
+                        time = time + (bean2.getTime() - temp_time);
+                        temp_time = bean2.getTime();
+                    } else {
+                        temp_time = bean2.getTime();
+                        item.setTime(TimeStringUtil.getSToHourMinSecValue(temp_time));
+                        time = time + temp_time;
+                    }
+
                 }
                 totalItem.setTime(TimeStringUtil.getSToHourMinSecValue(time));
                 totalItem.setMeters(String.valueOf(distance));
@@ -1057,9 +1064,15 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
                     distance = distance + temp_dist;
 
                     // 每段的时间
-                    temp_time = bean2.getTime();
-                    item.setTime(TimeStringUtil.getSToHourMinSecValue(temp_time));
-                    time = time + temp_time;
+                    if (runInfoVO.getDeviceType() == MyConstant.DEVICE_AA01990) {
+                        item.setTime(TimeStringUtil.getSToHourMinSecValue(bean2.getTime() - temp_time));
+                        time = time + (bean2.getTime() - temp_time);
+                        temp_time = bean2.getTime();
+                    } else {
+                        temp_time = bean2.getTime();
+                        item.setTime(TimeStringUtil.getSToHourMinSecValue(temp_time));
+                        time = time + temp_time;
+                    }
 
                 }
 

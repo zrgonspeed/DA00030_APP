@@ -532,9 +532,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
      */
     public void disConnectDevice() {
         Logger.e("disConnectDevice()");
+        reset();
         resetDeviceType();
         if (mBluetoothGatt != null && !isScanHrDevice) {
-            Logger.e("断开设备");
+            Logger.e("mBluetoothGatt.disconnect()");
             mBluetoothGatt.disconnect();
 //            mBluetoothGatt = null;
         }
@@ -551,6 +552,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         isConnect = false;
         deviceType = -1;
         categoryType = -1;
+        isToExamine = false;
 
         if (onRunDataListener != null) {
             onRunDataListener.disConnect();
@@ -666,6 +668,8 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Logger.e("断开设备回调");
+
+                disableCharacterNotifiy();
 
                 // 保存运动数据
                 saveRowDataBean1();
