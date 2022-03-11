@@ -196,11 +196,12 @@ public class OnePageDataFragment extends BasePageDataFragment {
 
     }
 
+    private final DecimalFormat df = new DecimalFormat("0.00");
+
     @Override
     public void onRunData(RowerDataBean1 rowerDataBean1) {
         super.onRunData(rowerDataBean1);
 
-        DecimalFormat df = new DecimalFormat("0.00");
         // 距离
         {
             String showDistance = "0";

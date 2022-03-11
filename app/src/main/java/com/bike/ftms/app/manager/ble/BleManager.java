@@ -1602,37 +1602,28 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 }
 
                 // 注册不同机型需要的特征值
-                switch (deviceType) {
-                    case MyConstant.DEVICE_AA02020_00R_01: {
+
+
+                switch (MyConstant.getCategory(deviceType)) {
+                    case MyConstant.CATEGORY_BOAT: {
                         // 2ad1  桨手数据
                         UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad1");
                         UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad1");
                     }
                     break;
-
-                    case MyConstant.DEVICE_AA01990: {
-                        // 2ad1  桨手数据
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad1");
-                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad1");
-                    }
-                    break;
-
-                    case MyConstant.DEVICE_AA02020_00F_01: {
+                    case MyConstant.CATEGORY_BIKE: {
                         // 2ad2  室内自行车
                         UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad2");
                         UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad2");
                     }
                     break;
-
-                    case MyConstant.DEVICE_AA02020_00F_02: {
-                        // 2ad2  室内自行车
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad2");
-                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad2");
+                    case MyConstant.CATEGORY_SKI: {
                     }
                     break;
-
+                    case MyConstant.CATEGORY_STEP: {
+                    }
+                    break;
                 }
-
             }
 
             onRunDataListener.connected();

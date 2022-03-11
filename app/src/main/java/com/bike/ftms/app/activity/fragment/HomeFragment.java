@@ -85,4 +85,10 @@ public class HomeFragment extends BaseFragment {
     public void connected() {
         onePageHomeFragment.connected();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        onePageHomeFragment = null;
+    }
 }

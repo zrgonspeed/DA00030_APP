@@ -188,6 +188,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         if (m_wklk.isHeld()) {
             m_wklk.release(); //解除保持唤醒
         }
+        m_wklk = null;
 
         if (someHintDialog != null) {
             someHintDialog.cancel();
@@ -238,7 +239,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @SuppressLint("InvalidWakeLockTag")
     @Override
     protected void initData() {
-        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+        PowerManager pm = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
         m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "cn");
         m_wklk.acquire(); //设置保持唤醒
 
@@ -337,6 +338,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         BleManager.getInstance().disableCharacterNotifiy();
         BleManager.getInstance().disConnectDevice();
         BleManager.getInstance().destroy();
+
+        homeFragment = null;
+        workoutsFragment = null;
     }
 
     @Override
