@@ -9,10 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.rundata.HttpRowerDataBean1;
-import com.bike.ftms.app.bean.rundata.RowerDataBean2;
+import com.bike.ftms.app.bean.rundata.view.RunInfoItem;
+import com.bike.ftms.app.bean.rundata.view.RunInfoVO;
 import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.utils.TimeStringUtil;
+import com.bike.ftms.app.utils.GsonUtil;
+import com.bike.ftms.app.utils.Logger;
 
 import java.util.List;
 
@@ -22,10 +23,12 @@ import java.util.List;
  * @Date 2021/4/12
  */
 public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAdapter2.WorkoutsViewHolder> {
-    private List<RowerDataBean2> rowerDataBean2List;
+    private List<RunInfoItem> items;
+    private RunInfoVO runInfoVO;
 
-    public WorkoutsLocalAdapter2(List<RowerDataBean2> rowerDataBean2List) {
-        this.rowerDataBean2List = rowerDataBean2List;
+    public WorkoutsLocalAdapter2(RunInfoVO runInfoVO) {
+        this.runInfoVO = runInfoVO;
+        this.items = runInfoVO.getItems();
     }
 
     @NonNull
@@ -37,95 +40,40 @@ public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAda
 
     @Override
     public void onBindViewHolder(@NonNull WorkoutsLocalAdapter2.WorkoutsViewHolder holder, int position) {
-        RowerDataBean2 bean = rowerDataBean2List.get(position);
-        HttpRowerDataBean1 rowerDataBean1 = (HttpRowerDataBean1) bean.getRowerDataBean1();
+        RunInfoItem item = items.get(position);
+        // HttpRowerDataBean1 rowerDataBean1 = (HttpRowerDataBean1) item.getRowerDataBean1();
 
         // 服务器的数据
-        if (rowerDataBean1.getStatus() == 1) {
-            holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-            holder.tv_info_meters.setText(bean.getDistance() + "M");
-            holder.tv_info_cals.setText(String.valueOf(bean.getCalorie()));
+        if (false) {
+            /*holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(item.getTime()));
+            holder.tv_info_meters.setText(item.getDistance() + "M");
+            holder.tv_info_cals.setText(String.valueOf(item.getCalorie()));
             holder.tv_info_interval.setText(" ");
 
             holder.tv_info_interval.setText(String.valueOf(position));
 
-            holder.tv_info_five_hundred.setText(TimeStringUtil.getSToMinSecValue(bean.getAve_five_hundred()));
-            holder.tv_info_watts.setText(String.valueOf(bean.getAve_watts()));
-            holder.tv_info_cal_hr.setText(String.valueOf(bean.getCalories_hr()));
-            holder.tv_info_sm.setText(String.valueOf(bean.getSm()));
+            holder.tv_info_five_hundred.setText(TimeStringUtil.getSToMinSecValue(item.getAve_five_hundred()));
+            holder.tv_info_watts.setText(String.valueOf(item.getAve_watts()));
+            holder.tv_info_cal_hr.setText(String.valueOf(item.getCalories_hr()));
+            holder.tv_info_sm.setText(String.valueOf(item.getSm()));
 
             if (position == 0) {
                 holder.tv_info_interval.setText(" ");
-            }
+            }*/
         } else {
-            switch (bean.getRunMode()) {
-                case MyConstant.NORMAL:
-                    holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-                    holder.tv_info_meters.setText(bean.getDistance() + "M");
-                    holder.tv_info_cals.setText(String.valueOf(bean.getCalorie()));
-                    holder.tv_info_interval.setText(" ");
-                    break;
-                case MyConstant.GOAL_TIME:
-                    holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-                    holder.tv_info_meters.setText(bean.getDistance() + "M");
-                    holder.tv_info_cals.setText(String.valueOf(bean.getCalorie()));
-                    holder.tv_info_interval.setText(String.valueOf(bean.getRunInterval() + 1));
-                    break;
-                case MyConstant.GOAL_DISTANCE:
-                    holder.tv_info_meters.setText(bean.getDistance() + "M");
-                    holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-                    holder.tv_info_cals.setText(String.valueOf(bean.getCalorie()));
-                    holder.tv_info_interval.setText(String.valueOf(bean.getRunInterval() + 1));
-                    break;
-                case MyConstant.GOAL_CALORIES:
-                    holder.tv_info_cals.setText(String.valueOf(bean.getCalorie()));
-                    holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-                    holder.tv_info_meters.setText(bean.getDistance() + "M");
-                    holder.tv_info_interval.setText(String.valueOf(bean.getRunInterval() + 1));
-                    break;
-                case MyConstant.INTERVAL_TIME:
-                    if (position == rowerDataBean2List.size() - 1) {
-                        if (bean.getSetIntervalTime() == bean.getTime()) {
-                            holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetIntervalTime()));
-                        } else {
-                            holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetIntervalTime() - bean.getTime()));
-                        }
-                    } else {
-                        holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getSetIntervalTime()));
-                    }
-
-                    holder.tv_info_meters.setText(bean.getDistance() + "M");
-                    holder.tv_info_cals.setText(String.valueOf(bean.getCalorie()));
-                    holder.tv_info_interval.setText(String.valueOf(bean.getInterval()));
-                    break;
-                case MyConstant.INTERVAL_DISTANCE:
-                    holder.tv_info_meters.setText(bean.getDistance() + "M");
-
-                    holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-                    holder.tv_info_cals.setText(String.valueOf(bean.getCalorie()));
-                    holder.tv_info_interval.setText(String.valueOf(bean.getInterval()));
-                    break;
-                case MyConstant.INTERVAL_CALORIES:
-                    if (position == rowerDataBean2List.size() - 1) {
-                        holder.tv_info_cals.setText(String.valueOf(bean.getSetIntervalCalorie() - bean.getCalorie()));
-                    } else {
-                        holder.tv_info_cals.setText(String.valueOf(bean.getSetIntervalCalorie()));
-                    }
-
-                    holder.tv_info_meters.setText(bean.getDistance() + "M");
-                    holder.tv_info_time.setText(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
-                    holder.tv_info_interval.setText(String.valueOf(bean.getInterval()));
-                    break;
-                default:
-                    break;
+            holder.tv_info_time.setText(item.getTime());
+            holder.tv_info_meters.setText(item.getMeters());
+            holder.tv_info_cals.setText(item.getCals());
+            if ("-1".equals(item.getInterval()) || runInfoVO.getRunModeNum() == MyConstant.NORMAL) {
+                holder.tv_info_interval.setText("");
+            } else {
+                holder.tv_info_interval.setText(item.getInterval());
             }
-            if (bean.getInterval() == -1) {
-                holder.tv_info_interval.setText(" ");
-            }
-            holder.tv_info_watts.setText(String.valueOf(bean.getAve_watts()));
-            holder.tv_info_cal_hr.setText(String.valueOf(bean.getCalories_hr()));
 
-            switch (rowerDataBean1.getCategoryType()) {
+            holder.tv_info_watts.setText(item.getAve_watts());
+            holder.tv_info_cal_hr.setText(item.getCal_hr());
+
+            switch (runInfoVO.getCategoryType()) {
                 case MyConstant.CATEGORY_BOAT: {
                     holder.tv_info_sm.setVisibility(View.VISIBLE);
                     holder.tv_info_five_hundred.setVisibility(View.VISIBLE);
@@ -142,17 +90,17 @@ public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAda
                 break;
             }
 
-            holder.tv_info_sm.setText(String.valueOf(bean.getSm()));
-            holder.tv_info_five_hundred.setText(TimeStringUtil.getSToMinSecValue(bean.getAve_five_hundred()));
+            holder.tv_info_sm.setText(item.getSm());
+            holder.tv_info_five_hundred.setText(item.getAve_500());
 
-            holder.tv_info_inst_level.setText(String.valueOf(bean.getLevel()));
-            holder.tv_info_ave_one_km.setText(TimeStringUtil.getSToMinSecValue(bean.getAveOneKmTime()));
+            holder.tv_info_inst_level.setText(item.getLevel());
+            holder.tv_info_ave_one_km.setText(item.getAve_one_km());
         }
     }
 
     @Override
     public int getItemCount() {
-        return rowerDataBean2List.size();
+        return items.size();
     }
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {

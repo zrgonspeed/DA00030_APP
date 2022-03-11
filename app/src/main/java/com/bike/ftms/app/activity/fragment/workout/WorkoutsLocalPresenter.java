@@ -18,6 +18,8 @@ import com.bike.ftms.app.bean.rundata.get.RunDataResultListBO;
 import com.bike.ftms.app.bean.rundata.put.RemarksBO;
 import com.bike.ftms.app.bean.rundata.put.RunDataBO;
 import com.bike.ftms.app.bean.rundata.put.UploadResult;
+import com.bike.ftms.app.bean.rundata.view.RunInfoItem;
+import com.bike.ftms.app.bean.rundata.view.RunInfoVO;
 import com.bike.ftms.app.bean.user.ResultBean;
 import com.bike.ftms.app.common.HttpParam;
 import com.bike.ftms.app.common.MyConstant;
@@ -428,7 +430,7 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
                     rowerDataBean1List.add(new HttpRowerDataBean1((RowerDataBean1) t));
                 }
 
-                Logger.e(rowerDataBean1List.toString());
+                Logger.d(rowerDataBean1List.toString());
                 getMvpView().findRunDataFromLocalDBSuccess();
             }
         });
@@ -703,5 +705,384 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             Logger.e("oo == " + oo);
         }
         return bean2s;
+    }
+
+    public RunInfoVO newSetWorkouts2List(RowerDataBean1 bean) {
+        RunInfoVO runInfoVO = new RunInfoVO();
+        runInfoVO.setLocal_id(bean.getId());
+        // runInfoVO.setServer_id();
+
+        runInfoVO.setNote(bean.getNote());
+        runInfoVO.setRunModeNum(bean.getRunMode());
+        runInfoVO.setDate(TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
+        runInfoVO.setCategoryType(bean.getCategoryType());
+        runInfoVO.setDeviceType(bean.getDeviceType());
+
+        // 运动模式显示
+        switch (bean.getRunMode()) {
+            case MyConstant.NORMAL:
+                runInfoVO.setRunMode(bean.getDistance() + "M");
+                break;
+            case MyConstant.GOAL_TIME:
+                runInfoVO.setRunMode(TimeStringUtil.getSToMinSecValue(bean.getSetGoalTime()));
+                break;
+            case MyConstant.GOAL_DISTANCE:
+                runInfoVO.setRunMode(bean.getSetGoalDistance() + "M");
+                break;
+            case MyConstant.GOAL_CALORIES:
+                runInfoVO.setRunMode(bean.getSetGoalCalorie() + "C");
+                break;
+            case MyConstant.INTERVAL_TIME:
+                runInfoVO.setRunMode((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
+                break;
+            case MyConstant.INTERVAL_DISTANCE:
+                runInfoVO.setRunMode((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
+                break;
+            case MyConstant.INTERVAL_CALORIES:
+                runInfoVO.setRunMode((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
+                break;
+
+            case MyConstant.CUSTOM_INTERVAL_TIME:
+                runInfoVO.setRunMode("custom interval");
+                break;
+            case MyConstant.CUSTOM_INTERVAL_DISTANCE:
+                runInfoVO.setRunMode("custom interval");
+                break;
+            case MyConstant.CUSTOM_INTERVAL_CALORIES:
+                runInfoVO.setRunMode("custom interval");
+                break;
+            default:
+                break;
+        }
+
+        // 拷贝新的item bean2s
+        ArrayList<RowerDataBean2> bean2s = new ArrayList<>();
+        {
+            for (RowerDataBean2 bean2 : bean.getList()) {
+                RowerDataBean2 copyBean2 = bean2.copy();
+                copyBean2.setRowerDataBean1(bean);
+                bean2s.add(copyBean2);
+            }
+            for (RowerDataBean2 oo : bean2s) {
+                Logger.d("未设置新的items前 == " + oo);
+            }
+            Logger.d("bean2s.size == " + bean2s.size());
+            // 只有1条数据, 可能是 normal运动
+            if (bean2s.size() == 0) {
+                RowerDataBean2 rowerDataBean2 = new RowerDataBean2(bean);
+                bean2s.add(rowerDataBean2);
+            }
+        }
+
+        // item list 设置
+        List<RunInfoItem> items = new ArrayList<>();
+        for (RowerDataBean2 bean2 : bean2s) {
+            // bean2 -> item
+            RunInfoItem item = new RunInfoItem();
+            item.setAve_500(String.valueOf(bean2.getAve_five_hundred()));
+            item.setAve_one_km(String.valueOf(bean2.getAveOneKmTime()));
+            item.setCal_hr(String.valueOf(bean2.getCalories_hr()));
+            item.setAve_watts(String.valueOf(bean2.getAve_watts()));
+            item.setLevel(String.valueOf(bean2.getLevel()));
+            item.setSm(String.valueOf(bean2.getSm()));
+            if (MyConstant.isGoalMode(bean2.getRunMode())) {
+                item.setInterval(String.valueOf(bean2.getRunInterval() + 1));
+            } else if (MyConstant.isIntervalMode(bean2.getRunMode())) {
+                item.setInterval(String.valueOf(bean2.getInterval()));
+            } else {
+                item.setInterval(String.valueOf(bean2.getRunInterval()));
+            }
+
+            items.add(item);
+        }
+
+        // total item  平均设置
+        RunInfoItem totalItem = new RunInfoItem();
+        if (bean.getRunMode() != MyConstant.NORMAL) {
+            long ave_500 = 0;
+            long ave_one_km = 0;
+            int sm = 0;
+            int level = 0;
+            int ave_watts = 0;
+            int cal_hr = 0;
+            // 计算分段平均
+            for (RowerDataBean2 bean2 : bean2s) {
+                ave_watts = ave_watts + bean2.getAve_watts();
+                cal_hr = cal_hr + bean2.getCalories_hr();
+                level = level + bean2.getLevel();
+                sm = sm + bean2.getSm();
+                ave_500 = ave_500 + bean2.getAve_five_hundred();
+                ave_one_km = ave_one_km + bean2.getAveOneKmTime();
+            }
+            totalItem.setAve_watts(String.valueOf(Math.round(ave_watts * 1.0f / bean2s.size())));
+            totalItem.setCal_hr(String.valueOf(Math.round(cal_hr * 1.0f / bean2s.size())));
+            // 不同机型不同
+            totalItem.setAve_500(String.valueOf(ave_500 / bean2s.size()));
+            totalItem.setSm(String.valueOf(sm / bean2s.size()));
+            totalItem.setAve_one_km(String.valueOf(ave_one_km / bean2s.size()));
+            totalItem.setLevel(String.valueOf(level / bean2s.size()));
+        }
+
+        // total item 与 其它item   根据不同模式设置  时间 距离 卡路里
+        switch (bean.getRunMode()) {
+            case MyConstant.NORMAL: {
+                RunInfoItem item = items.get(0);
+                item.setTime(TimeStringUtil.getSToHourMinSecValue(bean.getTime()));
+                item.setMeters(String.valueOf(bean.getDistance()));
+                item.setCals(String.valueOf(bean.getCalorie()));
+                item.setInterval(String.valueOf(-1));
+            }
+            break;
+            case MyConstant.GOAL_TIME: {
+                long initTime = bean.getSetGoalTime();
+                long distance = 0;
+                long temp_dist = 0;
+                long temp_time = 0;
+                long time = 0;
+                long cal = 0;
+                long temp_cal = 0;
+
+                for (int i = 0; i < bean2s.size(); i++) {
+                    RowerDataBean2 bean2 = bean2s.get(i);
+                    RunInfoItem item = items.get(i);
+
+                    // 每段的运动时间
+                    temp_time = initTime - bean2.getTime();
+                    item.setTime(TimeStringUtil.getSToHourMinSecValue(temp_time));
+                    initTime = initTime - temp_time;
+                    time = time + temp_time;
+
+                    // 每段的卡路里
+                    temp_cal = bean2.getCalorie() - cal;
+                    item.setCals(String.valueOf(temp_cal));
+                    cal = cal + temp_cal;
+
+                    // 每段的运动距离 倒数
+                    temp_dist = bean2.getDistance() - distance;
+                    item.setMeters(String.valueOf(temp_dist));
+                    distance = distance + temp_dist;
+                }
+
+                totalItem.setTime(TimeStringUtil.getSToHourMinSecValue(time));
+                totalItem.setMeters(String.valueOf(distance));
+                totalItem.setCals(String.valueOf(cal));
+                totalItem.setInterval(String.valueOf(-1));
+                items.add(0, totalItem);
+            }
+            break;
+            case MyConstant.GOAL_DISTANCE: {
+                long initDistance = bean.getSetGoalDistance();
+                long distance = 0;
+                long temp_dist = 0;
+                long temp_time = 0;
+                long time = 0;
+                long cal = 0;
+                long temp_cal = 0;
+                for (int i = 0; i < bean2s.size(); i++) {
+                    RowerDataBean2 bean2 = bean2s.get(i);
+                    RunInfoItem item = items.get(i);
+
+                    // 每段的运动距离 倒数
+                    temp_dist = initDistance - bean2.getDistance();
+                    item.setMeters(String.valueOf(temp_dist));
+                    initDistance = initDistance - temp_dist;
+                    distance = distance + temp_dist;
+
+                    // 每段的运动时间
+                    temp_time = bean2.getTime() - time;
+                    item.setTime(TimeStringUtil.getSToHourMinSecValue(temp_time));
+                    time = time + temp_time;
+
+                    // 每段的卡路里
+                    // 每段的卡路里
+                    temp_cal = bean2.getCalorie() - cal;
+                    item.setCals(String.valueOf(temp_cal));
+                    cal = cal + temp_cal;
+                }
+
+                totalItem.setTime(TimeStringUtil.getSToHourMinSecValue(time));
+                totalItem.setMeters(String.valueOf(distance));
+                totalItem.setCals(String.valueOf(cal));
+                totalItem.setInterval(String.valueOf(-1));
+                items.add(0, totalItem);
+            }
+            break;
+            case MyConstant.GOAL_CALORIES: {
+                long initCal = bean.getSetGoalCalorie();
+                long distance = 0;
+                long temp_dist = 0;
+                long temp_time = 0;
+                long time = 0;
+                long cal = 0;
+                long temp_cal = 0;
+
+                for (int i = 0; i < bean2s.size(); i++) {
+                    RowerDataBean2 bean2 = bean2s.get(i);
+                    RunInfoItem item = items.get(i);
+
+                    // 每段的卡路里
+                    temp_cal = initCal - bean2.getCalorie();
+                    item.setCals(String.valueOf(temp_cal));
+                    initCal = initCal - temp_cal;
+                    cal = cal + temp_cal;
+
+                    // 每段的运动时间
+                    temp_time = bean2.getTime() - time;
+                    item.setTime(TimeStringUtil.getSToHourMinSecValue(temp_time));
+                    time = time + temp_time;
+
+                    // 每段的运动距离 倒数
+                    temp_dist = bean2.getDistance() - distance;
+                    item.setMeters(String.valueOf(temp_dist));
+                    distance = distance + temp_dist;
+                }
+                totalItem.setTime(TimeStringUtil.getSToHourMinSecValue(time));
+                totalItem.setMeters(String.valueOf(distance));
+                totalItem.setCals(String.valueOf(cal));
+                totalItem.setInterval(String.valueOf(-1));
+                items.add(0, totalItem);
+            }
+            break;
+
+            case MyConstant.INTERVAL_TIME: {
+                long initTime = bean.getSetIntervalTime();
+                long distance = 0;
+                long temp_dist = 0;
+                long temp_time = 0;
+                long time = 0;
+                long cal = 0;
+                long temp_cal = 0;
+
+
+                for (int i = 0; i < bean2s.size(); i++) {
+                    RowerDataBean2 bean2 = bean2s.get(i);
+                    RunInfoItem item = items.get(i);
+                    // 总和
+                    if (bean2s.indexOf(bean2) == bean2s.size() - 1) {
+                        if (initTime == bean2.getTime()) {
+                            time = time + initTime;
+                            item.setTime(TimeStringUtil.getSToHourMinSecValue(initTime));
+                        } else {
+                            time = time + bean2.getTime();
+                            item.setTime(TimeStringUtil.getSToHourMinSecValue(bean2.getTime()));
+                        }
+                    } else {
+                        time = time + initTime;
+                        item.setTime(TimeStringUtil.getSToHourMinSecValue(initTime));
+                    }
+
+                    // 每段的卡路里
+                    temp_cal = bean2.getCalorie();
+                    item.setCals(String.valueOf(temp_cal));
+                    cal = cal + temp_cal;
+
+                    // 每段的运动距离 倒数
+                    temp_dist = bean2.getDistance();
+                    item.setMeters(String.valueOf(temp_dist));
+                    distance = distance + temp_dist;
+                }
+
+                totalItem.setTime(TimeStringUtil.getSToHourMinSecValue(time));
+                totalItem.setMeters(String.valueOf(distance));
+                totalItem.setCals(String.valueOf(cal));
+                totalItem.setInterval(String.valueOf(-1));
+                items.add(0, totalItem);
+            }
+            break;
+            case MyConstant.INTERVAL_DISTANCE: {
+                long initDistance = bean.getSetIntervalDistance();
+                long distance = 0;
+                long temp_dist = 0;
+                long temp_time = 0;
+                long time = 0;
+                long cal = 0;
+                long temp_cal = 0;
+
+                for (int i = 0; i < bean2s.size(); i++) {
+                    RowerDataBean2 bean2 = bean2s.get(i);
+                    RunInfoItem item = items.get(i);
+
+                    // 平均
+                    // 总和
+                    if (bean2s.indexOf(bean2) == bean2s.size() - 1) {
+                        distance = distance + bean2.getDistance();
+                    } else {
+                        distance = distance + bean2.getDistance();
+                    }
+                    item.setMeters(String.valueOf(bean2.getDistance()));
+
+                    // 每段的卡路里
+                    temp_cal = bean2.getCalorie();
+                    item.setCals(String.valueOf(temp_cal));
+                    cal = cal + temp_cal;
+
+                    // 每段的时间
+                    temp_time = bean2.getTime();
+                    item.setTime(TimeStringUtil.getSToHourMinSecValue(temp_time));
+                    time = time + temp_time;
+                }
+                totalItem.setTime(TimeStringUtil.getSToHourMinSecValue(time));
+                totalItem.setMeters(String.valueOf(distance));
+                totalItem.setCals(String.valueOf(cal));
+                totalItem.setInterval(String.valueOf(-1));
+                items.add(0, totalItem);
+            }
+            break;
+            case MyConstant.INTERVAL_CALORIES: {
+                long initCal = bean.getSetIntervalCalorie();
+                long distance = 0;
+                long temp_dist = 0;
+                long temp_time = 0;
+                long time = 0;
+                long cal = 0;
+                long temp_cal = 0;
+
+                for (int i = 0; i < bean2s.size(); i++) {
+                    RowerDataBean2 bean2 = bean2s.get(i);
+                    RunInfoItem item = items.get(i);
+                    // 总和
+                    if (bean2s.indexOf(bean2) == bean2s.size() - 1) {
+                        cal = bean2.getCalorie() + cal;
+                        temp_cal = bean2.getCalorie();
+                    } else {
+                        cal = cal + initCal;
+                        temp_cal = bean2.getSetIntervalCalorie();
+                    }
+
+                    item.setCals(String.valueOf(temp_cal));
+
+                    // 每段的运动距离 倒数
+                    temp_dist = bean2.getDistance();
+                    item.setMeters(String.valueOf(temp_dist));
+                    distance = distance + temp_dist;
+
+                    // 每段的时间
+                    temp_time = bean2.getTime();
+                    item.setTime(TimeStringUtil.getSToHourMinSecValue(temp_time));
+                    time = time + temp_time;
+
+                }
+
+                totalItem.setTime(TimeStringUtil.getSToHourMinSecValue(time));
+                totalItem.setMeters(String.valueOf(distance));
+                totalItem.setCals(String.valueOf(cal));
+                totalItem.setInterval(String.valueOf(-1));
+                items.add(0, totalItem);
+            }
+            break;
+            default:
+                // idle模式?
+                break;
+        }
+
+        // item meters加单位 "M"
+        for (RunInfoItem item : items) {
+            item.setMeters(item.getMeters() + "M");
+        }
+
+        // normal模式，totalItem内部数据为 null，items列表只有1条
+        runInfoVO.setItems(items);
+        runInfoVO.setTotalItem(totalItem);
+        return runInfoVO;
     }
 }

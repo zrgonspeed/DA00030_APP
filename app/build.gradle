@@ -9,7 +9,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 30
         versionCode getMyAppVersionCode()
-        versionName "2.0-220308-01"
+        versionName "2.0-220311-01"
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
     compileOptions {

@@ -25,9 +25,12 @@ import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter2;
 import com.bike.ftms.app.bean.rundata.HttpRowerDataBean1;
+import com.bike.ftms.app.bean.rundata.PrintUtils;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.bean.rundata.RowerDataBean2;
+import com.bike.ftms.app.bean.rundata.view.RunInfoVO;
 import com.bike.ftms.app.common.MyConstant;
+import com.bike.ftms.app.utils.GsonUtil;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
@@ -368,7 +371,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
     @Override
     public void getRunDataInfoFromServerSuccess(HttpRowerDataBean1 bean) {
-        workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(bean.getList());
+        // workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(bean.getList());
         rv_workouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rv_workouts2.setAdapter(workoutsLocalAdapter2);
 
@@ -400,18 +403,23 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
     private void setWorkouts2() {
         RowerDataBean1 bean = rowerDataBean1List.get(clickPosition);
-        List<RowerDataBean2> bean2List = presenter.setWorkouts2List(bean);
+        // List<RowerDataBean2> bean2List = presenter.setWorkouts2List(bean);
+        RunInfoVO runInfoVO = presenter.newSetWorkouts2List(bean);
+        // PrintUtils.printJson("RunInfoVO", GsonUtil.GsonString(runInfoVO), "");
+        Logger.i(runInfoVO.toString());
 
         // 详细页面设置
         {
-            workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(bean2List);
+            // workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(bean2List);
+            workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(runInfoVO);
             rv_workouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             rv_workouts2.setAdapter(workoutsLocalAdapter2);
 
-            tv_info_date.setText("Date：" + TimeStringUtil.getDate2String(bean.getDate(), "yyyy-MM-dd"));
-            iv_info_device.setImageDrawable(MyConstant.getCategoryImg(bean.getCategoryType()));
+            tv_info_date.setText("Date：" + runInfoVO.getDate());
+            iv_info_device.setImageDrawable(MyConstant.getCategoryImg(runInfoVO.getCategoryType()));
+            tv_info_mode.setText(runInfoVO.getRunMode());
             // 不同机型不同显示内容
-            switch (bean.getCategoryType()) {
+            switch (runInfoVO.getCategoryType()) {
                 case MyConstant.CATEGORY_BOAT: {
                     tv_info_title_500.setVisibility(View.VISIBLE);
                     tv_info_title_sm.setVisibility(View.VISIBLE);
@@ -428,7 +436,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 break;
             }
 
-            switch (bean.getRunMode()) {
+            /*switch (bean.getRunMode()) {
                 case MyConstant.NORMAL:
                     tv_info_mode.setText(bean.getDistance() + "M");
                     break;
@@ -452,11 +460,11 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                     break;
                 default:
                     break;
-            }
+            }*/
         }
 
         // 备注设置
-        edt_info_note.setText(bean.getNote() == null ? "" : bean.getNote());
+        edt_info_note.setText(runInfoVO.getNote() == null ? "" : runInfoVO.getNote());
 
         ll_info.setVisibility(View.VISIBLE);
         ll_workouts.setVisibility(View.GONE);
