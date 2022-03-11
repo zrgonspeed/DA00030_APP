@@ -164,7 +164,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         super.onPause();
         isOnPause = true;
         m_wklk.release();//解除保持唤醒
-        //BleManager.getInstance().setonRunDataListener(null);
 
         if (connectHintDialog != null) {
             connectHintDialog.cancel();

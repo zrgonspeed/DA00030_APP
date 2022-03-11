@@ -440,12 +440,14 @@
             android:id="@+id/iv_heart_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:src="@drawable/heartrate" />
 
         <TextView
             android:id="@+id/tv_heart_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/iv_heart_rate"
             android:text="0"
             android:textColor="@color/color_0B4531"

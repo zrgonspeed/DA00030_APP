@@ -14,23 +14,27 @@ import java.lang.annotation.RetentionPolicy;
 public class MyConstant {
     // 支持的机型
     public static final int DEVICE_UNKNOW = 0;
-    public static final int DEVICE_AA02020R = 1;
+    public static final int DEVICE_AA02020_00R_01 = 1;
     public static final int DEVICE_AA01990 = 2;
     public static final int DEVICE_AA02020_00F_01 = 3;
     public static final int DEVICE_AA02020_00F_02 = 4;
+    public static final int DEVICE_AA02230_00R_01 = 5;
+    public static final int DEVICE_AA02290_00R_01 = 6;
 
     @IntDef({
-            DEVICE_AA02020R,
+            DEVICE_AA02020_00R_01,
             DEVICE_AA01990,
             DEVICE_AA02020_00F_01,
-            DEVICE_AA02020_00F_02
+            DEVICE_AA02020_00F_02,
+            DEVICE_AA02230_00R_01,
+            DEVICE_AA02290_00R_01
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface DeviceType {
     }
 
     public static final String[] deviceNames = {
-            "DEVICE_UNKNOW", "AA02020-00R-01", "AA01990", "AA02020-00F-01", "AA02020-00F-02"
+            "DEVICE_UNKNOW", "AA02020-00R-01", "AA01990", "AA02020-00F-01", "AA02020-00F-02", "AA02230_00R_01", "AA02290_00R_01"
     };
 
     // 大类机型 ---------------------------------------------------------------------------------
@@ -49,7 +53,7 @@ public class MyConstant {
     }
 
     private static final int[] boat_arr = {
-            DEVICE_AA02020R, DEVICE_AA01990
+            DEVICE_AA02020_00R_01, DEVICE_AA01990, DEVICE_AA02230_00R_01, DEVICE_AA02290_00R_01
     };
     private static final int[] bike_arr = {
             DEVICE_AA02020_00F_01, DEVICE_AA02020_00F_02
@@ -159,9 +163,4 @@ public class MyConstant {
     @Retention(RetentionPolicy.SOURCE)
     public @interface IntervalStatus {
     }
-
-    public static String homeFragment = "";
-    public static String oneObject = "";
-    public static String twoObject = "";
-    public static String threeObject = "";
 }

@@ -8,11 +8,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ImageView
-        android:id="@+id/iv_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@id/vp_home_fragment"
-        android:src="@drawable/bar1"
-        android:visibility="gone" />
 </RelativeLayout>

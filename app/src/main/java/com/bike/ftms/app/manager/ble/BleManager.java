@@ -1603,7 +1603,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
                 // 注册不同机型需要的特征值
                 switch (deviceType) {
-                    case MyConstant.DEVICE_AA02020R: {
+                    case MyConstant.DEVICE_AA02020_00R_01: {
                         // 2ad1  桨手数据
                         UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad1");
                         UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad1");
