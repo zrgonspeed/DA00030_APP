@@ -10,7 +10,6 @@ public class PrintUtils {
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     public static void printJson(String tag, String msg, String headString) {
-
         String message;
 
         try {

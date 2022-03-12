@@ -242,7 +242,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         PowerManager pm = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
         m_wklk = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "cn");
         m_wklk.acquire(); //设置保持唤醒
-
     }
 
     @OnClick({R.id.btn_workout_user_info, R.id.btn_bluetooth, R.id.btn_setting, R.id.btn_workout_login})

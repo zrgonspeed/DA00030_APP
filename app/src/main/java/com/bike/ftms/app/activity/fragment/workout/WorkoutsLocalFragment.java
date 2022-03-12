@@ -25,12 +25,9 @@ import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter2;
 import com.bike.ftms.app.bean.rundata.HttpRowerDataBean1;
-import com.bike.ftms.app.bean.rundata.PrintUtils;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
-import com.bike.ftms.app.bean.rundata.RowerDataBean2;
 import com.bike.ftms.app.bean.rundata.view.RunInfoVO;
 import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.utils.GsonUtil;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
@@ -127,6 +124,15 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if (isResumed() && !isHidden() && ll_workouts.getVisibility() == View.VISIBLE) {
+            presenter.findRunDataFromLocalDB();
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         presenter.detachView();
@@ -153,13 +159,13 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         return TAG;
     }
 
-    @Override
+/*    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && ll_workouts.getVisibility() == View.VISIBLE) {
             presenter.findRunDataFromLocalDB();
         }
-    }
+    }*/
 
     @OnClick({R.id.tv_upload, R.id.tv_back_workouts, R.id.tv_edit, R.id.iv_back, R.id.tv_workouts, R.id.iv_info_back, R.id.tv_done, R.id.tv_cancel, R.id.tv_ok})
     public void onViewClicked(View view) {
@@ -391,7 +397,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
 
     private void setWorkouts1() {
-        Logger.e("rowerDataBean1List == " + rowerDataBean1List);
+        Logger.i("rowerDataBean1List == " + rowerDataBean1List);
         workoutsLocalAdapter = new WorkoutsLocalAdapter(rowerDataBean1List, vector);
         rv_workouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rv_workouts.setAdapter(workoutsLocalAdapter);
@@ -435,32 +441,6 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                 }
                 break;
             }
-
-            /*switch (bean.getRunMode()) {
-                case MyConstant.NORMAL:
-                    tv_info_mode.setText(bean.getDistance() + "M");
-                    break;
-                case MyConstant.GOAL_TIME:
-                    tv_info_mode.setText(TimeStringUtil.getSToMinSecValue(bean.getSetGoalTime()));
-                    break;
-                case MyConstant.GOAL_DISTANCE:
-                    tv_info_mode.setText(bean.getSetGoalDistance() + "M");
-                    break;
-                case MyConstant.GOAL_CALORIES:
-                    tv_info_mode.setText(bean.getSetGoalCalorie() + "C");
-                    break;
-                case MyConstant.INTERVAL_TIME:
-                    tv_info_mode.setText((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
-                    break;
-                case MyConstant.INTERVAL_DISTANCE:
-                    tv_info_mode.setText((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
-                    break;
-                case MyConstant.INTERVAL_CALORIES:
-                    tv_info_mode.setText((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
-                    break;
-                default:
-                    break;
-            }*/
         }
 
         // 备注设置
