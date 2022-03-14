@@ -148,6 +148,16 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private boolean canSave = false;
 
     /**
+     * 连接超时，回调
+     */
+    private Runnable mConnTimeOutRunnable = () -> {
+        Logger.e("连接设备超时");
+        if (mBluetoothGatt != null) {
+            mBluetoothGatt.disconnect();
+        }
+    };
+
+    /**
      * 搜索设备时间计时
      */
     private CountDownTimer countDownTimer;
@@ -490,6 +500,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
                     boolean b = refreshDeviceCache(mBluetoothGatt);
                     Logger.i("清除蓝牙内部缓存 " + b);
+
+                    //处理超时连接的方法
+                    // mHandler.postDelayed(mConnTimeOutRunnable, 5 * 1000);
+
                 } else {
                     connectHrScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
                     mBluetoothHrGatt = device.connectGatt(MyApplication.getContext(), false, mHrGattCallback);
@@ -600,10 +614,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
             Logger.i("onConnectionStateChange newState " + newState);
             Logger.i("onConnectionStateChange name " + gatt.getDevice().getName());
 
-            // 防止多次收发数据
-//            if (isConnect) {
-//                return;
-//            }
+            // mHandler.removeCallbacks(mConnTimeOutRunnable);
 
             if (status != BluetoothGatt.GATT_SUCCESS) {
                 BleManager.getInstance().mPosition = -1;
@@ -647,10 +658,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 // 为对应的扫描结果设置连接状态
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
-                        myScanResult.setConnectState(1);
+                        myScanResult.setConnectState(3);
                         startTimerOfIsConnect();
                         if (connectScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
-                            connectScanResult.setConnectState(1);
+                            connectScanResult.setConnectState(3);
                         } else {
                             connectScanResult = myScanResult;
                         }
@@ -1574,7 +1585,6 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 // 获取机型
                 int tempDeviceType = initDeviceType(data);
                 if (tempDeviceType > 0 && tempDeviceType < MyConstant.deviceNames.length) {
-                    // 机型适配
                     deviceTypeOK = true;
                 }
 
@@ -1583,10 +1593,21 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     return;
                 }
 
+                connectScanResult.setConnectState(1);
+                for (MyScanResult result : mScanResults) {
+                    if (result.getScanResult().getDevice().getAddress().equals(connectScanResult.getScanResult().getDevice().getAddress())) {
+                        result.setConnectState(1);
+                    }
+                }
+                if (onScanConnectListener != null) {
+                    onScanConnectListener.onNotifyData();
+                }
+
                 isToExamine = true;
                 deviceType = tempDeviceType;
                 categoryType = MyConstant.getCategory(deviceType);
 
+                // 没用
                 SpManager.setTreadmill_flag(deviceType);
                 Logger.i("当前机型: " + deviceType);
             }

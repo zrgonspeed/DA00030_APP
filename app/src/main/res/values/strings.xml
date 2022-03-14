@@ -154,4 +154,11 @@ The usage is explained below \n
     <string name="hint_enter_code">enter code</string>
     <string name="get_rundata_info_fail">从服务器获取数据失败</string>
     <string name="start_scan">Start scanning...</string>
+
+
+    <string name="disconnect" translatable="false">Disconnect</string>
+    <string name="connecting" translatable="false">Connecting</string>
+    <string name="connect" translatable="false">Connect</string>
+
+
 </resources>

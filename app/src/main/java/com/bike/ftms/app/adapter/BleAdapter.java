@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.BleAdapter.BleViewHolder;
+import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.bean.bluetooth.MyScanResult;
 import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.utils.Logger;
@@ -59,11 +60,11 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull BleViewHolder holder, int position) {
         MyScanResult myScanResult = list.get(position);
-        // Logger.e("ConnectState  == " + myScanResult.getConnectState() + "  name == " + myScanResult.getScanResult().getDevice().getName());
+        Logger.e("ConnectState  == " + myScanResult.getConnectState() + "  name == " + myScanResult.getScanResult().getDevice().getName());
 
         holder.tvState.setOnClickListener(v -> {
-//            Logger.e("list.get(position).getConnectState()  == " + list.get(position).getConnectState());
-            if (myScanResult.getConnectState() == 2) {
+            Logger.d("getConnectState()  == " + list.get(position).getConnectState() + "   " + list.get(position).getScanResult().getDevice().getName());
+            if (myScanResult.getConnectState() == 2 || myScanResult.getConnectState() == 3) {
                 return;
             }
             onItemClickListener.onItemClickListener(position, v, myScanResult.getConnectState());
@@ -72,11 +73,11 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
         holder.tvAddress.setText(myScanResult.getScanResult().getDevice().getAddress());
         if (myScanResult.getConnectState() == 1) {
             BleManager.getInstance().mPosition = position;
-            holder.tvState.setText("Disconnect");
-        } else if (myScanResult.getConnectState() == 2) {
-            holder.tvState.setText("Connecting");
+            holder.tvState.setText(MyApplication.getContext().getResources().getString(R.string.disconnect));
+        } else if (myScanResult.getConnectState() == 2 || myScanResult.getConnectState() == 3) {
+            holder.tvState.setText(MyApplication.getContext().getResources().getString(R.string.connecting));
         } else {
-            holder.tvState.setText("Connect");
+            holder.tvState.setText(MyApplication.getContext().getResources().getString(R.string.connect));
         }
     }
 
