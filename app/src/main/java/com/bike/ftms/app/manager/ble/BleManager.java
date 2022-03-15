@@ -130,7 +130,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
     public static long SCAN_PERIOD = 60 * 1000;     //扫描设备时间限制
     private final long SCAN_PERIOD_INTERVAL = 1000;     //隔多久回调1次
     private static final long SEND_VERIFY_TIME = 2000; // 发送校验码延迟时间
-    private static final long START_SCAN_DELAY_TIME = 2000; // 扫描设备延迟时间
+    private static final long START_SCAN_DELAY_TIME = 3000; // 扫描设备延迟时间
 
     public boolean setBleDataInx = false;
     private boolean isToExamine = false;
@@ -1156,6 +1156,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
         if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
             new Thread(() -> {
                 isOpen = mBluetoothAdapter.enable();
+                Logger.i("mBluetoothAdapter.enable()");
                 Logger.i("isOpen == " + isOpen);
 
                 if (!isOpen) {
@@ -1381,6 +1382,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 接收设备数据
      */
     private void rxDataPackage(byte[] data, String uuid) {
+        rowerDataBean1.setDeviceType(deviceType);
+        rowerDataBean1.setCategoryType(categoryType);
+
         // 是否发送校正数据
         if (!isSendVerifyData) {
             isSendVerifyData = true;
@@ -1607,6 +1611,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 deviceType = tempDeviceType;
                 categoryType = MyConstant.getCategory(deviceType);
 
+
+                rowerDataBean1.setDeviceType(deviceType);
+                rowerDataBean1.setCategoryType(categoryType);
                 // 没用
                 SpManager.setTreadmill_flag(deviceType);
                 Logger.i("当前机型: " + deviceType);

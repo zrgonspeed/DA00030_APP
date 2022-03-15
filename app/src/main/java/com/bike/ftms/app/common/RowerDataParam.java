@@ -84,7 +84,7 @@ public class RowerDataParam {
     public static int ENERGY_PER_MINUTE_LEN = 1;
 
     /**
-     * FTMS协议 自定义部分
+     * FTMS协议 自定义部分  2ada
      **/
     public static int RUN_MODE_INX = 1;
     public static int RUN_MODE_LEN = 1;

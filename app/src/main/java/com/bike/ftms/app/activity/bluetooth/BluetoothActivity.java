@@ -65,10 +65,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     RecyclerView rv_ble;
     private BleAdapter bleAdapter;
 
-    // boolean first = true;
-    private boolean isCalled = true;
-    // private boolean isPre = faisCalledlse;
-
     private BLEBroadcastReceiver bleBroadcastReceiver;
 
     @Override
@@ -268,38 +264,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-//         Logger.e("onWindowFocusChanged " + hasFocus + " first " + first);
-//         Logger.e("cbSwitch.isChecked() " + cb_switch.isChecked());
-//
-//         if (hasFocus && !first && BleManager.getInstance().isOpen && !cb_switch.isChecked()) {
-// //            if (BleManager.getInstance().getBluetoothAdapter().isEnabled()) {
-//             cb_switch.setChecked(true);
-// //            }
-//         }
-//
-//         if (hasFocus && !first && !BleManager.getInstance().isOpen && cb_switch.isChecked()) {
-// //            if (!BleManager.getInstance().getBluetoothAdapter().isEnabled()) {
-//             cb_switch.setChecked(false);
-// //            }
-//         }
-//
-//         if (first && hasFocus) {
-//             boolean enabled = BleManager.getInstance().getBluetoothAdapter().isEnabled();
-//             if (!enabled || !cb_switch.isChecked()) {
-//             }
-//             // cb为false时，再check false，不会触发回调
-//             if (tv_switch != null) {
-//                 tv_switch.setText(cb_switch.isChecked() ? getResources().getString(R.string.bluetooth_switch_enable) : getResources().getString(R.string.bluetooth_switch_disable));
-//             }
-//
-//             if (BleManager.getInstance().getBluetoothAdapter().isEnabled() && !cb_switch.isChecked()) {
-//                 isPre = true;
-//                 cb_switch.setPressed(true);
-//                 cb_switch.setChecked(true);
-//             }
-//
-//             first = false;
-//         }
     }
 
     private void scanDevice() {
@@ -539,7 +503,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             return;
         }
 
-        isCalled = true;
         if (open) {
             if (bleAdapter != null) {
                 bleAdapter.notifyDataSetChanged();
@@ -564,7 +527,6 @@ public class BluetoothActivity extends BaseActivity implements OnScanConnectList
             return;
         }
 
-        isCalled = true;
         if (disable) {
             if (bleAdapter != null) {
                 bleAdapter.notifyDataSetChanged();
