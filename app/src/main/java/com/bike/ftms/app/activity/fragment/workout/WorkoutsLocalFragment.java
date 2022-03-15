@@ -410,6 +410,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             // TODO: 2022/3/15  
             // 点击3次，显示机型号
             Debug.canShowItemDeviceName = !Debug.canShowItemDeviceName;
+            Debug.canShowItemLocalId = !Debug.canShowItemLocalId;
             workoutsLocalAdapter.notifyDataSetChanged();
         });
     }

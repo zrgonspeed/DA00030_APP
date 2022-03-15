@@ -1,5 +1,7 @@
 package com.bike.ftms.app.adapter;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,18 +55,13 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
 
         HttpRowerDataBean1 bean = ((HttpRowerDataBean1) (bean1));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.itemView.setOnClickListener(v -> {
+            holder.ll_item.setBackgroundColor(MyApplication.getContext().getResources().getColor(R.color.workouts_item_click, null));
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 onItemClickListener.onItemClickListener(position);
-            }
+            }, 150);
         });
-        holder.ivDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemDeleteListener.onItemDeleteListener(position);
-            }
-        });
+        holder.ivDelete.setOnClickListener(v -> onItemDeleteListener.onItemDeleteListener(position));
         if (isShowDelete) {
             holder.ivDelete.setVisibility(View.VISIBLE);
         } else {
@@ -92,91 +89,24 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
         }
         holder.tv_workouts_device_name.setText(MyConstant.deviceNames[bean.getDeviceType()]);
 
+        if (Debug.canShowItemLocalId) {
+            holder.tv_local_id.setVisibility(View.VISIBLE);
+        } else {
+            holder.tv_local_id.setVisibility(View.GONE);
+        }
+        holder.tv_local_id.setText(bean.getId() + "");
+
         holder.tvDistance.setText(bean.getType());
         holder.tvTime.setText(bean.getResult());
-        /*switch (bean.getRunMode()) {
-            case MyConstant.NORMAL:
-                holder.tvDistance.setText(bean.getDistance() + "M");
-                holder.tvTime.setText(bean.getDistance() + "M");
-                break;
-            case MyConstant.GOAL_TIME:
-                holder.tvDistance.setText(TimeStringUtil.getSToMinSecValue(bean.getSetGoalTime()));
-                holder.tvTime.setText(bean.getDistance() + "M");
-                break;
-            case MyConstant.GOAL_DISTANCE:
-                holder.tvDistance.setText(bean.getSetGoalDistance() + "M");
-                holder.tvTime.setText(TimeStringUtil.getSToMinSecValue(bean.getTime()));
-                break;
-            case MyConstant.GOAL_CALORIES:
-                holder.tvDistance.setText(bean.getSetGoalCalorie() + "C");
-                holder.tvTime.setText(bean.getDistance() + "M");
-                break;
-            case MyConstant.INTERVAL_TIME:
-                holder.tvDistance.setText((bean.getInterval() + "x:" + bean.getSetIntervalTime() + "/:" + bean.getReset_time() + "R"));
-                // 总距离
-            {
-                List<RowerDataBean2> list = bean.getList();
-                if (list.size() > 1) {
-                    long totalMeter = 0;
-                    for (RowerDataBean2 bean2 : list) {
-                        totalMeter += bean2.getDistance();
-                    }
-                    holder.tvTime.setText(totalMeter + "M");
-                } else {
-                    holder.tvTime.setText(bean.getDistance() + "M");
-                }
-            }
-            break;
-            case MyConstant.INTERVAL_DISTANCE:
-                holder.tvDistance.setText((bean.getInterval() + "x" + bean.getSetIntervalDistance() + "M" + "/:" + bean.getReset_time() + "R"));
-            {
-                // 总时间
-                List<RowerDataBean2> list = bean.getList();
-                if (list.size() > 1) {
-                    long totalTime = 0;
-                    for (RowerDataBean2 bean2 : list) {
-                        totalTime += bean2.getTime();
-                    }
-                    holder.tvTime.setText(TimeStringUtil.getSToMinSecValue(totalTime));
-                } else {
-                    holder.tvTime.setText(TimeStringUtil.getSToMinSecValue(bean.getTime()));
-                }
-            }
-            break;
-            case MyConstant.INTERVAL_CALORIES:
-                holder.tvDistance.setText((bean.getInterval() + "x" + bean.getSetIntervalCalorie() + "C" + "/:" + bean.getReset_time() + "R"));
-                // 总距离
-            {
-                List<RowerDataBean2> list = bean.getList();
-                if (list.size() > 1) {
-                    long totalMeter = 0;
-                    for (RowerDataBean2 bean2 : list) {
-                        totalMeter += bean2.getDistance();
-                    }
-                    holder.tvTime.setText(totalMeter + "M");
-                } else {
-                    holder.tvTime.setText(bean.getDistance() + "M");
-                }
-            }
-            break;
-            default:
-                break;
-        }*/
-
-
-//        if (vector.get(position)) {
-//            holder.ll_item.setBackgroundColor(MyApplication.getContext().getResources().getColor(R.color.workouts_item_uploaded));
-//        } else {
-//            holder.ll_item.setBackgroundColor(MyApplication.getContext().getResources().getColor(R.color.white));
-//        }
 
         if (bean.getStatus() == 1) {
             holder.tv_server_id.setText(((HttpRowerDataBean1) bean).getWorkout_id() + "");
-            holder.ll_item.setBackgroundColor(MyApplication.getContext().getResources().getColor(R.color.workouts_item_uploaded));
+            holder.ll_item.setBackgroundColor(MyApplication.getContext().getResources().getColor(R.color.workouts_item_uploaded, null));
         } else {
             holder.tv_server_id.setText(bean.getId() + "");
-            holder.ll_item.setBackgroundColor(MyApplication.getContext().getResources().getColor(R.color.white));
+            holder.ll_item.setBackgroundColor(MyApplication.getContext().getResources().getColor(R.color.white, null));
         }
+
     }
 
     @Override
@@ -205,6 +135,8 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
     }
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
+        private TextView tv_local_id;
+
         private ImageView ivDelete;
         private TextView tvDate;
         private TextView tvDistance;
@@ -220,6 +152,7 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
             ivDelete = itemView.findViewById(R.id.iv_delete);
             tvDate = itemView.findViewById(R.id.tv_date);
             tvDistance = itemView.findViewById(R.id.tv_distance);
+            tv_local_id = itemView.findViewById(R.id.tv_local_id);
             iv_item_device = itemView.findViewById(R.id.iv_item_device);
             tv_workouts_device_name = itemView.findViewById(R.id.tv_workouts_device_name);
             tvTime = itemView.findViewById(R.id.tv_time);

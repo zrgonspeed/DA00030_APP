@@ -5,6 +5,7 @@ public class Debug {
     public static final boolean canShowSearchTime = false;
     public static final boolean canShowLog = true;
     public static boolean canShowItemDeviceName = false;
+    public static boolean canShowItemLocalId = false;
 
     public static void initDebug() {
 //        BleManager.SCAN_PERIOD = 10 * 1000;

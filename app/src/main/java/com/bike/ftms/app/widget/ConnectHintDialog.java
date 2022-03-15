@@ -267,7 +267,10 @@ public class ConnectHintDialog extends Dialog {
         }
 
         Logger.i("connectHintDialog == " + connectHintDialog);
-        connectHintDialog.show();
+        if (!activity.isFinishing() && !connectHintDialog.isShowing()) {
+            connectHintDialog.show();
+        }
+        // connectHintDialog.show();
 
         int rootHeight = UIUtils.getHeight(activity);
         int rootWidth = UIUtils.getWidth(activity);
