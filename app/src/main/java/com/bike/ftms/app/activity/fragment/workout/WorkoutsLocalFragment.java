@@ -405,6 +405,13 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         workoutsLocalAdapter.addItemDeleteClickListener(this);
         rl_delete.setOnTouchListener((v, event) -> true);
         rl_online.setOnTouchListener((v, event) -> true);
+
+        tv_title.setOnClickListener((e) -> {
+            // TODO: 2022/3/15  
+            // 点击3次，显示机型号
+            Debug.canShowItemDeviceName = !Debug.canShowItemDeviceName;
+            workoutsLocalAdapter.notifyDataSetChanged();
+        });
     }
 
     private void setWorkouts2() {

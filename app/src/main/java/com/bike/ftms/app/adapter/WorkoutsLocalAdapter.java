@@ -10,14 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.activity.fragment.workout.WorkoutsLocalFragment;
 import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.bean.rundata.HttpRowerDataBean1;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
-import com.bike.ftms.app.bean.rundata.RowerDataBean2;
 import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import java.util.List;
@@ -86,6 +84,13 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
 
         // 机型图标
         holder.iv_item_device.setImageDrawable(MyConstant.getCategoryImg(bean.getCategoryType()));
+
+        if (Debug.canShowItemDeviceName) {
+            holder.tv_workouts_device_name.setVisibility(View.VISIBLE);
+        } else {
+            holder.tv_workouts_device_name.setVisibility(View.GONE);
+        }
+        holder.tv_workouts_device_name.setText(MyConstant.deviceNames[bean.getDeviceType()]);
 
         holder.tvDistance.setText(bean.getType());
         holder.tvTime.setText(bean.getResult());
@@ -204,6 +209,7 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
         private TextView tvDate;
         private TextView tvDistance;
         private ImageView iv_item_device;
+        private TextView tv_workouts_device_name;
         private TextView tvTime;
         private ImageView ivNote;
         private LinearLayout ll_item;
@@ -215,6 +221,7 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
             tvDate = itemView.findViewById(R.id.tv_date);
             tvDistance = itemView.findViewById(R.id.tv_distance);
             iv_item_device = itemView.findViewById(R.id.iv_item_device);
+            tv_workouts_device_name = itemView.findViewById(R.id.tv_workouts_device_name);
             tvTime = itemView.findViewById(R.id.tv_time);
             ivNote = itemView.findViewById(R.id.iv_note);
             ll_item = itemView.findViewById(R.id.ll_item);
