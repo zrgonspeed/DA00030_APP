@@ -284,6 +284,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         // if (isOnPause) {
         //     return;
         // }
+        if (isDestroyed()) {
+            return;
+        }
         runOnUiThread(() -> {
             onConnectStatus(BleManager.isConnect, BleManager.deviceType);
             if (connectHintDialog == null) {
@@ -394,6 +397,14 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         super.onConfigurationChanged(newConfig);
 
         Logger.i("newConfig " + newConfig.orientation);
-
+        // // //启动时默认是竖屏
+        // if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        //     setContentView(R.layout.activity_main);
+        // }
+        // //切换就是横屏
+        // else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        //     setContentView(R.layout.activity_main_land);
+        // }
     }
+
 }
