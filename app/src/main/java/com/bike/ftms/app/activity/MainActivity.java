@@ -2,6 +2,7 @@ package com.bike.ftms.app.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.os.PowerManager;
@@ -386,5 +387,13 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         rl_uploading.setVisibility(View.GONE);
         rl_upload_success.setVisibility(View.GONE);
         rl_upload_fail.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        Logger.i("newConfig " + newConfig.orientation);
+
     }
 }

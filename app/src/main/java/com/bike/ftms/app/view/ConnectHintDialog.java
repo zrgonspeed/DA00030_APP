@@ -211,7 +211,7 @@ public class ConnectHintDialog extends Dialog {
         int rootHeight = UIUtils.getHeight(context);
         int rootWidth = UIUtils.getWidth(context);
 
-        Logger.d("rootWidth == " + rootWidth + "     rootHeight == " + rootHeight);
+        Logger.d("rootWidth == " + rootWidth + "     rootHeight == " + rootHeight + "   dpi == " + UIUtils.getDPI(context) + "  density == " + UIUtils.getDensity(context));
 
         if (type == 1) {
             titleTv.setMinHeight((int) (llParams.height * 0.30));
@@ -228,7 +228,13 @@ public class ConnectHintDialog extends Dialog {
             lp.gravity = Gravity.CENTER;
             messageTv.setLayoutParams(lp);
             // 设置文字大小
-            messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.sp_7)));
+
+            if (context.getResources().getConfiguration().locale.getLanguage().contains("en")) {
+                // 英文的字小一点
+                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.sp_6)));
+            } else {
+                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.sp_7)));
+            }
             Logger.d("fontSize == " + messageTv.getTextSize());
         }
     }

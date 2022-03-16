@@ -107,6 +107,7 @@
 
     <color name="workouts_item_uploaded">#D4BFD4D7</color>
 
-
     <color name="workouts_item_click">#AACDCDCD</color>
+
+    <color name="scroll">#BCBCBC</color>
 </resources>
