@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.widget.MyHeader;
+import com.bike.ftms.app.view.MyHeader;
 import com.bike.ftms.app.adapter.BleAdapter;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.manager.ble.BleManager;

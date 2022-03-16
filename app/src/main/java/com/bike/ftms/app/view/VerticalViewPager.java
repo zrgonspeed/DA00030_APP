@@ -1,4 +1,4 @@
-package com.bike.ftms.app.widget;
+package com.bike.ftms.app.view;
 
 /**
  * @Description https://blog.csdn.net/divaid/article/details/81259510

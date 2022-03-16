@@ -33,6 +33,7 @@
     <string name="workouts_upload">UPLOAD</string>
     <string name="workouts_edit">EDIT</string>
     <string name="workouts_date" translatable="false">DATE</string>
+    <string name="workouts_local_id" translatable="false">ID</string>
     <string name="workouts_type" translatable="false">TYPE</string>
     <string name="workouts_result" translatable="false">RESULT</string>
     <string name="workouts_done">DONE</string>

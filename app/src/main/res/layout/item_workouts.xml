@@ -36,7 +36,7 @@
                 android:layout_weight="1"
                 android:text="300"
                 android:textColor="@color/color_0B4531"
-                android:textSize="16sp"
+                android:textSize="@dimen/sp_14"
                 android:textStyle="bold"
                 android:visibility="gone" />
 
@@ -47,7 +47,7 @@
                 android:layout_weight="1"
                 android:text="2021-02-19 09:42"
                 android:textColor="@color/color_0B4531"
-                android:textSize="16sp"
+                android:textSize="@dimen/sp_14"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -58,18 +58,17 @@
             android:background="#00B5B3B3"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingLeft="50dp">
+            android:paddingStart="@dimen/dp_50">
 
 
             <TextView
                 android:id="@+id/tv_server_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dp_50"
+                android:layout_marginEnd="@dimen/dp_50"
                 android:text=""
                 android:textColor="@color/color_0B4531"
-                android:textSize="16sp"
+                android:textSize="@dimen/sp_14"
                 android:textStyle="bold"
                 android:visibility="gone" />
 
@@ -89,7 +88,7 @@
                 android:layout_toRightOf="@id/iv_item_device"
                 android:text="2x5c/:05r"
                 android:textColor="@color/color_0B4531"
-                android:textSize="16sp"
+                android:textSize="@dimen/sp_14"
                 android:textStyle="bold" />
 
             <TextView
@@ -128,7 +127,7 @@
                 android:layout_centerVertical="true"
                 android:text="0:33.2"
                 android:textColor="@color/color_0B4531"
-                android:textSize="16sp"
+                android:textSize="@dimen/sp_14"
                 android:textStyle="bold" />
 
             <ImageView

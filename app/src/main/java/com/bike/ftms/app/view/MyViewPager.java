@@ -1,4 +1,4 @@
-package com.bike.ftms.app.widget;
+package com.bike.ftms.app.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,8 +7,6 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
-
-import com.bike.ftms.app.utils.Logger;
 
 public class MyViewPager extends ViewPager {
     int lastX = -1;

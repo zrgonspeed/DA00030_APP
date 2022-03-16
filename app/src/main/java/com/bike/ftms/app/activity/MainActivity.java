@@ -34,9 +34,9 @@ import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
-import com.bike.ftms.app.widget.ConnectHintDialog;
-import com.bike.ftms.app.widget.HorizontalViewPager;
-import com.bike.ftms.app.widget.SomeHintDialog;
+import com.bike.ftms.app.view.ConnectHintDialog;
+import com.bike.ftms.app.view.HorizontalViewPager;
+import com.bike.ftms.app.view.SomeHintDialog;
 
 import java.util.ArrayList;
 import java.util.List;

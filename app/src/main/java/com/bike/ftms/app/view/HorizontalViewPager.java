@@ -1,4 +1,4 @@
-package com.bike.ftms.app.widget;
+package com.bike.ftms.app.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

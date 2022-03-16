@@ -50,6 +50,8 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
     @BindView(R.id.tv_upload)
     TextView tv_upload;
+    @BindView(R.id.tv_workouts_local_id)
+    TextView tv_workouts_local_id;
     @BindView(R.id.tv_back_workouts)
     TextView tv_back_workouts;
     @BindView(R.id.tv_edit)
@@ -411,6 +413,13 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
             // 点击3次，显示机型号
             Debug.canShowItemDeviceName = !Debug.canShowItemDeviceName;
             Debug.canShowItemLocalId = !Debug.canShowItemLocalId;
+
+            if (Debug.canShowItemLocalId) {
+                tv_workouts_local_id.setVisibility(View.VISIBLE);
+            } else {
+                tv_workouts_local_id.setVisibility(View.GONE);
+            }
+
             workoutsLocalAdapter.notifyDataSetChanged();
         });
     }

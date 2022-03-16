@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="@dimen/dp_40"
             android:src="@drawable/btn_back" />
 
 
@@ -27,7 +27,7 @@
             android:layout_centerInParent="true"
             android:text="@string/personal_data_title"
             android:textColor="@color/color_black"
-            android:textSize="16sp"
+            android:textSize="@dimen/sp_14"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -58,7 +58,7 @@
                                 android:layout_height="45dp"
                                 android:src="@drawable/btn_back" />-->
 
-                <com.bike.ftms.app.widget.SettingBar
+                <com.bike.ftms.app.view.SettingBar
                     android:id="@+id/fl_person_data_avatar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -72,13 +72,13 @@
                         android:layout_margin="@dimen/dp_20"
                         android:background="@drawable/user_header_def_2"
                         android:scaleType="centerCrop" />
-                </com.bike.ftms.app.widget.SettingBar>
+                </com.bike.ftms.app.view.SettingBar>
 
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dp_60" />
 
-                <com.bike.ftms.app.widget.SettingBar
+                <com.bike.ftms.app.view.SettingBar
                     android:id="@+id/sb_person_data_signout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -89,7 +89,7 @@
                         android:layout_gravity="center"
                         android:text="@string/sign_out"
                         android:textColor="@color/black" />
-                </com.bike.ftms.app.widget.SettingBar>
+                </com.bike.ftms.app.view.SettingBar>
             </LinearLayout>
 
 
@@ -99,7 +99,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <com.bike.ftms.app.widget.SettingBar
+                <com.bike.ftms.app.view.SettingBar
                     android:id="@+id/sb_person_data_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
                     app:bar_rightText="张日光"
                     tools:bar_rightText="880634" />
 
-                <com.bike.ftms.app.widget.SettingBar
+                <com.bike.ftms.app.view.SettingBar
                     android:id="@+id/sb_person_data_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
                     app:bar_rightTextHint="@string/personal_data_name_hint"
                     tools:bar_rightText="Android 轮子哥" />
 
-                <com.bike.ftms.app.widget.SettingBar
+                <com.bike.ftms.app.view.SettingBar
                     android:id="@+id/sb_person_data_gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                     app:bar_rightText="男"
                     app:bar_rightTextHint="@string/personal_data_address_hint" />
 
-                <com.bike.ftms.app.widget.SettingBar
+                <com.bike.ftms.app.view.SettingBar
                     android:id="@+id/sb_person_data_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
                     app:bar_rightText="中国"
                     app:bar_rightTextHint="@string/personal_data_address_hint" />
 
-                <com.bike.ftms.app.widget.SettingBar
+                <com.bike.ftms.app.view.SettingBar
                     android:id="@+id/sb_person_data_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         app:title="@string/personal_data_title" />-->
 
-                <com.bike.ftms.app.widget.SettingBar
+                <com.bike.ftms.app.view.SettingBar
                     android:id="@+id/sb_person_data_birthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

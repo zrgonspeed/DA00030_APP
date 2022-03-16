@@ -8,7 +8,7 @@ import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.bean.user.LoginSuccessBean;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
-import com.bike.ftms.app.widget.SettingBar;
+import com.bike.ftms.app.view.SettingBar;
 
 import butterknife.BindView;
 import butterknife.OnClick;

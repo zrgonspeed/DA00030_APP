@@ -87,7 +87,11 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
         } else {
             holder.tv_workouts_device_name.setVisibility(View.GONE);
         }
-        holder.tv_workouts_device_name.setText(MyConstant.deviceNames[bean.getDeviceType()]);
+        if (bean.getDeviceType() < 0 || bean.getDeviceType() > MyConstant.deviceNames.length - 1) {
+            holder.tv_workouts_device_name.setText(MyConstant.deviceNames[0]);
+        } else {
+            holder.tv_workouts_device_name.setText(MyConstant.deviceNames[bean.getDeviceType()]);
+        }
 
         if (Debug.canShowItemLocalId) {
             holder.tv_local_id.setVisibility(View.VISIBLE);
