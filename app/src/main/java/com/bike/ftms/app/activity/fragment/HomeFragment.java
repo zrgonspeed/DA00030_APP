@@ -93,4 +93,13 @@ public class HomeFragment extends BaseFragment {
     }
 
 
+    @Override
+    public void setPortLayout() {
+
+    }
+
+    @Override
+    public void setLandLayout() {
+
+    }
 }

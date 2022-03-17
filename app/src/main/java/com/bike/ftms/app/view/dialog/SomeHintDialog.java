@@ -1,4 +1,4 @@
-package com.bike.ftms.app.view;
+package com.bike.ftms.app.view.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,6 +11,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.activity.OnOrientationChanged;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.UIUtils;
@@ -22,7 +23,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  * @Author YYH
  * @Date 2021/4/26
  */
-public class SomeHintDialog extends Dialog {
+public class SomeHintDialog extends Dialog implements OnOrientationChanged {
     private Button yes;//确定按钮
     private Button no;//取消按钮
     private TextView titleTv;//消息标题文本
@@ -221,6 +222,7 @@ public class SomeHintDialog extends Dialog {
         return getPage2TextSize();
     }
 
+
     public interface BTOnclickListener {
         public void onNoClick();
 
@@ -232,8 +234,6 @@ public class SomeHintDialog extends Dialog {
     }
 
     private int page = 1;
-    private float page1TextSize;
-    private float page2TextSize;
 
     public static SomeHintDialog showSomeHintDialog(Activity activity, SomeHintDialog someHintDialog) {
         if (someHintDialog == null) {
@@ -311,4 +311,13 @@ public class SomeHintDialog extends Dialog {
         return someHintDialog;
     }
 
+    @Override
+    public void setPortLayout() {
+
+    }
+
+    @Override
+    public void setLandLayout() {
+
+    }
 }

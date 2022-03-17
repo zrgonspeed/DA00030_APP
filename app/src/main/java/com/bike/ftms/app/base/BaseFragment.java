@@ -2,6 +2,7 @@ package com.bike.ftms.app.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bike.ftms.app.activity.OnOrientationChanged;
 import com.bike.ftms.app.utils.Logger;
 
 import org.jetbrains.annotations.NotNull;
-
 
 
 /**
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * @Author YeYueHong
  * @Date 2021/3/30
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements OnOrientationChanged {
     private static String TAG = BaseFragment.class.getSimpleName();
 
     protected Activity mActivity;
@@ -111,6 +112,17 @@ public abstract class BaseFragment extends Fragment {
         super.onResume();
         Logger.d(getTAG() + " - " + "6 onResume()");
         Logger.d(getTAG() + " - " + "Fragment 处于活动状态");
+
+        Configuration cf = this.getResources().getConfiguration(); //获取设置的配置信息
+        int ori = cf.orientation; //获取屏幕方向
+        Logger.d(getTAG() + " 横竖屏: " + ori);
+        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+            //横屏
+            setLandLayout();
+        } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
+            //竖屏
+            setPortLayout();
+        }
     }
 
     /**
@@ -199,5 +211,20 @@ public abstract class BaseFragment extends Fragment {
         return s.substring(s.indexOf('{') + 1, s.indexOf('('));
     }
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        Logger.d(getTAG() + " newConfig 横竖屏 " + newConfig.orientation);
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setPortLayout();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setLandLayout();
+        }
+    }
+
+    protected int getIntDimen(int id) {
+        return (int) getResources().getDimension(id);
+    }
 }
 

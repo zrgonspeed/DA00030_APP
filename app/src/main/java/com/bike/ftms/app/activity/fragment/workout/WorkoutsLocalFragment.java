@@ -466,4 +466,14 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         ll_info.setVisibility(View.VISIBLE);
         ll_workouts.setVisibility(View.GONE);
     }
+
+    @Override
+    public void setPortLayout() {
+
+    }
+
+    @Override
+    public void setLandLayout() {
+
+    }
 }

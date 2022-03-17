@@ -5,20 +5,20 @@
     android:layout_height="match_parent"
     android:padding="@dimen/dp_10">
 
+
     <LinearLayout
         android:id="@+id/ll1"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/dp_100"
         android:layout_marginEnd="@dimen/dp_5"
         android:background="@color/color_387E2F"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/ll2"
-        app:layout_constraintEnd_toStartOf="@+id/rl1"
         app:layout_constraintHorizontal_weight="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1">
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintWidth_percent="0.31">
 
         <TextView
             android:id="@+id/tv_home_strokes_unit"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text="@string/home_strokes"
             android:textColor="@color/color_white"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:visibility="visible" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_white"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="visible" />
 
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:text="@string/home_level"
             android:textColor="@color/color_white"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:visibility="gone" />
 
         <TextView
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_white"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>
@@ -63,23 +63,23 @@
         android:id="@+id/ll2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/dp_5"
-        android:layout_marginBottom="@dimen/dp_5"
+        android:layout_marginStart="@dimen/dp_10"
         android:background="@color/color_387E2F"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/ll3"
-        app:layout_constraintEnd_toEndOf="@id/ll1"
-        app:layout_constraintStart_toStartOf="@id/ll1"
-        app:layout_constraintTop_toBottomOf="@+id/ll1"
-        app:layout_constraintVertical_weight="1">
+        app:layout_constraintBottom_toBottomOf="@id/ll1"
+        app:layout_constraintStart_toEndOf="@id/ll1"
+        app:layout_constraintTop_toTopOf="@+id/ll1"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintWidth_percent="0.32">
 
         <TextView
+            android:id="@+id/tv_home_title_drag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/home_drag"
             android:textColor="@color/color_white"
-            android:textSize="@dimen/sp_14" />
+            android:textSize="@dimen/sp_12" />
 
         <TextView
             android:id="@+id/tv_drag"
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_white"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -95,22 +95,24 @@
         android:id="@+id/ll3"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dp_10"
         android:background="@color/color_387E2F"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/ll1"
+        app:layout_constraintBottom_toBottomOf="@id/ll2"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="@id/ll1"
-        app:layout_constraintTop_toBottomOf="@+id/ll2"
-        app:layout_constraintVertical_weight="1">
+        app:layout_constraintStart_toEndOf="@id/ll2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintWidth_percent="0.32">
 
         <TextView
+            android:id="@+id/tv_home_title_cycle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/home_interval"
             android:textColor="@color/color_white"
-            android:textSize="@dimen/sp_14" />
+            android:textSize="@dimen/sp_12" />
 
         <TextView
             android:id="@+id/tv_interval"
@@ -118,7 +120,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_white"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -126,16 +128,19 @@
         android:id="@+id/rl1"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_10"
         android:layout_marginEnd="@dimen/dp_5"
         android:layout_marginBottom="@dimen/dp_5"
         android:background="@color/color_CCD8AE"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@id/rl3"
-        app:layout_constraintEnd_toStartOf="@id/rl2"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintStart_toEndOf="@+id/ll1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll1"
+        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintWidth_percent="0.66">
 
         <!--distance-->
         <TextView
@@ -144,7 +149,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="visible" />
 
@@ -155,10 +160,9 @@
             android:layout_alignBottom="@id/tv_home_distance"
             android:layout_marginStart="@dimen/dp_10"
             android:layout_toRightOf="@id/tv_home_distance"
-            android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_distance"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="visible" />
 
@@ -170,7 +174,7 @@
             android:layout_marginStart="@dimen/dp_150"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -184,7 +188,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_km_30min"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="gone" />
     </RelativeLayout>
@@ -193,13 +197,15 @@
         android:id="@+id/rl2"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
         android:background="@color/color_CCD8AE"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@id/rl3"
+        app:layout_constraintBottom_toBottomOf="@id/rl1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@id/rl1"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll1"
         app:layout_constraintVertical_weight="1">
 
         <!--sm-->
@@ -209,7 +215,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold" />
 
         <TextView
@@ -222,7 +228,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_sm"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold" />
 
         <!--rpm-->
@@ -232,7 +238,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -246,7 +252,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_rpm"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="gone" />
     </RelativeLayout>
@@ -255,14 +261,14 @@
         android:id="@+id/rl3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
         android:background="@drawable/shape_option"
         android:gravity="center"
         android:outlineProvider="bounds"
-        app:layout_constraintBottom_toTopOf="@id/rl4"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="@id/rl1"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rl2"
         app:layout_constraintVertical_weight="1">
 
@@ -272,7 +278,7 @@
             android:layout_height="wrap_content"
             android:text="00:00"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -286,7 +292,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_500"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -298,7 +304,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="visible" />
 
@@ -312,7 +318,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_watts"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="visible" />
 
@@ -325,7 +331,7 @@
             android:layout_marginStart="@dimen/dp_200"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="visible" />
 
@@ -339,7 +345,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_calories"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="visible" />
 
@@ -351,7 +357,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -365,7 +371,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_ave_watts"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -378,7 +384,7 @@
             android:layout_marginStart="@dimen/dp_200"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -392,7 +398,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_calories_hr"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -402,14 +408,14 @@
         android:id="@+id/rl4"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
         android:layout_marginBottom="@dimen/dp_5"
         android:background="@color/color_CCD8AE"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@id/rl5"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="@id/rl1"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rl3"
         app:layout_constraintVertical_weight="1">
 
@@ -419,7 +425,7 @@
             android:layout_height="wrap_content"
             android:text="00:00:00"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -427,19 +433,20 @@
         android:id="@+id/rl5"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_10"
         android:background="@color/color_CCD8AE"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/rl6"
+        app:layout_constraintHeight_percent="0.1"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="@id/rl1"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rl4"
         app:layout_constraintVertical_weight="1">
 
         <ImageView
             android:id="@+id/iv_heart_rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
             android:layout_centerVertical="true"
             android:src="@drawable/heartrate" />
 
@@ -451,7 +458,7 @@
             android:layout_toRightOf="@+id/iv_heart_rate"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -459,11 +466,11 @@
         android:id="@+id/rl6"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/dp_5"
+        android:layout_marginStart="@dimen/dp_10"
         android:background="@drawable/shape_option"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@id/rl5"
         app:layout_constraintTop_toTopOf="@id/rl5"
@@ -476,7 +483,7 @@
             android:layout_height="wrap_content"
             android:text="00:00"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold" />
 
         <TextView
@@ -489,7 +496,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_500"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold" />
 
 
@@ -500,7 +507,7 @@
             android:layout_height="wrap_content"
             android:text="00:00"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -514,7 +521,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_ave_500"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -526,7 +533,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -540,7 +547,7 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_one_km"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -551,7 +558,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_30"
+            android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -565,9 +572,20 @@
             android:paddingBottom="@dimen/dp_6"
             android:text="@string/home_ave_one_km"
             android:textColor="@color/color_0B4531"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_12"
             android:textStyle="bold"
             android:visibility="gone" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_blank"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@color/color_CCD8AE"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl6" />
 </androidx.constraintlayout.widget.ConstraintLayout>

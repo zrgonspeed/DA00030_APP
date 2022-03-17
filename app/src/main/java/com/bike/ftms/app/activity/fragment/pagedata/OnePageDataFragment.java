@@ -3,8 +3,11 @@ package com.bike.ftms.app.activity.fragment.pagedata;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
@@ -16,6 +19,8 @@ import java.text.DecimalFormat;
 
 import butterknife.BindView;
 
+import static androidx.constraintlayout.widget.ConstraintSet.PARENT_ID;
+
 
 /**
  * @Description
@@ -24,10 +29,7 @@ import butterknife.BindView;
  */
 public class OnePageDataFragment extends BasePageDataFragment {
     private static final String TAG = OnePageDataFragment.class.getSimpleName();
-    @BindView(R.id.rl3)
-    RelativeLayout rl3;
-    @BindView(R.id.rl6)
-    RelativeLayout rl6;
+
 
     // distance
     @BindView(R.id.tv_home_distance)
@@ -44,7 +46,10 @@ public class OnePageDataFragment extends BasePageDataFragment {
     TextView tv_drag;
     @BindView(R.id.tv_interval)
     TextView tv_interval;
-
+    @BindView(R.id.tv_home_title_drag)
+    TextView tv_home_title_drag;
+    @BindView(R.id.tv_home_title_cycle)
+    TextView tv_home_title_cycle;
     // hr
     @BindView(R.id.tv_heart_rate)
     TextView tv_heart_rate;
@@ -130,7 +135,7 @@ public class OnePageDataFragment extends BasePageDataFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.view_pager_home1;
+        return R.layout.view_pager_home_data;
     }
 
     private int tv_optional_1_index = 0;
@@ -390,5 +395,284 @@ public class OnePageDataFragment extends BasePageDataFragment {
         tv_home_level_unit.setVisibility(View.VISIBLE);
         tv_home_strokes.setVisibility(View.GONE);
         tv_home_strokes_unit.setVisibility(View.GONE);
+    }
+
+    @BindView(R.id.ll1)
+    LinearLayout ll1;
+    @BindView(R.id.ll2)
+    LinearLayout ll2;
+    @BindView(R.id.ll3)
+    LinearLayout ll3;
+
+    @BindView(R.id.rl1)
+    RelativeLayout rl1;
+    @BindView(R.id.rl2)
+    RelativeLayout rl2;
+    @BindView(R.id.rl3)
+    RelativeLayout rl3;
+    @BindView(R.id.rl4)
+    RelativeLayout rl4;
+    @BindView(R.id.rl5)
+    RelativeLayout rl5;
+    @BindView(R.id.rl6)
+    RelativeLayout rl6;
+
+    @BindView(R.id.rl_blank)
+    RelativeLayout rl_blank;
+
+    @Override
+    public void setPortLayout() {
+        {
+            // 顶部3个
+            ConstraintLayout.LayoutParams params1 = (ConstraintLayout.LayoutParams) ll1.getLayoutParams();
+            params1.height = getIntDimen(R.dimen.dp_100);
+            params1.bottomToTop = -1;
+            params1.endToStart = -1;
+            params1.matchConstraintPercentWidth = 0.31f;
+            ll1.setLayoutParams(params1);
+
+            ConstraintLayout.LayoutParams params2 = (ConstraintLayout.LayoutParams) ll2.getLayoutParams();
+            params2.height = getIntDimen(R.dimen.dp_100);
+            params2.topMargin = 0;
+            params2.bottomMargin = 0;
+            params2.leftMargin = getIntDimen(R.dimen.dp_10);
+            params2.bottomToTop = -1;
+            params2.endToEnd = -1;
+            params2.startToStart = -1;
+            params2.topToBottom = -1;
+            params2.bottomToBottom = R.id.ll1;
+            params2.startToEnd = R.id.ll1;
+            params2.topToTop = R.id.ll1;
+            params2.matchConstraintPercentWidth = 0.32f;
+            ll2.setLayoutParams(params2);
+
+            ConstraintLayout.LayoutParams params3 = (ConstraintLayout.LayoutParams) ll3.getLayoutParams();
+            params3.leftMargin = getIntDimen(R.dimen.dp_10);
+            params3.bottomToBottom = R.id.ll2;
+            params3.endToEnd = -1;
+            params3.startToStart = -1;
+            params3.topToBottom = -1;
+            params3.startToEnd = R.id.ll2;
+            params3.topToTop = PARENT_ID;
+            params3.matchConstraintPercentWidth = 0.32f;
+            ll3.setLayoutParams(params3);
+
+            ConstraintLayout.LayoutParams paramsRl1 = (ConstraintLayout.LayoutParams) rl1.getLayoutParams();
+            paramsRl1.topMargin = getIntDimen(R.dimen.dp_10);
+            paramsRl1.bottomToTop = -1;
+            paramsRl1.endToStart = -1;
+            paramsRl1.matchConstraintPercentHeight = 0.1f;
+            paramsRl1.horizontalBias = 0.6f;
+            paramsRl1.startToEnd = -1;
+            paramsRl1.topToTop = -1;
+            paramsRl1.startToStart = PARENT_ID;
+            paramsRl1.topToBottom = R.id.ll1;
+            paramsRl1.verticalBias = 0.2f;
+            paramsRl1.matchConstraintPercentWidth = 0.66f;
+            rl1.setLayoutParams(paramsRl1);
+
+            ConstraintLayout.LayoutParams paramsRl2 = (ConstraintLayout.LayoutParams) rl2.getLayoutParams();
+            paramsRl2.leftMargin = getIntDimen(R.dimen.dp_10);
+            paramsRl2.topMargin = getIntDimen(R.dimen.dp_10);
+            paramsRl2.bottomToTop = -1;
+            paramsRl2.bottomToBottom = R.id.rl1;
+            paramsRl2.topToTop = -1;
+            paramsRl2.topToBottom = R.id.ll1;
+            rl2.setLayoutParams(paramsRl2);
+
+            ConstraintLayout.LayoutParams paramsRl3 = (ConstraintLayout.LayoutParams) rl3.getLayoutParams();
+            paramsRl3.topMargin = getIntDimen(R.dimen.dp_10);
+            paramsRl3.bottomToTop = -1;
+            paramsRl3.matchConstraintPercentHeight = 0.1f;
+            paramsRl3.startToStart = PARENT_ID;
+            rl3.setLayoutParams(paramsRl3);
+
+            ConstraintLayout.LayoutParams paramsRl4 = (ConstraintLayout.LayoutParams) rl4.getLayoutParams();
+            paramsRl4.topMargin = getIntDimen(R.dimen.dp_10);
+            paramsRl4.bottomToTop = -1;
+            paramsRl4.matchConstraintPercentHeight = 0.1f;
+            paramsRl4.startToStart = PARENT_ID;
+            rl4.setLayoutParams(paramsRl4);
+
+            ConstraintLayout.LayoutParams paramsRl5 = (ConstraintLayout.LayoutParams) rl5.getLayoutParams();
+            paramsRl5.topMargin = getIntDimen(R.dimen.dp_10);
+            paramsRl5.bottomToBottom = -1;
+            paramsRl5.matchConstraintPercentHeight = 0.1f;
+            paramsRl5.startToStart = PARENT_ID;
+            rl5.setLayoutParams(paramsRl5);
+
+            ConstraintLayout.LayoutParams paramsRl6 = (ConstraintLayout.LayoutParams) rl6.getLayoutParams();
+            paramsRl6.leftMargin = getIntDimen(R.dimen.dp_10);
+            paramsRl6.bottomToBottom = -1;
+            paramsRl6.matchConstraintPercentHeight = 0.1f;
+            rl6.setLayoutParams(paramsRl6);
+
+            rl_blank.setVisibility(View.VISIBLE);
+
+        }
+        // 字体
+        setTextSize(getIntDimen(R.dimen.sp_8), getIntDimen(R.dimen.sp_12));
+        // 部分文本
+        {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv_home_30min_km.getLayoutParams();
+            layoutParams.leftMargin = getIntDimen(R.dimen.dp_100);
+            tv_home_30min_km.setLayoutParams(layoutParams);
+
+            RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) tv_home_cal.getLayoutParams();
+            layoutParams1.leftMargin = getIntDimen(R.dimen.dp_130);
+            tv_home_cal.setLayoutParams(layoutParams1);
+
+            RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) tv_home_cal_hr.getLayoutParams();
+            layoutParams2.leftMargin = getIntDimen(R.dimen.dp_130);
+            tv_home_cal_hr.setLayoutParams(layoutParams2);
+        }
+    }
+
+    @Override
+    public void setLandLayout() {
+        {
+            // 顶部3个
+            ConstraintLayout.LayoutParams params1 = (ConstraintLayout.LayoutParams) ll1.getLayoutParams();
+            params1.height = getIntDimen(R.dimen.dp_0);
+            params1.bottomToTop = R.id.ll2;
+            params1.endToStart = R.id.rl1;
+            params1.matchConstraintPercentWidth = 1.0f;
+            ll1.setLayoutParams(params1);
+
+            ConstraintLayout.LayoutParams params2 = (ConstraintLayout.LayoutParams) ll2.getLayoutParams();
+            params2.height = getIntDimen(R.dimen.dp_100);
+            params2.topMargin = getIntDimen(R.dimen.dp_5);
+            params2.bottomMargin = getIntDimen(R.dimen.dp_5);
+            params2.leftMargin = 0;
+            params2.bottomToTop = R.id.ll3;
+            params2.endToEnd = R.id.ll1;
+            params2.startToStart = R.id.ll1;
+            params2.topToBottom = R.id.ll1;
+            params2.bottomToBottom = -1;
+            params2.startToEnd = -1;
+            params2.topToTop = -1;
+            params2.matchConstraintPercentWidth = 1.0f;
+            ll2.setLayoutParams(params2);
+
+            ConstraintLayout.LayoutParams params3 = (ConstraintLayout.LayoutParams) ll3.getLayoutParams();
+            params3.leftMargin = 0;
+            params3.bottomToBottom = PARENT_ID;
+            params3.endToEnd = R.id.ll1;
+            params3.startToStart = R.id.ll1;
+            params3.topToBottom = R.id.ll2;
+            params3.startToEnd = -1;
+            params3.topToTop = -1;
+            params3.matchConstraintPercentWidth = 1.0f;
+            ll3.setLayoutParams(params3);
+
+            ConstraintLayout.LayoutParams paramsRl1 = (ConstraintLayout.LayoutParams) rl1.getLayoutParams();
+            paramsRl1.topMargin = 0;
+            paramsRl1.bottomToTop = R.id.rl3;
+            paramsRl1.endToStart = R.id.rl2;
+            paramsRl1.matchConstraintPercentHeight = 1.0f;
+            paramsRl1.horizontalBias = 0.5f;
+            paramsRl1.startToEnd = R.id.ll1;
+            paramsRl1.topToTop = PARENT_ID;
+            paramsRl1.startToStart = -1;
+            paramsRl1.topToBottom = -1;
+            paramsRl1.verticalBias = 0.5f;
+            paramsRl1.matchConstraintPercentWidth = 1.0f;
+            rl1.setLayoutParams(paramsRl1);
+
+            ConstraintLayout.LayoutParams paramsRl2 = (ConstraintLayout.LayoutParams) rl2.getLayoutParams();
+            paramsRl2.leftMargin = 0;
+            paramsRl2.topMargin = 0;
+            paramsRl2.bottomToTop = R.id.rl3;
+            paramsRl2.bottomToBottom = -1;
+            paramsRl2.topToTop = PARENT_ID;
+            paramsRl2.topToBottom = -1;
+            rl2.setLayoutParams(paramsRl2);
+
+            ConstraintLayout.LayoutParams paramsRl3 = (ConstraintLayout.LayoutParams) rl3.getLayoutParams();
+            paramsRl3.topMargin = getIntDimen(R.dimen.dp_5);
+            paramsRl3.bottomToTop = R.id.rl4;
+            paramsRl3.matchConstraintPercentHeight = 1.0f;
+            paramsRl3.startToStart = R.id.rl1;
+            rl3.setLayoutParams(paramsRl3);
+
+            ConstraintLayout.LayoutParams paramsRl4 = (ConstraintLayout.LayoutParams) rl4.getLayoutParams();
+            paramsRl4.topMargin = getIntDimen(R.dimen.dp_5);
+            paramsRl4.bottomToTop = R.id.rl5;
+            paramsRl4.matchConstraintPercentHeight = 1.0f;
+            paramsRl4.startToStart = R.id.rl1;
+            rl4.setLayoutParams(paramsRl4);
+
+            ConstraintLayout.LayoutParams paramsRl5 = (ConstraintLayout.LayoutParams) rl5.getLayoutParams();
+            paramsRl5.topMargin = 0;
+            paramsRl5.bottomToBottom = PARENT_ID;
+            paramsRl5.matchConstraintPercentHeight = 1.0f;
+            paramsRl5.startToStart = R.id.rl1;
+            rl5.setLayoutParams(paramsRl5);
+
+            ConstraintLayout.LayoutParams paramsRl6 = (ConstraintLayout.LayoutParams) rl6.getLayoutParams();
+            paramsRl6.leftMargin = getIntDimen(R.dimen.dp_5);
+            paramsRl6.bottomToBottom = PARENT_ID;
+            paramsRl6.matchConstraintPercentHeight = 1.0f;
+            rl6.setLayoutParams(paramsRl6);
+
+            rl_blank.setVisibility(View.GONE);
+        }
+        // 字体
+        setTextSize(getIntDimen(R.dimen.sp_8), getIntDimen(R.dimen.sp_14));
+        // 部分文本
+        {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv_home_30min_km.getLayoutParams();
+            layoutParams.leftMargin = getIntDimen(R.dimen.dp_150);
+            tv_home_30min_km.setLayoutParams(layoutParams);
+
+            RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) tv_home_cal.getLayoutParams();
+            layoutParams1.leftMargin = getIntDimen(R.dimen.dp_200);
+            tv_home_cal.setLayoutParams(layoutParams1);
+
+            RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) tv_home_cal_hr.getLayoutParams();
+            layoutParams2.leftMargin = getIntDimen(R.dimen.dp_200);
+            tv_home_cal_hr.setLayoutParams(layoutParams2);
+        }
+    }
+
+    private void setTextSize(int size1, int size2) {
+        size1 = (int) (size1 * 0.6);
+        size2 = (int) (size2 * 0.6);
+        tv_home_strokes_unit.setTextSize(size1);
+        tv_home_level_unit.setTextSize(size1);
+        tv_home_title_drag.setTextSize(size1);
+        tv_home_title_cycle.setTextSize(size1);
+        tv_home_distance_unit.setTextSize(size1);
+        tv_home_30min_km_unit.setTextSize(size1);
+        tv_home_sm_unit.setTextSize(size1);
+        tv_home_rpm_unit.setTextSize(size1);
+        tv_home_watt_unit.setTextSize(size1);
+        tv_home_cal_unit.setTextSize(size1);
+        tv_home_ave_watt_unit.setTextSize(size1);
+        tv_home_cal_hr_unit.setTextSize(size1);
+        tv_home_500_unit.setTextSize(size1);
+        tv_home_ave_500_unit.setTextSize(size1);
+        tv_home_one_km.setTextSize(size1);
+        tv_home_ave_one_km_unit.setTextSize(size1);
+        tv_home_one_km_unit.setTextSize(size1);
+
+        tv_home_strokes.setTextSize(size2);
+        tv_home_level.setTextSize(size2);
+        tv_drag.setTextSize(size2);
+        tv_interval.setTextSize(size2);
+        tv_home_distance.setTextSize(size2);
+        tv_home_30min_km.setTextSize(size2);
+        tv_home_sm.setTextSize(size2);
+        tv_home_rpm.setTextSize(size2);
+        tv_home_watt.setTextSize(size2);
+        tv_home_cal.setTextSize(size2);
+        tv_home_ave_watt.setTextSize(size2);
+        tv_home_cal_hr.setTextSize(size2);
+        tv_time.setTextSize(size2);
+        tv_heart_rate.setTextSize(size2);
+        tv_home_500.setTextSize(size2);
+        tv_home_ave_500.setTextSize(size2);
+        tv_home_one_km.setTextSize(size2);
+        tv_home_ave_one_km.setTextSize(size2);
     }
 }

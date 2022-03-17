@@ -1,4 +1,4 @@
-package com.bike.ftms.app.view;
+package com.bike.ftms.app.view.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.activity.OnOrientationChanged;
 import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.UIUtils;
@@ -26,7 +27,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  * @Author YYH
  * @Date 2021/4/26
  */
-public class ConnectHintDialog extends Dialog {
+public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
     private Button yes;//确定按钮
     private Button no;//取消按钮
     private TextView titleTv;//消息标题文本
@@ -237,6 +238,54 @@ public class ConnectHintDialog extends Dialog {
             }
             Logger.d("fontSize == " + messageTv.getTextSize());
         }
+    }
+
+    @Override
+    public void setPortLayout() {
+        int rootHeight = UIUtils.getHeight(context);
+        int rootWidth = UIUtils.getWidth(context);
+        setContentWidthHeight((int) (rootWidth), (int) (rootHeight * 0.3));
+
+        WindowManager.LayoutParams attributes = getWindow().getAttributes();
+        attributes.width = (int) (rootWidth * 0.7);
+        getWindow().setAttributes(attributes);
+
+        ViewGroup.LayoutParams llParams = ll_content.getLayoutParams();
+        ViewGroup.LayoutParams llParams_bottom = ll_bottom_button.getLayoutParams();
+        ViewGroup.LayoutParams ll_sv_tv_Params = ll_sv_tv.getLayoutParams();
+
+        titleTv.setMinHeight((int) (llParams.height * 0.20));
+        titleTv.setMaxHeight((int) (llParams.height * 0.30));
+
+        llParams_bottom.height = (int) (llParams.height * 0.18);
+        ll_bottom_button.setLayoutParams(llParams_bottom);
+
+        ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
+        ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
+    }
+
+    @Override
+    public void setLandLayout() {
+        int rootHeight = UIUtils.getHeight(context);
+        int rootWidth = UIUtils.getWidth(context);
+        setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
+
+        WindowManager.LayoutParams attributes = getWindow().getAttributes();
+        attributes.width = (int) (rootWidth * 0.4);
+        getWindow().setAttributes(attributes);
+
+        ViewGroup.LayoutParams llParams = ll_content.getLayoutParams();
+        ViewGroup.LayoutParams llParams_bottom = ll_bottom_button.getLayoutParams();
+        ViewGroup.LayoutParams ll_sv_tv_Params = ll_sv_tv.getLayoutParams();
+
+        titleTv.setMinHeight((int) (llParams.height * 0.30));
+        titleTv.setMaxHeight((int) (llParams.height * 0.30));
+
+        llParams_bottom.height = (int) (llParams.height * 0.3);
+        ll_bottom_button.setLayoutParams(llParams_bottom);
+
+        ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
+        ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
     }
 
     /**

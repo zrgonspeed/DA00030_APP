@@ -8,6 +8,7 @@ import android.os.PersistableBundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bike.ftms.app.Debug;
@@ -35,9 +37,9 @@ import com.bike.ftms.app.manager.ble.BleManager;
 import com.bike.ftms.app.manager.ble.OnRunDataListener;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.Logger;
-import com.bike.ftms.app.view.ConnectHintDialog;
 import com.bike.ftms.app.view.HorizontalViewPager;
-import com.bike.ftms.app.view.SomeHintDialog;
+import com.bike.ftms.app.view.dialog.ConnectHintDialog;
+import com.bike.ftms.app.view.dialog.SomeHintDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,7 @@ import butterknife.OnClick;
 import tech.gujin.toast.ToastUtil;
 
 
-public class MainActivity extends BaseActivity implements OnRunDataListener {
+public class MainActivity extends BaseActivity implements OnRunDataListener, OnOrientationChanged {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.vp)
@@ -68,6 +70,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     ImageView btnSetting;
     @BindView(R.id.iv_page)
     ImageView ivPage;
+
+    @BindView(R.id.ll_bottom)
+    RelativeLayout ll_bottom;
+
     private PowerManager.WakeLock m_wklk;//屏幕锁屏
     private HomeFragment homeFragment;
     private WorkoutsFragment workoutsFragment;
@@ -98,10 +104,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
             someHintDialog = SomeHintDialog.showSomeHintDialog(this, someHintDialog);
         }
 
-        // 判空， Fragment同理
-        // if(findFragmentByTag(RootFragment) == null){
-        //     // 这里replace或add 根Fragment
-        // }
+
     }
 
 
@@ -110,23 +113,37 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
         super.onStart();
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         Logger.w("this == " + this);
+
+
         isOnPause = false;
         m_wklk.acquire(); //设置保持唤醒
         Logger.e("BleManager == " + BleManager.getInstance());
         BleManager.getInstance().setOnRunDataListener(this);
         if (!BleManager.isConnect && !BleManager.isHrConnect) {
             if (vp.getCurrentItem() == 0 && (someHintDialog == null || !someHintDialog.isShowing())) {
-                ConnectHintDialog.showConnectHintDialog(this, connectHintDialog);
+                connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog);
             }
             homeFragment.onRunData(new RowerDataBean1());
         } else {
             if (connectHintDialog != null && connectHintDialog.isShowing()) {
                 connectHintDialog.dismiss();
             }
+        }
+
+        Configuration cf = this.getResources().getConfiguration(); //获取设置的配置信息
+        int ori = cf.orientation; //获取屏幕方向
+        Logger.i("横竖屏: " + ori);
+        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+            //横屏
+            setLandLayout();
+        } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
+            //竖屏
+            setPortLayout();
         }
 
         // 判断是否登录，去显示下方用户名头像
@@ -395,16 +412,95 @@ public class MainActivity extends BaseActivity implements OnRunDataListener {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
-        Logger.i("newConfig " + newConfig.orientation);
-        // // //启动时默认是竖屏
-        // if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-        //     setContentView(R.layout.activity_main);
-        // }
-        // //切换就是横屏
-        // else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        //     setContentView(R.layout.activity_main_land);
-        // }
+        Logger.i("newConfig 横竖屏 " + newConfig.orientation);
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setPortLayout();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setLandLayout();
+        }
     }
 
+
+    @Override
+    public void setLandLayout() {
+        ViewGroup.LayoutParams layoutParams = ll_bottom.getLayoutParams();
+        layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        ll_bottom.setLayoutParams(layoutParams);
+
+        RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) btn_workout_login.getLayoutParams();
+        layoutParams1.setMarginEnd(getIntDimen(R.dimen.dp_10));
+        btn_workout_login.setLayoutParams(layoutParams1);
+
+        ViewGroup.LayoutParams layoutParams2 = btnBluetooth.getLayoutParams();
+        layoutParams2.height = getIntDimen(R.dimen.dp_40);
+        layoutParams2.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        btnBluetooth.setLayoutParams(layoutParams2);
+
+        RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) btnSetting.getLayoutParams();
+        layoutParams3.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        layoutParams3.height = getIntDimen(R.dimen.dp_40);
+        layoutParams3.setMarginEnd(getIntDimen(R.dimen.dp_10));
+        btnSetting.setLayoutParams(layoutParams3);
+
+        ivPage.setVisibility(View.VISIBLE);
+
+        // 对话框
+        if (connectHintDialog != null) {
+            connectHintDialog.setLandLayout();
+        }
+
+        // 已登录头像
+        RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) tv_username.getLayoutParams();
+        layoutParams4.setMarginEnd(-getIntDimen(R.dimen.dp_90));
+        tv_username.setLayoutParams(layoutParams4);
+        RelativeLayout.LayoutParams layoutParams5 = (RelativeLayout.LayoutParams) btn_workout_user_info.getLayoutParams();
+        layoutParams5.height = getIntDimen(R.dimen.dp_25);
+        btn_workout_user_info.setLayoutParams(layoutParams5);
+        btn_workout_user_info.setPadding(getIntDimen(R.dimen.dp_90), 0, 0, 0);
+
+    }
+
+    @Override
+    public void setPortLayout() {
+        ViewGroup.LayoutParams layoutParams = ll_bottom.getLayoutParams();
+        layoutParams.height = getIntDimen(R.dimen.dp_50);
+        ll_bottom.setLayoutParams(layoutParams);
+
+        RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) btn_workout_login.getLayoutParams();
+        layoutParams1.setMarginEnd(getIntDimen(R.dimen.dp_3));
+        btn_workout_login.setLayoutParams(layoutParams1);
+
+        ViewGroup.LayoutParams layoutParams2 = btnBluetooth.getLayoutParams();
+        layoutParams2.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        layoutParams2.width = getIntDimen(R.dimen.dp_40);
+        btnBluetooth.setLayoutParams(layoutParams2);
+
+        RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) btnSetting.getLayoutParams();
+        layoutParams3.width = getIntDimen(R.dimen.dp_40);
+        layoutParams3.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        layoutParams3.setMarginEnd(0);
+        btnSetting.setLayoutParams(layoutParams3);
+
+        ivPage.setVisibility(View.GONE);
+
+        // 对话框
+        if (connectHintDialog != null) {
+            connectHintDialog.setPortLayout();
+        }
+
+        // 已登录头像
+        RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) tv_username.getLayoutParams();
+        layoutParams4.setMarginEnd(-getIntDimen(R.dimen.dp_90));
+        tv_username.setLayoutParams(layoutParams4);
+        RelativeLayout.LayoutParams layoutParams5 = (RelativeLayout.LayoutParams) btn_workout_user_info.getLayoutParams();
+        layoutParams5.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        btn_workout_user_info.setLayoutParams(layoutParams5);
+        btn_workout_user_info.setPadding(getIntDimen(R.dimen.dp_95), 0, 0, 0);
+
+
+    }
+
+    private int getIntDimen(int id) {
+        return (int) getResources().getDimension(id);
+    }
 }
