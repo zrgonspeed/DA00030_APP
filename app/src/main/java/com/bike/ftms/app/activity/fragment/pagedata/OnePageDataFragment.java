@@ -13,6 +13,7 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.bean.rundata.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.manager.ble.BleManager;
+import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import java.text.DecimalFormat;
@@ -511,11 +512,12 @@ public class OnePageDataFragment extends BasePageDataFragment {
 
         }
         // 字体
-        setTextSize(getIntDimen(R.dimen.sp_8), getIntDimen(R.dimen.sp_12));
+        setTextSize((int) (getIntDimen(R.dimen.sp_6) * 0.8), (int) (getIntDimen(R.dimen.sp_8)));
+        tv_home_30min_km_unit.setTextSize((int) (getIntDimen(R.dimen.sp_6) * 0.8));
         // 部分文本
         {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv_home_30min_km.getLayoutParams();
-            layoutParams.leftMargin = getIntDimen(R.dimen.dp_100);
+            layoutParams.leftMargin = getIntDimen(R.dimen.dp_80);
             tv_home_30min_km.setLayoutParams(layoutParams);
 
             RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) tv_home_cal.getLayoutParams();
@@ -618,7 +620,9 @@ public class OnePageDataFragment extends BasePageDataFragment {
             rl_blank.setVisibility(View.GONE);
         }
         // 字体
-        setTextSize(getIntDimen(R.dimen.sp_8), getIntDimen(R.dimen.sp_14));
+        setTextSize((int) (getIntDimen(R.dimen.sp_6)), (int) (getIntDimen(R.dimen.sp_8)));
+        tv_home_30min_km_unit.setTextSize((int) (getIntDimen(R.dimen.sp_6)));
+
         // 部分文本
         {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv_home_30min_km.getLayoutParams();
@@ -636,8 +640,8 @@ public class OnePageDataFragment extends BasePageDataFragment {
     }
 
     private void setTextSize(int size1, int size2) {
-        size1 = (int) (size1 * 0.6);
-        size2 = (int) (size2 * 0.6);
+        Logger.i("fontSize == " + size1 + "  " + size2);
+
         tv_home_strokes_unit.setTextSize(size1);
         tv_home_level_unit.setTextSize(size1);
         tv_home_title_drag.setTextSize(size1);

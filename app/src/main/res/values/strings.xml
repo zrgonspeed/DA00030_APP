@@ -15,8 +15,8 @@
     <string name="home_ave_watts" translatable="false">AVE WATTS</string>
     <string name="home_ave_one_km" translatable="false">/1KM AVE</string>
     <string name="home_one_km" translatable="false">/1KM</string>
-    <string name="home_calories" translatable="false">CALORIES</string>
-    <string name="home_calories_hr" translatable="false">CALORIES/HR</string>
+    <string name="home_calories" translatable="false">CAL</string>
+    <string name="home_calories_hr" translatable="false">CAL/HR</string>
     <string name="home_exit">Are you sure to exit ?</string>
 
     <string name="setting_back">BACK</string>
