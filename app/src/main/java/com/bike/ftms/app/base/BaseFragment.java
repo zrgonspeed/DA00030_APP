@@ -115,7 +115,7 @@ public abstract class BaseFragment extends Fragment implements OnOrientationChan
 
         Configuration cf = this.getResources().getConfiguration(); //获取设置的配置信息
         int ori = cf.orientation; //获取屏幕方向
-        Logger.d(getTAG() + " 横竖屏: " + ori);
+        // Logger.d(getTAG() + " 横竖屏: " + ori);
         if (ori == Configuration.ORIENTATION_LANDSCAPE) {
             //横屏
             setLandLayout();

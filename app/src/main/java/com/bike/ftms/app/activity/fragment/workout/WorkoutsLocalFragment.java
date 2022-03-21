@@ -47,6 +47,9 @@ import tech.gujin.toast.ToastUtil;
  */
 public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsLocalPresenter.GetRunDataInfoFromServerCB, WorkoutsLocalPresenter.DeleteLocalRunDataCB, WorkoutsLocalPresenter.UpdateLocalNoteCB, WorkoutsLocalPresenter.DeleteRunDataFromServerCB, WorkoutsLocalPresenter.GetRunDataFromServerCB, WorkoutsLocalView, WorkoutsLocalPresenter.UploadNoteCB, WorkoutsLocalPresenter.UploadRunDataCB, WorkoutsLocalAdapter.OnItemClickListener, WorkoutsLocalAdapter.OnItemDeleteListener {
     private static final String TAG = WorkoutsLocalFragment.class.getSimpleName();
+    // @BindView(R.id.ll_workouts_item_type)
+    // LinearLayout ll_workouts_item_type;
+
 
     @BindView(R.id.tv_upload)
     TextView tv_upload;
@@ -401,6 +404,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     private void setWorkouts1() {
         Logger.i("rowerDataBean1List == " + rowerDataBean1List);
         workoutsLocalAdapter = new WorkoutsLocalAdapter(rowerDataBean1List, vector);
+
         rv_workouts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rv_workouts.setAdapter(workoutsLocalAdapter);
         workoutsLocalAdapter.addItemClickListener(this);
@@ -476,11 +480,17 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
     @Override
     public void setPortLayout() {
-
+        // RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_workouts_item_type.getLayoutParams();
+        // ll_workouts_item_type.setPadding(0, 0, 0, 0);
+        // ll_workouts_item_type.setLayoutParams(params);
+        workoutsLocalAdapter.setPortLayout();
     }
 
     @Override
     public void setLandLayout() {
-
+        // RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_workouts_item_type.getLayoutParams();
+        // ll_workouts_item_type.setPadding(getIntDimen(R.dimen.dp_50), 0, 0, 0);
+        // ll_workouts_item_type.setLayoutParams(params);
+        workoutsLocalAdapter.setLandLayout();
     }
 }

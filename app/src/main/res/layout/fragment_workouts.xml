@@ -144,7 +144,7 @@
             android:id="@+id/rv_workouts"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:scrollbarSize="20dp"
+            android:scrollbarSize="@dimen/dp_20"
             android:scrollbarThumbVertical="@color/scroll"
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"

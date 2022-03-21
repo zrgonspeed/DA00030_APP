@@ -457,6 +457,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         btn_workout_user_info.setLayoutParams(layoutParams5);
         btn_workout_user_info.setPadding(getIntDimen(R.dimen.dp_90), 0, 0, 0);
 
+
     }
 
     @Override
@@ -495,7 +496,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         layoutParams5.height = RelativeLayout.LayoutParams.MATCH_PARENT;
         btn_workout_user_info.setLayoutParams(layoutParams5);
         btn_workout_user_info.setPadding(getIntDimen(R.dimen.dp_95), 0, 0, 0);
-
 
     }
 
