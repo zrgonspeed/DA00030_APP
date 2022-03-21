@@ -1,4 +1,4 @@
-package com.bike.ftms.app.bean.rundata;
+package com.bike.ftms.app.ble.help;
 
 import com.bike.ftms.app.utils.Logger;
 

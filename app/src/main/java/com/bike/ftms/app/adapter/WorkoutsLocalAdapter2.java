@@ -9,11 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.rundata.view.RunInfoItem;
-import com.bike.ftms.app.bean.rundata.view.RunInfoVO;
+import com.bike.ftms.app.ble.bean.rundata.view.RunInfoItem;
+import com.bike.ftms.app.ble.bean.rundata.view.RunInfoVO;
 import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.utils.GsonUtil;
-import com.bike.ftms.app.utils.Logger;
 
 import java.util.List;
 
@@ -86,6 +84,13 @@ public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAda
                     holder.tv_info_ave_one_km.setVisibility(View.VISIBLE);
                     holder.tv_info_sm.setVisibility(View.GONE);
                     holder.tv_info_five_hundred.setVisibility(View.GONE);
+                }
+                break;
+                case MyConstant.CATEGORY_SKI: {
+                    holder.tv_info_sm.setVisibility(View.VISIBLE);
+                    holder.tv_info_five_hundred.setVisibility(View.VISIBLE);
+                    holder.tv_info_inst_level.setVisibility(View.GONE);
+                    holder.tv_info_ave_one_km.setVisibility(View.GONE);
                 }
                 break;
             }

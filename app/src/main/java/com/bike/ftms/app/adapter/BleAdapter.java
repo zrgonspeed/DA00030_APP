@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.BleAdapter.BleViewHolder;
 import com.bike.ftms.app.base.MyApplication;
-import com.bike.ftms.app.bean.bluetooth.MyScanResult;
-import com.bike.ftms.app.manager.ble.BleManager;
+import com.bike.ftms.app.ble.bean.MyScanResult;
+import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.utils.Logger;
 
 import java.util.List;

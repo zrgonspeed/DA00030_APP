@@ -1,4 +1,4 @@
-package com.bike.ftms.app.manager.ble;
+package com.bike.ftms.app.ble.help;
 
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;

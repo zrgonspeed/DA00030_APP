@@ -1,4 +1,6 @@
-package com.bike.ftms.app.bean.rundata;
+package com.bike.ftms.app.ble.bean.rundata;
+
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 
 public class HttpRowerDataBean1 extends RowerDataBean1 {
     private String workout_id;

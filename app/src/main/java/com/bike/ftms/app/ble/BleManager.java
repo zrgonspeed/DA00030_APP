@@ -1,4 +1,4 @@
-package com.bike.ftms.app.manager.ble;
+package com.bike.ftms.app.ble;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -18,11 +18,17 @@ import android.os.ParcelUuid;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.MyApplication;
-import com.bike.ftms.app.bean.bluetooth.MyScanResult;
-import com.bike.ftms.app.bean.rundata.RowerDataBean1;
-import com.bike.ftms.app.bean.rundata.RowerDataBean2;
+import com.bike.ftms.app.ble.bean.MyScanResult;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean2;
+import com.bike.ftms.app.ble.help.UuidHelp;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.common.RowerDataParam;
+import com.bike.ftms.app.ble.base.OnRunDataListener;
+import com.bike.ftms.app.ble.base.OnScanConnectListener;
+import com.bike.ftms.app.ble.category.BikeManager;
+import com.bike.ftms.app.ble.category.BoatManager;
+import com.bike.ftms.app.ble.category.SkiManager;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.serial.SerialCommand;
 import com.bike.ftms.app.serial.SerialData;
@@ -1438,6 +1444,13 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 BikeManager.getInstance().setRunData(data, rowerDataBean1);
             }
             break;
+            case MyConstant.CATEGORY_SKI: {
+                SkiManager.getInstance().setRunData(data, rowerDataBean1);
+            }
+            break;
+            case MyConstant.CATEGORY_STEP: {
+            }
+            break;
         }
     }
 
@@ -1634,7 +1647,7 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
                 switch (MyConstant.getCategory(deviceType)) {
                     case MyConstant.CATEGORY_BOAT: {
-                        // 2ad1  桨手数据
+                        // 2ad1  划船器
                         UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad1");
                         UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad1");
                     }
@@ -1646,6 +1659,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
                     }
                     break;
                     case MyConstant.CATEGORY_SKI: {
+                        // 滑雪机
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad1");
+                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad1");
                     }
                     break;
                     case MyConstant.CATEGORY_STEP: {
@@ -1696,6 +1712,10 @@ public class BleManager implements CustomTimer.TimerCallBack {
                             rowerDataBean1.setAveOneKmTime(resolveData(data, RowerDataParam.AVERAGE_ONE_KM_TIME_INX, RowerDataParam.AVERAGE_ONE_KM_TIME_LEN));
                             rowerDataBean1.setSplitOneKmTime(resolveData(data, RowerDataParam.SPLIT_ONE_KM_TIME_INX, RowerDataParam.SPLIT_ONE_KM_TIME_LEN));
                             rowerDataBean1.setSplitCal(resolveData(data, RowerDataParam.SPLIT_CAL_INX, RowerDataParam.SPLIT_CAL_LEN));
+                        }
+                        break;
+                        case MyConstant.CATEGORY_SKI: {
+
                         }
                         break;
                     }

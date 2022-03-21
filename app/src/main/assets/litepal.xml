@@ -6,8 +6,8 @@
     <version value="6" />
     <!-- 映射模型 -->
     <list>
-        <mapping class="com.bike.ftms.app.bean.rundata.RowerDataBean1" />
-        <mapping class="com.bike.ftms.app.bean.rundata.RowerDataBean2" />
+        <mapping class="com.bike.ftms.app.ble.bean.rundata.RowerDataBean1" />
+        <mapping class="com.bike.ftms.app.ble.bean.rundata.RowerDataBean2" />
     </list>
 
 </litepal>

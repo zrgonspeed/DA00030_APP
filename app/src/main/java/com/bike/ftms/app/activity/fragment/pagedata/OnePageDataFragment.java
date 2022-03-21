@@ -10,9 +10,9 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.manager.ble.BleManager;
+import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
@@ -228,6 +228,10 @@ public class OnePageDataFragment extends BasePageDataFragment {
                     showDistance = df.format(tempDistance / 1000.0f);
                 }
                 break;
+                case MyConstant.CATEGORY_SKI: {
+                    showDistance = tempDistance + "";
+                }
+                break;
             }
             tv_home_distance.setText(showDistance);
 
@@ -320,7 +324,41 @@ public class OnePageDataFragment extends BasePageDataFragment {
     }
 
     private void initSkiUI() {
+        arr2 = boatViewArr;
+        // 其它隐藏
+        for (View[] views : bikeViewArr) {
+            for (View view : views) {
+                view.setVisibility(View.GONE);
+            }
+        }
+        // 其它隐藏
+        // TODO: 2022/3/3
 
+
+        // 距离单位 m
+        tv_home_distance_unit.setText(getResources().getString(R.string.home_distance));
+
+        // 右下角 参数先显示
+        arr2[0][0].setVisibility(View.VISIBLE);
+        arr2[0][1].setVisibility(View.VISIBLE);
+        arr2[1][0].setVisibility(View.GONE);
+        arr2[1][1].setVisibility(View.GONE);
+
+        // 显示S/M
+        tv_home_sm.setVisibility(View.VISIBLE);
+        tv_home_sm_unit.setVisibility(View.VISIBLE);
+        tv_home_rpm.setVisibility(View.GONE);
+        tv_home_rpm_unit.setVisibility(View.GONE);
+
+        // 显示STROKES
+        tv_home_strokes.setVisibility(View.VISIBLE);
+        tv_home_strokes_unit.setVisibility(View.VISIBLE);
+        tv_home_level.setVisibility(View.GONE);
+        tv_home_level_unit.setVisibility(View.GONE);
+
+        // 隐藏速度
+        tv_home_30min_km.setVisibility(View.GONE);
+        tv_home_30min_km_unit.setVisibility(View.GONE);
     }
 
     private void initBoatUI() {

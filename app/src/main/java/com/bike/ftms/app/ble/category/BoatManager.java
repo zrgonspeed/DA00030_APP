@@ -1,8 +1,10 @@
-package com.bike.ftms.app.manager.ble;
+package com.bike.ftms.app.ble.category;
 
-import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.common.RowerDataParam;
+import com.bike.ftms.app.ble.BleManager;
+import com.bike.ftms.app.ble.base.CategoryType;
 import com.bike.ftms.app.utils.ConvertData;
 import com.bike.ftms.app.utils.Logger;
 
@@ -27,7 +29,7 @@ public class BoatManager extends CategoryType {
 
 
     @Override
-    void setRunData(byte[] data, RowerDataBean1 rowerDataBean1) {
+    public void setRunData(byte[] data, RowerDataBean1 rowerDataBean1) {
         setBleDataInxOfRower(new byte[]{data[0], data[1]});
         setRunData_2AD1(data, rowerDataBean1);
     }

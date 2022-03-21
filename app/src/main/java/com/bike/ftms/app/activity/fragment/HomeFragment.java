@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -12,7 +11,7 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.fragment.pagedata.OnePageDataFragment;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseFragment;
-import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.view.VerticalViewPager;
 

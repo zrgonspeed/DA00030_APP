@@ -1,6 +1,6 @@
-package com.bike.ftms.app.manager.ble;
+package com.bike.ftms.app.ble.base;
 
-import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 
 /**
  * @Description

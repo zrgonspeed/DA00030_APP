@@ -1,60 +1,32 @@
-package com.bike.ftms.app.bean.rundata.get;
+package com.bike.ftms.app.ble.bean.rundata.get;
 
-import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {
- * "totals": {
- * "time": "00:01:40",
- * "meters": "500M",
- * "efm": "01:35",
- * "cals": "44",
- * "sm": "73",
- * "calhr": "1686",
- * "watts": "403"
- * },
- * "items": [
- * {
- * "time": "00:00:20",
- * "meters": "100M",
- * "efm": "01:35",
- * "cals": "9",
- * "sm": "73",
- * "calhr": "1686",
- * "watts": "403"
- * },
- * ...
- * ]
- * }
+ * "date": "2021-10-20 10:07:00",
+ * "type": "100C",
+ * "result": "73M",
+ * "remarks":"备注信息"
  */
-public class RunDataResultBO {
+public class RunDataResultDTO {
     private String workout_id;
 
     private String date;
     private String type;
     private String result;
-    private String remarks;
+    private String remarks; // 备注信息
 
-    private List<RunDataInfoDTO> items = new ArrayList<>();
-    private RunDataInfoDTO totals = new RunDataInfoDTO();
+    private List<RunDataInfoDTO> runDataInfoDTOS = new ArrayList<>();
 
-    public RunDataResultBO() {
+    public RunDataResultDTO() {
     }
 
-    public RunDataResultBO(RowerDataBean1 bean1) {
+    public RunDataResultDTO(RowerDataBean1 bean1) {
         toSelf(bean1);
-    }
-
-    public void setTotals(RunDataInfoDTO totals) {
-        this.totals = totals;
-    }
-
-    public RunDataInfoDTO getTotals() {
-        return totals;
     }
 
     public String getWorkout_id() {
@@ -97,12 +69,12 @@ public class RunDataResultBO {
         this.remarks = remarks;
     }
 
-    public void setItems(List<RunDataInfoDTO> items) {
-        this.items = items;
+    public void setRunDataInfoDTOS(List<RunDataInfoDTO> runDataInfoDTOS) {
+        this.runDataInfoDTOS = runDataInfoDTOS;
     }
 
-    public List<RunDataInfoDTO> getItems() {
-        return items;
+    public List<RunDataInfoDTO> getRunDataInfoDTOS() {
+        return runDataInfoDTOS;
     }
 
     @Override
@@ -113,7 +85,7 @@ public class RunDataResultBO {
                 ", type='" + type + '\'' +
                 ", result='" + result + '\'' +
                 ", remarks='" + remarks + '\'' +
-                ", runDataInfoDTOS=" + items +
+                ", runDataInfoDTOS=" + runDataInfoDTOS +
                 '}';
     }
 

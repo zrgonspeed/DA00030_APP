@@ -24,9 +24,9 @@ import com.bike.ftms.app.activity.MainActivity;
 import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter;
 import com.bike.ftms.app.adapter.WorkoutsLocalAdapter2;
-import com.bike.ftms.app.bean.rundata.HttpRowerDataBean1;
-import com.bike.ftms.app.bean.rundata.RowerDataBean1;
-import com.bike.ftms.app.bean.rundata.view.RunInfoVO;
+import com.bike.ftms.app.ble.bean.rundata.HttpRowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.view.RunInfoVO;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
@@ -455,6 +455,13 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
                     tv_info_title_level.setVisibility(View.VISIBLE);
                     tv_info_title_500.setVisibility(View.GONE);
                     tv_info_title_sm.setVisibility(View.GONE);
+                }
+                break;
+                case MyConstant.CATEGORY_SKI: {
+                    tv_info_title_500.setVisibility(View.VISIBLE);
+                    tv_info_title_sm.setVisibility(View.VISIBLE);
+                    tv_info_title_ave_one_km.setVisibility(View.GONE);
+                    tv_info_title_level.setVisibility(View.GONE);
                 }
                 break;
             }

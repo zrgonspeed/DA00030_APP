@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.MyApplication;
-import com.bike.ftms.app.bean.rundata.HttpRowerDataBean1;
-import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.HttpRowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.TimeStringUtil;
 

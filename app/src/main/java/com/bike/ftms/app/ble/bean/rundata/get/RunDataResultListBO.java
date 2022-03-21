@@ -1,4 +1,4 @@
-package com.bike.ftms.app.bean.rundata.get;
+package com.bike.ftms.app.ble.bean.rundata.get;
 
 import java.util.List;
 

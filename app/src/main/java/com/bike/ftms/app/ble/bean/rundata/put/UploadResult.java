@@ -1,4 +1,4 @@
-package com.bike.ftms.app.bean.rundata.put;
+package com.bike.ftms.app.ble.bean.rundata.put;
 
 /*
 HTTP/1.1 200 OK

@@ -20,6 +20,7 @@ public class MyConstant {
     public static final int DEVICE_AA02020_00F_02 = 4;
     public static final int DEVICE_AA02230_00R_01 = 5;
     public static final int DEVICE_AA02290_00R_01 = 6;
+    public static final int DEVICE_AA02290_00F_01 = 7;
 
     @IntDef({
             DEVICE_AA02020_00R_01,
@@ -27,14 +28,15 @@ public class MyConstant {
             DEVICE_AA02020_00F_01,
             DEVICE_AA02020_00F_02,
             DEVICE_AA02230_00R_01,
-            DEVICE_AA02290_00R_01
+            DEVICE_AA02290_00R_01,
+            DEVICE_AA02290_00F_01,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface DeviceType {
     }
 
     public static final String[] deviceNames = {
-            "DEVICE_UNKNOW", "AA02020-00R-01", "AA01990", "AA02020-00F-01", "AA02020-00F-02", "AA02230-00R-01", "AA02290-00R-01"
+            "DEVICE_UNKNOW", "AA02020-00R-01", "AA01990", "AA02020-00F-01", "AA02020-00F-02", "AA02230-00R-01", "AA02290-00R-01", "AA02290-00F-01"
     };
 
     // 大类机型 ---------------------------------------------------------------------------------
@@ -59,6 +61,7 @@ public class MyConstant {
             DEVICE_AA02020_00F_01, DEVICE_AA02020_00F_02
     };
     private static final int[] ski_arr = {
+            DEVICE_AA02290_00F_01,
     };
     private static final int[] step_arr = {
     };

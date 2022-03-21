@@ -1,6 +1,6 @@
-package com.bike.ftms.app.bean.rundata.put;
+package com.bike.ftms.app.ble.bean.rundata.put;
 
-import com.bike.ftms.app.bean.rundata.RowerDataBean2;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean2;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 /*

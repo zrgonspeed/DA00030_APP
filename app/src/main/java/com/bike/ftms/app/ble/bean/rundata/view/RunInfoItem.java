@@ -1,4 +1,4 @@
-package com.bike.ftms.app.bean.rundata.view;
+package com.bike.ftms.app.ble.bean.rundata.view;
 
 public class RunInfoItem {
     private String interval;

@@ -1,4 +1,4 @@
-package com.bike.ftms.app.bean.rundata.put;
+package com.bike.ftms.app.ble.bean.rundata.put;
 
 public class RemarksBO {
     private String remarks;

@@ -1,9 +1,10 @@
-package com.bike.ftms.app.manager.ble;
+package com.bike.ftms.app.ble.category;
 
-import com.bike.ftms.app.bean.rundata.RowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.common.RowerDataParam;
+import com.bike.ftms.app.ble.BleManager;
+import com.bike.ftms.app.ble.base.CategoryType;
 import com.bike.ftms.app.utils.ConvertData;
-import com.bike.ftms.app.utils.DataTypeConversion;
 import com.bike.ftms.app.utils.Logger;
 
 import static com.bike.ftms.app.utils.DataTypeConversion.resolveData;

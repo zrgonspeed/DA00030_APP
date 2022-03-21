@@ -1,4 +1,4 @@
-package com.bike.ftms.app.bean.rundata;
+package com.bike.ftms.app.ble.bean.rundata.raw;
 
 
 import com.bike.ftms.app.common.MyConstant;
