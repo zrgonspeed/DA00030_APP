@@ -18,17 +18,17 @@ import android.os.ParcelUuid;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.MyApplication;
+import com.bike.ftms.app.ble.base.OnRunDataListener;
+import com.bike.ftms.app.ble.base.OnScanConnectListener;
 import com.bike.ftms.app.ble.bean.MyScanResult;
 import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean2;
-import com.bike.ftms.app.ble.help.UuidHelp;
-import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.common.RowerDataParam;
-import com.bike.ftms.app.ble.base.OnRunDataListener;
-import com.bike.ftms.app.ble.base.OnScanConnectListener;
 import com.bike.ftms.app.ble.category.BikeManager;
 import com.bike.ftms.app.ble.category.BoatManager;
 import com.bike.ftms.app.ble.category.SkiManager;
+import com.bike.ftms.app.ble.help.UuidHelp;
+import com.bike.ftms.app.common.MyConstant;
+import com.bike.ftms.app.common.RowerDataParam;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.serial.SerialCommand;
 import com.bike.ftms.app.serial.SerialData;
@@ -1577,6 +1577,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
         // ffe0   0xfe 0x40 0x01 0x4a 0x11 0x01 0xdd 0x05 0xff                  机型1个字节
         // ffe0   0xfe 0x40 0x01 0x4a 0x11 0x01 0x00 0xdd 0x05 0xff             机型2个字节
         if (data.length > 8 && data[1] == 0x40 && data[2] == 0x01) {
+            byte[] unPackData = new byte[32];
+            int len = SerialData.comUnPackage(data, unPackData, data.length);
+            Logger.i(ConvertData.byteArrayToHexString(unPackData, len));
+
+            byte[] resultData = new byte[len];
+            System.arraycopy(unPackData, 0, resultData, 0, len);
+            Logger.i(ConvertData.byteArrayToHexString(resultData, resultData.length));
+
+            data = resultData;
             // 日期和机型校验
             {
                 String[] dates = BasisTimesUtils.getCurDate().split("-");
@@ -1586,9 +1595,11 @@ public class BleManager implements CustomTimer.TimerCallBack {
                 date[2] = (byte) Integer.parseInt(dates[2], 16);
                 byte[] calCRCBytes = ConvertData.shortToBytes(SerialData.calCRCByTable(ConvertData.subBytes(date, 0, date.length), date.length));
                 Logger.i("calCRCBytes[0] == " + ConvertData.toHexString(calCRCBytes[0]) + " calCRCBytes[1] == " + ConvertData.toHexString(calCRCBytes[1]));
+                Logger.i("raw calCRCBytes[0] == " + calCRCBytes[0] + " calCRCBytes[1] == " + calCRCBytes[1]);
 
                 boolean dateOK = false;
                 boolean deviceTypeOK = false;
+
                 if (calCRCBytes[0] == data[3] && calCRCBytes[1] == data[4]) {
                     dateOK = true;
                     isVerifyConnectTimer.closeTimer();
@@ -1829,33 +1840,14 @@ public class BleManager implements CustomTimer.TimerCallBack {
     private static int initDeviceType(byte[] data) {
         int temp = -1;
         if (data.length == 10) {
-            boolean flag = false;
-            for (byte b : data) {
-                if (b == -3) {
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag) {
-                // 包含0xfd
-                // 1个字节机型
-                temp = data[5];
-                Logger.i("1个字节机型");
-            } else {
-                // 2个字节机型   低位在前高位在后
-                temp = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
-                Logger.i("2个字节机型");
-            }
+            temp = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
+            Logger.i("2个字节机型");
         } else {
             if (data.length == 9) {
                 temp = data[5];
                 Logger.i("1个字节机型");
-            } else {
-                temp = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
-                Logger.i("2个字节机型");
             }
         }
-
         return temp;
     }
 
