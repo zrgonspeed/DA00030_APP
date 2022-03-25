@@ -51,15 +51,15 @@
         app:layout_constraintVertical_bias="0.15"
         app:layout_constraintWidth_percent="0.9">
 
+
         <ImageView
             android:id="@+id/iv_setting_login"
             android:layout_width="@dimen/dp_100"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_10"
-            android:layout_toStartOf="@id/iv_setting_bluetooth"
+            android:layout_below="@+id/iv_setting_bluetooth"
+            android:layout_alignStart="@id/iv_setting_bluetooth"
             android:src="@drawable/btn_setting_login"
             android:visibility="visible" />
-
 
         <ImageView
             android:id="@+id/iv_setting_bluetooth"
@@ -87,7 +87,8 @@
             android:id="@+id/iv_setting_version"
             android:layout_width="@dimen/dp_100"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_10"
+            android:layout_below="@id/iv_setting_hr"
+            android:layout_alignStart="@id/iv_setting_hr"
             android:layout_toEndOf="@id/iv_setting_hr"
             android:src="@drawable/btn_setting_version" />
     </RelativeLayout>
