@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <!--标题栏1-->
         <RelativeLayout
@@ -295,7 +295,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!--包裹一层，用于将备注输入布局置底-->
         <LinearLayout
@@ -382,7 +382,7 @@
                     android:gravity="center"
                     android:text="@string/workouts_time"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_13"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -397,7 +397,7 @@
                     android:gravity="center"
                     android:text="@string/workouts_meters"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_13"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -413,7 +413,7 @@
                     android:gravity="center"
                     android:text="@string/workouts_clas"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_13"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -430,7 +430,7 @@
                     android:gravity="center"
                     android:text="@string/workouts_ave_500"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_13"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -446,7 +446,7 @@
                     android:gravity="center"
                     android:text="@string/workouts_ave_one_km"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_13"
                     android:textStyle="bold"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -463,7 +463,7 @@
                     android:gravity="center"
                     android:text="@string/workouts_sm"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_13"
                     android:textStyle="bold"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -480,7 +480,7 @@
                     android:gravity="center"
                     android:text="@string/workouts_level"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_13"
                     android:textStyle="bold"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -496,7 +496,7 @@
                     android:gravity="center"
                     android:text="@string/workouts_cal_hr"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_13"
                     android:textStyle="bold"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -512,7 +512,7 @@
                     android:gravity="center"
                     android:text="@string/workouts_ave_watts"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_13"
                     android:textStyle="bold"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
