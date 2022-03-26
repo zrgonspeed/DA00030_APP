@@ -1,44 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingEnd="@dimen/dp_10">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tv_info_interval"
-        android:layout_width="@dimen/dp_40"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dp_10"
         android:gravity="center"
         android:text="1"
         android:textColor="@color/color_0B4531"
         android:textSize="@dimen/sp_14"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.01"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.05" />
 
     <TextView
         android:id="@+id/tv_info_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="-20dp"
-        android:layout_weight="1"
         android:gravity="center"
         android:text="00:00:00"
         android:textColor="@color/color_0B4531"
         android:textSize="@dimen/sp_14"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.07"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.12" />
 
     <TextView
         android:id="@+id/tv_info_meters"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_weight="1"
         android:gravity="center"
         android:text="0M"
         android:textColor="@color/color_0B4531"
         android:textSize="@dimen/sp_14"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.22"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.12" />
 
 
     <TextView
@@ -52,7 +65,13 @@
         android:text="666"
         android:textColor="@color/color_0B4531"
         android:textSize="@dimen/sp_14"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.37"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.12" />
 
     <TextView
         android:id="@+id/tv_info_five_hundred"
@@ -64,7 +83,13 @@
         android:text="00:00:00"
         android:textColor="@color/color_0B4531"
         android:textSize="@dimen/sp_14"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.12" />
 
     <TextView
         android:id="@+id/tv_info_ave_one_km"
@@ -77,19 +102,30 @@
         android:textColor="@color/color_0B4531"
         android:textSize="@dimen/sp_14"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.12" />
 
     <TextView
         android:id="@+id/tv_info_sm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_weight="0.5"
         android:gravity="center"
         android:text="0"
         android:textColor="@color/color_0B4531"
         android:textSize="@dimen/sp_14"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.67"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.12" />
 
     <TextView
         android:id="@+id/tv_info_inst_level"
@@ -102,7 +138,13 @@
         android:textColor="@color/color_0B4531"
         android:textSize="@dimen/sp_14"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.67"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.12" />
 
     <TextView
         android:id="@+id/tv_info_cal_hr"
@@ -114,7 +156,13 @@
         android:text="0"
         android:textColor="@color/color_0B4531"
         android:textSize="@dimen/sp_14"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.12" />
 
     <TextView
         android:id="@+id/tv_info_watts"
@@ -126,5 +174,11 @@
         android:text="0"
         android:textColor="@color/color_0B4531"
         android:textSize="@dimen/sp_14"
-        android:textStyle="bold" />
-</LinearLayout>
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.12" />
+</androidx.constraintlayout.widget.ConstraintLayout>

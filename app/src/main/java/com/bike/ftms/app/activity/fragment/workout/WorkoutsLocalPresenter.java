@@ -601,8 +601,8 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
         for (RowerDataBean2 bean2 : bean2s) {
             // bean2 -> item
             RunInfoItem item = new RunInfoItem();
-            item.setAve_500(String.valueOf(bean2.getAve_five_hundred()));
-            item.setAve_one_km(String.valueOf(bean2.getAveOneKmTime()));
+            item.setAve_500(TimeStringUtil.getSToMinSecValue(bean2.getAve_five_hundred()));
+            item.setAve_one_km(TimeStringUtil.getSToMinSecValue(bean2.getAveOneKmTime()));
             item.setCal_hr(String.valueOf(bean2.getCalories_hr()));
             item.setAve_watts(String.valueOf(bean2.getAve_watts()));
             item.setLevel(String.valueOf(bean2.getLevel()));
@@ -639,9 +639,9 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
             totalItem.setAve_watts(String.valueOf(Math.round(ave_watts * 1.0f / bean2s.size())));
             totalItem.setCal_hr(String.valueOf(Math.round(cal_hr * 1.0f / bean2s.size())));
             // 不同机型不同
-            totalItem.setAve_500(String.valueOf(ave_500 / bean2s.size()));
+            totalItem.setAve_500(TimeStringUtil.getSToMinSecValue(ave_500 / bean2s.size()));
             totalItem.setSm(String.valueOf(sm / bean2s.size()));
-            totalItem.setAve_one_km(String.valueOf(ave_one_km / bean2s.size()));
+            totalItem.setAve_one_km(TimeStringUtil.getSToMinSecValue(ave_one_km / bean2s.size()));
             totalItem.setLevel(String.valueOf(level / bean2s.size()));
         }
 
