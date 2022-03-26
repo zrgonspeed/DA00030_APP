@@ -39,58 +39,59 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rl"
         app:layout_constraintVertical_bias="0.15"
         app:layout_constraintWidth_percent="0.9">
 
-
-        <ImageView
-            android:id="@+id/iv_setting_login"
-            android:layout_width="@dimen/dp_100"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/iv_setting_bluetooth"
-            android:layout_alignStart="@id/iv_setting_bluetooth"
-            android:src="@drawable/btn_setting_login"
-            android:visibility="visible" />
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/iv_setting_bluetooth"
-            android:layout_width="@dimen/dp_100"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_10"
-            android:layout_toStartOf="@id/v_line"
-            android:src="@drawable/btn_setting_bluetooth" />
+            <ImageView
+                android:id="@+id/iv_setting_login"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_100"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:src="@drawable/btn_setting_login"
+                android:visibility="visible" />
 
-        <View
-            android:id="@+id/v_line"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
 
-        <ImageView
-            android:id="@+id/iv_setting_hr"
-            android:layout_width="@dimen/dp_100"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_10"
-            android:layout_toEndOf="@id/v_line"
-            android:src="@drawable/btn_setting_hr" />
+            <ImageView
+                android:id="@+id/iv_setting_bluetooth"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_100"
+                android:src="@drawable/btn_setting_bluetooth" />
 
-        <ImageView
-            android:id="@+id/iv_setting_version"
-            android:layout_width="@dimen/dp_100"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_setting_hr"
-            android:layout_alignStart="@id/iv_setting_hr"
-            android:layout_toEndOf="@id/iv_setting_hr"
-            android:src="@drawable/btn_setting_version" />
-    </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_setting_hr"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_100"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:src="@drawable/btn_setting_hr" />
+
+            <ImageView
+                android:id="@+id/iv_setting_version"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_100"
+                android:src="@drawable/btn_setting_version" />
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
