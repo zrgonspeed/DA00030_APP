@@ -27,6 +27,7 @@ public abstract class BaseFragment extends Fragment implements OnOrientationChan
     private static String TAG = BaseFragment.class.getSimpleName();
 
     protected Activity mActivity;
+    protected int ori = 0;
 
     public BaseFragment() {
         super();
@@ -114,15 +115,8 @@ public abstract class BaseFragment extends Fragment implements OnOrientationChan
         Logger.d(getTAG() + " - " + "Fragment 处于活动状态");
 
         Configuration cf = this.getResources().getConfiguration(); //获取设置的配置信息
-        int ori = cf.orientation; //获取屏幕方向
         // Logger.d(getTAG() + " 横竖屏: " + ori);
-        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
-            //横屏
-            setLandLayout();
-        } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
-            //竖屏
-            setPortLayout();
-        }
+        setOri(cf.orientation);
     }
 
     /**
@@ -216,15 +210,22 @@ public abstract class BaseFragment extends Fragment implements OnOrientationChan
         super.onConfigurationChanged(newConfig);
 
         Logger.d(getTAG() + " newConfig 横竖屏 " + newConfig.orientation);
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            setPortLayout();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            setLandLayout();
-        }
+        setOri(newConfig.orientation);
     }
 
     protected int getIntDimen(int id) {
         return (int) getResources().getDimension(id);
+    }
+
+    private void setOri(int ori) {
+        this.ori = ori;
+        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+            //横屏
+            setLandLayout();
+        } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
+            //竖屏
+            setPortLayout();
+        }
     }
 }
 

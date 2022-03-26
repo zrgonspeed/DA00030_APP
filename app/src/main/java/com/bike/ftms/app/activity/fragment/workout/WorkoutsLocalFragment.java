@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,8 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
     @BindView(R.id.tv_info_date)
     TextView tv_info_date;
+    @BindView(R.id.tv_type)
+    TextView tv_type;
     @BindView(R.id.tv_info_mode)
     TextView tv_info_mode;
     @BindView(R.id.iv_info_device)
@@ -89,6 +92,20 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     @BindView(R.id.edt_info_note)
     EditText edt_info_note;
     // 详细页面标题
+    @BindView(R.id.tv_workouts)
+    TextView tv_workouts;
+
+    @BindView(R.id.tv_info_title_time)
+    TextView tv_info_title_time;
+    @BindView(R.id.tv_info_title_meters)
+    TextView tv_info_title_meters;
+    @BindView(R.id.tv_info_title_cal)
+    TextView tv_info_title_cal;
+    @BindView(R.id.tv_info_title_cal_hr)
+    TextView tv_info_title_cal_hr;
+    @BindView(R.id.tv_info_title_ave_watt)
+    TextView tv_info_title_ave_watt;
+
     @BindView(R.id.tv_info_title_500)
     TextView tv_info_title_500;
     @BindView(R.id.tv_info_title_sm)
@@ -439,6 +456,8 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
         {
             // workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(bean2List);
             workoutsLocalAdapter2 = new WorkoutsLocalAdapter2(runInfoVO);
+            workoutsLocalAdapter2.setOri(ori);
+
             rv_workouts2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             rv_workouts2.setAdapter(workoutsLocalAdapter2);
 
@@ -480,17 +499,53 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
     @Override
     public void setPortLayout() {
-        // RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_workouts_item_type.getLayoutParams();
-        // ll_workouts_item_type.setPadding(0, 0, 0, 0);
-        // ll_workouts_item_type.setLayoutParams(params);
         workoutsLocalAdapter.setPortLayout();
+        if (workoutsLocalAdapter2 != null) {
+            workoutsLocalAdapter2.setPortLayout();
+        }
+        tv_info_date.setTextSize(TypedValue.COMPLEX_UNIT_PX, getIntDimen(R.dimen.sp_12));
+        tv_type.setVisibility(View.GONE);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) iv_info_device.getLayoutParams();
+        layoutParams.height = getIntDimen(R.dimen.dp_30);
+        layoutParams.width = getIntDimen(R.dimen.dp_30);
+        layoutParams.rightMargin = getIntDimen(R.dimen.dp_0);
+        iv_info_device.setLayoutParams(layoutParams);
+
+        //workout2 标题字体大小
+        setWorkouts2_Title_TextSize(getIntDimen(R.dimen.sp_11));
+        tv_workouts.setTextSize(TypedValue.COMPLEX_UNIT_PX, getIntDimen(R.dimen.sp_11));
     }
 
     @Override
     public void setLandLayout() {
-        // RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_workouts_item_type.getLayoutParams();
-        // ll_workouts_item_type.setPadding(getIntDimen(R.dimen.dp_50), 0, 0, 0);
-        // ll_workouts_item_type.setLayoutParams(params);
         workoutsLocalAdapter.setLandLayout();
+        if (workoutsLocalAdapter2 != null) {
+            workoutsLocalAdapter2.setLandLayout();
+        }
+        tv_info_date.setTextSize(TypedValue.COMPLEX_UNIT_PX, getIntDimen(R.dimen.sp_14));
+        tv_type.setVisibility(View.VISIBLE);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) iv_info_device.getLayoutParams();
+        layoutParams.height = getIntDimen(R.dimen.dp_40);
+        layoutParams.width = getIntDimen(R.dimen.dp_40);
+        layoutParams.rightMargin = getIntDimen(R.dimen.dp_50);
+        iv_info_device.setLayoutParams(layoutParams);
+
+        //workout2 标题字体大小
+        setWorkouts2_Title_TextSize(getIntDimen(R.dimen.sp_13));
+        tv_workouts.setTextSize(TypedValue.COMPLEX_UNIT_PX, getIntDimen(R.dimen.sp_14));
+    }
+
+    private void setWorkouts2_Title_TextSize(int size) {
+        tv_info_title_time.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        tv_info_title_meters.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        tv_info_title_cal.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        tv_info_title_500.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        tv_info_title_ave_one_km.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        tv_info_title_sm.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        tv_info_title_ave_one_km.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        tv_info_title_cal_hr.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        tv_info_title_ave_watt.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
     }
 }

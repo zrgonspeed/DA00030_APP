@@ -21,7 +21,6 @@ import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.ble.bean.rundata.HttpRowerDataBean1;
 import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import java.util.List;
@@ -184,6 +183,10 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
         notifyDataSetChanged();
     }
 
+    protected int getIntDimen(int id) {
+        return (int) MyApplication.getContext().getResources().getDimension(id);
+    }
+
     public interface OnItemClickListener {
         void onItemClickListener(int position);
     }
@@ -238,9 +241,5 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
             ll_workouts_item_result = itemView.findViewById(R.id.ll_workouts_item_result);
             ll_workouts_item_date = itemView.findViewById(R.id.ll_workouts_item_date);
         }
-    }
-
-    protected int getIntDimen(int id) {
-        return (int) MyApplication.getContext().getResources().getDimension(id);
     }
 }

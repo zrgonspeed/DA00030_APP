@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!--标题栏1-->
         <RelativeLayout
@@ -295,7 +295,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <!--包裹一层，用于将备注输入布局置底-->
         <LinearLayout
@@ -371,162 +371,110 @@
             </RelativeLayout>
 
             <!--标题栏-->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_30"
-                android:background="@color/color_387E2F">
+                android:layout_height="wrap_content"
+                android:background="@color/color_387E2F"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/dp_6"
+                android:paddingBottom="@dimen/dp_6">
 
                 <TextView
-                    android:id="@+id/tv_info_title_time"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/workouts_time"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_13"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.07"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.13" />
+                    android:textSize="@dimen/sp_10"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_info_title_meters"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/workouts_meters"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_13"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.22"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.13" />
-
+                    android:textSize="@dimen/sp_10"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_info_title_cal"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
                     android:gravity="center"
                     android:text="@string/workouts_clas"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_13"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.37"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.13" />
-
+                    android:textSize="@dimen/sp_10"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_info_title_500"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/workouts_ave_500"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_13"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.52"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.13" />
+                    android:textSize="@dimen/sp_10"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_info_title_ave_one_km"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/workouts_ave_one_km"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_13"
+                    android:textSize="@dimen/sp_10"
                     android:textStyle="bold"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.52"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.13" />
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_info_title_sm"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
                     android:gravity="center"
                     android:text="@string/workouts_sm"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_13"
-                    android:textStyle="bold"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.67"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.13" />
+                    android:textSize="@dimen/sp_10"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_info_title_level"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
                     android:gravity="center"
                     android:text="@string/workouts_level"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_13"
+                    android:textSize="@dimen/sp_10"
                     android:textStyle="bold"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.67"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.13" />
+                    android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/tv_info_title_cal_hr"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/workouts_cal_hr"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_13"
-                    android:textStyle="bold"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.82"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.13" />
+                    android:textSize="@dimen/sp_10"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_info_title_ave_watt"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/workouts_ave_watts"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp_13"
-                    android:textStyle="bold"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.97"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.13" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:textSize="@dimen/sp_10"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <!--数据列表-->
             <LinearLayout

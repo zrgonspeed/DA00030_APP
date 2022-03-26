@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/dp_5">
+
+    <TextView
+        android:id="@+id/tv_info_interval"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:layout_marginStart="@dimen/dp_5"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="@color/color_0B4531"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_info_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_0"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="00:00:00"
+        android:textColor="@color/color_0B4531"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_info_meters"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="0M"
+        android:textColor="@color/color_0B4531"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/tv_info_cals"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="0dp"
+        android:layout_weight="0.8"
+        android:gravity="center"
+        android:text="666"
+        android:textColor="@color/color_0B4531"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_info_five_hundred"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="00:00:00"
+        android:textColor="@color/color_0B4531"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_info_ave_one_km"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="00:00"
+        android:textColor="@color/color_0B4531"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_info_sm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/color_0B4531"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_info_inst_level"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/color_0B4531"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_info_cal_hr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/color_0B4531"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_info_watts"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/color_0B4531"
+        android:textSize="@dimen/sp_13"
+        android:textStyle="bold" />
+</LinearLayout>
