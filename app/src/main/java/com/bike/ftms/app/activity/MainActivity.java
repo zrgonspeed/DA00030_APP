@@ -35,6 +35,7 @@ import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.ble.base.OnRunDataListener;
 import com.bike.ftms.app.manager.storage.SpManager;
+import com.bike.ftms.app.utils.BasisTimesUtils;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.view.HorizontalViewPager;
 import com.bike.ftms.app.view.dialog.ConnectHintDialog;
@@ -104,6 +105,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         }
 
 
+        Logger.i(BasisTimesUtils.getCurDate());
     }
 
 
