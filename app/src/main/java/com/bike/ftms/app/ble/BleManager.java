@@ -82,6 +82,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
      * 0x16 0x75 0x33 0x01 0x0b 0x01
      * heart_rate=117	(0x75)
      */
+    /**
+     * 2a38  Body Sensor Location  人体感应器位置
+     */
 
     // 2ada 用
     public static final byte RUN_STATUS_RUNNING = 0x01;
@@ -1101,10 +1104,15 @@ public class BleManager implements CustomTimer.TimerCallBack {
 
             if (gattService != null) {
                 List<BluetoothGattCharacteristic> list = gattService.getCharacteristics();
-                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad3");
-                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ada");
-                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2a37");
-                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2a38");
+
+                if (isScanHrDevice) {
+                    UuidHelp.setCharacterNotification(mBluetoothHrGatt, list, "2a37");
+                    UuidHelp.setCharacterNotification(mBluetoothHrGatt, list, "2a38");
+
+                } else {
+                    UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad3");
+                    UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ada");
+                }
             }
 
         }

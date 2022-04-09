@@ -40,8 +40,10 @@ public class UuidHelp {
     public static void setCharacterNotification(BluetoothGatt bluetoothGatt, List<BluetoothGattCharacteristic> list, String s) {
         for (BluetoothGattCharacteristic gattCharacteristic : list) {
             if (gattCharacteristic.getUuid().toString().contains(s)) {//接收通道
-                boolean enabled = bluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-                Logger.i(s + ",注册通知::" + enabled);
+                if (bluetoothGatt != null) {
+                    boolean enabled = bluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
+                    Logger.i(s + ",注册通知::" + enabled);
+                }
             }
         }
     }

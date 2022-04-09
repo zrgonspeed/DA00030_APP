@@ -84,6 +84,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
 
     private boolean isOnPause = false;
     private boolean isLogin = false;
+    private int ori = 1;
 
     @Override
     protected int getLayoutId() {
@@ -127,7 +128,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         BleManager.getInstance().setOnRunDataListener(this);
         if (!BleManager.isConnect && !BleManager.isHrConnect) {
             if (vp.getCurrentItem() == 0 && (someHintDialog == null || !someHintDialog.isShowing())) {
-                connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog);
+                connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog, ori);
             }
             homeFragment.onRunData(new RowerDataBean1());
         } else {
@@ -137,7 +138,8 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         }
 
         Configuration cf = this.getResources().getConfiguration(); //获取设置的配置信息
-        int ori = cf.orientation; //获取屏幕方向
+        //获取屏幕方向
+        ori = cf.orientation;
         Logger.i("横竖屏: " + ori);
         if (ori == Configuration.ORIENTATION_LANDSCAPE) {
             //横屏
@@ -308,7 +310,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         runOnUiThread(() -> {
             onConnectStatus(BleManager.isConnect, BleManager.deviceType);
             if (connectHintDialog == null) {
-                connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog);
+                connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog, ori);
             }
         });
     }
@@ -414,6 +416,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Logger.i("newConfig 横竖屏 " + newConfig.orientation);
+        ori = newConfig.orientation;
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             setPortLayout();
         } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {

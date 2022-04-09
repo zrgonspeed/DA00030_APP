@@ -3,6 +3,7 @@ package com.bike.ftms.app.view.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -299,7 +300,7 @@ public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
         public void onNoClick();
     }
 
-    public synchronized static ConnectHintDialog showConnectHintDialog(Activity activity, ConnectHintDialog connectHintDialog) {
+    public synchronized static ConnectHintDialog showConnectHintDialog(Activity activity, ConnectHintDialog connectHintDialog, int ori) {
         Logger.i("showConnectHintDialog()-----------------------------connectHintDialog== " + connectHintDialog);
         if (connectHintDialog != null) {
             Logger.i("connectHintDialog.isShowing() == " + connectHintDialog.isShowing());
@@ -339,6 +340,17 @@ public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
         connectHintDialog.setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
         connectHintDialog.setType(1);
 
+        connectHintDialog.setOri(ori);
         return connectHintDialog;
+    }
+
+    private void setOri(int ori) {
+        if (ori == Configuration.ORIENTATION_LANDSCAPE) {
+            //横屏
+            setLandLayout();
+        } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
+            //竖屏
+            setPortLayout();
+        }
     }
 }
