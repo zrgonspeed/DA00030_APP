@@ -1,7 +1,8 @@
 package com.bike.ftms.app.ble;
 
+import static com.bike.ftms.app.utils.DataTypeConversion.resolveData;
+
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -9,18 +10,12 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.ParcelUuid;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.ble.base.OnRunDataListener;
-import com.bike.ftms.app.ble.base.OnScanConnectListener;
 import com.bike.ftms.app.ble.bean.MyScanResult;
 import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean2;
@@ -41,25 +36,34 @@ import com.bike.ftms.app.utils.Logger;
 
 import org.litepal.crud.LitePalSupport;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
-import dev.xesam.android.toolbox.timer.CountDownTimer;
 import tech.gujin.toast.ToastUtil;
 
-import static com.bike.ftms.app.utils.DataTypeConversion.resolveData;
-
 @SuppressLint({"MissingPermission", "WrongConstant"})
-public class BleManager extends BaseBleManager implements CustomTimer.TimerCallBack {
+public class BleManager extends BaseBleManager {
     private String TAG = BleManager.class.getSimpleName();
     private static BleManager instance;
 
     public final String uuid = "00001826-0000-1000-8000-00805f9b34fb";      //  标准服务：   Fitness Machine	    健康设备     1826
     public final String uuidSendData = "0000ffe5-0000-1000-8000-00805f9b34fb";  // 自定义服务uuid
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public void disableCharacterNotifiy() {
+        UuidHelp.disableCharacterNotifiy1(mBluetoothGatt, mBluetoothGattServices);
+    }
+
+    @Override
+    protected String getConnectTag() {
+        return isConnectTag;
+    }
 
     /**
      * 这些uuid用于收发运动数据
@@ -72,6 +76,8 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
      * ffe0     自定义特征,  中心设备发
      * ffe9     自定义特征, 手机发
      */
+
+    protected final String isConnectTag = "isConnect";
 
 
     // 2ada 用
@@ -93,32 +99,7 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
     public static int deviceType = -1;  // 电子表机型
     public static int categoryType = -1;    // 电子表分类
 
-    public static boolean isConnect;  //是否连接
-    public static boolean isCanning;  //是否正在扫描
-    public static boolean isOpen;     //是否打开定位及蓝牙
-
-    private BluetoothAdapter mBluetoothAdapter; //系统蓝牙适配器
-    private OnScanConnectListener onScanConnectListener;      //扫描回调
-    private List<MyScanResult> mScanResults = new ArrayList<>();      //扫描到的蓝牙设备
-    private List<BluetoothGattService> mBluetoothGattServices;//服务，Characteristic(特征) 的集合。
-    private BluetoothGattCharacteristic mBluetoothGattCharacteristic;//特征值(用于收发数据)   当前是ffe9发
-    private OnRunDataListener onRunDataListener;//运动数据回调
-
-    public OnRunDataListener getOnRunDataListener() {
-        return onRunDataListener;
-    }
-
-    // 电子表
-    private BluetoothGatt mBluetoothGatt;       //连接蓝牙、及操作
-    private MyScanResult connectScanResult;
-    private CustomTimer isConnectTimer;
-    private final String isConnectTag = "isConnect";
-
-    private static final long SCAN_MAX_COUNT = 20;     //扫描的设备个数限制（停止扫描）
-    public static long SCAN_PERIOD = 60 * 1000;     //扫描设备时间限制
-    private final long SCAN_PERIOD_INTERVAL = 1000;     //隔多久回调1次
     private static final long SEND_VERIFY_TIME = 2000; // 发送校验码延迟时间
-    private static final long START_SCAN_DELAY_TIME = 3000; // 扫描设备延迟时间
 
     public boolean setBleDataInx = false;
     private boolean isToExamine = false;
@@ -127,7 +108,6 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
 
     private CustomTimer isVerifyConnectTimer;
     private final String isVerifyConnectTag = "isVerifyConnect";
-    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper()));
 
     private RowerDataBean1 rowerDataBean1 = new RowerDataBean1();
     private RowerDataBean2 rowerDataBean2 = new RowerDataBean2();
@@ -135,63 +115,22 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
     private int tempInterval2 = 0;
     private boolean canSave = false;
 
+    protected BluetoothGattCharacteristic mBluetoothGattCharacteristic;//特征值(用于收发数据)   当前是ffe9发
+
     /**
      * 连接超时，回调
      */
-    private Runnable mConnTimeOutRunnable = () -> {
+/*    private Runnable mConnTimeOutRunnable = () -> {
         Logger.e("连接设备超时");
         if (mBluetoothGatt != null) {
             mBluetoothGatt.disconnect();
         }
-    };
+    };*/
 
-    /**
-     * 搜索设备时间计时
-     */
-    private CountDownTimer countDownTimer;
+    protected OnRunDataListener onRunDataListener;//运动数据回调
 
-    private CountDownTime countDownTime;
-
-    /**
-     * 蓝牙打开与关闭回调 -> BluetoothActivity
-     */
-    private BleOpenCallBack bleOpenCallBack;
-    private BleClosedCallBack bleClosedCallBack;
-
-    public interface BleOpenCallBack {
-        void isOpen(boolean open);
-    }
-
-    public interface BleClosedCallBack {
-        void isClosed(boolean disable);
-    }
-
-    public interface CountDownTime {
-        void onTick(long time);
-
-        void onFinish();
-
-        void onStart();
-    }
-
-    public void setBleOpenCallBack(BleOpenCallBack bleOpenCallBack) {
-        this.bleOpenCallBack = bleOpenCallBack;
-    }
-
-    public void setBleClosedCallBack(BleClosedCallBack bleClosedCallBack) {
-        this.bleClosedCallBack = bleClosedCallBack;
-    }
-
-    public void setCountDownTime(CountDownTime countDownTime) {
-        this.countDownTime = countDownTime;
-    }
-
-
-    /**
-     * 扫描回调 -> BluetoothActivity
-     */
-    public void setOnScanConnectListener(OnScanConnectListener onScanConnectListener) {
-        this.onScanConnectListener = onScanConnectListener;
+    public OnRunDataListener getOnRunDataListener() {
+        return onRunDataListener;
     }
 
     /**
@@ -215,222 +154,6 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
         return instance;
     }
 
-    /**
-     * @return 扫描到的设备
-     */
-    public List<MyScanResult> getScanResults() {
-        if (mScanResults == null) {
-            mScanResults = new ArrayList<>();
-        }
-        return mScanResults;
-    }
-
-    /**
-     * @return 系统蓝牙适配器
-     */
-    public BluetoothAdapter getBluetoothAdapter() {
-        if (mBluetoothAdapter == null) {
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        }
-
-        Logger.e("mBluetoothAdapter == null ? " + (mBluetoothAdapter == null));
-        return mBluetoothAdapter;
-    }
-
-
-    /**
-     * 扫描蓝牙设备
-     */
-    public void scanDevice() {
-        Logger.i("scanDevice()");
-
-        Logger.e("mBluetoothAdapter == " + mBluetoothAdapter + "    isCanning == " + isCanning);
-        if (mBluetoothAdapter != null && !isCanning) {
-            boolean enabled = mBluetoothAdapter.isEnabled();
-            Logger.i("2 enabled == " + enabled);
-            if (!enabled) {
-                boolean enable = mBluetoothAdapter.enable();
-                Logger.e("2_1 enable == " + enable);
-                return;
-            }
-
-            startSearchCountDownTimer();
-
-            isCanning = true;
-            mScanResults.clear();
-            if (connectScanResult != null && connectScanResult.getConnectState() == 1) {
-                mScanResults.add(connectScanResult);
-            }
-
-            if (onScanConnectListener != null) {
-                onScanConnectListener.onScanSuccess();
-            }
-
-            //创建ScanSettings的build对象用于设置参数
-            ScanSettings.Builder builder = new ScanSettings.Builder()
-                    //设置高功耗模式(低延时)
-                    .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
-            //android 6.0添加设置回调类型、匹配模式等
-            if (android.os.Build.VERSION.SDK_INT >= 23) {
-                //定义回调类型
-                builder.setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES);
-                //设置蓝牙LE扫描滤波器硬件匹配的匹配模式
-                builder.setMatchMode(ScanSettings.MATCH_MODE_STICKY);
-            }
-            // 若设备支持批处理扫描，可以选择使用批处理，但此时扫描结果仅触发onBatchScanResults()
-            if (mBluetoothAdapter.isOffloadedScanBatchingSupported()) {
-                //设置蓝牙LE扫描的报告延迟的时间（以毫秒为单位）
-                //设置为0以立即通知结果
-                builder.setReportDelay(0L);
-            }
-            ScanSettings scanSettings = builder.build();
-            List<ScanFilter> scanFilters = new ArrayList<>();
-            ScanFilter scanFilter;
-
-            scanFilter = new ScanFilter.Builder().setServiceUuid(new ParcelUuid(UUID.fromString(uuid))).build();
-            scanFilters.add(scanFilter);
-            mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
-        }
-    }
-
-    /**
-     * 扫描时间刷新计时
-     */
-    private void startSearchCountDownTimer() {
-        if (countDownTimer == null) {
-            // + 200 毫秒是应该的
-            countDownTimer = new CountDownTimer(SCAN_PERIOD + 200, SCAN_PERIOD_INTERVAL) {
-                @Override
-                protected void onStart(long millisUntilFinished) {
-                    Logger.i("开始扫描");
-                    if (countDownTime != null) {
-                        countDownTime.onStart();
-                    }
-                }
-
-                @Override
-                protected void onTick(long millisUntilFinished) {
-                    long seconds = Math.round((double) millisUntilFinished / 1000);
-                    if (countDownTime != null) {
-                        countDownTime.onTick(seconds);
-                    }
-                }
-
-                @Override
-                public void onFinish() {
-                    Logger.e("扫描时间到了，停止扫描");
-                    stopScan();
-                    if (mScanResults.size() == 0) {//没有搜索到设备
-                        Logger.e("No devices were found");
-                    }
-                }
-
-                @Override
-                protected void onCancel(long millisUntilFinished) {
-                    Logger.e("扫描取消");
-                }
-            };
-
-        }
-
-        countDownTimer.cancel();
-        countDownTimer.start();
-    }
-
-    /**
-     * 扫描时间刷新结束
-     */
-    private void stopSearchCountDownTimer() {
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-            countDownTimer = null;
-        }
-    }
-
-    /**
-     * 停止扫描
-     */
-    public void stopScan() {
-        if (mBluetoothAdapter != null && isCanning) {
-            isCanning = false;
-            //mHandler.removeCallbacksAndMessages(null);
-            if (mBluetoothAdapter.getBluetoothLeScanner() != null && mBluetoothAdapter.isEnabled()) {
-                mBluetoothAdapter.getBluetoothLeScanner().stopScan(mScanCallback);
-            }
-
-            if (onScanConnectListener != null) {
-                Logger.e("thread == " + Thread.currentThread().toString());
-                mHandler.post(() -> {
-                    onScanConnectListener.onStopScan();
-                });
-            }
-
-            stopSearchCountDownTimer();
-
-            Logger.e("停止扫描设备");
-        }
-    }
-
-    /**
-     * 扫描结果回调
-     */
-    private final ScanCallback mScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            super.onScanResult(callbackType, result);
-            //Logger.i("onScanResult:" + result.getDevice().getName());
-           /* Logger.i("onScanResult" + result.getDevice().toString());          //D5:EA:80:77:23:39
-            Logger.i("onScanResult" + result.getDevice().getUuids());            //null
-            Logger.i("onScanResult" + result.getDevice().getType());             //2
-            Logger.i("onScanResult" + result.getDevice().getName());             //PZ-PA051BA
-            Logger.i("onScanResult" + result.getDevice().getAddress());          //D5:EA:80:77:23:39
-            Logger.i("onScanResult" + result.getDevice().getBluetoothClass());   //1f00
-            Logger.i("onScanResult" + result.getDevice().getAlias());            //null
-            Logger.i("onScanResult" + result.getDevice().getBondState());        //10
-            Logger.i("onScanResult" + result.toString());
-            //设备广播（ScanRecord）
-            //result.getScanRecord().getServiceUuids()   mServiceUuids=[0000ab00-0000-1000-8000-00805f9b34fb]*/
-
-            String deviceAddress = result.getDevice().getAddress();
-            String deviceName = result.getDevice().getName();
-
-            if (deviceName != null && !deviceName.trim().equals("") && deviceAddress != null) {
-                boolean isAdd = true;//第一次无需查重
-                for (int i = 0; i < getScanResults().size(); i++) {//查重
-                    if (getScanResults().get(i).getScanResult().getDevice().getAddress().equals(deviceAddress)) {
-                        isAdd = false;
-                    }
-                }
-                if (isAdd) {
-                    getScanResults().add(new MyScanResult(result, 0));
-                    if (onScanConnectListener != null) {
-                        onScanConnectListener.onScanSuccess();
-                    }
-                    if (getScanResults().size() >= SCAN_MAX_COUNT) { //达到限制后停止扫描
-                        Logger.e("getScanResults().size() == " + getScanResults().size());
-                        stopScan();
-                    }
-                }
-
-            }
-
-        }
-
-        @Override
-        public void onBatchScanResults(List<ScanResult> results) {
-            super.onBatchScanResults(results);
-            Logger.i("onBatchScanResults");
-        }
-
-        @Override
-        public void onScanFailed(int errorCode) {
-            super.onScanFailed(errorCode);
-            Logger.i("onScanFailed" + errorCode);
-        }
-
-    };
-
-    public int mPosition = -1;
 
     /**
      * 连接蓝牙设备
@@ -448,7 +171,7 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
             disableCharacterNotifiy();
             disConnectDevice();
             Logger.e("2------disConnectDevice()");
-            BleManager.getInstance().mPosition = -1;
+            setPosition(-1);
 
             if (onScanConnectListener != null) {
                 onScanConnectListener.onNotifyData();
@@ -477,42 +200,6 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
         }
     }
 
-    /**
-     * 强制清除内部缓存
-     */
-    private boolean refreshDeviceCache(BluetoothGatt gatt) {
-        try {
-            BluetoothGatt localBluetoothGatt = gatt;
-            Method localMethod = localBluetoothGatt.getClass().getMethod("refresh", new Class[0]);
-            if (localMethod != null) {
-                boolean bool = ((Boolean) localMethod.invoke(localBluetoothGatt, new Object[0])).booleanValue();
-                return bool;
-            }
-        } catch (Exception localException) {
-            Logger.e("An exception occurred while refreshing device");
-        }
-        return false;
-    }
-
-    /**
-     * 禁用特征值通知
-     */
-    public void disableCharacterNotifiy() {
-        UuidHelp.disableCharacterNotifiy(mBluetoothGatt, mBluetoothGattServices);
-    }
-
-    /**
-     * 断开蓝牙设备
-     */
-    public void disConnectDevice() {
-        Logger.e("disConnectDevice()");
-        reset();
-        resetDeviceType();
-        if (mBluetoothGatt != null) {
-            mBluetoothGatt.disconnect();
-        }
-    }
-
     private void resetDeviceType() {
         isConnect = false;
         deviceType = -1;
@@ -524,21 +211,6 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
         }
     }
 
-    /**
-     * APP退出时
-     */
-    public void destroy() {
-        mBluetoothGatt = null;
-
-        bleClosedCallBack = null;
-        bleOpenCallBack = null;
-
-        onRunDataListener = null;
-        onScanConnectListener = null;
-//        mScanCallback = null;
-
-//        instance = null;
-    }
 
     /**
      * 电子表设备连接回调
@@ -567,7 +239,7 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
             // mHandler.removeCallbacks(mConnTimeOutRunnable);
 
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                BleManager.getInstance().mPosition = -1;
+                setPosition(-1);
                 if (mBluetoothGatt != null) {
                     Logger.e("mBluetoothGatt.close();");
                     mBluetoothGatt.close();
@@ -629,17 +301,17 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
                 }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Logger.e("断开设备回调");
-
                 disableCharacterNotifiy();
 
                 // 保存运动数据
                 saveRowDataBean1();
 
-                BleManager.getInstance().mPosition = -1;
+                setPosition(-1);
                 rowerDataBean1 = new RowerDataBean1();
                 if (onRunDataListener != null) {
                     onRunDataListener.onRunData(rowerDataBean1);
                 }
+                // 设置扫描结果中的连接状态
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
                         myScanResult.setConnectState(0);
@@ -802,10 +474,8 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
      */
     private void registrationGattCharacteristic() {
         if (mBluetoothGattServices != null) {
-            BluetoothGattService gattService;
-            gattService = mBluetoothGatt.getService(UUID.fromString(uuid));
+            BluetoothGattService gattService = mBluetoothGatt.getService(UUID.fromString(uuid));
             if (gattService == null) {
-                // onRunDataListener.onExit();
                 mBluetoothGatt.disconnect();
                 mBluetoothGatt = null;
             }
@@ -856,116 +526,6 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
         return r;
     }
 
-    /**
-     * 释放资源
-     */
-    public void whenBTClosed() {
-        // 蓝牙关闭后的操作
-        isOpen = false;
-        isCanning = false;
-        resetDeviceType();
-        reset();
-    }
-
-    /**
-     * 打开BLE  外部调用
-     */
-    public void openBLE(BleOpenCallBack bleOpenCallBack) {
-        this.bleOpenCallBack = bleOpenCallBack;
-        boolean enabled = mBluetoothAdapter.isEnabled();
-        Logger.i("enable == " + enabled);
-        if (enabled) {
-            isOpen = enabled;
-            mHandler.post(() -> bleOpenCallBack.isOpen(isOpen));
-            BleManager.getInstance().getScanResults().clear();
-            mHandler.postDelayed(() -> {
-                BleManager.getInstance().scanDevice();
-            }, START_SCAN_DELAY_TIME);
-            return;
-        }
-
-        if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
-            new Thread(() -> {
-                isOpen = mBluetoothAdapter.enable();
-                Logger.i("mBluetoothAdapter.enable()");
-                Logger.i("isOpen == " + isOpen);
-
-                if (!isOpen) {
-                    isOpen = mBluetoothAdapter.isEnabled();
-                }
-                Logger.i("isOpen == " + isOpen);
-
-                if (isOpen) {
-                    mHandler.postDelayed(() -> {
-                        BleManager.getInstance().scanDevice();
-                    }, START_SCAN_DELAY_TIME);
-                    BleManager.getInstance().getScanResults().clear();
-                } else {
-                }
-
-                mHandler.post(() -> bleOpenCallBack.isOpen(isOpen));
-            }).start();
-        }
-    }
-
-    /**
-     * 关闭BLE 外部调用
-     */
-    public void closeBLE(BleClosedCallBack bleClosedCallBack) {
-        this.bleClosedCallBack = bleClosedCallBack;
-
-        if (mBluetoothAdapter != null) {
-            new Thread(() -> {
-
-                BleManager.getInstance().stopScan();
-                BleManager.getInstance().disableCharacterNotifiy();
-                BleManager.getInstance().disConnectDevice();
-                mHandler.removeCallbacksAndMessages(null);
-
-                // true 表示适配器关闭已开始，或 false 表示立即错误
-                boolean disable = mBluetoothAdapter.disable();
-                Logger.e("mBluetoothAdapter.disable() == " + disable);
-
-                if (disable) {
-                    isOpen = false;
-                    Logger.e("断开蓝牙成功");
-                } else {
-                    Logger.e("断开蓝牙失败");
-                }
-
-                mHandler.post(() -> bleClosedCallBack.isClosed(disable));
-            }).start();
-        } else {
-            Logger.e("mBluetoothAdapter == null");
-        }
-    }
-
-    /**
-     * 恢复默认值 -> 连接设备时
-     */
-    private void reset() {
-        RowerDataParam.STROKE_RATE_INX = -1;
-        RowerDataParam.STROKE_COUNT_INX = -1;
-        RowerDataParam.AVERAGE_STROKE_RATE_INX = -1;
-        RowerDataParam.TOTAL_DISTANCE_INX = -1;
-        RowerDataParam.INSTANTANEOUS_PACE_INX = -1;
-        RowerDataParam.AVERAGE_PACE_INX = -1;
-        RowerDataParam.INSTANTANEOUS_POWER_INX = -1;
-        RowerDataParam.AVERAGE_POWER_INX = -1;
-        RowerDataParam.RESISTANCE_LEVEL_INX = -1;
-        RowerDataParam.HEART_RATE_INX = -1;
-        RowerDataParam.METABOLIC_EQUIVALENT_INX = -1;
-        RowerDataParam.ELAPSED_TIME_INX = -1;
-        RowerDataParam.REMAINING_TIME_INX = -1;
-        RowerDataParam.ENERGY_PER_HOUR_INX = -1;
-        RowerDataParam.TOTAL_ENERGY_INX = -1;
-        RowerDataParam.ENERGY_PER_MINUTE_INX = -1;
-        setBleDataInx = false;
-        isSendVerifyData = false;
-        isToExamine = false;
-        canSave = false;
-    }
-
 
     /**
      * 校验命令
@@ -1008,17 +568,6 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
         int len = SerialData.comPackage(bytes, respondByte, bytes.length - 3);
         sendDescriptorByte(respondByte, len);
     }
-
-
-    private void startTimerOfIsConnect() {
-        if (isConnectTimer == null) {
-            isConnectTimer = new CustomTimer();
-        }
-        isConnectTimer.closeTimer();
-        isConnectTimer.setTag(isConnectTag);
-        isConnectTimer.startTimer(1000, 1000, this);
-    }
-
 
     private void startTimerOfIsVerifyConnect() {
         if (isVerifyConnectTimer == null) {
@@ -1102,6 +651,7 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
                     onRunDataListener.onRunData(rowerDataBean1);
                 }
             }
+
             return;
         }
 
@@ -1524,74 +1074,70 @@ public class BleManager extends BaseBleManager implements CustomTimer.TimerCallB
     }
 
     private static void tempSave(LitePalSupport support) {
-/*        new Thread() {
-            public void run() {
-                Looper.prepare();
-                new Handler().post(() -> {
-                    ToastUtil.show("保存成功！", true, ToastUtil.Mode.REPLACEABLE);
-                });//在子线程中直接去new 一个handler
-                Looper.loop();    //这种情况下，Runnable对象是运行在子线程中的，可以进行联网操作，但是不能更新UI
-            }
-        }.start();*/
         support.save();
     }
 
-    /*public void startSend() {
-        rowerDataBean1 = new RowerDataBean1();
+    /**
+     * 恢复默认值 -> 连接设备时
+     */
+    protected void reset() {
+        RowerDataParam.STROKE_RATE_INX = -1;
+        RowerDataParam.STROKE_COUNT_INX = -1;
+        RowerDataParam.AVERAGE_STROKE_RATE_INX = -1;
+        RowerDataParam.TOTAL_DISTANCE_INX = -1;
+        RowerDataParam.INSTANTANEOUS_PACE_INX = -1;
+        RowerDataParam.AVERAGE_PACE_INX = -1;
+        RowerDataParam.INSTANTANEOUS_POWER_INX = -1;
+        RowerDataParam.AVERAGE_POWER_INX = -1;
+        RowerDataParam.RESISTANCE_LEVEL_INX = -1;
+        RowerDataParam.HEART_RATE_INX = -1;
+        RowerDataParam.METABOLIC_EQUIVALENT_INX = -1;
+        RowerDataParam.ELAPSED_TIME_INX = -1;
+        RowerDataParam.REMAINING_TIME_INX = -1;
+        RowerDataParam.ENERGY_PER_HOUR_INX = -1;
+        RowerDataParam.TOTAL_ENERGY_INX = -1;
+        RowerDataParam.ENERGY_PER_MINUTE_INX = -1;
+        setBleDataInx = false;
+        isSendVerifyData = false;
+        isToExamine = false;
+        canSave = false;
+    }
 
-        // 2ada
-        // 模拟
-        isToExamine = true;
-        // 2ada
-        // 0x20 0x00 0x05 0x01 0x00
-        byte[] data = new byte[5];
-        data[0] = 0x20;
-        data[1] = 0x00;
-        data[2] = 0x05;
-        data[3] = 0x01;
-        data[4] = 0x00;
+    /**
+     * 断开设备
+     */
+    public void disConnectDevice() {
+        Logger.e("disConnectDevice()");
+        reset();
+        resetDeviceType();
+        if (mBluetoothGatt != null) {
+            mBluetoothGatt.disconnect();
+        }
+    }
 
-        byte[] finalData = data;
-        new Thread(() -> {
-            while (true) {
-                rxDataPackage(finalData, "2ada");
-                SystemClock.sleep(500);
-            }
-        }).start();
+    public void whenBTClosed() {
+        // 蓝牙关闭后的操作
+        isOpen = false;
+        isCanning = false;
+        resetDeviceType();
+        reset();
+    }
 
+    /**
+     * APP退出时
+     */
+    public void destroy() {
+        mBluetoothGatt = null;
+        bleClosedCallBack = null;
+        bleOpenCallBack = null;
+        onScanConnectListener = null;
+        onRunDataListener = null;
 
-        // 2ad1  ftms
-        // 0x7c 0x0b 0x92 0x53 0x02 0x5d 0x0a 0x00 0x5e 0x00 0x5e 0x00 0x93 0x01 0x93 0x01 0xeb 0x00 0x96 0x06 0x73 0x3c 0xb9 0x02
-        byte[] data2 = {0x7c, 0x0b, 0x70, 0x53, 0x02, 0x5d, 0x0a, 0x00, 0x5e, 0x00, 0x5e, 0x00, 0x70, 0x01, 0x70, 0x01, 0x70, 0x00, 0x70, 0x06, 0x73, 0x3c, 0x70, 0x02};
-        new Thread(() -> {
-            while (true) {
-                rxDataPackage(data2, "2ad1");
-                SystemClock.sleep(500);
-            }
-        }).start();
+    }
 
-        byte[] data3 = {0x16, 0x75, 0x33, 0x01, 0x0b, 0x01};
-        isHeartbeatConnect = true;
-        new Thread(() -> {
-            while (true) {
-                setHrData(data3);
-                SystemClock.sleep(500);
-            }
-        }).start();
-    }*/
-
-    /*public void startThread() {
-        rowerDataBean1 = new RowerDataBean1();
-
-        new Thread(() -> {
-            while (true) {
-                rowerDataBean1.setDistance((long) (Math.random() * 66 + 1));
-                rowerDataBean1.setTime(new Date().getTime());
-                rowerDataBean1.setCalorie((long) (Math.random() * 10 + 1));
-                onRunDataListener.onRunData(rowerDataBean1);
-                SystemClock.sleep(1000);
-            }
-        }).start();
-
-    }*/
+    public void setHrInt(short heart_rate) {
+        if (rowerDataBean1 != null) {
+            rowerDataBean1.setHeart_rate(heart_rate);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.bike.ftms.app.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.BleAdapter.BleViewHolder;
 import com.bike.ftms.app.base.MyApplication;
+import com.bike.ftms.app.ble.BaseBleManager;
 import com.bike.ftms.app.ble.bean.MyScanResult;
 import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.utils.Logger;
@@ -42,14 +44,6 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
         notifyDataSetChanged();
     }
 
-    /**
-     * 设置新的数据
-     */
-    public void setData(@Nullable List<MyScanResult> data) {
-        list = data;
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public BleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -57,6 +51,7 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
         return bleAdapter;
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onBindViewHolder(@NonNull BleViewHolder holder, int position) {
         MyScanResult myScanResult = list.get(position);
@@ -72,7 +67,7 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
         holder.tvName.setText(myScanResult.getScanResult().getDevice().getName());
         holder.tvAddress.setText(myScanResult.getScanResult().getDevice().getAddress());
         if (myScanResult.getConnectState() == 1) {
-            BleManager.getInstance().mPosition = position;
+            getBleManager().setPosition(position);
             holder.tvState.setText(MyApplication.getContext().getResources().getString(R.string.disconnect));
         } else if (myScanResult.getConnectState() == 2 || myScanResult.getConnectState() == 3) {
             holder.tvState.setText(MyApplication.getContext().getResources().getString(R.string.connecting));
@@ -80,6 +75,16 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
             holder.tvState.setText(MyApplication.getContext().getResources().getString(R.string.connect));
         }
     }
+
+    private BaseBleManager baseBleManager;
+
+    public void setBleManager(BaseBleManager baseBleManager) {
+        this.baseBleManager = baseBleManager;
+    }
+
+    private BaseBleManager getBleManager() {
+        return baseBleManager;
+    };
 
     @Override
     public int getItemCount() {

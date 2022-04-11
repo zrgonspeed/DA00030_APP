@@ -1,5 +1,6 @@
 package com.bike.ftms.app.ble.help;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
@@ -9,6 +10,7 @@ import com.bike.ftms.app.utils.Logger;
 
 import java.util.List;
 
+@SuppressLint("MissingPermission")
 public class UuidHelp {
     /**
      * 启用特征值通知
@@ -51,7 +53,7 @@ public class UuidHelp {
     /**
      * 禁用特征值通知
      */
-    public static void disableCharacterNotifiy(BluetoothGatt bluetoothGatt, List<BluetoothGattService> bluetoothGattServices) {
+    public static void disableCharacterNotifiy1(BluetoothGatt bluetoothGatt, List<BluetoothGattService> bluetoothGattServices) {
         Logger.e("disableCharacterNotifiy()");
         if (bluetoothGattServices == null || bluetoothGatt == null) {
             return;
@@ -64,6 +66,23 @@ public class UuidHelp {
                         characteristic.getUuid().toString().contains("2ad2") ||
                         characteristic.getUuid().toString().contains("2ad3")
                 ) {
+                    bluetoothGatt.setCharacteristicNotification(characteristic, false);
+                }
+            }
+        }
+    }
+
+    /**
+     * 禁用特征值通知
+     */
+    public static void disableCharacterNotifiy2(BluetoothGatt bluetoothGatt, List<BluetoothGattService> bluetoothGattServices) {
+        Logger.e("disableCharacterNotifiy2()");
+        if (bluetoothGattServices == null || bluetoothGatt == null) {
+            return;
+        }
+        for (BluetoothGattService service : bluetoothGattServices) {
+            for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                if (characteristic.getUuid().toString().contains("2a37")) {
                     bluetoothGatt.setCharacteristicNotification(characteristic, false);
                 }
             }

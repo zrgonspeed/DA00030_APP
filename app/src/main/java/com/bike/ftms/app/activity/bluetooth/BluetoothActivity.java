@@ -64,7 +64,7 @@ public class BluetoothActivity extends BaseBluetoothActivity implements OnScanCo
 
     @Override
     protected boolean isOpenBle() {
-        return BleManager.isOpen;
+        return BleManager.getInstance().isOpen;
     }
 
     @Override
@@ -75,6 +75,24 @@ public class BluetoothActivity extends BaseBluetoothActivity implements OnScanCo
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onItemClickListener(int position, View v, int connectState) {
+        if (!isClicked) {
+            if (position != getBleManager().getPosition() && getBleManager().getPosition() != -1) {
+                // 断开旧连接
+                getBleManager().connectDevice(getBleManager().getPosition());
+                getBleManager().setPosition(-1);
+            } else {
+                getBleManager().connectDevice(position);
+                getBleManager().setPosition(position);
+            }
+            new Handler().postDelayed(() -> {
+                isClicked = false;
+            }, 2000);
+        }
+        isClicked = true;
     }
 
 }

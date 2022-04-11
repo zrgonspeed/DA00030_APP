@@ -122,12 +122,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         super.onResume();
         Logger.w("this == " + this);
 
-
         isOnPause = false;
         m_wklk.acquire(); //设置保持唤醒
-        Logger.e("BleManager == " + BleManager.getInstance());
         BleManager.getInstance().setOnRunDataListener(this);
-        if (!BleManager.isConnect && !BleHeartDeviceManager.isConnect) {
+        if (!BleManager.getInstance().isConnect && !BleHeartDeviceManager.getInstance().isConnect) {
             if (vp.getCurrentItem() == 0 && (someHintDialog == null || !someHintDialog.isShowing())) {
                 connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog, ori);
             }
@@ -165,7 +163,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
             tv_username.setVisibility(View.GONE);
         }
 
-        onConnectStatus(BleManager.isConnect, BleManager.deviceType);
+        onConnectStatus(BleManager.getInstance().isConnect, BleManager.deviceType);
     }
 
     // 显示连接上的机型和图片
@@ -309,7 +307,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
             return;
         }
         runOnUiThread(() -> {
-            onConnectStatus(BleManager.isConnect, BleManager.deviceType);
+            onConnectStatus(BleManager.getInstance().isConnect, BleManager.deviceType);
             if (connectHintDialog == null) {
                 connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog, ori);
             }
@@ -319,7 +317,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
     @Override
     public void connected() {
         runOnUiThread(() -> {
-            onConnectStatus(BleManager.isConnect, BleManager.deviceType);
+            onConnectStatus(BleManager.getInstance().isConnect, BleManager.deviceType);
             homeFragment.connected();
         });
     }
@@ -362,6 +360,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         BleManager.getInstance().disableCharacterNotifiy();
         BleManager.getInstance().disConnectDevice();
         BleManager.getInstance().destroy();
+
+        BleHeartDeviceManager.getInstance().disableCharacterNotifiy();
+        BleHeartDeviceManager.getInstance().disConnectDevice();
+        BleHeartDeviceManager.getInstance().destroy();
 
         homeFragment = null;
         workoutsFragment = null;
@@ -462,8 +464,6 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         layoutParams5.height = getIntDimen(R.dimen.dp_25);
         btn_workout_user_info.setLayoutParams(layoutParams5);
         btn_workout_user_info.setPadding(getIntDimen(R.dimen.dp_90), 0, 0, 0);
-
-
     }
 
     @Override

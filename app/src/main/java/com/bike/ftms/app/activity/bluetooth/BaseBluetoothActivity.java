@@ -49,7 +49,7 @@ import butterknife.OnClick;
 import tech.gujin.toast.ToastUtil;
 
 public abstract class BaseBluetoothActivity extends BaseActivity implements OnScanConnectListener, BleAdapter.OnItemClickListener,
-        BleManager.BleOpenCallBack, BleManager.BleClosedCallBack {
+        BaseBleManager.BleOpenCallBack, BaseBleManager.BleClosedCallBack {
     private static final String TAG = BaseBluetoothActivity.class.getSimpleName();
     private static final int PERMISSION_STATE_CODE = 1000;
     private static final int LOCALTION_STATE_CODE = 1050;
@@ -167,8 +167,8 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
     @Override
     protected void initView() {
         Logger.i("initView()");
-        getBleManager().getInstance().getBluetoothAdapter();
-        getBleManager().getInstance().setCountDownTime(new BaseBleManager.CountDownTime() {
+        getBleManager().getBluetoothAdapter();
+        getBleManager().setCountDownTime(new BaseBleManager.CountDownTime() {
             @Override
             public void onTick(long time) {
                 tv_search_time.setText("" + time);
@@ -245,19 +245,19 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
                 scanDevice();
             } else {
                 Logger.e("断开蓝牙?");
-                BleManager.getInstance().closeBLE(this);
+                getBleManager().closeBLE(this);
             }
         });
 
 
-        boolean enabled = BleManager.getInstance().getBluetoothAdapter().isEnabled();
+        boolean enabled = getBleManager().getBluetoothAdapter().isEnabled();
         cb_switch.setChecked(enabled);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        BleManager.getInstance().setOnScanConnectListener(this);
+        getBleManager().setOnScanConnectListener(this);
         //注册广播
         initBLEBroadcastReceiver();
     }
@@ -275,7 +275,7 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
                 requestPermissionAndOpenBLE();
             } else {
                 startRefresh();
-                BleManager.getInstance().scanDevice();
+                getBleManager().scanDevice();
             }
         }
     }
@@ -315,7 +315,7 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
                 Logger.i("有权限");
                 // 还需要开启位置功能
 
-                BleManager.getInstance().openBLE(this);
+                getBleManager().openBLE(this);
                 // 另一种打开蓝牙的方式
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivity(enableBtIntent);
@@ -347,7 +347,7 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
 
             } else {
                 Logger.i("有权限");
-                BleManager.getInstance().openBLE(this);
+                getBleManager().openBLE(this);
 
                 // 另一种打开蓝牙的方式
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -368,7 +368,7 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
             if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 获取到权限，作相应处理（调用定位SDK应当确保相关权限均被授权，否则可能引起定位失败）
                 startRefresh();
-                BleManager.getInstance().openBLE(this);
+                getBleManager().openBLE(this);
             } else {
                 // 没有获取到权限，做特殊处理
                 Logger.e("" + "没有获取到权限");
@@ -425,7 +425,8 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
         if (bleAdapter != null) {
             bleAdapter.notifyDataSetChanged();
         } else {
-            bleAdapter = new BleAdapter(BleManager.getInstance().getScanResults());
+            bleAdapter = new BleAdapter(getBleManager().getScanResults());
+            bleAdapter.setBleManager(getBleManager());
             bleAdapter.addItemClickListener(this);
             rv_ble.setAdapter(bleAdapter);
             rv_ble.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -459,38 +460,19 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
     @Override
     protected void onPause() {
         super.onPause();
-        BleManager.getInstance().setOnScanConnectListener(null);
-        BleManager.getInstance().stopScan();
-        BleManager.getInstance().setBleOpenCallBack(null);
-        BleManager.getInstance().setBleClosedCallBack(null);
-        BleManager.getInstance().setCountDownTime(null);
+        getBleManager().setOnScanConnectListener(null);
+        getBleManager().stopScan();
+        getBleManager().setBleOpenCallBack(null);
+        getBleManager().setBleClosedCallBack(null);
+        getBleManager().setCountDownTime(null);
 
         //注销广播接收
         unregisterReceiver(bleBroadcastReceiver);
     }
 
     // 每点击一次要2秒后才能再次点击，防止狂按
-    private boolean isClicked = false;
+    protected boolean isClicked = false;
 
-    @Override
-    public void onItemClickListener(int position, View v, int connectState) {
-        if (!isClicked) {
-            if (position != BleManager.getInstance().mPosition && BleManager.getInstance().mPosition != -1) {
-                // 断开旧连接
-                BleManager.getInstance().connectDevice(BleManager.getInstance().mPosition);
-                BleManager.getInstance().mPosition = -1;
-            } else {
-                BleManager.getInstance().connectDevice(position);
-                BleManager.getInstance().mPosition = position;
-            }
-            new Handler().postDelayed(() -> {
-                isClicked = false;
-//                v.setEnabled(true);
-            }, 2000);
-//            v.setEnabled(false);
-        }
-        isClicked = true;
-    }
 
     @Override
     protected void onDestroy() {
@@ -569,7 +551,7 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
                 Logger.e("蓝牙广播接收：state == " + state);
                 if (state == BluetoothAdapter.STATE_OFF) {
                     Logger.e("蓝牙广播接收：蓝牙关闭");
-                    BleManager.getInstance().whenBTClosed();
+                    getBleManager().whenBTClosed();
                     isClosed(true);
                     // isPre = false;
                 } else if (state == BluetoothAdapter.STATE_ON) {
