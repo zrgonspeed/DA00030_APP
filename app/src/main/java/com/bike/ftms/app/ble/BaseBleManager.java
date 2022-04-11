@@ -56,12 +56,13 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
     protected MyScanResult connectScanResult;
     protected CustomTimer isConnectTimer;
 
-    public boolean isConnect;  //是否连接
-    public boolean isCanning;  //是否正在扫描
-    public boolean isOpen;     //是否打开定位及蓝牙
+    protected boolean isConnect;  //是否连接
+    protected boolean isCanning;  //是否正在扫描
+    protected boolean isOpen;     //是否打开定位及蓝牙
+
 
     private static final long SCAN_MAX_COUNT = 20;     //扫描的设备个数限制（停止扫描）
-    public static long SCAN_PERIOD = 60 * 1000;     //扫描设备时间限制
+    private static long SCAN_PERIOD = 60 * 1000;     //扫描设备时间限制
     private final long SCAN_PERIOD_INTERVAL = 1000;     //隔多久回调1次
 
     private static final long START_SCAN_DELAY_TIME = 3000; // 扫描设备延迟时间
@@ -89,7 +90,6 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
     protected BleOpenCallBack bleOpenCallBack;
     protected BleClosedCallBack bleClosedCallBack;
 
-    public abstract void connectDevice(int mPosition);
 
     public interface BleOpenCallBack {
         void isOpen(boolean open);
@@ -119,6 +119,9 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
         this.countDownTime = countDownTime;
     }
 
+    public boolean getIsOpen() {
+        return isOpen;
+    }
 
     /**
      * 扫描回调 -> BluetoothActivity
@@ -190,8 +193,6 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
             mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
         }
     }
-
-    protected abstract String getUuid();
 
     /**
      * 扫描时间刷新计时
@@ -347,11 +348,6 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
         return false;
     }
 
-    /**
-     * 禁用特征值通知
-     */
-    public abstract void disableCharacterNotifiy();
-
 
     /**
      * 打开BLE  外部调用
@@ -434,16 +430,24 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
         isConnectTimer.startTimer(1000, 1000, this);
     }
 
-    protected abstract String getConnectTag();
+    public abstract void whenBTClosed();
 
+    public abstract void disableCharacterNotifiy();
+
+    public abstract void connectDevice(int mPosition);
+
+    public boolean isConnected() {
+        return isConnect;
+    }
+
+    protected abstract String getConnectTag();
 
     protected abstract void reset();
 
     protected abstract void disConnectDevice();
 
-    public abstract void whenBTClosed();
-
-
     protected abstract void destroy();
+
+    protected abstract String getUuid();
 
 }

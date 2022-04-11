@@ -30,7 +30,7 @@ import com.bike.ftms.app.activity.user.PersonalDataActivity;
 import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
-import com.bike.ftms.app.ble.BleHeartDeviceManager;
+import com.bike.ftms.app.ble.heart.BleHeartDeviceManager;
 import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.ble.BleManager;
@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         isOnPause = false;
         m_wklk.acquire(); //设置保持唤醒
         BleManager.getInstance().setOnRunDataListener(this);
-        if (!BleManager.getInstance().isConnect && !BleHeartDeviceManager.getInstance().isConnect) {
+        if (!BleManager.getInstance().isConnected() && !BleHeartDeviceManager.getInstance().isConnected()) {
             if (vp.getCurrentItem() == 0 && (someHintDialog == null || !someHintDialog.isShowing())) {
                 connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog, ori);
             }
@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
             tv_username.setVisibility(View.GONE);
         }
 
-        onConnectStatus(BleManager.getInstance().isConnect, BleManager.deviceType);
+        onConnectStatus(BleManager.getInstance().isConnected(), BleManager.deviceType);
     }
 
     // 显示连接上的机型和图片
@@ -307,7 +307,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
             return;
         }
         runOnUiThread(() -> {
-            onConnectStatus(BleManager.getInstance().isConnect, BleManager.deviceType);
+            onConnectStatus(BleManager.getInstance().isConnected(), BleManager.deviceType);
             if (connectHintDialog == null) {
                 connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog, ori);
             }
@@ -317,7 +317,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
     @Override
     public void connected() {
         runOnUiThread(() -> {
-            onConnectStatus(BleManager.getInstance().isConnect, BleManager.deviceType);
+            onConnectStatus(BleManager.getInstance().isConnected(), BleManager.deviceType);
             homeFragment.connected();
         });
     }
@@ -357,12 +357,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
     }
 
     public void release() {
-        BleManager.getInstance().disableCharacterNotifiy();
-        BleManager.getInstance().disConnectDevice();
         BleManager.getInstance().destroy();
-
-        BleHeartDeviceManager.getInstance().disableCharacterNotifiy();
-        BleHeartDeviceManager.getInstance().disConnectDevice();
         BleHeartDeviceManager.getInstance().destroy();
 
         homeFragment = null;

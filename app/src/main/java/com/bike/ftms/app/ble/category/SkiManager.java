@@ -1,6 +1,6 @@
 package com.bike.ftms.app.ble.category;
 
-import com.bike.ftms.app.ble.BleHeartDeviceManager;
+import com.bike.ftms.app.ble.heart.BleHeartDeviceManager;
 import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.common.RowerDataParam;
@@ -50,7 +50,7 @@ public class SkiManager extends CategoryType {
         rowerDataBean1.setFive_hundred(RowerDataParam.INSTANTANEOUS_PACE_INX == -1 ? 0 : resolveData(data, RowerDataParam.INSTANTANEOUS_PACE_INX, RowerDataParam.INSTANTANEOUS_PACE_LEN));
         rowerDataBean1.setCalorie(RowerDataParam.TOTAL_ENERGY_INX == -1 ? 0 : resolveData(data, RowerDataParam.TOTAL_ENERGY_INX, RowerDataParam.TOTAL_ENERGY_LEN));
         rowerDataBean1.setCalories_hr(RowerDataParam.ENERGY_PER_HOUR_INX == -1 ? 0 : resolveData(data, RowerDataParam.ENERGY_PER_HOUR_INX, RowerDataParam.ENERGY_PER_HOUR_LEN));
-        if (!BleHeartDeviceManager.getInstance().isConnect) {
+        if (!BleHeartDeviceManager.getInstance().isConnected()) {
             rowerDataBean1.setHeart_rate(RowerDataParam.HEART_RATE_INX == -1 ? 0 : resolveData(data, RowerDataParam.HEART_RATE_INX, RowerDataParam.HEART_RATE_LEN));
         }
         rowerDataBean1.setWatts(RowerDataParam.INSTANTANEOUS_POWER_INX == -1 ? 0 : resolveData(data, RowerDataParam.INSTANTANEOUS_POWER_INX, RowerDataParam.INSTANTANEOUS_POWER_LEN));

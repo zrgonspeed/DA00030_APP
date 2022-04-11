@@ -1,9 +1,8 @@
-package com.bike.ftms.app.ble;
+package com.bike.ftms.app.ble.heart;
 
 import static com.bike.ftms.app.utils.DataTypeConversion.resolveData;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -11,33 +10,22 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
-import android.os.Handler;
-import android.os.Looper;
 
 import com.bike.ftms.app.base.MyApplication;
-import com.bike.ftms.app.ble.base.OnRunDataListener;
-import com.bike.ftms.app.ble.base.OnScanConnectListener;
+import com.bike.ftms.app.ble.BaseBleManager;
+import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.ble.bean.MyScanResult;
-import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.ble.help.UuidHelp;
-import com.bike.ftms.app.common.RowerDataParam;
 import com.bike.ftms.app.utils.ConvertData;
 import com.bike.ftms.app.utils.CustomTimer;
 import com.bike.ftms.app.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
-import dev.xesam.android.toolbox.timer.CountDownTimer;
-
 @SuppressLint("MissingPermission")
-public class BleHeartDeviceManager extends BaseBleManager implements BleHeartDevice, CustomTimer.TimerCallBack {
+public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer.TimerCallBack {
     private String TAG = BleHeartDeviceManager.class.getSimpleName();
 
     private static BleHeartDeviceManager instance;
@@ -131,25 +119,9 @@ public class BleHeartDeviceManager extends BaseBleManager implements BleHeartDev
         }
     }
 
-
-
-
-
-    @Override
-    public boolean isConnected() {
-        return isConnect;
-    }
-
-    @Override
-    public int getStatus() {
-        return 0;
-    }
-
-    @Override
     public int getHeartInt() {
         return heart_rate;
     }
-
 
     /**
      * 心率设备连接回调
@@ -370,8 +342,6 @@ public class BleHeartDeviceManager extends BaseBleManager implements BleHeartDev
     }
 
 
-
-
     /**
      * 心跳数据  0x16 -> 0001 0110  从右往左
      * 0心跳值是1字节 还是2字节       0
@@ -429,6 +399,8 @@ public class BleHeartDeviceManager extends BaseBleManager implements BleHeartDev
      * APP退出时
      */
     public void destroy() {
+        disableCharacterNotifiy();
+        disConnectDevice();
         mBluetoothGatt = null;
         bleClosedCallBack = null;
         bleOpenCallBack = null;

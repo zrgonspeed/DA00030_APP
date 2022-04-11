@@ -22,6 +22,7 @@ import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean2;
 import com.bike.ftms.app.ble.category.BikeManager;
 import com.bike.ftms.app.ble.category.BoatManager;
 import com.bike.ftms.app.ble.category.SkiManager;
+import com.bike.ftms.app.ble.heart.BleHeartDeviceManager;
 import com.bike.ftms.app.ble.help.UuidHelp;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.common.RowerDataParam;
@@ -1127,6 +1128,9 @@ public class BleManager extends BaseBleManager {
      * APP退出时
      */
     public void destroy() {
+        disableCharacterNotifiy();
+        disConnectDevice();
+        
         mBluetoothGatt = null;
         bleClosedCallBack = null;
         bleOpenCallBack = null;

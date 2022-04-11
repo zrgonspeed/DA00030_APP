@@ -64,7 +64,7 @@ public class BluetoothActivity extends BaseBluetoothActivity implements OnScanCo
 
     @Override
     protected boolean isOpenBle() {
-        return BleManager.getInstance().isOpen;
+        return BleManager.getInstance().getIsOpen();
     }
 
     @Override
