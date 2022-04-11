@@ -3,18 +3,15 @@ package com.bike.ftms.app.activity.bluetooth;
 import android.os.Bundle;
 
 import com.bike.ftms.app.R;
+import com.bike.ftms.app.ble.BaseBleManager;
+import com.bike.ftms.app.ble.BleHeartDeviceManager;
 
-public class HeartRateMonitorActivity extends BluetoothActivity {
+public class HeartRateMonitorActivity extends BaseBluetoothActivity {
     private static final String TAG = HeartRateMonitorActivity.class.getSimpleName();
 
     @Override
     protected String getTAG() {
         return TAG;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -25,7 +22,16 @@ public class HeartRateMonitorActivity extends BluetoothActivity {
     @Override
     protected void initData() {
         super.initData();
+    }
 
+    @Override
+    protected boolean isOpenBle() {
+        return BleHeartDeviceManager.isOpen;
+    }
+
+    @Override
+    protected BaseBleManager getBleManager() {
+        return BleHeartDeviceManager.getInstance();
     }
 
     @Override
@@ -35,11 +41,6 @@ public class HeartRateMonitorActivity extends BluetoothActivity {
 
     @Override
     public void onConnectEvent(boolean isconnect, String name) {
-      /*  if (isconnect) {
-            startActivity(new Intent(this,MainActivity.class));
-            Intent intent = getIntent();
-            setResult(ParamData.REQUEST_IS_FINISH_CODE, intent);
-            finish();
-        }*/
+
     }
 }

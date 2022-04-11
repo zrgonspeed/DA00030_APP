@@ -30,6 +30,7 @@ import com.bike.ftms.app.activity.user.PersonalDataActivity;
 import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
+import com.bike.ftms.app.ble.BleHeartDeviceManager;
 import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.ble.BleManager;
@@ -126,7 +127,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         m_wklk.acquire(); //设置保持唤醒
         Logger.e("BleManager == " + BleManager.getInstance());
         BleManager.getInstance().setOnRunDataListener(this);
-        if (!BleManager.isConnect && !BleManager.isHrConnect) {
+        if (!BleManager.isConnect && !BleHeartDeviceManager.isConnect) {
             if (vp.getCurrentItem() == 0 && (someHintDialog == null || !someHintDialog.isShowing())) {
                 connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog, ori);
             }

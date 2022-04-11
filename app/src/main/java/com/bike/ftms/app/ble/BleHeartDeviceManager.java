@@ -37,7 +37,7 @@ import java.util.UUID;
 import dev.xesam.android.toolbox.timer.CountDownTimer;
 
 @SuppressLint("MissingPermission")
-public class BleHeartDeviceManager implements BleHeartDevice, CustomTimer.TimerCallBack {
+public class BleHeartDeviceManager extends BaseBleManager implements BleHeartDevice, CustomTimer.TimerCallBack {
     private static BleHeartDeviceManager instance;
     public final String uuidHeartbeat = "0000180d-0000-1000-8000-00805f9b34fb"; // 标准服务： 180d
     /**
@@ -67,6 +67,8 @@ public class BleHeartDeviceManager implements BleHeartDevice, CustomTimer.TimerC
     private BleHeartDeviceManager() {
     }
 
+    private RowerDataBean1 rowerDataBean1 = new RowerDataBean1();
+
     // 心率设备
     private BluetoothGatt mBluetoothGatt;       //连接蓝牙、及操作
     private MyScanResult connectScanResult;
@@ -93,7 +95,7 @@ public class BleHeartDeviceManager implements BleHeartDevice, CustomTimer.TimerC
     private final long SCAN_PERIOD_INTERVAL = 1000;     //隔多久回调1次
     private static final long START_SCAN_DELAY_TIME = 3000; // 扫描设备延迟时间
 
-    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper()));
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
 
     /**

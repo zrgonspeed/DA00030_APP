@@ -54,7 +54,7 @@ import tech.gujin.toast.ToastUtil;
 import static com.bike.ftms.app.utils.DataTypeConversion.resolveData;
 
 @SuppressLint({"MissingPermission", "WrongConstant"})
-public class BleManager implements CustomTimer.TimerCallBack {
+public class BleManager extends BaseBleManager implements CustomTimer.TimerCallBack {
     private String TAG = BleManager.class.getSimpleName();
     private static BleManager instance;
 
@@ -508,7 +508,9 @@ public class BleManager implements CustomTimer.TimerCallBack {
         Logger.e("disConnectDevice()");
         reset();
         resetDeviceType();
-        mBluetoothGatt.disconnect();
+        if (mBluetoothGatt != null) {
+            mBluetoothGatt.disconnect();
+        }
     }
 
     private void resetDeviceType() {
