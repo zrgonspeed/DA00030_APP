@@ -155,6 +155,14 @@ public class BleManager extends BaseBleManager {
         return instance;
     }
 
+    // 释放上次gatt连接资源
+    private void closeGatt() {
+        if (mBluetoothGatt != null) {
+            mBluetoothGatt.disconnect();
+            mBluetoothGatt.close();
+            mBluetoothGatt = null;
+        }
+    }
 
     /**
      * 连接蓝牙设备
@@ -186,10 +194,14 @@ public class BleManager extends BaseBleManager {
                 rowerDataBean1 = new RowerDataBean1();
                 connectScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
                 reset();
-                //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
-                mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
+
                 boolean b = refreshDeviceCache(mBluetoothGatt);
                 Logger.i("清除蓝牙内部缓存 " + b);
+                closeGatt();
+
+                //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
+                mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
+
 
                 //处理超时连接的方法
                 // mHandler.postDelayed(mConnTimeOutRunnable, 5 * 1000);

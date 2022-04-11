@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
+import com.bike.ftms.app.ble.heart.BleHeartData;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.utils.Logger;
@@ -28,7 +29,7 @@ import static androidx.constraintlayout.widget.ConstraintSet.PARENT_ID;
  * @Author YeYueHong
  * @Date 2021/3/30
  */
-public class OnePageDataFragment extends BasePageDataFragment {
+public class OnePageDataFragment extends BasePageDataFragment implements BleHeartData {
     private static final String TAG = OnePageDataFragment.class.getSimpleName();
 
 
@@ -716,5 +717,10 @@ public class OnePageDataFragment extends BasePageDataFragment {
         tv_home_ave_500.setTextSize(size2);
         tv_home_one_km.setTextSize(size2);
         tv_home_ave_one_km.setTextSize(size2);
+    }
+
+    @Override
+    public void onHeartListener(int heart) {
+        tv_heart_rate.setText(String.valueOf(heart));
     }
 }

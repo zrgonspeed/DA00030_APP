@@ -105,17 +105,27 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
             if (position >= 0 && position < getScanResults().size()) {
                 getScanResults().get(position).setConnectState(2);
                 BluetoothDevice device = getScanResults().get(position).getScanResult().getDevice();
-
                 connectScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
-                mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
+
                 boolean b = refreshDeviceCache(mBluetoothGatt);
                 Logger.i("清除蓝牙内部缓存 " + b);
+                closeGatt();
 
+                mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
                 Logger.i("connectDevice " + device.getAddress());
             }
         }
         if (onScanConnectListener != null) {
             onScanConnectListener.onNotifyData();
+        }
+    }
+
+    // 释放上次gatt连接资源
+    private void closeGatt() {
+        if (mBluetoothGatt != null) {
+            mBluetoothGatt.disconnect();
+            mBluetoothGatt.close();
+            mBluetoothGatt = null;
         }
     }
 
@@ -364,6 +374,16 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
 
         Logger.i("心跳: " + heart_rate);
         BleManager.getInstance().setHrInt(heart_rate);
+
+        if (bleHeartData != null) {
+            bleHeartData.onHeartListener(heart_rate);
+        }
+    }
+
+    protected BleHeartData bleHeartData;
+
+    public void setBleHeartData(BleHeartData bleHeartData) {
+        this.bleHeartData = bleHeartData;
     }
 
     @Override
@@ -383,7 +403,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
     /**
      * 断开蓝牙设备
      */
-    public void disConnectDevice() {
+    protected void disConnectDevice() {
         Logger.e("disConnectDevice()");
         resetDeviceType();
         if (mBluetoothGatt != null) {

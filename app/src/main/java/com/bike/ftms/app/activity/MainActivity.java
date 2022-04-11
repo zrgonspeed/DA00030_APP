@@ -30,6 +30,7 @@ import com.bike.ftms.app.activity.user.PersonalDataActivity;
 import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
+import com.bike.ftms.app.ble.heart.BleHeartData;
 import com.bike.ftms.app.ble.heart.BleHeartDeviceManager;
 import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
 import com.bike.ftms.app.common.MyConstant;
@@ -50,7 +51,7 @@ import butterknife.OnClick;
 import tech.gujin.toast.ToastUtil;
 
 
-public class MainActivity extends BaseActivity implements OnRunDataListener, OnOrientationChanged {
+public class MainActivity extends BaseActivity implements OnRunDataListener, OnOrientationChanged, BleHeartData {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.vp)
@@ -125,10 +126,12 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         isOnPause = false;
         m_wklk.acquire(); //设置保持唤醒
         BleManager.getInstance().setOnRunDataListener(this);
-        if (!BleManager.getInstance().isConnected() && !BleHeartDeviceManager.getInstance().isConnected()) {
+        BleHeartDeviceManager.getInstance().setBleHeartData(this);
+        if (!BleManager.getInstance().isConnected()) {
             if (vp.getCurrentItem() == 0 && (someHintDialog == null || !someHintDialog.isShowing())) {
                 connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog, ori);
             }
+            // 刷新界面数据为0
             homeFragment.onRunData(new RowerDataBean1());
         } else {
             if (connectHintDialog != null && connectHintDialog.isShowing()) {
@@ -300,9 +303,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         if (isFinishing()) {
             return;
         }
-        // if (isOnPause) {
-        //     return;
-        // }
+
         if (isDestroyed()) {
             return;
         }
@@ -502,5 +503,13 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
 
     private int getIntDimen(int id) {
         return (int) getResources().getDimension(id);
+    }
+
+    @Override
+    public void onHeartListener(int heart) {
+        if (isOnPause) {
+            return;
+        }
+        runOnUiThread(() -> homeFragment.onHeartListener(heart));
     }
 }

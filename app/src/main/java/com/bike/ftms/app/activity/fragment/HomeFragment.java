@@ -101,4 +101,13 @@ public class HomeFragment extends BaseFragment {
     public void setLandLayout() {
 
     }
+
+
+    public void onHeartListener(int heart) {
+        if (onePageHomeFragment == null) {
+            Logger.e("onePageHomeFragment == null");
+            return;
+        }
+        onePageHomeFragment.onHeartListener(heart);
+    }
 }
