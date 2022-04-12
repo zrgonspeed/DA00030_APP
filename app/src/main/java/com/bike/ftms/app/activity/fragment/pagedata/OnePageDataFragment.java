@@ -29,7 +29,7 @@ import static androidx.constraintlayout.widget.ConstraintSet.PARENT_ID;
  * @Author YeYueHong
  * @Date 2021/3/30
  */
-public class OnePageDataFragment extends BasePageDataFragment implements BleHeartData {
+public class OnePageDataFragment extends BasePageDataFragment {
     private static final String TAG = OnePageDataFragment.class.getSimpleName();
 
 
@@ -719,8 +719,7 @@ public class OnePageDataFragment extends BasePageDataFragment implements BleHear
         tv_home_ave_one_km.setTextSize(size2);
     }
 
-    @Override
-    public void onHeartListener(int heart) {
+    public void onHeartData(int heart) {
         tv_heart_rate.setText(String.valueOf(heart));
     }
 }

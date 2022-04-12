@@ -216,6 +216,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(true, gatt.getDevice().getName());
                 }
+                bleHeartData.onHRConnected();
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Logger.e("断开心跳设备回调");
                 disableCharacterNotifiy();
@@ -376,7 +377,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
         BleManager.getInstance().setHrInt(heart_rate);
 
         if (bleHeartData != null) {
-            bleHeartData.onHeartListener(heart_rate);
+            bleHeartData.onHeartData(heart_rate);
         }
     }
 
@@ -394,7 +395,9 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
                 // mBluetoothGatt = null;
             }
             isConnectTimer.closeTimer();
-
+            if (bleHeartData != null) {
+                bleHeartData.disHRConnect();
+            }
             Logger.d("断开连接");
             return;
         }
@@ -410,7 +413,10 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
             mBluetoothGatt.disconnect();
         }
         if (bleHeartData != null) {
-            bleHeartData.onHeartListener(0);
+            bleHeartData.onHeartData(0);
+        }
+        if (bleHeartData != null) {
+            bleHeartData.disHRConnect();
         }
     }
 

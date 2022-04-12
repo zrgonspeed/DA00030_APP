@@ -60,6 +60,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
     TextView tv_device;
     @BindView(R.id.iv_device)
     ImageView iv_device;
+    @BindView(R.id.iv_logo)
+    ImageView iv_logo;
+    @BindView(R.id.iv_heart_connected)
+    ImageView iv_heart_connected;
     @BindView(R.id.btn_workout_login)
     ImageView btn_workout_login;
     @BindView(R.id.btn_workout_user_info)
@@ -166,11 +170,12 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
             tv_username.setVisibility(View.GONE);
         }
 
-        onConnectStatus(BleManager.getInstance().isConnected(), BleManager.deviceType);
+        setConnectStatus(BleManager.getInstance().isConnected(), BleManager.deviceType);
+        setHRConnectStatus(BleHeartDeviceManager.getInstance().isConnected());
     }
 
     // 显示连接上的机型和图片
-    private synchronized void onConnectStatus(boolean connected, int deviceType) {
+    private synchronized void setConnectStatus(boolean connected, int deviceType) {
         if (connected && deviceType != -1) {
             tv_device.setText(MyConstant.deviceNames[deviceType]);
             iv_device.setImageDrawable(MyConstant.getCategoryImg(MyConstant.getCategory(deviceType)));
@@ -299,7 +304,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
 
     @Override
     public void disConnect() {
-        Logger.i("isFinishing() == " + isFinishing());
+        Logger.d("isFinishing() == " + isFinishing());
         if (isFinishing()) {
             return;
         }
@@ -308,7 +313,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
             return;
         }
         runOnUiThread(() -> {
-            onConnectStatus(BleManager.getInstance().isConnected(), BleManager.deviceType);
+            setConnectStatus(BleManager.getInstance().isConnected(), BleManager.deviceType);
             if (connectHintDialog == null) {
                 connectHintDialog = ConnectHintDialog.showConnectHintDialog(this, connectHintDialog, ori);
             }
@@ -318,7 +323,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
     @Override
     public void connected() {
         runOnUiThread(() -> {
-            onConnectStatus(BleManager.getInstance().isConnected(), BleManager.deviceType);
+            setConnectStatus(BleManager.getInstance().isConnected(), BleManager.deviceType);
             homeFragment.connected();
         });
     }
@@ -506,10 +511,43 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
     }
 
     @Override
-    public void onHeartListener(int heart) {
+    public void onHeartData(int heart) {
         if (isOnPause) {
             return;
         }
         runOnUiThread(() -> homeFragment.onHeartListener(heart));
+    }
+
+    @Override
+    public void setHRConnectStatus(boolean connected) {
+        if (connected) {
+            iv_heart_connected.setVisibility(View.VISIBLE);
+            iv_logo.setVisibility(View.GONE);
+        } else {
+            iv_heart_connected.setVisibility(View.GONE);
+            iv_logo.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onHRConnected() {
+        runOnUiThread(() -> {
+            setHRConnectStatus(BleHeartDeviceManager.getInstance().isConnected());
+        });
+    }
+
+    @Override
+    public void disHRConnect() {
+        Logger.d("isFinishing() == " + isFinishing());
+        if (isFinishing()) {
+            return;
+        }
+
+        if (isDestroyed()) {
+            return;
+        }
+        runOnUiThread(() -> {
+            setHRConnectStatus(BleHeartDeviceManager.getInstance().isConnected());
+        });
     }
 }

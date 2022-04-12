@@ -108,6 +108,6 @@ public class HomeFragment extends BaseFragment {
             Logger.e("onePageHomeFragment == null");
             return;
         }
-        onePageHomeFragment.onHeartListener(heart);
+        onePageHomeFragment.onHeartData(heart);
     }
 }
