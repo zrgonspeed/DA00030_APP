@@ -80,7 +80,6 @@ public class BleManager extends BaseBleManager {
 
     protected final String isConnectTag = "isConnect";
 
-
     // 2ada 用
     public static final byte RUN_STATUS_RUNNING = 0x01;
     public static final byte RUN_STATUS_STOP = 0x00;
@@ -1148,7 +1147,6 @@ public class BleManager extends BaseBleManager {
         bleOpenCallBack = null;
         onScanConnectListener = null;
         onRunDataListener = null;
-
     }
 
     public void setHrInt(short heart_rate) {

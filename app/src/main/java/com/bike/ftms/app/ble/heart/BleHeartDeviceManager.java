@@ -405,14 +405,13 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
      */
     protected void disConnectDevice() {
         Logger.e("disConnectDevice()");
-        resetDeviceType();
+        isConnect = false;
         if (mBluetoothGatt != null) {
             mBluetoothGatt.disconnect();
         }
-    }
-
-    private void resetDeviceType() {
-        isConnect = false;
+        if (bleHeartData != null) {
+            bleHeartData.onHeartListener(0);
+        }
     }
 
     /**
@@ -434,7 +433,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
         // 蓝牙关闭后的操作
         isOpen = false;
         isCanning = false;
-        resetDeviceType();
+        isConnect = false;
     }
 
 
