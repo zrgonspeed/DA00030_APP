@@ -1,5 +1,6 @@
 package com.bike.ftms.app.ble;
 
+import static com.bike.ftms.app.ble.help.UuidHelp.uuidServiceFTMS;
 import static com.bike.ftms.app.utils.DataTypeConversion.resolveData;
 
 import android.annotation.SuppressLint;
@@ -49,35 +50,6 @@ public class BleManager extends BaseBleManager {
     private String TAG = BleManager.class.getSimpleName();
     private static BleManager instance;
 
-    public final String uuid = "00001826-0000-1000-8000-00805f9b34fb";      //  标准服务：   Fitness Machine	    健康设备     1826
-    public final String uuidSendData = "0000ffe5-0000-1000-8000-00805f9b34fb";  // 自定义服务uuid
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    @Override
-    public void disableCharacterNotifiy() {
-        UuidHelp.disableCharacterNotifiy1(mBluetoothGatt, mBluetoothGattServices);
-    }
-
-    @Override
-    protected String getConnectTag() {
-        return isConnectTag;
-    }
-
-    /**
-     * 这些uuid用于收发运动数据
-     * 2ada   2ad1   2ad3   ffe0    ffe9
-     * <p>
-     * 2ad1     Rower Data    桨手数据
-     * 2ada     Fitness Machine Status 	健身设备状态
-     * 2ad3     Training Status	    训练状况
-     * <p>
-     * ffe0     自定义特征,  中心设备发
-     * ffe9     自定义特征, 手机发
-     */
-
     protected final String isConnectTag = "isConnect";
 
     // 2ada 用
@@ -92,15 +64,10 @@ public class BleManager extends BaseBleManager {
 
     private byte runStatus = RUN_STATUS_STOP;
 
-    public byte getRunStatus() {
-        return runStatus;
-    }
-
     public static int deviceType = -1;  // 电子表机型
     public static int categoryType = -1;    // 电子表分类
 
     private static final long SEND_VERIFY_TIME = 2000; // 发送校验码延迟时间
-
     public boolean setBleDataInx = false;
     private boolean isToExamine = false;
     private boolean isSendVerifyData = false;
@@ -116,6 +83,10 @@ public class BleManager extends BaseBleManager {
     private boolean canSave = false;
 
     protected BluetoothGattCharacteristic mBluetoothGattCharacteristic;//特征值(用于收发数据)   当前是ffe9发
+
+    public byte getRunStatus() {
+        return runStatus;
+    }
 
     /**
      * 连接超时，回调
@@ -177,6 +148,9 @@ public class BleManager extends BaseBleManager {
 
         if (getScanResults().get(position).getConnectState() == 1) {
             disableCharacterNotifiy();
+            boolean b = refreshDeviceCache(mBluetoothGatt);
+            Logger.i("清除蓝牙内部缓存 " + b);
+            closeGatt();
             disConnectDevice();
             Logger.e("2------disConnectDevice()");
             setPosition(-1);
@@ -376,25 +350,25 @@ public class BleManager extends BaseBleManager {
                         list = localGattService.getCharacteristics();
                         Logger.i("localGattService = " + localGattService.getUuid());
                         for (BluetoothGattCharacteristic c : list) {
-                            Logger.e("c = " + c.getUuid());
+                            Logger.d("c = " + c.getUuid());
                         }
                     }
                 }
 
                 // 指定一个service
-                BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(uuid));
+                BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(uuidServiceFTMS));
                 // 获取这个service下的所有character
                 List<BluetoothGattCharacteristic> list = new ArrayList<>();
                 if (localGattService != null) {
                     list = localGattService.getCharacteristics();
                     Logger.i("localGattService = " + localGattService.getUuid());
                     for (BluetoothGattCharacteristic c : list) {
-                        Logger.e("c = " + c.getUuid());
+                        Logger.d("c = " + c.getUuid());
                     }
                 }
 
                 // 指定一个发送相关的service
-                BluetoothGattService localGattService1 = mBluetoothGatt.getService(UUID.fromString(uuidSendData));
+                BluetoothGattService localGattService1 = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidSendData));
                 if (localGattService1 != null) {
                     List<BluetoothGattCharacteristic> characteristics = localGattService1.getCharacteristics();
                     list.addAll(characteristics);
@@ -404,9 +378,9 @@ public class BleManager extends BaseBleManager {
                         Logger.e("c = " + c.getUuid());
                     }
                 }
-                UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad3");
-                UuidHelp.enableCharacteristic(mBluetoothGatt, list, "ffe0");
-                UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ada");
+                UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD3);
+                UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.CUSTOM_FFE0);
+                UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2ADA);
                 registrationGattCharacteristic();//注册通知
             } else {
                 Logger.e("onServicesDiscovered received: " + status);
@@ -455,9 +429,14 @@ public class BleManager extends BaseBleManager {
             super.onDescriptorWrite(gatt, descriptor, status);
             // 写入 0x01 0x00
             // 写入到关联的远程设备上
+            Logger.i("descriptor.getUuid().toString() " + descriptor.getUuid().toString());
 
-            Logger.i(descriptor.getUuid().toString());
-            Logger.i("onDescriptorWrite " + ConvertData.byteArrayToHexString(descriptor.getValue(), descriptor.getValue().length));
+            byte[] value = descriptor.getValue();
+            if (value == null) {
+                Logger.i("onDescriptorWrite() value数组null");
+            } else {
+                Logger.i("onDescriptorWrite " + ConvertData.byteArrayToHexString(value, value.length));
+            }
         }
 
         @Override
@@ -486,19 +465,19 @@ public class BleManager extends BaseBleManager {
      */
     private void registrationGattCharacteristic() {
         if (mBluetoothGattServices != null) {
-            BluetoothGattService gattService = mBluetoothGatt.getService(UUID.fromString(uuid));
+            BluetoothGattService gattService = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidServiceFTMS));
             if (gattService == null) {
                 mBluetoothGatt.disconnect();
                 mBluetoothGatt = null;
             }
             if (mBluetoothGatt != null) {
-                for (BluetoothGattCharacteristic gattCharacteristic : mBluetoothGatt.getService(UUID.fromString(uuidSendData)).getCharacteristics()) {
-                    if (gattCharacteristic.getUuid().toString().contains("ffe9")) {
+                for (BluetoothGattCharacteristic gattCharacteristic : mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidSendData)).getCharacteristics()) {
+                    if (gattCharacteristic.getUuid().toString().contains(UuidHelp.CUSTOM_FFE9)) {
                         mBluetoothGattCharacteristic = gattCharacteristic;
                         Logger.i("ffe9 " + ",设置为发送::");
                     }
                 }
-                UuidHelp.setCharacterNotification(mBluetoothGatt, mBluetoothGatt.getService(UUID.fromString(uuidSendData)).getCharacteristics(), "ffe0");
+                UuidHelp.setCharacterNotification(mBluetoothGatt, mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidSendData)).getCharacteristics(), UuidHelp.CUSTOM_FFE0);
             }
             mHandler.postDelayed(() -> {
                 if (!isSendVerifyData) {
@@ -511,8 +490,8 @@ public class BleManager extends BaseBleManager {
             if (gattService != null) {
                 List<BluetoothGattCharacteristic> list = gattService.getCharacteristics();
 
-                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad3");
-                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ada");
+                UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.FTMS_2AD3);
+                UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.FTMS_2ADA);
             }
 
         }
@@ -631,7 +610,7 @@ public class BleManager extends BaseBleManager {
             return;
         }
 
-        if (uuid.contains("ffe0")) {
+        if (uuid.contains(UuidHelp.CUSTOM_FFE0)) {
             setRunData_FFE0(data);
             return;
         }
@@ -641,12 +620,12 @@ public class BleManager extends BaseBleManager {
             return;
         }
 
-        if (uuid.contains("2ada")) {
+        if (uuid.contains(UuidHelp.FTMS_2ADA)) {
             setRunData_2ADA(data);
             return;
         }
 
-        if (uuid.contains("2ad3")) {
+        if (uuid.contains(UuidHelp.FTMS_2AD3)) {
             status = data[1];
             if (status == STATUS_POST) {
                 // 保存数据
@@ -880,7 +859,7 @@ public class BleManager extends BaseBleManager {
             // 注册特征值
             {
                 // 指定一个service
-                BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(uuid));
+                BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(uuidServiceFTMS));
                 // 获取这个service下的所有character
                 List<BluetoothGattCharacteristic> list = new ArrayList<>();
                 if (localGattService != null) {
@@ -893,20 +872,20 @@ public class BleManager extends BaseBleManager {
                 switch (MyConstant.getCategory(deviceType)) {
                     case MyConstant.CATEGORY_BOAT: {
                         // 2ad1  划船器
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad1");
-                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad1");
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD1);
+                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.FTMS_2AD1);
                     }
                     break;
                     case MyConstant.CATEGORY_BIKE: {
                         // 2ad2  室内自行车
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad2");
-                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad2");
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD2);
+                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.FTMS_2AD2);
                     }
                     break;
                     case MyConstant.CATEGORY_SKI: {
                         // 滑雪机
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2ad1");
-                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2ad1");
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD1);
+                        UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.FTMS_2AD1);
                     }
                     break;
                     case MyConstant.CATEGORY_STEP: {
@@ -1141,7 +1120,7 @@ public class BleManager extends BaseBleManager {
     public void destroy() {
         disableCharacterNotifiy();
         disConnectDevice();
-        
+
         mBluetoothGatt = null;
         bleClosedCallBack = null;
         bleOpenCallBack = null;
@@ -1153,5 +1132,19 @@ public class BleManager extends BaseBleManager {
         if (rowerDataBean1 != null) {
             rowerDataBean1.setHeart_rate(heart_rate);
         }
+    }
+
+    public String getUuid() {
+        return uuidServiceFTMS;
+    }
+
+    @Override
+    public void disableCharacterNotifiy() {
+        UuidHelp.disableCharacterNotifiy1(mBluetoothGatt, mBluetoothGattServices);
+    }
+
+    @Override
+    protected String getConnectTag() {
+        return isConnectTag;
     }
 }

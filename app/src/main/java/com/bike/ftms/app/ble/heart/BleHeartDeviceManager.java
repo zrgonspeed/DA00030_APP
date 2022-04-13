@@ -27,25 +27,7 @@ import java.util.UUID;
 @SuppressLint("MissingPermission")
 public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer.TimerCallBack {
     private String TAG = BleHeartDeviceManager.class.getSimpleName();
-
     private static BleHeartDeviceManager instance;
-    public final String uuidHeartbeat = "0000180d-0000-1000-8000-00805f9b34fb"; // 标准服务： 180d
-
-    protected final String isConnectTag = "isHrConnect";
-
-    public String getUuid() {
-        return uuidHeartbeat;
-    }
-
-    @Override
-    public void disableCharacterNotifiy() {
-        UuidHelp.disableCharacterNotifiy2(mBluetoothGatt, mBluetoothGattServices);
-    }
-
-    @Override
-    protected String getConnectTag() {
-        return isConnectTag;
-    }
 
     /**
      * https://www.bluetooth.com/zh-cn/specifications/assigned-numbers/   GATT Specification Supplement
@@ -60,6 +42,24 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
     /**
      * 2a38  Body Sensor Location  人体感应器位置
      */
+
+    protected final String isConnectTag = "isHrConnect";
+
+    public String getUuid() {
+        return UuidHelp.uuidServiceHeartRate;
+    }
+
+    @Override
+    public void disableCharacterNotifiy() {
+        UuidHelp.disableCharacterNotifiy2(mBluetoothGatt, mBluetoothGattServices);
+    }
+
+    @Override
+    protected String getConnectTag() {
+        return isConnectTag;
+    }
+
+
     public static BleHeartDeviceManager getInstance() {
         if (instance == null) {
             synchronized (BleHeartDeviceManager.class) {
@@ -260,12 +260,12 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
             Logger.i("Hr onServicesDiscovered status=" + status);
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 mBluetoothGattServices = mBluetoothGatt.getServices();
-                BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(uuidHeartbeat));
+                BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidServiceHeartRate));
                 List<BluetoothGattCharacteristic> list = new ArrayList<>();
                 if (localGattService != null) {
                     list = localGattService.getCharacteristics();
                 }
-                UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2a37");
+                UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.HR_2A37);
                 // UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2a38");
                 registrationGattCharacteristic();//注册通知
             } else {
@@ -297,7 +297,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
             isConnectTimer.setmAllTime(0L);
             Logger.i("" + characteristic.getUuid() + ",Hr onCharacteristicChanged::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
 
-            if (characteristic.getUuid().toString().contains("2a37")) {
+            if (characteristic.getUuid().toString().contains(UuidHelp.HR_2A37)) {
                 setHrData(characteristic.getValue());
             }
         }
@@ -346,7 +346,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
                 mBluetoothGatt = null;
             } else {
                 List<BluetoothGattCharacteristic> list = gattService.getCharacteristics();
-                UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2a37");
+                UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.HR_2A37);
                 // UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2a38");
             }
         }
