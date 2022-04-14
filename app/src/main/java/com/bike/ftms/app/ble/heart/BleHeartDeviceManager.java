@@ -81,20 +81,18 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
     /**
      * 连接蓝牙设备
      *
-     * @param position
      */
-    public void connectDevice(int position) {
-        Logger.i("2------connectDevice(" + position + ")");
+    public void connectDevice(MyScanResult scanResult) {
+        Logger.i("2------connectDevice(" + scanResult + ")");
         if (mBluetoothGattServices != null) {
             Logger.e("mBluetoothGattServices.size == " + mBluetoothGattServices.size());
         }
         Logger.i("getScanResults(): " + getScanResults().size());
 
-        if (getScanResults().get(position).getConnectState() == 1) {
+        if (scanResult.getConnectState() == 1) {
             disableCharacterNotifiy();
             disConnectDevice();
             Logger.e("2------disConnectDevice()");
-            setPosition(-1);
 
             if (onScanConnectListener != null) {
                 onScanConnectListener.onNotifyData();
@@ -102,18 +100,16 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
             return;
         }
         if (getScanResults() != null && getScanResults().size() != 0) {
-            if (position >= 0 && position < getScanResults().size()) {
-                getScanResults().get(position).setConnectState(2);
-                BluetoothDevice device = getScanResults().get(position).getScanResult().getDevice();
-                connectScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
+            scanResult.setConnectState(2);
+            BluetoothDevice device = scanResult.getScanResult().getDevice();
+            connectScanResult = new MyScanResult(scanResult.getScanResult(), 2);
 
-                boolean b = refreshDeviceCache(mBluetoothGatt);
-                Logger.i("清除蓝牙内部缓存 " + b);
-                closeGatt();
+            boolean b = refreshDeviceCache(mBluetoothGatt);
+            Logger.i("清除蓝牙内部缓存 " + b);
+            closeGatt();
 
-                mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
-                Logger.i("connectDevice " + device.getAddress());
-            }
+            mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
+            Logger.i("connectDevice " + device.getAddress());
         }
         if (onScanConnectListener != null) {
             onScanConnectListener.onNotifyData();
@@ -158,12 +154,10 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
             Logger.i("onConnectionStateChange name " + gatt.getDevice().getName());
 
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                setPosition(-1);
                 if (mBluetoothGatt != null) {
                     Logger.e("mBluetoothGatt.close();");
                     mBluetoothGatt.close();
                 }
-
 
                 // 设置扫描结果连接状态
                 for (MyScanResult myScanResult : mScanResults) {
@@ -221,7 +215,6 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
                 Logger.e("断开心跳设备回调");
                 disableCharacterNotifiy();
 
-                setPosition(-1);
                 // 设置扫描结果中的连接状态
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {

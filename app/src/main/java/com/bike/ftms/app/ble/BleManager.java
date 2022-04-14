@@ -134,52 +134,58 @@ public class BleManager extends BaseBleManager {
         }
     }
 
+    private void printScanResults() {
+        Logger.i(mScanResults.toString());
+    }
+
+    private void printConnectedScanResult() {
+        Logger.i(connectScanResult.toString());
+    }
+
     /**
      * 连接蓝牙设备
-     *
-     * @param position
      */
-    public void connectDevice(int position) {
-        Logger.i("2------connectDevice(" + position + ")");
-        if (mBluetoothGattServices != null) {
-            Logger.e("mBluetoothGattServices.size == " + mBluetoothGattServices.size());
-        }
-        Logger.i("getScanResults(): " + getScanResults().size());
+    public void connectDevice(MyScanResult scanResult) {
+        Logger.i("2------connectDevice(" + scanResult + ")");
 
-        if (getScanResults().get(position).getConnectState() == 1) {
+        if (connectScanResult != null && connectScanResult.getConnectState() == 1) {
+            Logger.e("2------disConnectDevice()");
+
             disableCharacterNotifiy();
             boolean b = refreshDeviceCache(mBluetoothGatt);
-            Logger.i("清除蓝牙内部缓存 " + b);
+            Logger.e("断开 清除蓝牙内部缓存 " + b);
             closeGatt();
             disConnectDevice();
-            Logger.e("2------disConnectDevice()");
-            setPosition(-1);
 
+            printScanResults();
+            printConnectedScanResult();
+
+            if (connectScanResult != null) {
+                connectScanResult.setConnectState(0);
+            }
             if (onScanConnectListener != null) {
                 onScanConnectListener.onNotifyData();
             }
             return;
         }
         if (getScanResults() != null && getScanResults().size() != 0) {
-            if (position >= 0 && position < getScanResults().size()) {
-                getScanResults().get(position).setConnectState(2);
-                BluetoothDevice device = getScanResults().get(position).getScanResult().getDevice();
-                rowerDataBean1 = new RowerDataBean1();
-                connectScanResult = new MyScanResult(getScanResults().get(position).getScanResult(), 2);
-                reset();
+            scanResult.setConnectState(2);
+            connectScanResult = scanResult;
 
-                boolean b = refreshDeviceCache(mBluetoothGatt);
-                Logger.i("清除蓝牙内部缓存 " + b);
-                closeGatt();
+            rowerDataBean1 = new RowerDataBean1();
+            reset();
+            boolean b = refreshDeviceCache(mBluetoothGatt);
+            Logger.i("连接 清除蓝牙内部缓存 " + b);
+            closeGatt();
 
-                //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
-                mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
+            BluetoothDevice device = scanResult.getScanResult().getDevice();
+            //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
+            mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
 
+            //处理超时连接的方法
+            // mHandler.postDelayed(mConnTimeOutRunnable, 5 * 1000);
+            Logger.i("connectDevice " + device.getAddress() + "  " + device.getName() + "  ++++++++++++++++++++++++++++++++++++");
 
-                //处理超时连接的方法
-                // mHandler.postDelayed(mConnTimeOutRunnable, 5 * 1000);
-                Logger.i("connectDevice " + device.getAddress());
-            }
         }
         if (onScanConnectListener != null) {
             onScanConnectListener.onNotifyData();
@@ -225,7 +231,6 @@ public class BleManager extends BaseBleManager {
             // mHandler.removeCallbacks(mConnTimeOutRunnable);
 
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                setPosition(-1);
                 if (mBluetoothGatt != null) {
                     Logger.e("mBluetoothGatt.close();");
                     mBluetoothGatt.close();
@@ -281,18 +286,17 @@ public class BleManager extends BaseBleManager {
                     Logger.i("4------寻找服务");
                     mBluetoothGatt.discoverServices();
                 }
-                Logger.e("isConnect=" + isConnect);
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(true, gatt.getDevice().getName());
                 }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Logger.e("断开设备回调");
+                mHandler.removeCallbacksAndMessages(null);
                 disableCharacterNotifiy();
 
                 // 保存运动数据
                 saveRowDataBean1();
 
-                setPosition(-1);
                 rowerDataBean1 = new RowerDataBean1();
                 if (onRunDataListener != null) {
                     onRunDataListener.onRunData(rowerDataBean1);
@@ -340,7 +344,7 @@ public class BleManager extends BaseBleManager {
                 // 这个蓝牙设备的所有service
                 mBluetoothGattServices = mBluetoothGatt.getServices();
                 for (BluetoothGattService service : mBluetoothGattServices) {
-                    Logger.e("service uuid = " + service.getUuid());
+                    Logger.d("service uuid = " + service.getUuid());
 
                     // 指定一个service
                     BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(service.getUuid().toString()));
@@ -348,9 +352,9 @@ public class BleManager extends BaseBleManager {
                     List<BluetoothGattCharacteristic> list = new ArrayList<>();
                     if (localGattService != null) {
                         list = localGattService.getCharacteristics();
-                        Logger.i("localGattService = " + localGattService.getUuid());
+                        // Logger.i("localGattService = " + localGattService.getUuid());
                         for (BluetoothGattCharacteristic c : list) {
-                            Logger.d("c = " + c.getUuid());
+                            // Logger.d("c = " + c.getUuid());
                         }
                     }
                 }
@@ -373,9 +377,9 @@ public class BleManager extends BaseBleManager {
                     List<BluetoothGattCharacteristic> characteristics = localGattService1.getCharacteristics();
                     list.addAll(characteristics);
 
-                    Logger.i("localGattService1 = " + localGattService1.getUuid());
+                    Logger.d("localGattService1 = " + localGattService1.getUuid());
                     for (BluetoothGattCharacteristic c : characteristics) {
-                        Logger.e("c = " + c.getUuid());
+                        Logger.d("c = " + c.getUuid());
                     }
                 }
                 UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD3);
@@ -455,7 +459,7 @@ public class BleManager extends BaseBleManager {
         @Override
         public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
             super.onMtuChanged(gatt, mtu, status);
-            Logger.i("onMtuChanged");
+            // Logger.i("onMtuChanged");
         }
     };
 

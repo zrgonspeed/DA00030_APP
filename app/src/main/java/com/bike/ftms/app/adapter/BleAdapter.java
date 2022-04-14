@@ -55,19 +55,18 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull BleViewHolder holder, int position) {
         MyScanResult myScanResult = list.get(position);
-        Logger.e("ConnectState  == " + myScanResult.getConnectState() + "  name == " + myScanResult.getScanResult().getDevice().getName());
+        Logger.i("onBindViewHolder() ConnectState  == " + myScanResult.getConnectState() + "  name == " + myScanResult.getScanResult().getDevice().getName());
 
         holder.tvState.setOnClickListener(v -> {
             Logger.d("getConnectState()  == " + list.get(position).getConnectState() + "   " + list.get(position).getScanResult().getDevice().getName());
             if (myScanResult.getConnectState() == 2 || myScanResult.getConnectState() == 3) {
                 return;
             }
-            onItemClickListener.onItemClickListener(position, v, myScanResult.getConnectState());
+            onItemClickListener.onItemClickListener(myScanResult);
         });
         holder.tvName.setText(myScanResult.getScanResult().getDevice().getName());
         holder.tvAddress.setText(myScanResult.getScanResult().getDevice().getAddress());
         if (myScanResult.getConnectState() == 1) {
-            getBleManager().setPosition(position);
             holder.tvState.setText(MyApplication.getContext().getResources().getString(R.string.disconnect));
         } else if (myScanResult.getConnectState() == 2 || myScanResult.getConnectState() == 3) {
             holder.tvState.setText(MyApplication.getContext().getResources().getString(R.string.connecting));
@@ -92,7 +91,7 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
     }
 
     public interface OnItemClickListener {
-        void onItemClickListener(int position, View v, int connectState);
+        void onItemClickListener(MyScanResult clickScanResult);
     }
 
     public void addItemClickListener(OnItemClickListener listener) {

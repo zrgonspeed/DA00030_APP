@@ -3,7 +3,6 @@ package com.bike.ftms.app.ble;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
@@ -13,17 +12,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelUuid;
 
-import com.bike.ftms.app.ble.base.OnRunDataListener;
+import com.bike.ftms.app.Debug;
 import com.bike.ftms.app.ble.base.OnScanConnectListener;
 import com.bike.ftms.app.ble.bean.MyScanResult;
-import com.bike.ftms.app.ble.help.UuidHelp;
 import com.bike.ftms.app.utils.CustomTimer;
 import com.bike.ftms.app.utils.Logger;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import dev.xesam.android.toolbox.timer.CountDownTimer;
@@ -53,7 +50,12 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
 
     // 电子表
     protected BluetoothGatt mBluetoothGatt;       //连接蓝牙、及操作
-    protected MyScanResult connectScanResult;
+    protected MyScanResult connectScanResult;       // 已经连接的扫描结果
+
+    public MyScanResult getConnectScanResult() {
+        return connectScanResult;
+    }
+
     protected CustomTimer isConnectTimer;
 
     protected boolean isConnect;  //是否连接
@@ -66,16 +68,6 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
     private final long SCAN_PERIOD_INTERVAL = 1000;     //隔多久回调1次
 
     private static final long START_SCAN_DELAY_TIME = 3000; // 扫描设备延迟时间
-
-    protected int mPosition = -1;
-
-    public void setPosition(int i) {
-        mPosition = i;
-    }
-
-    public int getPosition() {
-        return mPosition;
-    }
 
     /**
      * 搜索设备时间计时
@@ -146,13 +138,13 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
     public void scanDevice() {
         Logger.i("scanDevice()");
 
-        Logger.e("mBluetoothAdapter == " + mBluetoothAdapter + "    isCanning == " + isCanning);
+        // Logger.e("mBluetoothAdapter == " + mBluetoothAdapter + "    isCanning == " + isCanning);
         if (mBluetoothAdapter != null && !isCanning) {
             boolean enabled = mBluetoothAdapter.isEnabled();
-            Logger.i("2 enabled == " + enabled);
+            Logger.i("scanDevice() enabled == " + enabled);
             if (!enabled) {
                 boolean enable = mBluetoothAdapter.enable();
-                Logger.e("2_1 enable == " + enable);
+                Logger.e("scanDevice() adapter.enable() enable == " + enable);
                 return;
             }
 
@@ -188,9 +180,12 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
 
             ScanSettings scanSettings = builder.build();
             List<ScanFilter> scanFilters = new ArrayList<>();
-            ScanFilter scanFilter = new ScanFilter.Builder().setServiceUuid(new ParcelUuid(UUID.fromString(getUuid()))).build();
-            scanFilters.add(scanFilter);
+            if (!Debug.canScanAllDevice) {
+                ScanFilter scanFilter = new ScanFilter.Builder().setServiceUuid(new ParcelUuid(UUID.fromString(getUuid()))).build();
+                scanFilters.add(scanFilter);
+            }
             mBluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, mScanCallback);
+
         }
     }
 
@@ -335,6 +330,9 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
      * 强制清除内部缓存
      */
     protected boolean refreshDeviceCache(BluetoothGatt gatt) {
+        if (gatt == null) {
+            return false;
+        }
         try {
             BluetoothGatt localBluetoothGatt = gatt;
             Method localMethod = localBluetoothGatt.getClass().getMethod("refresh", new Class[0]);
@@ -343,7 +341,8 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
                 return bool;
             }
         } catch (Exception localException) {
-            Logger.e("An exception occurred while refreshing device");
+            Logger.e("An exception occurred while refreshing device:");
+            localException.printStackTrace();
         }
         return false;
     }
@@ -355,9 +354,9 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
     public void openBLE(BleOpenCallBack bleOpenCallBack) {
         this.bleOpenCallBack = bleOpenCallBack;
         boolean enabled = mBluetoothAdapter.isEnabled();
-        Logger.i("enable == " + enabled);
+        Logger.i("adapter.isEnabled() == " + enabled);
         if (enabled) {
-            isOpen = enabled;
+            isOpen = true;
             mHandler.post(() -> bleOpenCallBack.isOpen(isOpen));
             getScanResults().clear();
             mHandler.postDelayed(() -> {
@@ -434,7 +433,7 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
 
     public abstract void disableCharacterNotifiy();
 
-    public abstract void connectDevice(int mPosition);
+    public abstract void connectDevice(MyScanResult scanResult);
 
     public boolean isConnected() {
         return isConnect;

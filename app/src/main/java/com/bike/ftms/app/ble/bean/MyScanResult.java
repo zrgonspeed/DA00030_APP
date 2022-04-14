@@ -32,11 +32,14 @@ public class MyScanResult {
         connectState = state;
     }
 
+
+
     @Override
     public String toString() {
         return "MyScanResult{" +
                 "scanResult=" + scanResult +
                 ", connectState=" + connectState +
+                ", super.toString()=" + super.toString() +
                 '}';
     }
 

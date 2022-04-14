@@ -109,15 +109,15 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
     private void setRefreshLayout() {
         if (refreshing) {
             rl_status_refresh.setEnableRefresh(false);
-            Logger.e("setEnableRefresh(false);");
+            // Logger.e("setEnableRefresh(false);");
         } else {
             if (isOpenBle()) {
                 rl_status_refresh.setEnableRefresh(true);
-                Logger.e("setEnableRefresh(true);");
+                // Logger.e("setEnableRefresh(true);");
 
             } else {
                 rl_status_refresh.setEnableRefresh(false);
-                Logger.e("setEnableRefresh(false);");
+                // Logger.e("setEnableRefresh(false);");
             }
         }
         rl_status_refresh.setRefreshHeader(new MyHeader(getApplicationContext()).setSpinnerStyle(SpinnerStyle.FixedBehind).setPrimaryColorId(R.color.colorPrimary).setAccentColorId(android.R.color.white).setEnableLastTime(false));
@@ -126,7 +126,7 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
             @Override
             public void onStateChanged(@NonNull RefreshLayout refreshLayout, @NonNull RefreshState oldState, @NonNull RefreshState newState) {
                 super.onStateChanged(refreshLayout, oldState, newState);
-                Logger.i("oldState == " + oldState + "   newState == " + newState);
+                // Logger.i("oldState == " + oldState + "   newState == " + newState);
                 // oldState == RefreshFinish   newState == None  这时才刷新动画完成
                 if (oldState == RefreshState.RefreshFinish && newState == RefreshState.None) {
                     rl_status_refresh.setEnableRefresh(false);
@@ -155,7 +155,9 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
                 ll_loading.setVisibility(View.GONE);
 
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    rl_status_refresh.finishRefresh(true);
+                    if (rl_status_refresh != null) {
+                        rl_status_refresh.finishRefresh(true);
+                    }
                 }, 1500);
             }
         });
@@ -438,11 +440,13 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
         ll_loading.setVisibility(View.GONE);
         refreshing = false;
         setRefreshLayout();
+
+        bleAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onConnectEvent(boolean isconnect, String name) {
-        Logger.i("isconnect==" + isconnect + "  bt name==" + name);
+        // Logger.i("isconnect==" + isconnect + "  bt name==" + name);
         /*if (isconnect) {
             finish();
         }*/
@@ -472,7 +476,6 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
 
     // 每点击一次要2秒后才能再次点击，防止狂按
     protected boolean isClicked = false;
-
 
     @Override
     protected void onDestroy() {

@@ -27,7 +27,7 @@ public class UIUtils {
 
         // density == 2.5    dpi == 400
         // density == 2.0    dpi == 320
-        Logger.e("density == " + density + "    dpi == " + dpi);
+        Logger.d("density == " + density + "    dpi == " + dpi);
         return density;
     }
 
@@ -39,7 +39,7 @@ public class UIUtils {
 
         // density == 2.5    dpi == 400
         // density == 2.0    dpi == 320
-        Logger.e("density == " + density + "    dpi == " + dpi);
+        Logger.d("density == " + density + "    dpi == " + dpi);
         return dpi;
     }
 }
