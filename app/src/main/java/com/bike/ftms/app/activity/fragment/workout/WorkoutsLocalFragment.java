@@ -297,7 +297,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
 
     @Override
     public void uploadRunDataSuccess(boolean nowUploaded) {
-        ToastUtil.show("已全部上传完");
+        ToastUtil.show(getString(R.string.upload_server_all));
         if (nowUploaded) {
             Handler handler = new Handler(Looper.getMainLooper());
             ((MainActivity) (getActivity())).showUploadSuccess();

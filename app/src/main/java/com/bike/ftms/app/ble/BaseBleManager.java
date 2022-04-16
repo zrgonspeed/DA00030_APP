@@ -13,6 +13,8 @@ import android.os.Looper;
 import android.os.ParcelUuid;
 
 import com.bike.ftms.app.Debug;
+import com.bike.ftms.app.R;
+import com.bike.ftms.app.base.MyApplication;
 import com.bike.ftms.app.ble.base.OnScanConnectListener;
 import com.bike.ftms.app.ble.bean.MyScanResult;
 import com.bike.ftms.app.utils.CustomTimer;
@@ -391,7 +393,7 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
                 } else {
                     mHandler.post(() -> {
                         // 用户拒绝了打开（还可能是打开失败？）
-                        ToastUtil.show("请同意打开蓝牙!");
+                        ToastUtil.show(MyApplication.getContext().getString(R.string.please_open_bluetooth));
                     });
                 }
 

@@ -393,7 +393,7 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
         if (gps_open) {
             scanDevice();
         } else {
-            ToastUtil.show("请打开位置服务");
+            ToastUtil.show(getString(R.string.please_open_local));
             cb_switch.setChecked(false);
         }
 
