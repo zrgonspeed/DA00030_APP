@@ -10,7 +10,9 @@ import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.ble.heart.BleHeartDeviceManager;
 import com.bike.ftms.app.utils.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @SuppressLint("MissingPermission")
 public class UuidHelp {
@@ -37,13 +39,14 @@ public class UuidHelp {
      * @param uuid_4
      */
     public static void enableCharacteristic(BluetoothGatt bluetoothGatt, List<BluetoothGattCharacteristic> list, String uuid_4) {
+        Logger.d("enableCharacteristic()-------");
         for (BluetoothGattCharacteristic gattCharacteristic : list) {
             if (gattCharacteristic.getUuid().toString().contains(uuid_4)) {
                 List<BluetoothGattDescriptor> bluetoothGattDescriptors = gattCharacteristic.getDescriptors();
                 for (BluetoothGattDescriptor bluetoothGattDescriptor : bluetoothGattDescriptors) {
                     boolean r = bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                     bluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
-                    Logger.d("" + gattCharacteristic.getUuid().toString() + ",bluetoothGattDescriptor " + r);
+                    Logger.d("bluetoothGatt.writeDescriptor-----" + gattCharacteristic.getUuid().toString() + ",bluetoothGattDescriptor " + r);
                 }
             }
         }
@@ -102,6 +105,24 @@ public class UuidHelp {
             for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
                 if (characteristic.getUuid().toString().contains(HR_2A37)) {
                     bluetoothGatt.setCharacteristicNotification(characteristic, false);
+                }
+            }
+        }
+    }
+
+    public static void printBleServices(BluetoothGatt mBluetoothGatt) {
+        Logger.d("这个蓝牙设备的所有service: ");
+        List<BluetoothGattService> services = mBluetoothGatt.getServices();
+        for (BluetoothGattService service : services) {
+            Logger.d("service uuid = " + service.getUuid());
+            // 指定一个service
+            // BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(service.getUuid().toString()));
+            // 获取这个service下的所有character
+            List<BluetoothGattCharacteristic> list = new ArrayList<>();
+            if (service != null) {
+                list = service.getCharacteristics();
+                for (BluetoothGattCharacteristic c : list) {
+                    Logger.d("--character = " + c.getUuid());
                 }
             }
         }

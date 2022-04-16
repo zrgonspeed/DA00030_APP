@@ -55,7 +55,7 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull BleViewHolder holder, int position) {
         MyScanResult myScanResult = list.get(position);
-        Logger.i("onBindViewHolder() ConnectState  == " + myScanResult.getConnectState() + "  name == " + myScanResult.getScanResult().getDevice().getName());
+        Logger.d("onBindViewHolder() ConnectState  == " + myScanResult.getConnectState() + "  name == " + myScanResult.getScanResult().getDevice().getName());
 
         holder.tvState.setOnClickListener(v -> {
             Logger.d("getConnectState()  == " + list.get(position).getConnectState() + "   " + list.get(position).getScanResult().getDevice().getName());

@@ -339,57 +339,29 @@ public class BleManager extends BaseBleManager {
             Logger.i("onServicesDiscovered status=" + status);
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                Logger.i("5------发现服务 status " + status);
+                Logger.i("5------发现服务");
 
-                // 这个蓝牙设备的所有service
                 mBluetoothGattServices = mBluetoothGatt.getServices();
-                for (BluetoothGattService service : mBluetoothGattServices) {
-                    Logger.d("service uuid = " + service.getUuid());
+                UuidHelp.printBleServices(mBluetoothGatt);
 
-                    // 指定一个service
-                    BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(service.getUuid().toString()));
-                    // 获取这个service下的所有character
-                    List<BluetoothGattCharacteristic> list = new ArrayList<>();
-                    if (localGattService != null) {
-                        list = localGattService.getCharacteristics();
-                        // Logger.i("localGattService = " + localGattService.getUuid());
-                        for (BluetoothGattCharacteristic c : list) {
-                            // Logger.d("c = " + c.getUuid());
-                        }
+                /// 将指定service的character加入list
+                BluetoothGattService ftmsService = mBluetoothGatt.getService(UUID.fromString(uuidServiceFTMS));
+                List<BluetoothGattCharacteristic> list;
+                if (ftmsService != null) {
+                    list = ftmsService.getCharacteristics();
+                    // 指定一个发送相关的service, 把需要的character加入list
+                    BluetoothGattService sendService = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidSendData));
+                    if (sendService != null) {
+                        list.addAll(sendService.getCharacteristics());
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.CUSTOM_FFE0);
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD3);
+                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2ADA);
+                        registrationGattCharacteristic();//注册通知
                     }
                 }
-
-                // 指定一个service
-                BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(uuidServiceFTMS));
-                // 获取这个service下的所有character
-                List<BluetoothGattCharacteristic> list = new ArrayList<>();
-                if (localGattService != null) {
-                    list = localGattService.getCharacteristics();
-                    Logger.i("localGattService = " + localGattService.getUuid());
-                    for (BluetoothGattCharacteristic c : list) {
-                        Logger.d("c = " + c.getUuid());
-                    }
-                }
-
-                // 指定一个发送相关的service
-                BluetoothGattService localGattService1 = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidSendData));
-                if (localGattService1 != null) {
-                    List<BluetoothGattCharacteristic> characteristics = localGattService1.getCharacteristics();
-                    list.addAll(characteristics);
-
-                    Logger.d("localGattService1 = " + localGattService1.getUuid());
-                    for (BluetoothGattCharacteristic c : characteristics) {
-                        Logger.d("c = " + c.getUuid());
-                    }
-                }
-                UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD3);
-                UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.CUSTOM_FFE0);
-                UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2ADA);
-                registrationGattCharacteristic();//注册通知
             } else {
                 Logger.e("onServicesDiscovered received: " + status);
             }
-
         }
 
         //发送数据后的回调
@@ -469,35 +441,34 @@ public class BleManager extends BaseBleManager {
      */
     private void registrationGattCharacteristic() {
         if (mBluetoothGattServices != null) {
-            BluetoothGattService gattService = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidServiceFTMS));
-            if (gattService == null) {
+            BluetoothGattService ftmsService = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidServiceFTMS));
+            if (ftmsService == null) {
                 mBluetoothGatt.disconnect();
                 mBluetoothGatt = null;
+                return;
             }
             if (mBluetoothGatt != null) {
-                for (BluetoothGattCharacteristic gattCharacteristic : mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidSendData)).getCharacteristics()) {
-                    if (gattCharacteristic.getUuid().toString().contains(UuidHelp.CUSTOM_FFE9)) {
-                        mBluetoothGattCharacteristic = gattCharacteristic;
-                        Logger.i("ffe9 " + ",设置为发送::");
+                BluetoothGattService sendService = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidSendData));
+                if (sendService != null) {
+                    for (BluetoothGattCharacteristic gattCharacteristic : sendService.getCharacteristics()) {
+                        if (gattCharacteristic.getUuid().toString().contains(UuidHelp.CUSTOM_FFE9)) {
+                            mBluetoothGattCharacteristic = gattCharacteristic;
+                            Logger.i(UuidHelp.CUSTOM_FFE9 + ",设置为发送::");
+                        }
                     }
+
+                    UuidHelp.setCharacterNotification(mBluetoothGatt, sendService.getCharacteristics(), UuidHelp.CUSTOM_FFE0);
+                    UuidHelp.setCharacterNotification(mBluetoothGatt, ftmsService.getCharacteristics(), UuidHelp.FTMS_2AD3);
+                    UuidHelp.setCharacterNotification(mBluetoothGatt, ftmsService.getCharacteristics(), UuidHelp.FTMS_2ADA);
+
+                    mHandler.postDelayed(() -> {
+                        if (!isSendVerifyData) {
+                            isSendVerifyData = true;
+                            sendVerifyData();
+                        }
+                    }, SEND_VERIFY_TIME);
                 }
-                UuidHelp.setCharacterNotification(mBluetoothGatt, mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidSendData)).getCharacteristics(), UuidHelp.CUSTOM_FFE0);
             }
-            mHandler.postDelayed(() -> {
-                if (!isSendVerifyData) {
-                    isSendVerifyData = true;
-                    sendVerifyData();
-                }
-            }, SEND_VERIFY_TIME);
-
-
-            if (gattService != null) {
-                List<BluetoothGattCharacteristic> list = gattService.getCharacteristics();
-
-                UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.FTMS_2AD3);
-                UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.FTMS_2ADA);
-            }
-
         }
     }
 

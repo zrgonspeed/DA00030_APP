@@ -38,7 +38,7 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         }
 
-        Logger.e("mBluetoothAdapter == null ? " + (mBluetoothAdapter == null));
+        // Logger.e("mBluetoothAdapter == null ? " + (mBluetoothAdapter == null));
         return mBluetoothAdapter;
     }
 
@@ -56,6 +56,7 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
         return connectScanResult;
     }
 
+    // 连接超时，连接上但指定时间内没有回调连接状态，就断开
     protected CustomTimer isConnectTimer;
 
     protected boolean isConnect;  //是否连接
@@ -237,6 +238,7 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
      * 扫描时间刷新结束
      */
     private void stopSearchCountDownTimer() {
+        Logger.i("stopSearchCountDownTimer() countDownTimer==" + countDownTimer);
         if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
@@ -247,6 +249,10 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
      * 停止扫描
      */
     public void stopScan() {
+        Logger.i("stopScan()----------");
+        Logger.i("isCanning == " + isCanning);
+        stopSearchCountDownTimer();
+        mHandler.removeCallbacksAndMessages(null);
         if (mBluetoothAdapter != null && isCanning) {
             isCanning = false;
             //mHandler.removeCallbacksAndMessages(null);
@@ -255,7 +261,7 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
             }
 
             if (onScanConnectListener != null) {
-                Logger.e("thread == " + Thread.currentThread().toString());
+                Logger.e("thread == " + Thread.currentThread());
                 mHandler.post(() -> {
                     onScanConnectListener.onStopScan();
                 });
