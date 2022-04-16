@@ -435,6 +435,23 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
         isConnectTimer.startTimer(1000, 1000, this);
     }
 
+    protected void printScanResults() {
+        Logger.i(mScanResults.toString());
+    }
+
+    protected void printConnectedScanResult() {
+        Logger.i(connectScanResult.toString());
+    }
+
+    // 释放上次gatt连接资源
+    protected void closeGatt() {
+        if (mBluetoothGatt != null) {
+            mBluetoothGatt.disconnect();
+            mBluetoothGatt.close();
+            mBluetoothGatt = null;
+        }
+    }
+
     public abstract void whenBTClosed();
 
     public abstract void disableCharacterNotifiy();
@@ -454,5 +471,6 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
     protected abstract void destroy();
 
     protected abstract String getUuid();
+
 
 }

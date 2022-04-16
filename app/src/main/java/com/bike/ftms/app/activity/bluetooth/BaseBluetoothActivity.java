@@ -34,6 +34,7 @@ import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.ble.BaseBleManager;
 import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.ble.base.OnScanConnectListener;
+import com.bike.ftms.app.ble.bean.MyScanResult;
 import com.bike.ftms.app.utils.ButtonUtils;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.view.MyHeader;
@@ -43,6 +44,8 @@ import com.scwang.smartrefresh.layout.constant.RefreshState;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -585,5 +588,26 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
         ll_loading.setVisibility(View.GONE);
         rv_ble.setVisibility(View.GONE);
         setRefreshLayout();
+    }
+
+    @Override
+    public void onItemClickListener(MyScanResult clickScanResult) {
+        if (!isClicked) {
+            getBleManager().stopScan();
+            getBleManager().connectDevice(clickScanResult);
+
+            // 把其他result状态变为0
+            List<MyScanResult> scanResults = getBleManager().getScanResults();
+            for (int i = 0; i < scanResults.size(); i++) {
+                if (clickScanResult != scanResults.get(i)) {
+                    scanResults.get(i).setConnectState(0);
+                }
+            }
+
+            new Handler().postDelayed(() -> {
+                isClicked = false;
+            }, 2000);
+        }
+        isClicked = true;
     }
 }

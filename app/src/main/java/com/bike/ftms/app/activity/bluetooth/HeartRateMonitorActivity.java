@@ -1,11 +1,7 @@
 package com.bike.ftms.app.activity.bluetooth;
 
-import android.os.Handler;
-import android.view.View;
-
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.ble.BaseBleManager;
-import com.bike.ftms.app.ble.bean.MyScanResult;
 import com.bike.ftms.app.ble.heart.BleHeartDeviceManager;
 
 public class HeartRateMonitorActivity extends BaseBluetoothActivity {
@@ -44,17 +40,5 @@ public class HeartRateMonitorActivity extends BaseBluetoothActivity {
     @Override
     public void onConnectEvent(boolean isconnect, String name) {
 
-    }
-
-    @Override
-    public void onItemClickListener(MyScanResult clickScanResult) {
-        if (!isClicked) {
-            getBleManager().stopScan();
-            getBleManager().connectDevice(clickScanResult);
-            new Handler().postDelayed(() -> {
-                isClicked = false;
-            }, 2000);
-        }
-        isClicked = true;
     }
 }

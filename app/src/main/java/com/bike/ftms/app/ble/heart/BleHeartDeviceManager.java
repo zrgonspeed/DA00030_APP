@@ -84,16 +84,22 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
      */
     public void connectDevice(MyScanResult scanResult) {
         Logger.i("2------connectDevice(" + scanResult + ")");
-        if (mBluetoothGattServices != null) {
-            Logger.e("mBluetoothGattServices.size == " + mBluetoothGattServices.size());
-        }
-        Logger.i("getScanResults(): " + getScanResults().size());
 
-        if (scanResult.getConnectState() == 1) {
-            disableCharacterNotifiy();
-            disConnectDevice();
+        if (connectScanResult != null && connectScanResult.getConnectState() == 1) {
             Logger.e("2------disConnectDevice()");
 
+            disableCharacterNotifiy();
+            boolean b = refreshDeviceCache(mBluetoothGatt);
+            Logger.e("断开 清除蓝牙内部缓存 " + b);
+            closeGatt();
+            disConnectDevice();
+
+            // printScanResults();
+            // printConnectedScanResult();
+
+            if (connectScanResult != null) {
+                connectScanResult.setConnectState(0);
+            }
             if (onScanConnectListener != null) {
                 onScanConnectListener.onNotifyData();
             }
@@ -101,13 +107,13 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
         }
         if (getScanResults() != null && getScanResults().size() != 0) {
             scanResult.setConnectState(2);
-            BluetoothDevice device = scanResult.getScanResult().getDevice();
-            connectScanResult = new MyScanResult(scanResult.getScanResult(), 2);
+            connectScanResult = scanResult;
 
             boolean b = refreshDeviceCache(mBluetoothGatt);
             Logger.i("清除蓝牙内部缓存 " + b);
             closeGatt();
 
+            BluetoothDevice device = scanResult.getScanResult().getDevice();
             mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
             Logger.i("connectDevice " + device.getAddress());
         }
@@ -116,14 +122,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
         }
     }
 
-    // 释放上次gatt连接资源
-    private void closeGatt() {
-        if (mBluetoothGatt != null) {
-            mBluetoothGatt.disconnect();
-            mBluetoothGatt.close();
-            mBluetoothGatt = null;
-        }
-    }
+
 
     public int getHeartInt() {
         return heart_rate;
@@ -159,7 +158,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
                     mBluetoothGatt.close();
                 }
 
-                // 设置扫描结果连接状态
+                // 设置扫描结果状态 0
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
                         myScanResult.setConnectState(0);
@@ -177,7 +176,6 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
 
                 disConnectDevice();
 
-
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(false, gatt.getDevice().getName());
                 }
@@ -189,7 +187,8 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
             }
 
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                // 为对应的扫描结果设置连接状态
+                Logger.i("3------连接成功");
+                // 为对应的扫描结果设置连接状态 2  心率设备不需要校验
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
                         myScanResult.setConnectState(1);
@@ -204,18 +203,20 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
                 }
                 isConnect = true;
                 if (mBluetoothGatt != null) {
+                    Logger.i("4------寻找服务");
                     mBluetoothGatt.discoverServices();
                 }
-                Logger.e("isHeartbeatConnect=" + isConnect);
+                // 暂时没用
                 if (onScanConnectListener != null) {
                     onScanConnectListener.onConnectEvent(true, gatt.getDevice().getName());
                 }
                 bleHeartData.onHRConnected();
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Logger.e("断开心跳设备回调");
+                mHandler.removeCallbacksAndMessages(null);
                 disableCharacterNotifiy();
 
-                // 设置扫描结果中的连接状态
+                // 设置扫描结果中的状态 0
                 for (MyScanResult myScanResult : mScanResults) {
                     if (myScanResult.getScanResult().getDevice().getAddress().equals(gatt.getDevice().getAddress())) {
                         myScanResult.setConnectState(0);
@@ -251,16 +252,21 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
             Logger.i("Hr onServicesDiscovered status=" + status);
+
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                Logger.i("5------发现服务");
+
                 mBluetoothGattServices = mBluetoothGatt.getServices();
-                BluetoothGattService localGattService = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidServiceHeartRate));
-                List<BluetoothGattCharacteristic> list = new ArrayList<>();
-                if (localGattService != null) {
-                    list = localGattService.getCharacteristics();
+                UuidHelp.printBleServices(mBluetoothGatt);
+
+                /// 将指定service的character加入list
+                BluetoothGattService heartRateService = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidServiceHeartRate));
+                List<BluetoothGattCharacteristic> list;
+                if (heartRateService != null) {
+                    list = heartRateService.getCharacteristics();
+                    UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.HR_2A37);
+                    registrationGattCharacteristic();//注册通知
                 }
-                UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.HR_2A37);
-                // UuidHelp.enableCharacteristic(mBluetoothGatt, list, "2a38");
-                registrationGattCharacteristic();//注册通知
             } else {
                 Logger.d("Hr onServicesDiscovered received: " + status);
             }
@@ -333,15 +339,15 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
      */
     private void registrationGattCharacteristic() {
         if (mBluetoothGattServices != null) {
-            BluetoothGattService gattService = mBluetoothGatt.getService(UUID.fromString(getUuid()));
-            if (gattService == null) {
+            BluetoothGattService heartDataService = mBluetoothGatt.getService(UUID.fromString(getUuid()));
+            if (heartDataService == null) {
                 mBluetoothGatt.disconnect();
                 mBluetoothGatt = null;
-            } else {
-                List<BluetoothGattCharacteristic> list = gattService.getCharacteristics();
-                UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.HR_2A37);
-                // UuidHelp.setCharacterNotification(mBluetoothGatt, list, "2a38");
+                return;
             }
+
+            List<BluetoothGattCharacteristic> list = heartDataService.getCharacteristics();
+            UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.HR_2A37);
         }
     }
 

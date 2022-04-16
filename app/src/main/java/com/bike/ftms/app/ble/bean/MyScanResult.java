@@ -1,5 +1,6 @@
 package com.bike.ftms.app.ble.bean;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.le.ScanResult;
 
 /**
@@ -33,11 +34,11 @@ public class MyScanResult {
     }
 
 
-
+    @SuppressLint("MissingPermission")
     @Override
     public String toString() {
         return "MyScanResult{" +
-                "scanResult=" + scanResult +
+                "scanResult=" + scanResult.getDevice().getName() + "---" + scanResult.getDevice().getAddress() +
                 ", connectState=" + connectState +
                 ", super.toString()=" + super.toString() +
                 '}';
