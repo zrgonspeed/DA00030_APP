@@ -299,7 +299,11 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         if (isOnPause) {
             return;
         }
-        runOnUiThread(() -> homeFragment.onRunData(rowerDataBean1));
+        runOnUiThread(() -> {
+            if (homeFragment != null) {
+                homeFragment.onRunData(rowerDataBean1);
+            }
+        });
     }
 
     @Override

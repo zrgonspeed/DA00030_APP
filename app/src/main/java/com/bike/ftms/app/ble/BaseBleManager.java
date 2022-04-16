@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 import dev.xesam.android.toolbox.timer.CountDownTimer;
+import tech.gujin.toast.ToastUtil;
 
 @SuppressLint({"MissingPermission", "WrongConstant"})
 public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
@@ -373,6 +374,7 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
 
         if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
             new Thread(() -> {
+                // 这里有的机型会弹出 "申请开启蓝牙权限"
                 isOpen = mBluetoothAdapter.enable();
                 Logger.i("mBluetoothAdapter.enable()");
                 Logger.i("isOpen == " + isOpen);
@@ -381,13 +383,16 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
                     isOpen = mBluetoothAdapter.isEnabled();
                 }
                 Logger.i("isOpen == " + isOpen);
-
                 if (isOpen) {
                     mHandler.postDelayed(() -> {
                         scanDevice();
                     }, START_SCAN_DELAY_TIME);
                     getScanResults().clear();
                 } else {
+                    mHandler.post(() -> {
+                        // 用户拒绝了打开（还可能是打开失败？）
+                        ToastUtil.show("请同意打开蓝牙!");
+                    });
                 }
 
                 mHandler.post(() -> bleOpenCallBack.isOpen(isOpen));
