@@ -339,9 +339,6 @@ public class BleManager extends BaseBleManager {
                     BluetoothGattService sendService = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidSendData));
                     if (sendService != null) {
                         list.addAll(sendService.getCharacteristics());
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.CUSTOM_FFE0);
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD3);
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2ADA);
                         registrationGattCharacteristic();//注册通知
                     }
                 }
@@ -829,19 +826,16 @@ public class BleManager extends BaseBleManager {
                 switch (MyConstant.getCategory(deviceType)) {
                     case MyConstant.CATEGORY_BOAT: {
                         // 2ad1  划船器
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD1);
                         UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.FTMS_2AD1);
                     }
                     break;
                     case MyConstant.CATEGORY_BIKE: {
                         // 2ad2  室内自行车
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD2);
                         UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.FTMS_2AD2);
                     }
                     break;
                     case MyConstant.CATEGORY_SKI: {
                         // 滑雪机
-                        UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.FTMS_2AD1);
                         UuidHelp.setCharacterNotification(mBluetoothGatt, list, UuidHelp.FTMS_2AD1);
                     }
                     break;

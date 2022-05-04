@@ -16,6 +16,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.bike.ftms.app.ble.help.UuidHelp;
 import com.bike.ftms.app.utils.Logger;
 
 import java.lang.ref.WeakReference;
@@ -302,7 +303,7 @@ public class BluetoothHelper {
                     super.onCharacteristicChanged(gatt, characteristic);
                     Logger.d("=====================  onCharacteristicChanged  ====================");
 
-                    if (UUID.fromString(UUIDManager.UUID_HEART_RATE_MEASUREMENT).equals(characteristic.getUuid())) {
+                    if (UUID.fromString(UuidHelp.UUID_HEART_RATE_MEASUREMENT).equals(characteristic.getUuid())) {
                         int flag = characteristic.getProperties();
                         int format;
                         if ((flag & 0x01) != 0) {

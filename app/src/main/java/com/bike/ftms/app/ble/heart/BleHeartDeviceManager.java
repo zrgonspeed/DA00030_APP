@@ -20,7 +20,6 @@ import com.bike.ftms.app.utils.ConvertData;
 import com.bike.ftms.app.utils.CustomTimer;
 import com.bike.ftms.app.utils.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -80,7 +79,6 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
 
     /**
      * 连接蓝牙设备
-     *
      */
     public void connectDevice(MyScanResult scanResult) {
         Logger.i("2------connectDevice(" + scanResult + ")");
@@ -121,7 +119,6 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
             onScanConnectListener.onNotifyData();
         }
     }
-
 
 
     public int getHeartInt() {
@@ -259,14 +256,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
                 mBluetoothGattServices = mBluetoothGatt.getServices();
                 UuidHelp.printBleServices(mBluetoothGatt);
 
-                /// 将指定service的character加入list
-                BluetoothGattService heartRateService = mBluetoothGatt.getService(UUID.fromString(UuidHelp.uuidServiceHeartRate));
-                List<BluetoothGattCharacteristic> list;
-                if (heartRateService != null) {
-                    list = heartRateService.getCharacteristics();
-                    UuidHelp.enableCharacteristic(mBluetoothGatt, list, UuidHelp.HR_2A37);
-                    registrationGattCharacteristic();//注册通知
-                }
+                registrationGattCharacteristic();//注册通知
             } else {
                 Logger.d("Hr onServicesDiscovered received: " + status);
             }
@@ -292,12 +282,23 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
-            // 10秒内     这里没执行，就会断开连接
-            isConnectTimer.setmAllTime(0L);
-            Logger.i("" + characteristic.getUuid() + ",Hr onCharacteristicChanged::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
+            if (UUID.fromString(UuidHelp.UUID_HEART_RATE_MEASUREMENT).equals(characteristic.getUuid())) {
+                // 10秒内     这里没执行，就会断开连接
+                isConnectTimer.setmAllTime(0L);
+                Logger.i("" + characteristic.getUuid() + ",Hr onCharacteristicChanged::" + ConvertData.byteArrayToHexString(characteristic.getValue(), characteristic.getValue().length));
 
-            if (characteristic.getUuid().toString().contains(UuidHelp.HR_2A37)) {
-                setHrData(characteristic.getValue());
+                // 官方标准解析心跳
+                int flag = characteristic.getProperties();
+                int format;
+                if ((flag & 0x01) != 0) {
+                    format = BluetoothGattCharacteristic.FORMAT_UINT16;
+                } else {
+                    format = BluetoothGattCharacteristic.FORMAT_UINT8;
+                }
+                int currHr = characteristic.getIntValue(format, 1);
+                Logger.i("心跳: " + currHr);
+
+                setHrData(currHr);
             }
         }
 
@@ -361,18 +362,17 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
      * 4存在的 RR 间隔：              1
      * 5–7 保留供将来使用          000
      *
-     * @param data
+     * @param currHr
      */
-    private void setHrData(byte[] data) {
-        String s = ConvertData.byteArrToBinStr(data);
+    private void setHrData(int currHr) {
+        // String s = ConvertData.byteArrToBinStr(data);
         // 0x16 == 22   0001 0110
-        if ("0".contentEquals(s.subSequence(7, 8))) {
-            heart_rate = (short) ConvertData.byteToInt(data[1]);
-        } else {
-            heart_rate = (short) resolveData(data, 1, 2);
-        }
-
-        Logger.i("心跳: " + heart_rate);
+        // if ("0".contentEquals(s.subSequence(7, 8))) {
+        //     heart_rate = (short) ConvertData.byteToInt(data[1]);
+        // } else {
+        //     heart_rate = (short) resolveData(data, 1, 2);
+        // }
+        this.heart_rate = (short) currHr;
         BleManager.getInstance().setHrInt(heart_rate);
 
         if (bleHeartData != null) {

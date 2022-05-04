@@ -31,40 +31,27 @@ public class UuidHelp {
     public static final String HR_2A37 = "2a37";    // "Heart Rate Measurement"
     public static final String HR_2A38 = "2a38";    // "Body Sensor Location"
 
-    /**
-     * 启用特征值通知
-     *
-     * @param bluetoothGatt
-     * @param list
-     * @param uuid_4
-     */
-    public static void enableCharacteristic(BluetoothGatt bluetoothGatt, List<BluetoothGattCharacteristic> list, String uuid_4) {
-        Logger.d("enableCharacteristic()-------");
-        for (BluetoothGattCharacteristic gattCharacteristic : list) {
-            if (gattCharacteristic.getUuid().toString().contains(uuid_4)) {
-                List<BluetoothGattDescriptor> bluetoothGattDescriptors = gattCharacteristic.getDescriptors();
-                for (BluetoothGattDescriptor bluetoothGattDescriptor : bluetoothGattDescriptors) {
-                    boolean r = bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                    bluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
-                    Logger.d("bluetoothGatt.writeDescriptor-----" + gattCharacteristic.getUuid().toString() + ",bluetoothGattDescriptor " + r);
-                }
-            }
-        }
-    }
+    public static final String UUID_HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb";
 
     /**
      * 启用特征值通知
      *
      * @param bluetoothGatt
      * @param list
-     * @param s
      */
-    public static void setCharacterNotification(BluetoothGatt bluetoothGatt, List<BluetoothGattCharacteristic> list, String s) {
+    public static void setCharacterNotification(BluetoothGatt bluetoothGatt, List<BluetoothGattCharacteristic> list, String uuid) {
         for (BluetoothGattCharacteristic gattCharacteristic : list) {
-            if (gattCharacteristic.getUuid().toString().contains(s)) {//接收通道
+            if (gattCharacteristic.getUuid().toString().contains(uuid)) {//接收通道
                 if (bluetoothGatt != null) {
                     boolean enabled = bluetoothGatt.setCharacteristicNotification(gattCharacteristic, true);
-                    Logger.i(s + ",注册通知::" + enabled);
+                    Logger.i(uuid + ",注册通知::" + enabled);
+                }
+
+                List<BluetoothGattDescriptor> bluetoothGattDescriptors = gattCharacteristic.getDescriptors();
+                for (BluetoothGattDescriptor bluetoothGattDescriptor : bluetoothGattDescriptors) {
+                    boolean r = bluetoothGattDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                    bluetoothGatt.writeDescriptor(bluetoothGattDescriptor);
+                    Logger.d("bluetoothGatt.writeDescriptor-----" + gattCharacteristic.getUuid().toString() + ",bluetoothGattDescriptor " + r);
                 }
             }
         }
