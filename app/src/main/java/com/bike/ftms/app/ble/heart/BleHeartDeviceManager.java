@@ -112,7 +112,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
             closeGatt();
 
             BluetoothDevice device = scanResult.getScanResult().getDevice();
-            mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback);
+            mBluetoothGatt = device.connectGatt(MyApplication.getContext(), false, mGattCallback, 2);
             Logger.i("connectDevice " + device.getAddress());
         }
         if (onScanConnectListener != null) {
@@ -144,7 +144,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
         //当连接状态发生改变
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            super.onConnectionStateChange(gatt, status, newState);
+            // super.onConnectionStateChange(gatt, status, newState);
             Logger.i("onConnectionStateChange status " + status);
             Logger.i("onConnectionStateChange newState " + newState);
             Logger.i("onConnectionStateChange name " + gatt.getDevice().getName());
