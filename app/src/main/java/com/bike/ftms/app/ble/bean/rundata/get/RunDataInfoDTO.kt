@@ -1,85 +1,24 @@
-package com.bike.ftms.app.ble.bean.rundata.get;
+package com.bike.ftms.app.ble.bean.rundata.get
 
-import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean2;
-import com.bike.ftms.app.utils.TimeStringUtil;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean2
+import com.bike.ftms.app.utils.TimeStringUtil
 
-public class RunDataInfoDTO {
-    private String time;
-    private String meters;
-    private String cals;
+class RunDataInfoDTO {
+    var time: String? = null
+    var meters: String? = null
+    var cals: String? = null
+    var efm // /500M
+            : String? = null
+    var sm: String? = null
+    var calhr: String? = null
+    var watts: String? = null
 
-    private String efm;     // /500M
-
-    private String sm;
-    private String calhr;
-    private String watts;
-
-    public RunDataInfoDTO() {
-
+    constructor() {}
+    constructor(bean2: RowerDataBean2) {
+        toSelf(bean2)
     }
 
-    public RunDataInfoDTO(RowerDataBean2 bean2) {
-        toSelf(bean2);
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getMeters() {
-        return meters;
-    }
-
-    public void setMeters(String meters) {
-        this.meters = meters;
-    }
-
-    public String getCals() {
-        return cals;
-    }
-
-    public void setCals(String cals) {
-        this.cals = cals;
-    }
-
-    public String getEfm() {
-        return efm;
-    }
-
-    public void setEfm(String efm) {
-        this.efm = efm;
-    }
-
-    public String getSm() {
-        return sm;
-    }
-
-    public void setSm(String sm) {
-        this.sm = sm;
-    }
-
-    public String getCalhr() {
-        return calhr;
-    }
-
-    public void setCalhr(String calhr) {
-        this.calhr = calhr;
-    }
-
-    public String getWatts() {
-        return watts;
-    }
-
-    public void setWatts(String watts) {
-        this.watts = watts;
-    }
-
-    @Override
-    public String toString() {
+    override fun toString(): String {
         return "RunDataInfoDTO{" +
                 "time='" + time + '\'' +
                 ", meters='" + meters + '\'' +
@@ -88,17 +27,16 @@ public class RunDataInfoDTO {
                 ", sm='" + sm + '\'' +
                 ", calhr='" + calhr + '\'' +
                 ", watts='" + watts + '\'' +
-                '}';
+                '}'
     }
 
-    private void toSelf(RowerDataBean2 bean2) {
-        setTime(TimeStringUtil.getSToHourMinSecValue(bean2.getTime()));
-        setMeters(bean2.getDistance() + "M");
-        setCals(bean2.getCalorie() + "");
-
-        setEfm(TimeStringUtil.getSToMinSecValue(bean2.getAve_five_hundred()));
-        setSm(bean2.getSm() + "");
-        setCalhr(bean2.getCalories_hr() + "");
-        setWatts(bean2.getWatts() + "");
+    private fun toSelf(bean2: RowerDataBean2) {
+        time = TimeStringUtil.getSToHourMinSecValue(bean2.time.toFloat())
+        meters = bean2.distance.toString() + "M"
+        cals = bean2.calorie.toString() + ""
+        efm = TimeStringUtil.getSToMinSecValue(bean2.ave_five_hundred.toFloat())
+        sm = bean2.sm.toString() + ""
+        calhr = bean2.calories_hr.toString() + ""
+        watts = bean2.watts.toString() + ""
     }
 }

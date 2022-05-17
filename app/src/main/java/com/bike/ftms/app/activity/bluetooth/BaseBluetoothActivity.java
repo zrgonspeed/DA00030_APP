@@ -32,7 +32,6 @@ import com.bike.ftms.app.R;
 import com.bike.ftms.app.adapter.BleAdapter;
 import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.ble.BaseBleManager;
-import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.ble.base.OnScanConnectListener;
 import com.bike.ftms.app.ble.bean.MyScanResult;
 import com.bike.ftms.app.utils.ButtonUtils;

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 31
     buildToolsVersion '30.0.3'
@@ -9,7 +9,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 31
         versionCode getMyAppVersionCode()
-        versionName "2.0-220504-01"
+        versionName "2.0-220517-01"
         testInstrumentationRunner "androidx.fragment_workouts.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -90,6 +90,9 @@ dependencies {
     // 日志调试框架：https://github.com/getActivity/Logcat
     // 可在手机上显示logcat
 //    debugImplementation 'com.github.getActivity:Logcat:9.9'
+
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 task updateVersionCode() {

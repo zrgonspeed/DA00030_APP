@@ -1,473 +1,152 @@
-package com.bike.ftms.app.ble.bean.rundata.raw;
-
-import com.bike.ftms.app.common.MyConstant;
-
-import org.litepal.crud.LitePalSupport;
-
-public class RowerDataBean2 extends LitePalSupport {
-    private int id;
-    private int strokes;
-    private int drag;
-    private int interval;
-    private int sm;
-    private long five_hundred;
-    private int heart_rate;
-    private long ave_five_hundred;
-    private int watts;
-    private int ave_watts;
-    private int calories_hr;
-    private String note;
-    private long date;
-
-    private long time;
-    private long distance;
-    private long calorie;
-    private long setIntervalTime = 0;//间歇模式设定时间
-    private long setIntervalDistance = 0;//间歇模式设定距离
-    private long setIntervalCalorie = 0;//间歇模式设定卡路里
-    private long setGoalTime = 0;//目标模式设定时间
-    private long setGoalDistance = 0;//目标模式设定距离
-    private long setGoalCalorie = 0;//目标模式设定卡路里
-
-    private int instSpeed;
-    private int instRpm;
-    private int level;
-    private int oneKmTime;
-    private int aveOneKmTime;
-    private int splitOneKmTime;
-    private int splitCal;
-
-    private int deviceType = 0;
-    private int categoryType = 0;
-
-    public int getDeviceType() {
-        return deviceType;
-    }
-
-    public void setDeviceType(int deviceType) {
-        this.deviceType = deviceType;
-    }
-
-    public int getCategoryType() {
-        return categoryType;
-    }
-
-    public void setCategoryType(int categoryType) {
-        this.categoryType = categoryType;
-    }
-
-    public int getInstSpeed() {
-        return instSpeed;
-    }
-
-    public void setInstSpeed(int instSpeed) {
-        this.instSpeed = instSpeed;
-    }
-
-    public int getInstRpm() {
-        return instRpm;
-    }
-
-    public void setInstRpm(int instRpm) {
-        this.instRpm = instRpm;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public int getOneKmTime() {
-        return oneKmTime;
-    }
-
-    public void setOneKmTime(int oneKmTime) {
-        this.oneKmTime = oneKmTime;
-    }
-
-    public int getAveOneKmTime() {
-        return aveOneKmTime;
-    }
-
-    public void setAveOneKmTime(int aveOneKmTime) {
-        this.aveOneKmTime = aveOneKmTime;
-    }
-
-    public int getSplitOneKmTime() {
-        return splitOneKmTime;
-    }
-
-    public void setSplitOneKmTime(int splitOneKmTime) {
-        this.splitOneKmTime = splitOneKmTime;
-    }
-
-    public int getSplitCal() {
-        return splitCal;
-    }
-
-    public void setSplitCal(int splitCal) {
-        this.splitCal = splitCal;
-    }
-
-    @MyConstant.RunMode
-    private int runMode = MyConstant.NORMAL;
-    private int reset_time;
-    @MyConstant.RunStatus
-    private int runStatus = MyConstant.RUN_STATUS_NO;
-    @MyConstant.IntervalStatus
-    private int intervalStatus = MyConstant.INTERVAL_STATUS_REST;
-    private int runInterval = 0;        // 各个模式的分段次数  0-255
-    private RowerDataBean1 rowerDataBean1;
-
-    public RowerDataBean2() {
-    }
-
-    public RowerDataBean2(RowerDataBean1 bean1) {
-        setTime(bean1.getTime());
-        setDistance(bean1.getDistance());
-        setCalorie(bean1.getCalorie());
-
-        setSetGoalDistance(bean1.getSetGoalDistance());
-        setSetGoalTime(bean1.getSetGoalTime());
-        setSetGoalCalorie(bean1.getSetGoalCalorie());
-
-        setSetIntervalCalorie(bean1.getSetIntervalCalorie());
-        setSetIntervalDistance(bean1.getSetIntervalDistance());
-        setSetIntervalTime(bean1.getSetIntervalTime());
-
-        setRunMode(bean1.getRunMode());
-        setRunInterval(bean1.getRunInterval());
-        setRunStatus(bean1.getRunStatus());
-        setIntervalStatus(bean1.getIntervalStatus());
-        setReset_time(bean1.getReset_time());
-
-
-        setSm(bean1.getSm());
-        setAve_five_hundred(bean1.getAve_five_hundred());
-
-        setInstRpm(bean1.getInstRpm());
-        setLevel(bean1.getLevel());
-        setCategoryType(bean1.getCategoryType());
-        setDeviceType(bean1.getDeviceType());
-        setOneKmTime(bean1.getOneKmTime());
-        setAveOneKmTime(bean1.getAveOneKmTime());
-        setSplitCal(bean1.getSplitCal());
-        setSplitOneKmTime(bean1.getSplitOneKmTime());
-
-        setAve_watts(bean1.getAve_watts());
-        setCalories_hr(bean1.getCalories_hr());
-        setDate(bean1.getDate());
-        setDrag(bean1.getDrag());
-        setFive_hundred(bean1.getFive_hundred());
-        setStrokes(bean1.getStrokes());
-        setWatts(bean1.getWatts());
-        setHeart_rate(bean1.getHeart_rate());
-        setInterval(bean1.getInterval());
-        setNote(bean1.getNote());
-
-        setRowerDataBean1(bean1);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getStrokes() {
-        return strokes;
-    }
-
-    public void setStrokes(int strokes) {
-        this.strokes = strokes;
-    }
-
-    public int getDrag() {
-        return drag;
-    }
-
-    public void setDrag(int drag) {
-        this.drag = drag;
-    }
-
-    public int getInterval() {
-        return interval;
-    }
-
-    public void setInterval(int interval) {
-        this.interval = interval;
-    }
-
-    public long getDistance() {
-        return distance;
-    }
-
-    public void setDistance(long distance) {
-        this.distance = distance;
-    }
-
-    public int getSm() {
-        return sm;
-    }
-
-    public void setSm(int sm) {
-        this.sm = sm;
-    }
-
-    public long getFive_hundred() {
-        return five_hundred;
-    }
-
-    public void setFive_hundred(long five_hundred) {
-        this.five_hundred = five_hundred;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public int getHeart_rate() {
-        return heart_rate;
-    }
-
-    public void setHeart_rate(int heart_rate) {
-        this.heart_rate = heart_rate;
-    }
-
-    public long getAve_five_hundred() {
-        return ave_five_hundred;
-    }
-
-    public void setAve_five_hundred(long ave_five_hundred) {
-        this.ave_five_hundred = ave_five_hundred;
-    }
-
-    public int getWatts() {
-        return watts;
-    }
-
-    public void setWatts(int watts) {
-        this.watts = watts;
-    }
-
-    public int getAve_watts() {
-        return ave_watts;
-    }
-
-    public void setAve_watts(int ave_watts) {
-        this.ave_watts = ave_watts;
-    }
-
-    public long getCalorie() {
-        return calorie;
-    }
-
-    public void setCalorie(long calorie) {
-        this.calorie = calorie;
-    }
-
-    public int getCalories_hr() {
-        return calories_hr;
-    }
-
-    public void setCalories_hr(int calories_hr) {
-        this.calories_hr = calories_hr;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public long getDate() {
-        return date;
-    }
-
-    public void setDate(long date) {
-        this.date = date;
-    }
-
-    public long getSetIntervalTime() {
-        return setIntervalTime;
-    }
-
-    public void setSetIntervalTime(long setIntervalTime) {
-        this.setIntervalTime = setIntervalTime;
-    }
-
-    public long getSetIntervalDistance() {
-        return setIntervalDistance;
-    }
-
-    public void setSetIntervalDistance(long setIntervalDistance) {
-        this.setIntervalDistance = setIntervalDistance;
-    }
-
-    public long getSetIntervalCalorie() {
-        return setIntervalCalorie;
-    }
-
-    public void setSetIntervalCalorie(long setIntervalCalorie) {
-        this.setIntervalCalorie = setIntervalCalorie;
-    }
-
-    public int getRunMode() {
-        return runMode;
-    }
-
-    public void setRunMode(@MyConstant.RunMode int runMode) {
-        this.runMode = runMode;
-    }
-
-    public int getReset_time() {
-        return reset_time;
-    }
-
-    public void setReset_time(int reset_time) {
-        this.reset_time = reset_time;
-    }
-
-    public long getSetGoalTime() {
-        return setGoalTime;
-    }
-
-    public void setSetGoalTime(long setGoalTime) {
-        this.setGoalTime = setGoalTime;
-    }
-
-    public long getSetGoalDistance() {
-        return setGoalDistance;
-    }
-
-    public void setSetGoalDistance(long setGoalDistance) {
-        this.setGoalDistance = setGoalDistance;
-    }
-
-    public long getSetGoalCalorie() {
-        return setGoalCalorie;
-    }
-
-    public void setSetGoalCalorie(long setGoalCalorie) {
-        this.setGoalCalorie = setGoalCalorie;
-    }
-
-    public RowerDataBean1 getRowerDataBean1() {
-        return rowerDataBean1;
-    }
-
-    public void setRowerDataBean1(RowerDataBean1 rowerDataBean1) {
-        this.rowerDataBean1 = rowerDataBean1;
-    }
-
-    public int getRunStatus() {
-        return runStatus;
-    }
-
-    public void setRunStatus(int runStatus) {
-        this.runStatus = runStatus;
-    }
-
-    public int getIntervalStatus() {
-        return intervalStatus;
-    }
-
-    public void setIntervalStatus(int intervalStatus) {
-        this.intervalStatus = intervalStatus;
-    }
-
-    public int getRunInterval() {
-        return runInterval;
-    }
-
-    public void setRunInterval(int runInterval) {
-        this.runInterval = runInterval;
-    }
-
-    public RowerDataBean2 copy() {
-        RowerDataBean2 bean = new RowerDataBean2();
-        bean.setId(getId());
-
-        bean.setTime(getTime());
-        bean.setDistance(getDistance());
-        bean.setCalorie(getCalorie());
-
-        bean.setSetGoalDistance(getSetGoalDistance());
-        bean.setSetGoalTime(getSetGoalTime());
-        bean.setSetGoalCalorie(getSetGoalCalorie());
-
-        bean.setSetIntervalCalorie(getSetIntervalCalorie());
-        bean.setSetIntervalDistance(getSetIntervalDistance());
-        bean.setSetIntervalTime(getSetIntervalTime());
-
-        bean.setRunMode(getRunMode());
-        bean.setRunInterval(getRunInterval());
-        bean.setRunStatus(getRunStatus());
-        bean.setIntervalStatus(getIntervalStatus());
-        bean.setReset_time(getReset_time());
-
-
-        bean.setInstRpm(getInstRpm());
-        bean.setLevel(getLevel());
-        bean.setCategoryType(getCategoryType());
-        bean.setDeviceType(getDeviceType());
-        bean.setOneKmTime(getOneKmTime());
-        bean.setAveOneKmTime(getAveOneKmTime());
-        bean.setSplitCal(getSplitCal());
-        bean.setSplitOneKmTime(getSplitOneKmTime());
-        
-        bean.setAve_five_hundred(getAve_five_hundred());
-        bean.setAve_watts(getAve_watts());
-        bean.setCalories_hr(getCalories_hr());
-        bean.setDate(getDate());
-        bean.setDrag(getDrag());
-        bean.setSm(getSm());
-        bean.setFive_hundred(getFive_hundred());
-        bean.setStrokes(getStrokes());
-        bean.setWatts(getWatts());
-        bean.setHeart_rate(getHeart_rate());
-        bean.setInterval(getInterval());
-        bean.setNote(getNote());
-
-        bean.setRowerDataBean1(getRowerDataBean1());
-
-        return bean;
-    }
-
-    @Override
-    public String toString() {
+package com.bike.ftms.app.ble.bean.rundata.raw
+
+import com.bike.ftms.app.common.MyConstant
+import com.bike.ftms.app.common.MyConstant.*
+import org.litepal.crud.LitePalSupport
+
+class RowerDataBean2 : LitePalSupport {
+    var id = 0
+    var strokes = 0
+    var drag = 0
+    var interval = 0
+    var sm = 0
+    var five_hundred: Long = 0
+    var heart_rate = 0
+    var ave_five_hundred: Long = 0
+    var watts = 0
+    var ave_watts = 0
+    var calories_hr = 0
+    var note: String? = null
+    var date: Long = 0
+    var time: Long = 0
+    var distance: Long = 0
+    var calorie: Long = 0
+    var setIntervalTime: Long = 0 //间歇模式设定时间
+    var setIntervalDistance: Long = 0 //间歇模式设定距离
+    var setIntervalCalorie: Long = 0 //间歇模式设定卡路里
+    var setGoalTime: Long = 0 //目标模式设定时间
+    var setGoalDistance: Long = 0 //目标模式设定距离
+    var setGoalCalorie: Long = 0 //目标模式设定卡路里
+    var instSpeed = 0
+    var instRpm = 0
+    var level = 0
+    var oneKmTime = 0
+    var aveOneKmTime = 0
+    var splitOneKmTime = 0
+    var splitCal = 0
+    var deviceType = 0
+    var categoryType = 0
+
+    @RunMode
+    var runMode = MyConstant.NORMAL
+    var reset_time = 0
+
+    @RunStatus
+    var runStatus = MyConstant.RUN_STATUS_NO
+
+    @IntervalStatus
+    var intervalStatus = MyConstant.INTERVAL_STATUS_REST
+    var runInterval = 0 // 各个模式的分段次数  0-255
+    var rowerDataBean1: RowerDataBean1? = null
+
+    constructor() {}
+    constructor(bean1: RowerDataBean1) {
+        time = bean1.time
+        distance = bean1.distance
+        calorie = bean1.calorie
+        setGoalDistance = bean1.setGoalDistance
+        setGoalTime = bean1.setGoalTime
+        setGoalCalorie = bean1.setGoalCalorie
+        setIntervalCalorie = bean1.setIntervalCalorie
+        setIntervalDistance = bean1.setIntervalDistance
+        setIntervalTime = bean1.setIntervalTime
+        runMode = bean1.runMode
+        runInterval = bean1.runInterval
+        runStatus = bean1.runStatus
+        intervalStatus = bean1.intervalStatus
+        reset_time = bean1.reset_time
+        sm = bean1.sm
+        ave_five_hundred = bean1.ave_five_hundred
+        instRpm = bean1.instRpm
+        level = bean1.level
+        categoryType = bean1.categoryType
+        deviceType = bean1.deviceType
+        oneKmTime = bean1.oneKmTime
+        aveOneKmTime = bean1.aveOneKmTime
+        splitCal = bean1.splitCal
+        splitOneKmTime = bean1.splitOneKmTime
+        ave_watts = bean1.ave_watts
+        calories_hr = bean1.calories_hr
+        date = bean1.date
+        drag = bean1.drag
+        five_hundred = bean1.five_hundred
+        strokes = bean1.strokes
+        watts = bean1.watts
+        heart_rate = bean1.heart_rate
+        interval = bean1.interval
+        note = bean1.note
+        rowerDataBean1 = bean1
+    }
+
+    fun copy(): RowerDataBean2 {
+        val bean = RowerDataBean2()
+        bean.id = id
+        bean.time = time
+        bean.distance = distance
+        bean.calorie = calorie
+        bean.setGoalDistance = setGoalDistance
+        bean.setGoalTime = setGoalTime
+        bean.setGoalCalorie = setGoalCalorie
+        bean.setIntervalCalorie = setIntervalCalorie
+        bean.setIntervalDistance = setIntervalDistance
+        bean.setIntervalTime = setIntervalTime
+        bean.runMode = runMode
+        bean.runInterval = runInterval
+        bean.runStatus = runStatus
+        bean.intervalStatus = intervalStatus
+        bean.reset_time = reset_time
+        bean.instRpm = instRpm
+        bean.level = level
+        bean.categoryType = categoryType
+        bean.deviceType = deviceType
+        bean.oneKmTime = oneKmTime
+        bean.aveOneKmTime = aveOneKmTime
+        bean.splitCal = splitCal
+        bean.splitOneKmTime = splitOneKmTime
+        bean.ave_five_hundred = ave_five_hundred
+        bean.ave_watts = ave_watts
+        bean.calories_hr = calories_hr
+        bean.date = date
+        bean.drag = drag
+        bean.sm = sm
+        bean.five_hundred = five_hundred
+        bean.strokes = strokes
+        bean.watts = watts
+        bean.heart_rate = heart_rate
+        bean.interval = interval
+        bean.note = note
+        bean.rowerDataBean1 = rowerDataBean1
+        return bean
+    }
+
+    override fun toString(): String {
         return "RowerDataBean2{" +
                 "id=" + id +
                 ", runMode=" + runMode +
                 ", runStatus=" + runStatus +
-
                 ", time=" + time +
                 ", distance=" + distance +
                 ", calorie=" + calorie +
-
                 ", interval=" + interval +
                 ", setIntervalTime=" + setIntervalTime +
                 ", setIntervalDistance=" + setIntervalDistance +
                 ", setIntervalCalorie=" + setIntervalCalorie +
                 ", intervalStatus=" + intervalStatus +
                 ", reset_time=" + reset_time +
-
                 ", runInterval=" + runInterval +
                 ", setGoalTime=" + setGoalTime +
                 ", setGoalDistance=" + setGoalDistance +
                 ", setGoalCalorie=" + setGoalCalorie +
-
                 ", level=" + level +
                 ", instRpm=" + instRpm +
                 ", instSpeed==" + instSpeed +
@@ -475,10 +154,8 @@ public class RowerDataBean2 extends LitePalSupport {
                 ", aveOneKmTime==" + aveOneKmTime +
                 ", splitOneKmTime==" + splitOneKmTime +
                 ", splitCal==" + splitCal +
-
                 ", deviceType==" + deviceType +
                 ", categoryType==" + categoryType +
-
                 ", strokes=" + strokes +
                 ", drag=" + drag +
                 ", sm=" + sm +
@@ -490,6 +167,6 @@ public class RowerDataBean2 extends LitePalSupport {
                 ", calories_hr=" + calories_hr +
                 ", note='" + note + '\'' +
                 ", date=" + date +
-                '}';
+                '}'
     }
 }
