@@ -13,7 +13,7 @@ class RunDataInfoDTO {
     var calhr: String? = null
     var watts: String? = null
 
-    constructor() {}
+    constructor()
     constructor(bean2: RowerDataBean2) {
         toSelf(bean2)
     }

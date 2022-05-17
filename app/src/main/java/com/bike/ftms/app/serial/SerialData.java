@@ -8,7 +8,7 @@ public class SerialData {
 
     }
 
-    private static short[] crcNibbleTbl = {
+    private static final short[] crcNibbleTbl = {
             0x0000, 0x1081, 0x2102, 0x3183,
             0x4204, 0x5285, 0x6306, 0x7387,
             (short) 0x8408, (short) 0x9489, (short) 0xa50a, (short) 0xb58b,

@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.UUID;
 
 
-
 /**
  * @Description 这里用一句话描述
  * @Author GaleLiu
@@ -34,9 +33,9 @@ import java.util.UUID;
 public class BluetoothHelper {
     private final String TAG = "BluetoothHelper";
     private static volatile BluetoothHelper instance;
-    private Context mContext;
+    private final Context mContext;
 
-    private BluetoothManager mBluetoothManager;
+    private final BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBtAdapter;
     private BluetoothLeScanner mBtScanner;
 
@@ -70,7 +69,7 @@ public class BluetoothHelper {
      */
     public String hasConnectAdress;
 
-    private MyBtHandler handler;
+    private final MyBtHandler handler;
     private Message msg;
 
     static final int MSG_WHAT_SCAN_RESULT = 30000;
@@ -360,7 +359,7 @@ public class BluetoothHelper {
     }
 
     public static class MyBtHandler extends Handler {
-        private WeakReference<BluetoothHelper> weak;
+        private final WeakReference<BluetoothHelper> weak;
         private BluetoothHelper mHelper;
         private ScanResult result;
 

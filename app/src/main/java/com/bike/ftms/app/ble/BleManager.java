@@ -47,7 +47,7 @@ import tech.gujin.toast.ToastUtil;
 
 @SuppressLint({"MissingPermission", "WrongConstant"})
 public class BleManager extends BaseBleManager {
-    private String TAG = BleManager.class.getSimpleName();
+    private final String TAG = BleManager.class.getSimpleName();
     private static BleManager instance;
 
     protected final String isConnectTag = "isConnect";
@@ -187,7 +187,7 @@ public class BleManager extends BaseBleManager {
     /**
      * 电子表设备连接回调
      */
-    private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
+    private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
             super.onPhyUpdate(gatt, txPhy, rxPhy, status);
@@ -624,11 +624,7 @@ public class BleManager extends BaseBleManager {
 
     private void setRunData_2ADA(byte[] data) {
         // 单独显示心跳
-        if (data[3] == 0 && data[4] == 1) {
-            onlyShowDzbHr = true;
-        } else {
-            onlyShowDzbHr = false;
-        }
+        onlyShowDzbHr = data[3] == 0 && data[4] == 1;
 
         Logger.d("---↑------------------------2ada----------------------↑------------------");
         //停止运动

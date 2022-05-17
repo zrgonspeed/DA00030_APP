@@ -305,7 +305,7 @@ public class RegisterActivity extends BaseActivity {
                 Logger.e("请求成功 ->> response.body().string() == " + response);
                 // {"code":"EmailError","message":"邮箱格式不正确"}
 
-                Logger.e("response.toString() == " + response.toString());
+                Logger.e("response.toString() == " + response);
                 // Response{protocol=http/1.1, code=422, message=, url=http://192.168.50.180:8080/restapi/verify/email}
 
                 if (httpCode == 204) {

@@ -189,7 +189,7 @@ public class OkHttpHelper {
                             return;
                         }
                         mHandler.post(() -> {
-                            Logger.i("" + "====onFailure======= " + request.url().toString() + "" + e);
+                            Logger.i("" + "====onFailure======= " + request.url() + "" + e);
                             if (callBack != null) {
                                 callBack.onFailure(call, e);
                             }
@@ -267,7 +267,7 @@ public class OkHttpHelper {
                             return;
                         }
                         mHandler.post(() -> {
-                            Logger.i("" + "====onFailure======= " + request.url().toString() + "" + e);
+                            Logger.i("" + "====onFailure======= " + request.url() + "" + e);
                             if (callBack != null) {
                                 callBack.onFailure(call, e);
                             }

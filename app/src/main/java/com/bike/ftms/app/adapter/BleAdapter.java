@@ -28,7 +28,7 @@ import java.util.List;
 public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
 
     private static final String TAG = BleAdapter.class.getSimpleName();
-    private List<MyScanResult> list;
+    private final List<MyScanResult> list;
     private OnItemClickListener onItemClickListener;
 
     public BleAdapter(List<MyScanResult> list) {
@@ -83,7 +83,7 @@ public class BleAdapter extends RecyclerView.Adapter<BleViewHolder> {
 
     private BaseBleManager getBleManager() {
         return baseBleManager;
-    };
+    }
 
     @Override
     public int getItemCount() {

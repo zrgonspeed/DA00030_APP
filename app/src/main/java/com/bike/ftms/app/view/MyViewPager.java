@@ -68,6 +68,7 @@ public class MyViewPager extends ViewPager {
         Logger.d("intercepted == " + intercepted);
         return intercepted;
     }*/
+
     /**
      * Swaps the X and Y coordinates of your touch event.
      */

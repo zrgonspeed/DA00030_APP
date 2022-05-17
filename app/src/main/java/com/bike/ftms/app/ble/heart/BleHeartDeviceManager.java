@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @SuppressLint("MissingPermission")
 public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer.TimerCallBack {
-    private String TAG = BleHeartDeviceManager.class.getSimpleName();
+    private final String TAG = BleHeartDeviceManager.class.getSimpleName();
     private static BleHeartDeviceManager instance;
 
     /**
@@ -128,7 +128,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
     /**
      * 心率设备连接回调
      */
-    private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
+    private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
             super.onPhyUpdate(gatt, txPhy, rxPhy, status);

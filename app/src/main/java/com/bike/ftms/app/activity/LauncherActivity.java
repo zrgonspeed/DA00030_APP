@@ -16,7 +16,7 @@ import com.bike.ftms.app.utils.Logger;
 public class LauncherActivity extends BaseActivity {
     // 动态跟着类名改 TAG
     private static final String TAG = LauncherActivity.class.getSimpleName();
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
 
     @Override
     protected String getTAG() {

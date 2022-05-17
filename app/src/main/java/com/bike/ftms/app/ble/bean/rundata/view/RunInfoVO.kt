@@ -23,7 +23,7 @@ class RunInfoVO {
                 ", note='" + note + '\'' +
                 '}'
         val title = "-------------" + "\n" + "\t" + "time" + "\t\t" + "meters" + "\t" + "cals" + "\t" + "ave_500" + "\t\t" + "sm" + "\t\t" + "ave_one_km" + "\t\t" + "level" + "\t\t" + "cal_hr" + "\t\t" +
-                "ave_watts" + "\n";
+                "ave_watts" + "\n"
         var row = ""
         for (i in items!!.indices) {
             val item = items!![i]

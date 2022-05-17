@@ -110,11 +110,7 @@ public class VerticalViewPager extends ViewPager {
                 lastY = y;
                 // 拦截的判断
 //                Logger.d("1 dealtX >= dealtY == " + (dealtX >= dealtY));
-                if (dealtX >= dealtY) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return dealtX < dealtY;
             case MotionEvent.ACTION_CANCEL:
                 break;
             case MotionEvent.ACTION_UP:

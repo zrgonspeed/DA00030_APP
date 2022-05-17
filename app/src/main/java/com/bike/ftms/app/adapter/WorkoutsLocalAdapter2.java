@@ -26,8 +26,8 @@ import java.util.List;
  * @Date 2021/4/12
  */
 public class WorkoutsLocalAdapter2 extends RecyclerView.Adapter<WorkoutsLocalAdapter2.WorkoutsViewHolder> implements OnOrientationChanged {
-    private List<RunInfoItem> items;
-    private RunInfoVO runInfoVO;
+    private final List<RunInfoItem> items;
+    private final RunInfoVO runInfoVO;
 
     public WorkoutsLocalAdapter2(RunInfoVO runInfoVO) {
         this.runInfoVO = runInfoVO;

@@ -16,14 +16,14 @@ public class BaseTimer {
      * 回调接口定义
      */
     public interface TimerCallBack {
-        public void callBack();
+        void callBack();
     }
 
     /**
      * 回调接口定义
      */
     public interface TimerCheckBleStateCallBack {
-        public void checkBack();
+        void checkBack();
     }
 
     class LoopTask extends TimerTask {

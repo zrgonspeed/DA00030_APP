@@ -208,21 +208,21 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
     }
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
-        private TextView tv_local_id;
+        private final TextView tv_local_id;
 
-        private ImageView iv_delete;
-        private TextView tv_date;
-        private TextView tv_distance;
-        private ImageView iv_item_device;
-        private TextView tv_workouts_device_name;
-        private TextView tv_time;
-        private ImageView iv_note;
-        private LinearLayout ll_item;
-        private TextView tv_server_id;
+        private final ImageView iv_delete;
+        private final TextView tv_date;
+        private final TextView tv_distance;
+        private final ImageView iv_item_device;
+        private final TextView tv_workouts_device_name;
+        private final TextView tv_time;
+        private final ImageView iv_note;
+        private final LinearLayout ll_item;
+        private final TextView tv_server_id;
 
-        private LinearLayout ll_workouts_item_date;
-        private LinearLayout ll_workouts_item_type;
-        private LinearLayout ll_workouts_item_result;
+        private final LinearLayout ll_workouts_item_date;
+        private final LinearLayout ll_workouts_item_type;
+        private final LinearLayout ll_workouts_item_result;
 
         public WorkoutsViewHolder(@NonNull View itemView) {
             super(itemView);

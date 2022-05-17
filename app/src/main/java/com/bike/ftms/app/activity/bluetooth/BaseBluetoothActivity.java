@@ -78,7 +78,7 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Logger.e("thread == " + Thread.currentThread().toString());
+        Logger.e("thread == " + Thread.currentThread());
     }
 
     /**
@@ -113,14 +113,9 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
             rl_status_refresh.setEnableRefresh(false);
             // Logger.e("setEnableRefresh(false);");
         } else {
-            if (isOpenBle()) {
-                rl_status_refresh.setEnableRefresh(true);
-                // Logger.e("setEnableRefresh(true);");
-
-            } else {
-                rl_status_refresh.setEnableRefresh(false);
-                // Logger.e("setEnableRefresh(false);");
-            }
+            // Logger.e("setEnableRefresh(true);");
+            // Logger.e("setEnableRefresh(false);");
+            rl_status_refresh.setEnableRefresh(isOpenBle());
         }
         rl_status_refresh.setRefreshHeader(new MyHeader(getApplicationContext()).setSpinnerStyle(SpinnerStyle.FixedBehind).setPrimaryColorId(R.color.colorPrimary).setAccentColorId(android.R.color.white).setEnableLastTime(false));
 

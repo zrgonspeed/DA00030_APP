@@ -18,7 +18,7 @@ import tech.gujin.toast.ToastUtil;
  * @Date 2021/3/31
  */
 public class MyApplication extends LitePalApplication {
-    private static String TAG = MyApplication.class.getSimpleName();
+    private static final String TAG = MyApplication.class.getSimpleName();
 
     private static Context mContext;
 

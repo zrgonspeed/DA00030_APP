@@ -40,7 +40,7 @@ public class SomeHintDialog extends Dialog implements OnOrientationChanged {
     private LinearLayout ll_bottom_button;
     private ScrollView sv_tv;
 
-    private Activity context;
+    private final Activity context;
 
     public SomeHintDialog(Activity context) { //R.style.MyDialog
         this(context, MATCH_PARENT, MATCH_PARENT);
@@ -224,13 +224,13 @@ public class SomeHintDialog extends Dialog implements OnOrientationChanged {
 
 
     public interface BTOnclickListener {
-        public void onNoClick();
+        void onNoClick();
 
-        public void onYesClick();
+        void onYesClick();
 
-        public void onNext();
+        void onNext();
 
-        public void onDismiss();
+        void onDismiss();
     }
 
     private int page = 1;

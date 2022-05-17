@@ -1,7 +1,7 @@
 package com.bike.ftms.app.utils;
 
 public class ConvertData {
-    private static StringBuffer buffer = new StringBuffer();
+    private static final StringBuffer buffer = new StringBuffer();
 
     public static byte intLowToByte(int ary) {
         byte value;
@@ -120,7 +120,7 @@ public class ConvertData {
                 sbTwo.append("0");
             }
             sbTwo.append(two);
-            result.append(sbTwo.toString() + ",");
+            result.append(sbTwo + ",");
         }
         return result.toString().substring(0, result.length() - 1);
     }

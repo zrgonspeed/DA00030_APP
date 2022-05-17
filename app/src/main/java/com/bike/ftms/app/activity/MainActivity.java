@@ -89,7 +89,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
     private SomeHintDialog someHintDialog;
 
     private boolean isOnPause = false;
-    private boolean isLogin = false;
+    private final boolean isLogin = false;
     private int ori = 1;
 
     @Override

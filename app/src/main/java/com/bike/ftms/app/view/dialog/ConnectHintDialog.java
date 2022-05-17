@@ -47,7 +47,7 @@ public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
     private LinearLayout ll_bottom_button;
     private ScrollView sv_tv;
 
-    private Activity context;
+    private final Activity context;
 
     public ConnectHintDialog(Activity context) { //R.style.MyDialog
         this(context, MATCH_PARENT, MATCH_PARENT);
@@ -293,11 +293,11 @@ public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
      * 设置确定按钮和取消被点击的接口
      */
     public interface onYesOnclickListener {
-        public void onYesClick();
+        void onYesClick();
     }
 
     public interface onNoOnclickListener {
-        public void onNoClick();
+        void onNoClick();
     }
 
     public synchronized static ConnectHintDialog showConnectHintDialog(Activity activity, ConnectHintDialog connectHintDialog, int ori) {

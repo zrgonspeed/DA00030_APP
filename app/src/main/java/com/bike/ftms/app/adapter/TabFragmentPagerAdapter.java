@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.List;
 
 public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
-    private List<Fragment> mList;
+    private final List<Fragment> mList;
 
     public TabFragmentPagerAdapter(FragmentManager fm, List<Fragment> list) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);

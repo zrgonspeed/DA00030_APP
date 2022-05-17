@@ -49,7 +49,7 @@ class RowerDataBean2 : LitePalSupport {
     var runInterval = 0 // 各个模式的分段次数  0-255
     var rowerDataBean1: RowerDataBean1? = null
 
-    constructor() {}
+    constructor()
     constructor(bean1: RowerDataBean1) {
         time = bean1.time
         distance = bean1.distance

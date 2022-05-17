@@ -122,7 +122,7 @@ public class WorkoutsLocalFragment extends WorkoutsFragment implements WorkoutsL
     private final Vector<Boolean> vector = new Vector<>();
     private int clickPosition;
     private int deletePosition;
-    private WorkoutsLocalPresenter presenter;
+    private final WorkoutsLocalPresenter presenter;
 
     public WorkoutsLocalFragment() {
         presenter = new WorkoutsLocalPresenter();

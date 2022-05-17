@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * @Date 2021/3/30
  */
 public abstract class BaseFragment extends Fragment implements OnOrientationChanged {
-    private static String TAG = BaseFragment.class.getSimpleName();
+    private static final String TAG = BaseFragment.class.getSimpleName();
 
     protected Activity mActivity;
     protected int ori = 0;
