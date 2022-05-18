@@ -1,66 +1,59 @@
-package com.bike.ftms.app.view;
+package com.bike.ftms.app.view
 
-import android.content.Context;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
-import android.view.View;
+import android.content.Context
+import android.graphics.drawable.Animatable
+import com.scwang.smartrefresh.layout.header.ClassicsHeader
+import com.bike.ftms.app.R
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import android.graphics.drawable.Drawable
+import android.util.AttributeSet
+import android.view.View
 
-import androidx.annotation.NonNull;
-
-import com.bike.ftms.app.R;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-
-public class MyHeader extends ClassicsHeader {
-    public MyHeader(Context context) {
-        super(context);
-        init();
+class MyHeader : ClassicsHeader {
+    constructor(context: Context?) : super(context) {
+        init()
     }
 
-    public MyHeader(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        init()
     }
 
-    private void init() {
-        mProgressView.setVisibility(GONE);
-        mTextFinish = getResources().getString(R.string.start_scan);
-        mTextRefreshing = getResources().getString(R.string.start_scan);
+    private fun init() {
+        mProgressView.visibility = GONE
+        mTextFinish = resources.getString(R.string.start_scan)
+        mTextRefreshing = resources.getString(R.string.start_scan)
     }
 
-    @Override
-    public int onFinish(@NonNull RefreshLayout layout, boolean success) {
-        final View progressView = mProgressView;
-        Drawable drawable = mProgressView.getDrawable();
-        if (drawable instanceof Animatable) {
+    override fun onFinish(layout: RefreshLayout, success: Boolean): Int {
+        val progressView: View = mProgressView
+        val drawable = mProgressView.drawable
+        if (drawable is Animatable) {
 //            if (((Animatable) drawable).isRunning()) {
 //                ((Animatable) drawable).stop();
 //            }
         } else {
-            progressView.animate().rotation(0).setDuration(0);
+            progressView.animate().rotation(0f).duration = 0
         }
-        progressView.setVisibility(VISIBLE);
-        finish = true;
-        moving = false;
-        return 0;//延迟500毫秒之后再弹回
+        progressView.visibility = VISIBLE
+        isFinish = true
+        isMoving = false
+        return 0 //延迟500毫秒之后再弹回
     }
 
-    @Override
-    public void onMoving(boolean isDragging, float percent, int offset, int height, int maxDragHeight) {
-        super.onMoving(isDragging, percent, offset, height, maxDragHeight);
-        moving = true;
-        finish = false;
+    override fun onMoving(
+        isDragging: Boolean,
+        percent: Float,
+        offset: Int,
+        height: Int,
+        maxDragHeight: Int
+    ) {
+        super.onMoving(isDragging, percent, offset, height, maxDragHeight)
+        isMoving = true
+        isFinish = false
     }
 
-    private boolean finish = false;
-    private boolean moving = false;
-
-    public boolean isFinish() {
-        return finish;
-    }
-
-    public boolean isMoving() {
-        return moving;
-    }
+    var isFinish = false
+        private set
+    var isMoving = false
+        private set
 }
