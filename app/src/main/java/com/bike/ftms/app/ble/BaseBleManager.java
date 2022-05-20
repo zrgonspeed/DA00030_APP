@@ -66,11 +66,9 @@ public abstract class BaseBleManager implements CustomTimer.TimerCallBack {
     protected boolean isCanning;  //是否正在扫描
     protected boolean isOpen;     //是否打开定位及蓝牙
 
-
     private static final long SCAN_MAX_COUNT = 20;     //扫描的设备个数限制（停止扫描）
     private static final long SCAN_PERIOD = 60 * 1000;     //扫描设备时间限制
     private final long SCAN_PERIOD_INTERVAL = 1000;     //隔多久回调1次
-
     private static final long START_SCAN_DELAY_TIME = 3000; // 扫描设备延迟时间
 
     /**

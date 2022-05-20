@@ -1,7 +1,6 @@
 package com.bike.ftms.app.ble.bean.rundata.raw
 
 import com.bike.ftms.app.common.MyConstant
-import com.bike.ftms.app.common.MyConstant.*
 import org.litepal.crud.LitePalSupport
 
 class RowerDataBean2 : LitePalSupport {
@@ -37,14 +36,14 @@ class RowerDataBean2 : LitePalSupport {
     var deviceType = 0
     var categoryType = 0
 
-    @RunMode
+    @MyConstant.RunMode
     var runMode = MyConstant.NORMAL
     var reset_time = 0
 
-    @RunStatus
+    @MyConstant.RunStatus
     var runStatus = MyConstant.RUN_STATUS_NO
 
-    @IntervalStatus
+    @MyConstant.IntervalStatus
     var intervalStatus = MyConstant.INTERVAL_STATUS_REST
     var runInterval = 0 // 各个模式的分段次数  0-255
     var rowerDataBean1: RowerDataBean1? = null
