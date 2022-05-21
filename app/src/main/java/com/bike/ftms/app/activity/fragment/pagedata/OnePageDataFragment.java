@@ -1,6 +1,9 @@
 package com.bike.ftms.app.activity.fragment.pagedata;
 
+import static androidx.constraintlayout.widget.ConstraintSet.PARENT_ID;
+
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -10,18 +13,15 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bike.ftms.app.R;
-import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
-import com.bike.ftms.app.ble.heart.BleHeartData;
-import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.ble.BleManager;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
+import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.TimeStringUtil;
 
 import java.text.DecimalFormat;
 
 import butterknife.BindView;
-
-import static androidx.constraintlayout.widget.ConstraintSet.PARENT_ID;
 
 
 /**
@@ -551,8 +551,8 @@ public class OnePageDataFragment extends BasePageDataFragment {
 
         }
         // 字体
-        setTextSize((int) (getIntDimen(R.dimen.sp_6) * 0.8), (int) (getIntDimen(R.dimen.sp_8)));
-        tv_home_30min_km_unit.setTextSize((int) (getIntDimen(R.dimen.sp_6) * 0.8));
+        setTextSize((int) (getIntDimen(R.dimen.sp_14)), (int) (getIntDimen(R.dimen.sp_20)));
+        tv_home_30min_km_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (getIntDimen(R.dimen.sp_14)));
         // 部分文本
         {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv_home_30min_km.getLayoutParams();
@@ -659,9 +659,8 @@ public class OnePageDataFragment extends BasePageDataFragment {
             rl_blank.setVisibility(View.GONE);
         }
         // 字体
-        setTextSize((int) (getIntDimen(R.dimen.sp_6)), (int) (getIntDimen(R.dimen.sp_8)));
-        tv_home_30min_km_unit.setTextSize((int) (getIntDimen(R.dimen.sp_6)));
-
+        setTextSize((int) (getIntDimen(R.dimen.sp_14)), (int) (getIntDimen(R.dimen.sp_20)));
+        tv_home_30min_km_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (getIntDimen(R.dimen.sp_14)));
         // 部分文本
         {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv_home_30min_km.getLayoutParams();
@@ -678,45 +677,46 @@ public class OnePageDataFragment extends BasePageDataFragment {
         }
     }
 
-    private void setTextSize(int size1, int size2) {
-        Logger.i("fontSize == " + size1 + "  " + size2);
+    private void setTextSize(int unitSize, int valueSize) {
+        Logger.i("fontSize == " + unitSize + "  " + valueSize);
 
-        tv_home_strokes_unit.setTextSize(size1);
-        tv_home_level_unit.setTextSize(size1);
-        tv_home_title_drag.setTextSize(size1);
-        tv_home_title_cycle.setTextSize(size1);
-        tv_home_distance_unit.setTextSize(size1);
-        tv_home_30min_km_unit.setTextSize(size1);
-        tv_home_sm_unit.setTextSize(size1);
-        tv_home_rpm_unit.setTextSize(size1);
-        tv_home_watt_unit.setTextSize(size1);
-        tv_home_cal_unit.setTextSize(size1);
-        tv_home_ave_watt_unit.setTextSize(size1);
-        tv_home_cal_hr_unit.setTextSize(size1);
-        tv_home_500_unit.setTextSize(size1);
-        tv_home_ave_500_unit.setTextSize(size1);
-        tv_home_one_km.setTextSize(size1);
-        tv_home_ave_one_km_unit.setTextSize(size1);
-        tv_home_one_km_unit.setTextSize(size1);
+        tv_home_strokes_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        Logger.i("newSize == " + tv_home_strokes_unit.getTextSize());
+        tv_home_level_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_title_drag.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_title_cycle.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_distance_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_30min_km_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_sm_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_rpm_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_watt_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_cal_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_ave_watt_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_cal_hr_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_500_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_ave_500_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_one_km.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_ave_one_km_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
+        tv_home_one_km_unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, unitSize);
 
-        tv_home_strokes.setTextSize(size2);
-        tv_home_level.setTextSize(size2);
-        tv_drag.setTextSize(size2);
-        tv_interval.setTextSize(size2);
-        tv_home_distance.setTextSize(size2);
-        tv_home_30min_km.setTextSize(size2);
-        tv_home_sm.setTextSize(size2);
-        tv_home_rpm.setTextSize(size2);
-        tv_home_watt.setTextSize(size2);
-        tv_home_cal.setTextSize(size2);
-        tv_home_ave_watt.setTextSize(size2);
-        tv_home_cal_hr.setTextSize(size2);
-        tv_time.setTextSize(size2);
-        tv_heart_rate.setTextSize(size2);
-        tv_home_500.setTextSize(size2);
-        tv_home_ave_500.setTextSize(size2);
-        tv_home_one_km.setTextSize(size2);
-        tv_home_ave_one_km.setTextSize(size2);
+        tv_home_strokes.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_level.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_drag.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_interval.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_distance.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_30min_km.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_sm.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_rpm.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_watt.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_cal.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_ave_watt.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_cal_hr.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_time.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_heart_rate.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_500.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_ave_500.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_one_km.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
+        tv_home_ave_one_km.setTextSize(TypedValue.COMPLEX_UNIT_PX, valueSize);
     }
 
     public void onHeartData(int heart) {

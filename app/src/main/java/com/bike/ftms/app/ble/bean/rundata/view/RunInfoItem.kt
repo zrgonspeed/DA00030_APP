@@ -1,5 +1,8 @@
 package com.bike.ftms.app.ble.bean.rundata.view
 
+/**
+ * 详细页面的每条数据
+ */
 class RunInfoItem {
     var interval: String? = null
     var time: String? = null

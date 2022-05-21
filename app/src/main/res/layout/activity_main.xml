@@ -68,7 +68,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/dp_10"
             android:layout_toStartOf="@id/btn_bluetooth"
-            android:src="@drawable/btn_to_login"
+            android:src="@drawable/btn_to_login_false"
             android:visibility="gone" />
 
 

@@ -1,12 +1,14 @@
 package com.bike.ftms.app.view.dialog;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -20,8 +22,6 @@ import com.bike.ftms.app.activity.OnOrientationChanged;
 import com.bike.ftms.app.activity.bluetooth.BluetoothActivity;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.utils.UIUtils;
-
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * @Description
@@ -99,11 +99,6 @@ public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
         initData();
         //初始化界面控件的事件
         initEvent();
-
-//        WindowManager.LayoutParams params = getWindow().getAttributes();
-//        params.width = w;
-//        params.height = h;
-//        getWindow().setAttributes(params);
     }
 
     /**
@@ -111,21 +106,15 @@ public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
      */
     private void initEvent() {
         //设置确定按钮被点击后，向外界提供监听
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (yesOnclickListener != null) {
-                    yesOnclickListener.onYesClick();
-                }
+        yes.setOnClickListener(v -> {
+            if (yesOnclickListener != null) {
+                yesOnclickListener.onYesClick();
             }
         });
         //设置取消按钮被点击后，向外界提供监听
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (noOnclickListener != null) {
-                    noOnclickListener.onNoClick();
-                }
+        no.setOnClickListener(v -> {
+            if (noOnclickListener != null) {
+                noOnclickListener.onNoClick();
             }
         });
     }
@@ -163,17 +152,12 @@ public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
         sv_tv = (ScrollView) findViewById(R.id.sv_tv);
         ll_bottom_button = (LinearLayout) findViewById(R.id.ll_bottom_button);
 
-        boolean debug = false;
-        if (debug) {
-
-        } else {
-            titleTv.setBackgroundResource(R.color.transparent);
-            messageTv.setBackgroundResource(R.color.transparent);
-            ll_content.setBackgroundResource(R.color.transparent);
-            ll_sv_tv.setBackgroundResource(R.color.transparent);
-            ll_bottom_button.setBackgroundResource(R.color.transparent);
-            sv_tv.setBackgroundResource(R.color.transparent);
-        }
+        titleTv.setBackgroundResource(R.color.transparent);
+        messageTv.setBackgroundResource(R.color.transparent);
+        ll_content.setBackgroundResource(R.color.transparent);
+        ll_sv_tv.setBackgroundResource(R.color.transparent);
+        ll_bottom_button.setBackgroundResource(R.color.transparent);
+        sv_tv.setBackgroundResource(R.color.transparent);
     }
 
     /**
@@ -202,92 +186,6 @@ public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
         ll_content.invalidate();
     }
 
-    public void setType(int type) {
-        ViewGroup.LayoutParams llParams = ll_content.getLayoutParams();
-        ViewGroup.LayoutParams llParams_bottom = ll_bottom_button.getLayoutParams();
-        ViewGroup.LayoutParams ll_sv_tv_Params = ll_sv_tv.getLayoutParams();
-
-        ScrollView sv_tv = findViewById(R.id.sv_tv);
-        ViewGroup.LayoutParams sv_params = sv_tv.getLayoutParams();
-
-        int rootHeight = UIUtils.getHeight(context);
-        int rootWidth = UIUtils.getWidth(context);
-
-        Logger.d("rootWidth == " + rootWidth + "     rootHeight == " + rootHeight + "   dpi == " + UIUtils.getDPI(context) + "  density == " + UIUtils.getDensity(context));
-
-        if (type == 1) {
-            titleTv.setMinHeight((int) (llParams.height * 0.30));
-            titleTv.setMaxHeight((int) (llParams.height * 0.30));
-
-            llParams_bottom.height = (int) (llParams.height * 0.30);
-            ll_bottom_button.setLayoutParams(llParams_bottom);
-
-            ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
-            ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
-
-            // 设置文字居中
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            lp.gravity = Gravity.CENTER;
-            messageTv.setLayoutParams(lp);
-            // 设置文字大小
-
-            if (context.getResources().getConfiguration().locale.getLanguage().contains("en")) {
-                // 英文的字小一点
-                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.sp_6)));
-            } else {
-                messageTv.setTextSize((float) (getContext().getResources().getDimension(R.dimen.sp_7)));
-            }
-            Logger.d("fontSize == " + messageTv.getTextSize());
-        }
-    }
-
-    @Override
-    public void setPortLayout() {
-        int rootHeight = UIUtils.getHeight(context);
-        int rootWidth = UIUtils.getWidth(context);
-        setContentWidthHeight((int) (rootWidth), (int) (rootHeight * 0.3));
-
-        WindowManager.LayoutParams attributes = getWindow().getAttributes();
-        attributes.width = (int) (rootWidth * 0.7);
-        getWindow().setAttributes(attributes);
-
-        ViewGroup.LayoutParams llParams = ll_content.getLayoutParams();
-        ViewGroup.LayoutParams llParams_bottom = ll_bottom_button.getLayoutParams();
-        ViewGroup.LayoutParams ll_sv_tv_Params = ll_sv_tv.getLayoutParams();
-
-        titleTv.setMinHeight((int) (llParams.height * 0.20));
-        titleTv.setMaxHeight((int) (llParams.height * 0.30));
-
-        llParams_bottom.height = (int) (llParams.height * 0.18);
-        ll_bottom_button.setLayoutParams(llParams_bottom);
-
-        ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
-        ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
-    }
-
-    @Override
-    public void setLandLayout() {
-        int rootHeight = UIUtils.getHeight(context);
-        int rootWidth = UIUtils.getWidth(context);
-        setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
-
-        WindowManager.LayoutParams attributes = getWindow().getAttributes();
-        attributes.width = (int) (rootWidth * 0.4);
-        getWindow().setAttributes(attributes);
-
-        ViewGroup.LayoutParams llParams = ll_content.getLayoutParams();
-        ViewGroup.LayoutParams llParams_bottom = ll_bottom_button.getLayoutParams();
-        ViewGroup.LayoutParams ll_sv_tv_Params = ll_sv_tv.getLayoutParams();
-
-        titleTv.setMinHeight((int) (llParams.height * 0.30));
-        titleTv.setMaxHeight((int) (llParams.height * 0.30));
-
-        llParams_bottom.height = (int) (llParams.height * 0.3);
-        ll_bottom_button.setLayoutParams(llParams_bottom);
-
-        ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
-        ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
-    }
 
     /**
      * 设置确定按钮和取消被点击的接口
@@ -326,19 +224,6 @@ public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
         if (!activity.isFinishing() && !connectHintDialog.isShowing()) {
             connectHintDialog.show();
         }
-        // connectHintDialog.show();
-
-        int rootHeight = UIUtils.getHeight(activity);
-        int rootWidth = UIUtils.getWidth(activity);
-        WindowManager.LayoutParams attributes = connectHintDialog.getWindow().getAttributes();
-        attributes.width = (int) (rootWidth * 0.4);
-//        attributes.height = (int) (rootHeight * 0.9);
-        connectHintDialog.getWindow().setAttributes(attributes);
-        // Logger.d("attributes.w " + attributes.width);
-        // Logger.d("attributes.h " + attributes.height);
-
-        connectHintDialog.setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
-        connectHintDialog.setType(1);
 
         connectHintDialog.setOri(ori);
         return connectHintDialog;
@@ -352,5 +237,69 @@ public class ConnectHintDialog extends Dialog implements OnOrientationChanged {
             //竖屏
             setPortLayout();
         }
+    }
+
+    @Override
+    public void setPortLayout() {
+        int rootHeight = UIUtils.getHeight(context);
+        int rootWidth = UIUtils.getWidth(context);
+        setContentWidthHeight((int) (rootWidth), (int) (rootHeight * 0.3));
+
+        WindowManager.LayoutParams attributes = getWindow().getAttributes();
+        attributes.width = (int) (rootWidth * 0.8);
+        getWindow().setAttributes(attributes);
+
+        ViewGroup.LayoutParams llParams = ll_content.getLayoutParams();
+        ViewGroup.LayoutParams llParams_bottom = ll_bottom_button.getLayoutParams();
+        ViewGroup.LayoutParams ll_sv_tv_Params = ll_sv_tv.getLayoutParams();
+
+        titleTv.setMinHeight((int) (llParams.height * 0.28));
+        titleTv.setMaxHeight((int) (llParams.height * 0.28));
+
+        llParams_bottom.height = (int) (llParams.height * 0.25);
+        ll_bottom_button.setLayoutParams(llParams_bottom);
+
+        ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
+        ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
+
+        // 设置文字居中
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER;
+        messageTv.setLayoutParams(lp);
+        // 设置文字大小
+        messageTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((float) (getContext().getResources().getDimension(R.dimen.sp_18))));
+        Logger.d("fontSize == " + messageTv.getTextSize());
+    }
+
+    @Override
+    public void setLandLayout() {
+        int rootHeight = UIUtils.getHeight(context);
+        int rootWidth = UIUtils.getWidth(context);
+        setContentWidthHeight((int) (rootWidth * 0.4), (int) (rootHeight * 0.5));
+
+        WindowManager.LayoutParams attributes = getWindow().getAttributes();
+        attributes.width = (int) (rootWidth * 0.4);
+        getWindow().setAttributes(attributes);
+
+        ViewGroup.LayoutParams llParams = ll_content.getLayoutParams();
+        ViewGroup.LayoutParams llParams_bottom = ll_bottom_button.getLayoutParams();
+        ViewGroup.LayoutParams ll_sv_tv_Params = ll_sv_tv.getLayoutParams();
+
+        titleTv.setMinHeight((int) (llParams.height * 0.30));
+        titleTv.setMaxHeight((int) (llParams.height * 0.30));
+
+        llParams_bottom.height = (int) (llParams.height * 0.3);
+        ll_bottom_button.setLayoutParams(llParams_bottom);
+
+        ll_sv_tv_Params.height = (int) (llParams.height - titleTv.getMinHeight() - llParams_bottom.height);
+        ll_sv_tv.setLayoutParams(ll_sv_tv_Params);
+
+        // 设置文字居中
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER;
+        messageTv.setLayoutParams(lp);
+        // 设置文字大小
+        messageTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((float) (getContext().getResources().getDimension(R.dimen.sp_18))));
+        Logger.d("fontSize == " + messageTv.getTextSize());
     }
 }

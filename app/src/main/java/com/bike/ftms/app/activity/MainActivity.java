@@ -30,12 +30,12 @@ import com.bike.ftms.app.activity.user.PersonalDataActivity;
 import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.adapter.TabFragmentPagerAdapter;
 import com.bike.ftms.app.base.BaseActivity;
-import com.bike.ftms.app.ble.heart.BleHeartData;
-import com.bike.ftms.app.ble.heart.BleHeartDeviceManager;
-import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
-import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.ble.base.OnRunDataListener;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
+import com.bike.ftms.app.ble.heart.BleHeartData;
+import com.bike.ftms.app.ble.heart.BleHeartDeviceManager;
+import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.utils.BasisTimesUtils;
 import com.bike.ftms.app.utils.Logger;
@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
 
         if (!SpManager.getSkipHint()) {
             // 安装后启动要提示事项，谷歌商店需要
-            someHintDialog = SomeHintDialog.showSomeHintDialog(this, someHintDialog);
+            someHintDialog = SomeHintDialog.showSomeHintDialog(this, someHintDialog, ori);
         }
 
 
@@ -460,6 +460,10 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         if (connectHintDialog != null) {
             connectHintDialog.setLandLayout();
         }
+        // app声明
+        if (someHintDialog != null) {
+            someHintDialog.setLandLayout();
+        }
 
         // 已登录头像
         RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) tv_username.getLayoutParams();
@@ -498,7 +502,9 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
         if (connectHintDialog != null) {
             connectHintDialog.setPortLayout();
         }
-
+        if (someHintDialog != null) {
+            someHintDialog.setPortLayout();
+        }
         // 已登录头像
         RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) tv_username.getLayoutParams();
         layoutParams4.setMarginEnd(-getIntDimen(R.dimen.dp_90));

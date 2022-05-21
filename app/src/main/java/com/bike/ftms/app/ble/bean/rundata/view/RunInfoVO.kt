@@ -1,5 +1,8 @@
 package com.bike.ftms.app.ble.bean.rundata.view
 
+/**
+ * 详细信息界面显示的所有内容
+ */
 class RunInfoVO {
     var local_id = -1
     var server_id = -1

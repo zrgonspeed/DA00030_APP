@@ -8,9 +8,8 @@ import android.text.TextUtils;
 import com.bike.ftms.app.R;
 import com.bike.ftms.app.activity.user.UserManager;
 import com.bike.ftms.app.base.mvp.BasePresenter;
+import com.bike.ftms.app.bean.user.ResultBean;
 import com.bike.ftms.app.ble.bean.rundata.HttpRowerDataBean1;
-import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
-import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean2;
 import com.bike.ftms.app.ble.bean.rundata.get.RunDataInfoDTO;
 import com.bike.ftms.app.ble.bean.rundata.get.RunDataResultBO;
 import com.bike.ftms.app.ble.bean.rundata.get.RunDataResultDTO;
@@ -18,9 +17,10 @@ import com.bike.ftms.app.ble.bean.rundata.get.RunDataResultListBO;
 import com.bike.ftms.app.ble.bean.rundata.put.RemarksBO;
 import com.bike.ftms.app.ble.bean.rundata.put.RunDataBO;
 import com.bike.ftms.app.ble.bean.rundata.put.UploadResult;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean2;
 import com.bike.ftms.app.ble.bean.rundata.view.RunInfoItem;
 import com.bike.ftms.app.ble.bean.rundata.view.RunInfoVO;
-import com.bike.ftms.app.bean.user.ResultBean;
 import com.bike.ftms.app.common.HttpParam;
 import com.bike.ftms.app.common.MyConstant;
 import com.bike.ftms.app.http.OkHttpCallBack;
@@ -529,6 +529,9 @@ public class WorkoutsLocalPresenter extends BasePresenter<WorkoutsLocalView> {
         });
     }
 
+    /**
+     * 设置详细界面的VO，包括vo中的items
+     */
     public RunInfoVO newSetWorkouts2List(RowerDataBean1 bean) {
         RunInfoVO runInfoVO = new RunInfoVO();
         runInfoVO.setLocal_id(bean.getId());

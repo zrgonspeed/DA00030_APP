@@ -131,18 +131,18 @@
     <string name="cancel">NO</string>
     <string name="name">name</string>
     <string name="some_hint_2">
-    \t\t\t\t When you use the APP, D-Fit will always collect and use your location, personal information (name, email, phone number), fitness information, photos, files and documents, calendars, devices or other IDs in order to use them in the application. When it is closed or not in use, it can also support various functions until you stop using the APP.
+    \t\t When you use the APP, D-Fit will always collect and use your location, personal information (name, email, phone number), fitness information, photos, files and documents, calendars, devices or other IDs in order to use them in the application. When it is closed or not in use, it can also support various functions until you stop using the APP.
 The usage is explained below \n
-\t\t\t\t 1. Location:  \t Used to connect Bluetooth devices to support data transfer between APP and sports equipment. \n
-\t\t\t\t 2. Personal Information:  \t Provide user registration and login functions. \n
-\t\t\t\t 3. Fitness information:  \t store, analyze, and upload the user\'s exercise data. \n
-\t\t\t\t 4. Photos, files and documents:  \t After the exercise, the exercise data will be automatically saved in the device. \n
-\t\t\t\t 5. Calendar:  \t Support users to select the date of birth when registering. \n
-\t\t\t\t 6. Device or other ID:  \t Identifies the user\'s mobile phone model to support developers to adapt to multiple mobile phones.</string>
+\t\t 1. Location:  \t Used to connect Bluetooth devices to support data transfer between APP and sports equipment. \n
+\t\t 2. Personal Information:  \t Provide user registration and login functions. \n
+\t\t 3. Fitness information:  \t store, analyze, and upload the user\'s exercise data. \n
+\t\t 4. Photos, files and documents:  \t After the exercise, the exercise data will be automatically saved in the device. \n
+\t\t 5. Calendar:  \t Support users to select the date of birth when registering. \n
+\t\t 6. Device or other ID:  \t Identifies the user\'s mobile phone model to support developers to adapt to multiple mobile phones.</string>
 
     <string name="some_hint">
         \n\n\n
-\t\t\t\t\t\t\t\t D-Fit collects location data to enable Bluetooth connection to transfer data between APP and fitness equipment even when the app is closed or not in use.\n
+\t\t\t\t D-Fit collects location data to enable Bluetooth connection to transfer data between APP and fitness equipment even when the app is closed or not in use.\n
     </string>
     <string name="skip">Skip</string>
     <string name="no_hint">Don\'t show again</string>
