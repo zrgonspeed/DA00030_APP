@@ -1,15 +1,15 @@
 package com.bike.ftms.app.ble.category;
 
-import com.bike.ftms.app.ble.heart.BleHeartDeviceManager;
-import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
-import com.bike.ftms.app.common.MyConstant;
-import com.bike.ftms.app.common.RowerDataParam;
+import static com.bike.ftms.app.utils.DataTypeConversion.resolveData;
+
 import com.bike.ftms.app.ble.BleManager;
 import com.bike.ftms.app.ble.base.CategoryType;
+import com.bike.ftms.app.ble.bean.rundata.raw.RowerDataBean1;
+import com.bike.ftms.app.ble.heart.BleHeartDeviceManager;
+import com.bike.ftms.app.common.MyConstant;
+import com.bike.ftms.app.common.RowerDataParam;
 import com.bike.ftms.app.utils.ConvertData;
 import com.bike.ftms.app.utils.Logger;
-
-import static com.bike.ftms.app.utils.DataTypeConversion.resolveData;
 
 public class BoatManager extends CategoryType {
     private static BoatManager instance;
@@ -65,6 +65,7 @@ public class BoatManager extends CategoryType {
             // 时间下数
             if (rowerDataBean1.getRunMode() == MyConstant.GOAL_TIME) {
                 if (rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_01 ||
+                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_03 ||
                         rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01
                 ) {
                     rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
@@ -75,7 +76,9 @@ public class BoatManager extends CategoryType {
             // 时间下数
             if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME) {
                 if (rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_01 ||
-                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01) {
+                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_03 ||
+                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01
+                ) {
                     rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
                 } else {
                     rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
