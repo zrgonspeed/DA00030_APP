@@ -293,6 +293,8 @@ public class OnePageDataFragment extends BasePageDataFragment {
             tv_home_ave_one_km.setText(TimeStringUtil.getSToMinSecValue(rowerDataBean1.getAveOneKmTime()));
             tv_home_30min_km.setText(df.format(rowerDataBean1.getInstSpeed() / 100.0f));
             tv_home_rpm.setText(String.valueOf(rowerDataBean1.getInstRpm()));
+
+            // boat部分机型也有
             tv_home_level.setText(String.valueOf(rowerDataBean1.getLevel()));
             tv_home_level_unit.setText(getResources().getString(R.string.home_level));
         }
@@ -392,8 +394,14 @@ public class OnePageDataFragment extends BasePageDataFragment {
         // 显示STROKES
         tv_home_strokes.setVisibility(View.VISIBLE);
         tv_home_strokes_unit.setVisibility(View.VISIBLE);
-        tv_home_level.setVisibility(View.GONE);
-        tv_home_level_unit.setVisibility(View.GONE);
+
+        if (BleManager.deviceType == MyConstant.DEVICE_AA02020_00R_03) {
+            tv_home_level.setVisibility(View.VISIBLE);
+            tv_home_level_unit.setVisibility(View.VISIBLE);
+        } else {
+            tv_home_level.setVisibility(View.GONE);
+            tv_home_level_unit.setVisibility(View.GONE);
+        }
 
         // 隐藏速度
         tv_home_30min_km.setVisibility(View.GONE);
@@ -581,7 +589,7 @@ public class OnePageDataFragment extends BasePageDataFragment {
             ll1.setLayoutParams(params1);
 
             ConstraintLayout.LayoutParams params2 = (ConstraintLayout.LayoutParams) ll2.getLayoutParams();
-            params2.height = getIntDimen(R.dimen.dp_100);
+            params2.height = getIntDimen(R.dimen.dp_0);
             params2.topMargin = getIntDimen(R.dimen.dp_5);
             params2.bottomMargin = getIntDimen(R.dimen.dp_5);
             params2.leftMargin = 0;
