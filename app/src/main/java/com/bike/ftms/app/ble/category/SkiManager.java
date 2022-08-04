@@ -63,22 +63,11 @@ public class SkiManager extends CategoryType {
 
             // 时间下数
             if (rowerDataBean1.getRunMode() == MyConstant.GOAL_TIME) {
-                if (rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_01 ||
-                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01
-                ) {
-                    rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
-                } else {
-                    rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
-                }
+                rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
             }
             // 时间下数
             if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME) {
-                if (rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_01 ||
-                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01) {
-                    rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
-                } else {
-                    rowerDataBean1.setTime(RowerDataParam.REMAINING_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.REMAINING_TIME_INX, RowerDataParam.REMAINING_TIME_LEN));
-                }
+                 rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
             }
 
             // 时间上数

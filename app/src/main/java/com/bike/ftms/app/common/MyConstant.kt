@@ -123,7 +123,7 @@ object MyConstant {
 
     /********************** 运动模式  */
     const val NORMAL = 0
-    const val GOAL_TIME = 1
+    const val GOAL_TIME = 1  // 也是游戏模式
     const val GOAL_DISTANCE = 2
     const val GOAL_CALORIES = 3
     const val INTERVAL_TIME = 5
