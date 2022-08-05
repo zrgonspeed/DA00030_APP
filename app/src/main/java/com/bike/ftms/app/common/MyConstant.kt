@@ -21,6 +21,7 @@ object MyConstant {
     const val DEVICE_AA02290_00R_02 = 8
     const val DEVICE_AA02290_00R_03 = 9
     const val DEVICE_AA02020_00R_03 = 10
+    const val DEVICE_AA02230_00F_01 = 11
 
     @JvmField
     val deviceNames = arrayOf(
@@ -34,7 +35,8 @@ object MyConstant {
         "AA02290-00F-01",
         "AA02290-00R-02",
         "AA02290-00R-03",
-        "AA02020-00R-03"
+        "AA02020-00R-03",
+        "AA02230-00F-01"
     )
 
     // 大类机型 ---------------------------------------------------------------------------------
@@ -50,9 +52,9 @@ object MyConstant {
         DEVICE_AA02290_00R_02,
         DEVICE_AA02290_00R_03,
         DEVICE_AA02020_00R_03,
-        )
+    )
     private val bike_arr = intArrayOf(
-        DEVICE_AA02020_00F_01, DEVICE_AA02020_00F_02
+        DEVICE_AA02020_00F_01, DEVICE_AA02020_00F_02, DEVICE_AA02230_00F_01
     )
     private val ski_arr = intArrayOf(
         DEVICE_AA02290_00F_01
@@ -171,7 +173,8 @@ object MyConstant {
         DEVICE_AA02290_00F_01,
         DEVICE_AA02290_00R_02,
         DEVICE_AA02290_00R_03,
-        DEVICE_AA02020_00R_03
+        DEVICE_AA02020_00R_03,
+        DEVICE_AA02230_00F_01
     )
     @Retention(RetentionPolicy.SOURCE)
     annotation class DeviceType
