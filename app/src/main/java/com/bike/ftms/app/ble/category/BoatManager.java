@@ -66,6 +66,7 @@ public class BoatManager extends CategoryType {
             // 时间下数
             if (rowerDataBean1.getRunMode() == MyConstant.GOAL_TIME) {
                 if (rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_01 ||
+                    rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00F_03 ||
                         rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_03 ||
                         rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01
                 ) {
@@ -77,6 +78,7 @@ public class BoatManager extends CategoryType {
             // 时间下数
             if (rowerDataBean1.getRunMode() == MyConstant.INTERVAL_TIME) {
                 if (rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_01 ||
+                    rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00F_03 ||
                         rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_03 ||
                         rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01
                 ) {

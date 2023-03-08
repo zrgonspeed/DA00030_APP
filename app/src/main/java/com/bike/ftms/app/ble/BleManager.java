@@ -525,6 +525,7 @@ public class BleManager extends BaseBleManager {
 
     @Override
     public void timerComply(long lastTime, String tag) {
+        Logger.d("lastTime == " + lastTime + "    isConnectTag == " + isConnectTag);
         if (lastTime == 10 && isConnectTag.equals(tag)) {
             if (mBluetoothGatt != null) {
                 mBluetoothGatt.disconnect();
@@ -1001,6 +1002,7 @@ public class BleManager extends BaseBleManager {
         int temp = -1;
         if (data.length == 10) {
             temp = DataTypeConversion.doubleBytesToIntLiterEnd(data, 5);
+            Logger.i("机型：" + temp);
             Logger.i("2个字节机型");
         } else {
             if (data.length == 9) {
