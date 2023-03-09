@@ -417,6 +417,7 @@ public class BleHeartDeviceManager extends BaseBleManager implements CustomTimer
         if (bleHeartData != null) {
             bleHeartData.disHRConnect();
         }
+        setHrData(0);
     }
 
     /**
