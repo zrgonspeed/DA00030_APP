@@ -54,13 +54,12 @@ object MyConstant {
         DEVICE_AA02290_00R_02,
         DEVICE_AA02290_00R_03,
         DEVICE_AA02020_00R_03,
-        DEVICE_AA02020_00F_03,
     )
     private val bike_arr = intArrayOf(
         DEVICE_AA02020_00F_01, DEVICE_AA02020_00F_02, DEVICE_AA02230_00F_01
     )
     private val ski_arr = intArrayOf(
-        DEVICE_AA02290_00F_01
+        DEVICE_AA02290_00F_01, DEVICE_AA02020_00F_03
     )
     private val step_arr = intArrayOf()
 
