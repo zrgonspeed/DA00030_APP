@@ -368,8 +368,8 @@ public class BleManager extends BaseBleManager {
             byte[] data = characteristic.getValue();
 
             String uuid = characteristic.getUuid().toString().substring(0, 8);
-            Logger.i(uuid + ",::" + ConvertData.byteArrayToHexString(data, data.length));
-            Logger.d(Arrays.toString(data));
+            Logger.i("raw: " + uuid + ",::" + ConvertData.byteArrayToHexString(data, data.length));
+            Logger.d("raw: " + Arrays.toString(data));
 
             rxDataPackage(data, characteristic.getUuid().toString());
         }
@@ -743,11 +743,11 @@ public class BleManager extends BaseBleManager {
         if (data.length > 8 && data[1] == 0x40 && data[2] == 0x01) {
             byte[] unPackData = new byte[32];
             int len = SerialData.comUnPackage(data, unPackData, data.length);
-            Logger.i(ConvertData.byteArrayToHexString(unPackData, len));
+            // Logger.i(ConvertData.byteArrayToHexString(unPackData, len));
 
             byte[] resultData = new byte[len];
             System.arraycopy(unPackData, 0, resultData, 0, len);
-            Logger.i(ConvertData.byteArrayToHexString(resultData, resultData.length));
+            Logger.i("解包: " + ConvertData.byteArrayToHexString(resultData, resultData.length));
 
             data = resultData;
             // 日期和机型校验
