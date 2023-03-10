@@ -31,6 +31,7 @@ import com.bike.ftms.app.manager.storage.SpManager;
 import com.bike.ftms.app.serial.SerialCommand;
 import com.bike.ftms.app.serial.SerialData;
 import com.bike.ftms.app.utils.BasisTimesUtils;
+import com.bike.ftms.app.utils.ButtonUtilsForBtList;
 import com.bike.ftms.app.utils.ConvertData;
 import com.bike.ftms.app.utils.CustomTimer;
 import com.bike.ftms.app.utils.DataTypeConversion;
@@ -157,6 +158,7 @@ public class BleManager extends BaseBleManager {
             boolean b = refreshDeviceCache(mBluetoothGatt);
             Logger.i("连接 清除蓝牙内部缓存 " + b);
             closeGatt();
+            disConnectDevice();
 
             //第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。设置为 false 表示只进行一次连接尝试。
             BluetoothDevice device = scanResult.getScanResult().getDevice();
@@ -165,7 +167,6 @@ public class BleManager extends BaseBleManager {
             //处理超时连接的方法
             // mHandler.postDelayed(mConnTimeOutRunnable, 5 * 1000);
             Logger.i("connectDevice " + device.getAddress() + "  " + device.getName() + "  ++++++++++++++++++++++++++++++++++++");
-
         }
         if (onScanConnectListener != null) {
             onScanConnectListener.onNotifyData();
@@ -799,6 +800,8 @@ public class BleManager extends BaseBleManager {
                 deviceType = tempDeviceType;
                 categoryType = MyConstant.getCategory(deviceType);
 
+                // 已连上，通过校验
+                ButtonUtilsForBtList.startCanClickTimer();
 
                 rowerDataBean1.setDeviceType(deviceType);
                 rowerDataBean1.setCategoryType(categoryType);

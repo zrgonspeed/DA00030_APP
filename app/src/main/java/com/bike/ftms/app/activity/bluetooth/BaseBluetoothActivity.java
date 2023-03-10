@@ -34,7 +34,8 @@ import com.bike.ftms.app.base.BaseActivity;
 import com.bike.ftms.app.ble.BaseBleManager;
 import com.bike.ftms.app.ble.base.OnScanConnectListener;
 import com.bike.ftms.app.ble.bean.MyScanResult;
-import com.bike.ftms.app.utils.ButtonUtils;
+import com.bike.ftms.app.utils.ButtonUtilsForBtList;
+import com.bike.ftms.app.utils.ButtonUtilsForSwitch;
 import com.bike.ftms.app.utils.Logger;
 import com.bike.ftms.app.view.MyHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -213,7 +214,7 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
                 case MotionEvent.ACTION_DOWN:
                     break;
                 case MotionEvent.ACTION_UP:
-                    boolean canResponse = ButtonUtils.canResponse();
+                    boolean canResponse = ButtonUtilsForSwitch.canResponse();
                     // Logger.d("canResponse == " + canResponse);
                     if (canResponse) {
                         v.performClick();
@@ -471,9 +472,6 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
         unregisterReceiver(bleBroadcastReceiver);
     }
 
-    // 每点击一次要2秒后才能再次点击，防止狂按
-    protected boolean isClicked = false;
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -586,7 +584,7 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
 
     @Override
     public void onItemClickListener(MyScanResult clickScanResult) {
-        if (!isClicked) {
+        if (ButtonUtilsForBtList.getCanClick() && ButtonUtilsForBtList.canResponse()) {
             getBleManager().stopScan();
             getBleManager().connectDevice(clickScanResult);
 
@@ -597,11 +595,6 @@ public abstract class BaseBluetoothActivity extends BaseActivity implements OnSc
                     scanResults.get(i).setConnectState(0);
                 }
             }
-
-            new Handler().postDelayed(() -> {
-                isClicked = false;
-            }, 2000);
         }
-        isClicked = true;
     }
 }
