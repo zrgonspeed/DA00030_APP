@@ -177,7 +177,7 @@ public class MainActivity extends BaseActivity implements OnRunDataListener, OnO
     // 显示连接上的机型和图片
     private synchronized void setConnectStatus(boolean connected, int deviceType) {
         if (connected && deviceType != -1) {
-            tv_device.setText(MyConstant.deviceNames[deviceType]);
+            tv_device.setText(MyConstant.nameMap.get(deviceType));
             iv_device.setImageDrawable(MyConstant.getCategoryImg(MyConstant.getCategory(deviceType)));
             tv_device.setVisibility(View.VISIBLE);
             iv_device.setVisibility(View.VISIBLE);

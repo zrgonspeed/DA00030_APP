@@ -11,45 +11,61 @@ import java.lang.annotation.RetentionPolicy
 object MyConstant {
     // 支持的机型
     const val DEVICE_UNKNOW = 0
+
     const val DEVICE_AA02020_00R_01 = 1
     const val DEVICE_AA01990 = 2
     const val DEVICE_AA02020_00F_01 = 3
     const val DEVICE_AA02020_00F_02 = 4
     const val DEVICE_AA02230_00R_01 = 5
+
     const val DEVICE_AA02290_00R_01 = 6
     const val DEVICE_AA02290_00F_01 = 7
     const val DEVICE_AA02290_00R_02 = 8
     const val DEVICE_AA02290_00R_03 = 9
     const val DEVICE_AA02020_00R_03 = 10
+
     const val DEVICE_AA02230_00F_01 = 11
     const val DEVICE_AA02020_00F_03 = 12
-
     const val DEVICE_AA02020_00F_04 = 13
     const val DEVICE_AA02320_00R_01 = 14
     const val DEVICE_AA02020_00R_05 = 15
+
     const val DEVICE_AA02020_00F_05 = 16
 
-    @JvmField
-    val deviceNames = arrayOf(
-        "DEVICE_UNKNOW",
-        "AA02020-00R-01",
-        "AA01990",
-        "AA02020-00F-01",
-        "AA02020-00F-02",
-        "AA02230-00R-01",
-        "AA02290-00R-01",
-        "AA02290-00F-01",
-        "AA02290-00R-02",
-        "AA02290-00R-03",
-        "AA02020-00R-03",
-        "AA02230-00F-01",
-        "AA02020-00F-03",
+    const val DEVICE_AA02400_00R_01 = 192   // 划船器
+    const val DEVICE_AA02320_00F_01 = 17    // 滑雪机
 
-        "AA02020-00F-04",
-        "AA02320-00R-01",
-        "AA02020-00R-05",
-        "AA02020-00F-05",
-    )
+    const val maxType = 255;
+
+    @JvmField
+    val nameMap = HashMap<Int, String>()
+
+    init {
+        nameMap[DEVICE_UNKNOW] = "DEVICE_UNKNOW"
+
+        nameMap[DEVICE_AA02020_00R_01] = "AA02020-00R-01"
+        nameMap[DEVICE_AA01990] = "AA01990"
+        nameMap[DEVICE_AA02020_00F_01] = "AA02020-00F-01"
+        nameMap[DEVICE_AA02020_00F_02] = "AA02020-00F-02"
+        nameMap[DEVICE_AA02230_00R_01] = "AA02230-00R-01"
+
+        nameMap[DEVICE_AA02290_00R_01] = "AA02290-00R-01"
+        nameMap[DEVICE_AA02290_00F_01] = "AA02290-00F-01"
+        nameMap[DEVICE_AA02290_00R_02] = "AA02290-00R-02"
+        nameMap[DEVICE_AA02290_00R_03] = "AA02290-00R-03"
+        nameMap[DEVICE_AA02020_00R_03] = "AA02020-00R-03"
+
+        nameMap[DEVICE_AA02230_00F_01] = "AA02230-00F-01"
+        nameMap[DEVICE_AA02020_00F_03] = "AA02020-00F-03"
+        nameMap[DEVICE_AA02020_00F_04] = "AA02020-00F-04"
+        nameMap[DEVICE_AA02320_00R_01] = "AA02320-00R-01"
+        nameMap[DEVICE_AA02020_00R_05] = "AA02020-00R-05"
+
+        nameMap[DEVICE_AA02020_00F_05] = "AA02020-00F-05"
+
+        nameMap[DEVICE_AA02400_00R_01] = "AA02400-00R-01"
+        nameMap[DEVICE_AA02320_00F_01] = "AA02320-00F-01"
+    }
 
     // 大类机型 ---------------------------------------------------------------------------------
     const val CATEGORY_BOAT = 1000
@@ -66,12 +82,19 @@ object MyConstant {
         DEVICE_AA02020_00R_03,
         DEVICE_AA02020_00R_05,
         DEVICE_AA02320_00R_01,
+        DEVICE_AA02400_00R_01
     )
     private val bike_arr = intArrayOf(
-        DEVICE_AA02020_00F_01, DEVICE_AA02020_00F_02, DEVICE_AA02230_00F_01
+        DEVICE_AA02020_00F_01,
+        DEVICE_AA02020_00F_02,
+        DEVICE_AA02230_00F_01
     )
     private val ski_arr = intArrayOf(
-        DEVICE_AA02290_00F_01, DEVICE_AA02020_00F_03, DEVICE_AA02020_00F_05, DEVICE_AA02020_00F_04
+        DEVICE_AA02290_00F_01,
+        DEVICE_AA02020_00F_03,
+        DEVICE_AA02020_00F_05,
+        DEVICE_AA02020_00F_04,
+        DEVICE_AA02320_00F_01
     )
     private val step_arr = intArrayOf()
 
@@ -194,7 +217,10 @@ object MyConstant {
         DEVICE_AA02020_00F_04,
         DEVICE_AA02320_00R_01,
         DEVICE_AA02020_00R_05,
-        DEVICE_AA02020_00F_05
+        DEVICE_AA02020_00F_05,
+
+        DEVICE_AA02400_00R_01,
+        DEVICE_AA02320_00F_01
     )
     @Retention(RetentionPolicy.SOURCE)
     annotation class DeviceType

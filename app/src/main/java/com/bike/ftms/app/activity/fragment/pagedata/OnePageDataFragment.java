@@ -395,7 +395,10 @@ public class OnePageDataFragment extends BasePageDataFragment {
         tv_home_strokes.setVisibility(View.VISIBLE);
         tv_home_strokes_unit.setVisibility(View.VISIBLE);
 
-        if (BleManager.deviceType == MyConstant.DEVICE_AA02020_00R_03) {
+        if (BleManager.deviceType == MyConstant.DEVICE_AA02020_00R_03 ||
+                BleManager.deviceType == MyConstant.DEVICE_AA02400_00R_01
+
+        ) {
             tv_home_level.setVisibility(View.VISIBLE);
             tv_home_level_unit.setVisibility(View.VISIBLE);
         } else {

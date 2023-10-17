@@ -138,10 +138,10 @@ public class WorkoutsLocalAdapter extends RecyclerView.Adapter<WorkoutsLocalAdap
         } else {
             holder.tv_workouts_device_name.setVisibility(View.GONE);
         }
-        if (bean.getDeviceType() < 0 || bean.getDeviceType() > MyConstant.deviceNames.length - 1) {
-            holder.tv_workouts_device_name.setText(MyConstant.deviceNames[0]);
+        if (bean.getDeviceType() < 0 || bean.getDeviceType() > MyConstant.maxType) {
+            holder.tv_workouts_device_name.setText(MyConstant.nameMap.get(0));
         } else {
-            holder.tv_workouts_device_name.setText(MyConstant.deviceNames[bean.getDeviceType()]);
+            holder.tv_workouts_device_name.setText(MyConstant.nameMap.get(bean.getDeviceType()));
         }
 
         if (Debug.canShowItemLocalId) {

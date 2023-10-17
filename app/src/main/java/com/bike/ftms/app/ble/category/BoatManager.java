@@ -72,7 +72,9 @@ public class BoatManager extends CategoryType {
                     rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00F_05 ||
                     rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_05 ||
                         rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_03 ||
-                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01
+                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01 ||
+                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02400_00R_01 ||
+                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02320_00F_01
                 ) {
                     rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
                 } else {
@@ -88,7 +90,9 @@ public class BoatManager extends CategoryType {
                     rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00F_05 ||
                     rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_05 ||
                         rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02020_00R_03 ||
-                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01
+                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02230_00R_01 ||
+                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02400_00R_01 ||
+                        rowerDataBean1.getDeviceType() == MyConstant.DEVICE_AA02320_00F_01
                 ) {
                     rowerDataBean1.setTime(RowerDataParam.ELAPSED_TIME_INX == -1 ? 0 : resolveData(data, RowerDataParam.ELAPSED_TIME_INX, RowerDataParam.ELAPSED_TIME_LEN));
                 } else {

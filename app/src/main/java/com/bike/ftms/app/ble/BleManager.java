@@ -777,7 +777,7 @@ public class BleManager extends BaseBleManager {
 
                 // 获取机型
                 int tempDeviceType = initDeviceType(data);
-                if (tempDeviceType > 0 && tempDeviceType < MyConstant.deviceNames.length) {
+                if (tempDeviceType > 0 && tempDeviceType < MyConstant.maxType) {
                     deviceTypeOK = true;
                 }
 
